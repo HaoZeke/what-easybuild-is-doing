@@ -19,9 +19,17 @@ recordings of real runs.
 
 ## Status
 
-Scaffold. One chapter, and the engine is not wired up yet, so every
-widget renders as read-only code with a note saying so. The book is
-published a chapter at a time on purpose.
+First draft: four chapters, front-loaded on purpose.
+
+The engine is partial. `easyblock` is live, backed by the name-encoding
+table exported from eb-stack at build time so the browser applies the
+framework's own substitutions rather than a copy that can drift. The
+other widgets settle read-only and say they are unimplemented rather than
+pretending the engine failed.
+
+The full engine is eb-stack compiled to WebAssembly, which needs the
+crate's IO-free core first: `ureq` and `fs2` are what stop it building for
+`wasm32` today.
 
 ## Build
 
@@ -41,8 +49,13 @@ this book is built with Sphinx:
 | `pixi run -e docs singlehtml` | `build/singlehtml`, one page | live |
 | `pixi run -e docs epub` | `build/epub` | absent, code only |
 
-`pixi run -e docs mkrst` alone runs the org export;
+`pixi run -e docs mkrst` alone runs the org export and
+`pixi run -e docs charmap` alone re-exports the encoding table;
 `pixi run -e docs clean` removes the generated `.rst` and `build/`.
+
+The `charmap` step needs the `eb-stack` binary. Set `EB_STACK` to it when
+it is not on `PATH`, which is the normal case on a build host where the
+engine was compiled rather than installed.
 
 ## Layout
 

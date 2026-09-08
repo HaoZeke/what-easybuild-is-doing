@@ -430,5 +430,8 @@ vite.config.ts.timestamp-*
 source/*.rst
 source/**/*.rst
 
+# Generated from eb-stack by scripts/gen-charmap.sh
+source/_static/eb-charmap.json
+
 # Sphinx output
 build/

@@ -1,11 +1,15 @@
 // Island runtime: hydrate each widget on its own terms, and load the
 // engine once, lazily, for the whole page.
 //
-// The engine is eb-stack compiled to WebAssembly. It does not exist yet,
-// so today every island settles into an inert state showing read-only
-// code and saying so. That is deliberate rather than a placeholder: the
-// book publishes a chapter at a time, and a chapter whose prose only works
-// once the widget is live is a chapter that cannot ship.
+// The engine is eb-stack. The full one is the crate compiled to
+// WebAssembly and does not exist yet, because the crate does not build for
+// wasm32 until its IO-free core does. eb-widget-engine.js supplies a
+// partial engine in the meantime: the widgets it implements go live and
+// the rest settle inert saying which of the two things is missing.
+//
+// That partial state is deliberate rather than a placeholder. The book
+// publishes a chapter at a time, and a chapter whose prose only works once
+// its widget is live is a chapter that cannot ship.
 //
 // The drop-in contract, so the engine can land without touching this file:
 //
@@ -26,6 +30,9 @@
     "input it will take.";
   var FAILED_NOTE =
     "The interactive engine failed to load, so this sample is read-only.";
+  var UNIMPLEMENTED_NOTE =
+    "The engine is loaded but does not implement this widget yet, so this " +
+    "sample is read-only. The code above is the real input it will take.";
 
   // Derived from this script's own URL so it works at any page depth,
   // which a relative path from the page would not.
@@ -93,8 +100,15 @@
     var run = engine && engine[widget];
     var pre = island.querySelector("pre");
 
-    if (typeof run !== "function" || !pre) {
+    if (!pre) {
       settleInert(island, FAILED_NOTE);
+      return;
+    }
+    if (typeof run !== "function") {
+      // A partial engine is the normal case while the book is being written,
+      // so say which of the two things is missing rather than blaming the
+      // load.
+      settleInert(island, UNIMPLEMENTED_NOTE);
       return;
     }
 

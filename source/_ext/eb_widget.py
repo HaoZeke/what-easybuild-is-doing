@@ -160,6 +160,9 @@ def _register_assets(app):
         return
     app.add_css_file("eb-widget.css")
     app.add_js_file("eb-widget.js", loading_method="defer")
+    # The engine ships under the same prefix on purpose: _asset_is_ours
+    # matches on it, so a chapter with no island loses the engine too.
+    app.add_js_file("eb-widget-engine.js", loading_method="defer")
 
 
 def _asset_is_ours(entry) -> bool:

@@ -96,17 +96,35 @@ looks for is =code_server=, and the class inside it is:
 
 #+begin_src easyconfig :widget easyblock
 code-server
+c++
+C#
+Xerces-C++
+Python-bundle-PyPI
 #+end_src
 
 =EB_code_minus_server=. The hyphen became the literal word =minus=.
 
-This is not a joke at EasyBuild's expense; it is a sensible answer to a
-real problem. Class names have to be valid Python identifiers, package
-names are not, and the mapping from one to the other has to be
-reversible so that two differently-named packages cannot collide on one
-class. Spelling the punctuation out is how you get that. It is
-surprising exactly once, and then it explains a whole category of "why
-is my easyblock not being picked up".
+This is not a joke at EasyBuild's expense, it is a sensible answer to a
+real problem. Class names have to be valid Python identifiers and package
+names are not, so something has to bridge them, and the bridge has to be
+*reversible* or two differently-named packages could collide on one class.
+Spelling the punctuation out gives you that. The framework's own
+justification names =c++= and =C#=, which are in the sample above: run it
+and watch =c++= become =EB_c_plus__plus_=, with the doubled separator that
+tells you the substitution is per character and collapses nothing.
+
+The consequence people trip over is the one you cannot see in
+=code-server=, because that name has no underscore. Try =Python-bundle-PyPI=
+and then try a name with an underscore in it. An underscore is *itself*
+encoded, to =_underscore_=. That is what makes the mapping reversible:
+if =_= were left alone, =_minus_= would be ambiguous between an encoded
+hyphen and a name that really did contain the letters =minus= between two
+underscores. It also means the class name is longer and stranger than you
+expect, which is exactly when people conclude the lookup is broken rather
+than mechanical.
+
+Surprising exactly once, and then it explains a whole category of "why is
+my easyblock not being picked up".
 
 For =code-server= the class exists, and it does three things worth
 knowing:

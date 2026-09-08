@@ -21,10 +21,27 @@ Almost everyone reads =('HDF5', '1.14.6')= as "needs HDF5, at least
 =install_requires= in Python takes =>=1.14.6=. Cargo takes =1.14.6=
 and means "compatible with". Conda takes =>=1.14.6,<2=.
 
-EasyBuild has no such syntax. There is no operator, no range, no
-caret, no tilde. A dependency is a name and a version, and the version
-is the version. Not a floor, not a preference: that exact module, or
-the build does not resolve.
+EasyBuild has no such syntax. There is no operator, no range, no caret,
+no tilde. A dependency is a name and a version, and the version is the
+version. Not a floor, not a preference: that exact module, or the build
+does not resolve.
+
+You can check that rather than take it from me. =_parse_dependency= in
+=easybuild/framework/easyconfig/easyconfig.py= says what a dependency is,
+in its docstring:
+
+#+begin_quote
+dep can be a dict, a tuple or a list. if it is a tuple or a list the
+attributes are expected to be in the following order: ('name',
+'version', 'versionsuffix', 'toolchain'). of these attributes, 'name'
+and 'version' are mandatory
+#+end_quote
+
+Four positional attributes, two of them required, and the dict it builds
+carries a single =version= string. There is nowhere for a comparator to
+go. The version can be *templated*, so the literal text in the file may
+be =%(pyshortver)s= rather than a number, but a template resolves to one
+exact version too. Nothing in the format expresses a set.
 
 * Why that is fine, and then why it is not
 
