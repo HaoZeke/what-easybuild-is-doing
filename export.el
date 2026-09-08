@@ -24,35 +24,51 @@
                (split-string (string-trim-right text) "\n")
                "\n")))
 
-;; #+begin_eb ... #+end_eb becomes the `eb' Sphinx directive.  Options ride
-;; on #+attr_eb, so the org source stays readable and the widget's
-;; configuration lives next to the code it seeds:
+;; Widgets ride on a *source* block, not a special block.
 ;;
-;;   #+attr_eb: :widget parse :universe none
-;;   #+begin_eb
+;; The first attempt used `#+begin_eb', and org exported its contents as
+;; ordinary paragraph text: `source_urls' became a subscript, and
+;; `%(mapped_arch)s' became `%(mapped :sub:`arch`)s'. Special blocks get
+;; markup treatment. Code needs a verbatim container, which is what a src
+;; block is, so the widget is a src block in the `easyconfig' language:
+;;
+;;   #+begin_src easyconfig :widget parse :universe foss-2025a
 ;;   name = 'zlib'
-;;   #+end_eb
+;;   #+end_src
 ;;
-;; Every other special block falls through to ox-rst unchanged.
-(defun ebguide-rst-special-block (special-block contents info)
-  "Translate an `eb' SPECIAL-BLOCK to an RST directive, else defer to rst."
-  (let ((type (org-element-property :type special-block)))
-    (if (not (string-equal (downcase (or type "")) "eb"))
-        (org-export-with-backend 'rst special-block contents info)
-      (let* ((attrs (org-export-read-attribute :attr_eb special-block))
-             (widget (or (plist-get attrs :widget) "parse"))
-             (universe (plist-get attrs :universe))
-             (label (plist-get attrs :label)))
+;; Every other src block, and every other language, falls through to
+;; ox-rst unchanged.
+
+(defconst ebguide-widget-language "easyconfig"
+  "Src-block language that marks a block as an interactive widget.")
+
+(defun ebguide--header-value (args key)
+  "Look up KEY in parsed babel header ARGS, returning nil when absent or blank."
+  (let ((val (cdr (assq key args))))
+    (when (and val (stringp val) (not (string-empty-p (string-trim val))))
+      (string-trim val))))
+
+(defun ebguide-rst-src-block (src-block contents info)
+  "Translate an `easyconfig' SRC-BLOCK to the eb directive, else defer to rst."
+  (let ((lang (org-element-property :language src-block)))
+    (if (not (string-equal (downcase (or lang "")) ebguide-widget-language))
+        (org-export-with-backend 'rst src-block contents info)
+      (let* ((args (org-babel-parse-header-arguments
+                    (or (org-element-property :parameters src-block) "")))
+             (widget (or (ebguide--header-value args :widget) "parse"))
+             (universe (ebguide--header-value args :universe))
+             (label (ebguide--header-value args :label))
+             (code (or (org-element-property :value src-block) "")))
         (concat ".. eb::\n"
                 (format "   :widget: %s\n" widget)
                 (when universe (format "   :universe: %s\n" universe))
                 (when label (format "   :label: %s\n" label))
                 "\n"
-                (ebguide--indent (or contents "") 3)
+                (ebguide--indent code 3)
                 "\n\n")))))
 
 (org-export-define-derived-backend 'ebguide-rst 'rst
-  :translate-alist '((special-block . ebguide-rst-special-block)))
+  :translate-alist '((src-block . ebguide-rst-src-block)))
 
 (defun ebguide-publish-to-rst (plist filename pub-dir)
   "Publish FILENAME as RST through the ebguide-rst backend."
@@ -78,6 +94,7 @@
          :publishing-directory "./source/"
          :publishing-function ebguide-publish-to-rst
          :recursive t
+         :with-sub-superscript nil
          :headline-levels 4)
         ("guide-assets"
          :base-directory "./orgmode/"

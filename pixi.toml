@@ -18,13 +18,13 @@ sphinx-design = "*"
 
 [feature.docs.tasks]
 mkrst = { cmd = "emacs --batch --load export.el", description = "orgmode/ -> source/*.rst via org-publish" }
-html = { cmd = "sphinx-build -W --keep-going -b html source build/html", depends-on = [
+html = { cmd = "sphinx-build -W --keep-going -d build/.doctrees -b html source build/html", depends-on = [
     "mkrst",
 ] }
-singlehtml = { cmd = "sphinx-build -W --keep-going -b singlehtml source build/singlehtml", depends-on = [
+singlehtml = { cmd = "sphinx-build -W --keep-going -d build/.doctrees -b singlehtml source build/singlehtml", depends-on = [
     "mkrst",
 ] }
-epub = { cmd = "sphinx-build -W --keep-going -b epub source build/epub", depends-on = [
+epub = { cmd = "sphinx-build -W --keep-going -d build/.doctrees -b epub source build/epub", depends-on = [
     "mkrst",
 ] }
 # The acceptance test for the stack choice: one source, three renderings.

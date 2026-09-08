@@ -17,6 +17,8 @@ project = "What EasyBuild Is Doing"
 author = "Rohit Goswami"
 copyright = "2026, Rohit Goswami"
 release = "0.1.0"
+# EPUB3 requires a non-empty version; Sphinx does not derive it from release.
+version = "0.1"
 
 # -- General configuration ---------------------------------------------------
 

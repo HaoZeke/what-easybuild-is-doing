@@ -4,8 +4,7 @@
 Here is a complete, real easyconfig. It installs a browser-based VS
 Code onto a supercomputer, and it is twenty lines long.
 
-#+attr_eb: :widget parse
-#+begin_eb
+#+begin_src easyconfig :widget parse
 name = 'code-server'
 version = '4.130.0'
 
@@ -26,7 +25,7 @@ checksums = [
 ]
 
 moduleclass = 'tools'
-#+end_eb
+#+end_src
 
 It reads like configuration. Keys on the left, values on the right, no
 control flow, no functions. You could believe it was YAML that someone
@@ -61,13 +60,12 @@ forbids it, because there is no format, only a namespace.
 
 Look at =sources=:
 
-#+attr_eb: :widget template
-#+begin_eb
+#+begin_src easyconfig :widget template
 name = 'code-server'
 version = '4.130.0'
 sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
 source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
-#+end_eb
+#+end_src
 
 =%(version)s= is old-style Python string formatting, which means the
 templating is not a feature EasyBuild added. It is the language's own
@@ -96,10 +94,9 @@ EasyBuild looks for an easyblock named after the software, and the
 lookup is a name mangling. The package is =code-server=. The module it
 looks for is =code_server=, and the class inside it is:
 
-#+attr_eb: :widget easyblock
-#+begin_eb
+#+begin_src easyconfig :widget easyblock
 code-server
-#+end_eb
+#+end_src
 
 =EB_code_minus_server=. The hyphen became the literal word =minus=.
 

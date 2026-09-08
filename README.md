@@ -59,12 +59,15 @@ Prose is written in org and never in the generated `.rst`. The custom
 `eb` block carries the widgets:
 
 ```org
-#+attr_eb: :widget parse
-#+begin_eb
+#+begin_src easyconfig :widget parse
 name = 'zlib'
 version = '1.3.1'
-#+end_eb
+#+end_src
 ```
+
+A src block rather than a special block, because a special block's
+contents get org markup treatment: `source_urls` comes out as a
+subscript.
 
 `:widget` must name one of the widgets in `source/_ext/eb_widget.py`, so
 a typo fails the build rather than rendering an inert box.
