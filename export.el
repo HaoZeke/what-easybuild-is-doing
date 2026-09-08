@@ -36,6 +36,9 @@
 ;;   name = 'zlib'
 ;;   #+end_src
 ;;
+;; `:hydrate' takes load, idle or visible and controls when the island wakes
+;; up; omitted, the directive's own default applies.
+;;
 ;; Every other src block, and every other language, falls through to
 ;; ox-rst unchanged.
 
@@ -58,11 +61,13 @@
              (widget (or (ebguide--header-value args :widget) "parse"))
              (universe (ebguide--header-value args :universe))
              (label (ebguide--header-value args :label))
+             (hydrate (ebguide--header-value args :hydrate))
              (code (or (org-element-property :value src-block) "")))
         (concat ".. eb::\n"
                 (format "   :widget: %s\n" widget)
                 (when universe (format "   :universe: %s\n" universe))
                 (when label (format "   :label: %s\n" label))
+                (when hydrate (format "   :hydrate: %s\n" hydrate))
                 "\n"
                 (ebguide--indent code 3)
                 "\n\n")))))

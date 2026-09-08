@@ -35,8 +35,12 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # conf.py, _ext, _static and _templates are authored here.
 master_doc = "index"
 
-# An easyconfig is Python, so the default highlighting is Python.
-highlight_language = "python"
+# No default lexer. The eb directive sets "python" on its own blocks, which
+# is where easyconfigs live, and everything else on these pages is prose
+# quotes, shell transcripts or eb output. A python default makes Sphinx try
+# to lex an ox-rst block quote as code and fail on its own backticks, which
+# under -W is a build failure caused entirely by a wrong default.
+highlight_language = "none"
 
 nitpicky = True
 

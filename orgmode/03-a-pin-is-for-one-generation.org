@@ -1,0 +1,152 @@
+#+TITLE: A pin is for one generation
+#+OPTIONS: toc:nil num:nil
+
+This is the chapter I would keep if I had to throw the rest away.
+
+Here is a dependency list:
+
+#+begin_src easyconfig :widget parse :hydrate load
+name = 'example'
+version = '1.0'
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+dependencies = [
+    ('HDF5', '1.14.6'),
+    ('netCDF', '4.9.3'),
+]
+#+end_src
+
+Almost everyone reads =('HDF5', '1.14.6')= as "needs HDF5, at least
+1.14.6". Every other packaging system they have used works that way.
+=install_requires= in Python takes =>=1.14.6=. Cargo takes =1.14.6=
+and means "compatible with". Conda takes =>=1.14.6,<2=.
+
+EasyBuild has no such syntax. There is no operator, no range, no
+caret, no tilde. A dependency is a name and a version, and the version
+is the version. Not a floor, not a preference: that exact module, or
+the build does not resolve.
+
+* Why that is fine, and then why it is not
+
+Within one generation it is not only fine, it is the point. A software
+stack built by one organisation for one year should be
+*reproducible*, and a range is the enemy of reproducibility. If
+=foss-2025a= ships HDF5 1.14.6, then every package on =foss-2025a= that
+wants HDF5 gets 1.14.6, and the stack has one HDF5 rather than four. A
+resolver with ranges would give you four.
+
+So the exactness is doing real work. The trouble starts the moment the
+recipe outlives the generation it was written for.
+
+* The thing that breaks
+
+You have a recipe that works on =foss-2025a=. You want it on
+=foss-2024a=, maybe because a user is stuck on the older stack, maybe
+because you are backfilling. The recipe says HDF5 1.14.6, and
+=foss-2024a= shipped HDF5 1.14.3.
+
+The build fails. It fails because nothing called HDF5 1.14.6 exists in
+that generation, and it never will, because generations do not gain new
+versions retroactively.
+
+Now look at what the recipe actually told you. It said "1.14.6". Did
+the software require 1.14.6? Almost certainly not. It required
+something, some feature that landed in some earlier version, and
+1.14.6 is simply *what was on the shelf* when someone wrote the recipe
+down. The number is a record of a build environment, not a statement
+about the package.
+
+That is the whole insight, and it is worth stating flatly:
+
+#+begin_quote
+A dependency version in an easyconfig is an exact pin for the
+generation the recipe was written against. Carried across generations,
+it states a requirement the software never made.
+#+end_quote
+
+* This is why retargeting is not a text edit
+
+The obvious move, when you want a recipe on another generation, is to
+open it and change =2025a= to =2024a=. Then the build fails on HDF5,
+so you change 1.14.6 to 1.14.3. Then it fails on netCDF, so you look
+up what =foss-2024a= shipped, and change that. Twenty minutes later
+you have a recipe that builds and you have learned nothing, and you
+have no record of which of those numbers were requirements and which
+were furniture.
+
+The right shape is different. The old recipe's versions are *floors*,
+not answers: evidence about what the package was once seen to work
+with. The target generation's available modules are the *candidates*.
+Something then has to choose a set of candidates that satisfies the
+floors and is internally consistent, which is a solver's job and not a
+text editor's.
+
+And the floors themselves only hold within one generation, for the
+reason above. Moving generation, they have to be dropped, and something
+has to decide what the target generation ships instead.
+
+* Where the real lower bound lives
+
+Dropping the floor is the fallback, not the answer. If you actually
+need to know the minimum, it is written down, just not in the
+easyconfig:
+
+- The project's own build system says it. =find_package(HDF5 1.10
+  REQUIRED)= in CMake is a real lower bound, stated by the people who
+  wrote the software. So is a =requires-python= or a dependency
+  specifier in =pyproject.toml=.
+- Other packaging ecosystems record it, because their formats can. A
+  conda-forge recipe or a Spack =package.py= keeps the constraint *and*
+  the condition it applies under, because both formats have somewhere
+  to put it.
+
+Either of those is evidence. What is not evidence: "the older
+generation shipped an older version, and the build passed". That tells
+you a version was sufficient on one machine on one day. It is a data
+point, and it is worth having, and it is not the same claim.
+
+If you retarget a recipe and you care whether it is right, say in the
+commit message which of the two your bound came from.
+
+* A worked case, because the abstraction is slippery
+
+Take the code-server recipe from chapter 1. It has no dependencies at
+all, which makes it a poor example of pinning and a perfect example of
+the *other* half of this problem: what a generation contains.
+
+code-server 4.130.0 is a real, released, upstream easyconfig. Here are
+the versions that shipped in EasyBuild's own 5.2.0 and 5.2.1 releases:
+
+#+begin_example
+4.9.1  4.16.1  4.21.1  4.22.1  4.89.1  4.90.2  4.93.1  4.97.2
+4.100.2  4.103.2  4.104.0  4.104.1  4.104.2  4.104.3  4.105.1
+#+end_example
+
+The list stops at 4.105.1. So a site running EasyBuild 5.2 can have a
+perfectly valid easyconfig for 4.130.0 in front of it and still not be
+able to build it, because "the easyconfig exists" and "the easyconfig
+exists in the release you are running" are different statements. Both
+were true at once here.
+
+The same distinction bites the pinning problem. "HDF5 1.14.6 exists" is
+not "HDF5 1.14.6 exists in =foss-2024a=", and an easyconfig cannot tell
+the difference because it names a version and not a generation.
+
+* What to take from this chapter
+
+1. A dependency is an exact version, because a reproducible stack
+   should have one of each library. There is no range syntax, and its
+   absence is deliberate.
+2. That version records the generation the recipe was written against.
+   Across generations it asserts a requirement the software never made.
+3. So retargeting means treating the old versions as evidence and the
+   target generation's modules as candidates, and choosing. Editing
+   numbers until the build passes reaches the same place with no record
+   of which numbers mattered.
+4. The real lower bound lives in the project's build system or in a
+   packaging format that can express conditions. "The old stack had an
+   old one and it worked" is a data point, not a bound.
+
+The next chapter is about the machinery that turns a filename into an
+install plan, and about what it means for that machinery to be looking
+in the wrong place.

@@ -66,6 +66,27 @@ cd "$SRC"
     fi
     echo "=== and the epub still carries the code itself? ==="
     grep -c 'code-server' build/epub/01-an-easyconfig-is-python.xhtml
+
+    echo "=== islands: a chapter with widgets loads the runtime ==="
+    if grep -q 'eb-widget\.js' build/html/01-an-easyconfig-is-python.html; then
+        echo "ok: ch1 (3 widgets) links the runtime"
+    else
+        echo "FAIL: ch1 has widgets but no runtime"
+    fi
+
+    echo "=== islands: a chapter without widgets loads nothing ==="
+    # Chapter 4 is prose only. Under the islands model it must ship no widget
+    # JavaScript and no widget CSS at all; that is the property Sphinx does
+    # not give you and the extension has to take away per page.
+    if grep -qE 'eb-widget\.(js|css)' build/html/04-the-robot.html; then
+        echo "FAIL: ch4 has no widgets but still links the runtime"
+    else
+        echo "ok: ch4 (no widgets) links neither js nor css"
+    fi
+
+    echo "=== islands: hydration strategy reaches the markup ==="
+    grep -o 'data-eb-hydrate="[a-z]*"' build/html/01-an-easyconfig-is-python.html \
+        | sort | uniq -c || echo "FAIL: no hydration attribute emitted"
 } 2>&1 | tee "$LOG"
 
 echo "wrote $LOG"
