@@ -1,0 +1,185 @@
+#+TITLE: An easyconfig is Python
+#+OPTIONS: toc:nil num:nil
+
+Here is a complete, real easyconfig. It installs a browser-based VS
+Code onto a supercomputer, and it is twenty lines long.
+
+#+attr_eb: :widget parse
+#+begin_eb
+name = 'code-server'
+version = '4.130.0'
+
+homepage = 'https://github.com/coder/code-server'
+description = """Run VS Code on any machine anywhere and access it in the browser."""
+
+toolchain = SYSTEM
+
+source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
+sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
+checksums = [
+    {
+        'code-server-4.130.0-linux-amd64.tar.gz':
+            '3de23052e34fa705b3817efa66201cbc8d8ba6615b4cd03120c39bfc0ae1b7ab',
+        'code-server-4.130.0-linux-arm64.tar.gz':
+            '795366c40d0b32bc6fbbedf8dc992f9767a6125cc6dce965766c5f79e06bb725',
+    }
+]
+
+moduleclass = 'tools'
+#+end_eb
+
+It reads like configuration. Keys on the left, values on the right, no
+control flow, no functions. You could believe it was YAML that someone
+had spelled oddly.
+
+It is not configuration. It is a Python file, and EasyBuild runs it.
+
+* Why that distinction earns its place in chapter one
+
+Because everything surprising about easyconfigs follows from it.
+
+An easyconfig is executed in a namespace that has been prepared with a
+set of names it is allowed to use. =SYSTEM= on line seven is not a
+keyword and not a string; it is a value that EasyBuild put in the
+namespace before evaluating the file. That is why it has no quotes
+around it while =moduleclass= does. The quoting rule that looks
+arbitrary is just Python: one is a variable, the other is a literal.
+
+Run the sample above and look at =toolchain= in the result. It comes
+back as a structure with a name and a version, not as the text
+=SYSTEM=, because by the time anything reads it the assignment has
+already happened.
+
+The same fact explains a thing that trips people up later. Since the
+file is Python, it can compute. A list comprehension in an easyconfig
+is legal. A loop that builds =exts_list= from a table is legal. Most
+easyconfigs contain none of that, and the convention against it is a
+good one, but the convention is a *convention*: nothing in the format
+forbids it, because there is no format, only a namespace.
+
+* The things in angle brackets are not in angle brackets
+
+Look at =sources=:
+
+#+attr_eb: :widget template
+#+begin_eb
+name = 'code-server'
+version = '4.130.0'
+sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
+source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
+#+end_eb
+
+=%(version)s= is old-style Python string formatting, which means the
+templating is not a feature EasyBuild added. It is the language's own
+=%= operator, applied to a dictionary EasyBuild assembles from the
+easyconfig itself. =%(version)s= works because =version= is set above
+it.
+
+Which raises the question of =%(mapped_arch)s=, since nothing in the
+file sets =mapped_arch=. Run the sample and you will see it resolve
+anyway, to =amd64=.
+
+It resolves because something outside the easyconfig put it in the
+dictionary. That something is the easyblock, and it is the subject of
+the rest of this chapter.
+
+* EasyBuild derives the easyblock from the name, and the derivation is a string transformation
+
+The easyconfig above never says how to install anything. There is no
+=easyblock= line. There are no configure flags, no =make= invocation,
+no install prefix. It says what to download and what the checksums
+are, and stops.
+
+So how does it get installed?
+
+EasyBuild looks for an easyblock named after the software, and the
+lookup is a name mangling. The package is =code-server=. The module it
+looks for is =code_server=, and the class inside it is:
+
+#+attr_eb: :widget easyblock
+#+begin_eb
+code-server
+#+end_eb
+
+=EB_code_minus_server=. The hyphen became the literal word =minus=.
+
+This is not a joke at EasyBuild's expense; it is a sensible answer to a
+real problem. Class names have to be valid Python identifiers, package
+names are not, and the mapping from one to the other has to be
+reversible so that two differently-named packages cannot collide on one
+class. Spelling the punctuation out is how you get that. It is
+surprising exactly once, and then it explains a whole category of "why
+is my easyblock not being picked up".
+
+For =code-server= the class exists, and it does three things worth
+knowing:
+
+- it computes =mapped_arch=, which is where that template value comes
+  from, and it raises an error on any architecture that is neither
+  x86-64 nor aarch64;
+- it defaults the install step to copying the unpacked tree into
+  place, because the release archive is already built software;
+- it runs =code-server --help= as a sanity check, which means the
+  install is not considered finished until the binary has actually
+  executed.
+
+None of that is in the easyconfig. All of it is implied by the name.
+
+* What happens when the class does not exist
+
+It is worth guessing before reading on, because the obvious answer is
+wrong and the wrong answer is the one most people carry.
+
+The obvious answer is that EasyBuild falls back to something generic,
+=ConfigureMake= being the usual guess, and tries =./configure && make
+&& make install=. It does not. There is no default. If no =easyblock=
+is given and no software-specific class can be imported, the build
+stops:
+
+#+begin_example
+No software-specific easyblock 'EB_example' found for example
+#+end_example
+
+That is =get_easyblock_class= in
+=easybuild/framework/easyconfig/easyconfig.py=, raising with the exit
+code =MISSING_EASYBLOCK=. The two parameters that could soften it,
+=error_on_missing_easyblock= and =error_on_failed_import=, both
+default to true, and the build path does not override them. The one
+caller that does pass false is the *extensions* machinery, where
+falling through to a generic extension handler is the right behaviour.
+
+Read that in reverse and it becomes a tool. The absence of an
+=easyblock= line is not a shrug; it is a positive claim that a
+software-specific easyblock exists. So in the sample at the top of this
+chapter, the missing line tells you =code_server.py= is out there
+before you have gone looking for it. And an easyconfig that *does* say
+=easyblock = 'ConfigureMake'= is not being verbose: naming a generic
+easyblock is the only way to get one.
+
+There is a second, nastier failure hiding behind the same code. If the
+easyblock module exists but has a broken import of its own, that is
+also an =ImportError=, and EasyBuild distinguishes the two by
+regex-matching the error message against the module name it was looking
+for. A match means "no such easyblock"; anything else is reported as
+=Failed to import ... easyblock=. If you ever see the second message,
+the easyblock is present and its own dependencies are the problem, and
+no amount of editing your easyconfig will help.
+
+* What to take from this chapter
+
+An easyconfig is a Python file evaluated in a prepared namespace, and
+three consequences follow that you will meet constantly:
+
+1. Unquoted names like =SYSTEM= are variables EasyBuild supplied, which
+   is why the quoting looks inconsistent and is not.
+2. =%(...)s= is Python's own string formatting over a dictionary built
+   from the easyconfig plus whatever the easyblock adds, which is how a
+   template can resolve to something the file never mentions.
+3. The easyblock is chosen by transforming the software's name, and
+   when no specific one exists the build stops rather than guessing,
+   which makes a missing =easyblock= line a claim that a specific
+   easyblock exists.
+
+The next chapter is about =toolchain=, the one line in the sample we
+have not touched, and the one that causes more confusion than the
+other nineteen together.

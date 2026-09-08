@@ -1,0 +1,35 @@
+[workspace]
+channels = ["conda-forge"]
+name = "what-easybuild-is-doing"
+platforms = ["linux-64"]
+
+# Emacs is a build dependency, not an editor choice: the org source is
+# exported by real org-mode in batch mode, which is what keeps custom
+# blocks and org semantics intact on the way to reStructuredText.
+[feature.docs.dependencies]
+python = ">=3.12,<4"
+emacs = ">=30.2,<31"
+
+[feature.docs.pypi-dependencies]
+sphinx = ">=9,<10"
+shibuya = ">=2025.12.13,<2026"
+sphinx-copybutton = "*"
+sphinx-design = "*"
+
+[feature.docs.tasks]
+mkrst = { cmd = "emacs --batch --load export.el", description = "orgmode/ -> source/*.rst via org-publish" }
+html = { cmd = "sphinx-build -W --keep-going -b html source build/html", depends-on = [
+    "mkrst",
+] }
+singlehtml = { cmd = "sphinx-build -W --keep-going -b singlehtml source build/singlehtml", depends-on = [
+    "mkrst",
+] }
+epub = { cmd = "sphinx-build -W --keep-going -b epub source build/epub", depends-on = [
+    "mkrst",
+] }
+# The acceptance test for the stack choice: one source, three renderings.
+all = { depends-on = ["html", "singlehtml", "epub"] }
+clean = { cmd = "rm -rf build source/*.rst source/**/*.rst 2>/dev/null; true" }
+
+[environments]
+docs = { features = ["docs"] }
