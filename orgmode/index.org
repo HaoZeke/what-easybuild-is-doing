@@ -26,9 +26,15 @@ Nothing. That is the point.
 EasyBuild's own tutorial opens by asking for Linux, Python, an
 environment modules tool and a working EasyBuild install. That is a
 reasonable ask of someone who has already decided to use EasyBuild. It
-is an unreasonable one of someone still deciding whether to. Everything
-interactive here is a parser and a dependency solver compiled to
-WebAssembly, running on your machine, in the page.
+is an unreasonable one of someone still deciding whether to. What runs
+here runs on your machine, in the page.
+
+Not all of it runs yet. The easyblock-name sample in chapter 1 is live,
+and it applies EasyBuild's own substitution table, exported from the
+framework rather than retyped. The samples that need a Python parser or
+a dependency solver are waiting on those being compiled to WebAssembly.
+Until then each one shows the exact input it will take and says it is
+read-only, and the answer sits in the prose beside it.
 
 That gets you a lot, and not everything. Nothing in a browser can
 configure, compile or link, and nothing here pretends to. Where a step

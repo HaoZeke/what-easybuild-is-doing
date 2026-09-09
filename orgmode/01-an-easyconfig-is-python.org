@@ -43,9 +43,9 @@ namespace before evaluating the file. That is why it has no quotes
 around it while =moduleclass= does. The quoting rule that looks
 arbitrary is just Python: one is a variable, the other is a literal.
 
-Run the sample above and look at =toolchain= in the result. It comes
-back as a structure with a name and a version, not as the text
-=SYSTEM=. By the time anything reads it, the assignment has happened.
+Once the file has been evaluated, =toolchain= carries a structure with a
+name and a version. The text =SYSTEM= is gone by then: the assignment
+happened before anything read the value.
 
 The same fact explains a thing that trips people up later. Since the
 file is Python, it can compute. A list comprehension in an easyconfig
@@ -72,8 +72,8 @@ easyconfig itself. =%(version)s= works because =version= is set above
 it.
 
 Which raises the question of =%(mapped_arch)s=, since nothing in the
-file sets =mapped_arch=. Run the sample and you will see it resolve
-anyway, to =amd64=.
+file sets =mapped_arch=. It resolves anyway, and on an x86-64 machine it
+resolves to =amd64=.
 
 It resolves because something outside the easyconfig put it in the
 dictionary. That something is the easyblock, and it is the subject of

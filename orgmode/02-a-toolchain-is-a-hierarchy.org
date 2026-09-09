@@ -22,7 +22,7 @@ open-source compiler stack". That reading will cost you an afternoon.
 structure decides which versions of which libraries your package is
 allowed to see.
 
-Run the sample. What comes back is not one toolchain, it is a list.
+What that line names is not one toolchain. It is a list.
 
 * The list has an order, and the order is the point
 
