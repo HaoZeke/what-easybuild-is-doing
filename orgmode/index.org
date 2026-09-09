@@ -56,6 +56,7 @@ reading the log, not watching the progress bar.
    05-a-versionsuffix-is-part-of-the-name
    06-what-installed-means
    07-a-checksum-is-a-claim-about-bytes
+   08-one-easyconfig-many-installs
 #+end_export
 
 Chapters are published as they are written, and each one reads on its

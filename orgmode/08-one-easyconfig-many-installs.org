@@ -1,0 +1,160 @@
+#+TITLE: One easyconfig, many installs
+#+OPTIONS: toc:nil num:nil
+
+Every easyconfig so far installed one thing. Here is the shape that
+installs hundreds, and most of a real software stack is made of it:
+
+#+begin_src easyconfig :widget parse
+easyblock = 'Bundle'
+
+name = 'ExampleRSet'
+version = '1.0'
+versionsuffix = '-R-%(rver)s'
+
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+dependencies = [
+    ('R', '4.4.2'),
+]
+
+exts_defaultclass = 'RPackage'
+exts_filter = ("R -q --no-save", "library(%(ext_name)s)")
+
+exts_default_options = {
+    'source_urls': ['https://cran.r-project.org/src/contrib/'],
+    'source_tmpl': '%(name)s_%(version)s.tar.gz',
+}
+
+exts_list = [
+    ('directlabels', '2024.1.21', {
+        'checksums': ['9b2e780410bc7812fe155afba9181653293ca657b0b10e1618242dad4d619775'],
+    }),
+    ('latex2exp', '0.9.6', {
+        'checksums': ['fc03bfa663231b60e1edace7b3001a7eb395b4ca468c6a983673845ddd63cb8a'],
+    }),
+]
+#+end_src
+
+Two extensions here, and a real one of these carries two hundred. Each
+entry is a separate download, a separate build, and a separate check.
+The module at the end is one module.
+
+* The chapter 1 rule inverts here
+
+Start with =easyblock = 'Bundle'=. Chapter 1 said a missing =easyblock=
+line claims a software-specific easyblock exists, and that naming a
+generic one is the only way to get it. This easyconfig names one.
+
+Then look at =exts_defaultclass=. That is the easyblock for the
+extensions, and it is a default: an entry in =exts_list= can override
+it with its own =easyblock= key.
+
+Chapter 1 also said EasyBuild refuses to guess, and that the two
+parameters which could soften the refusal both default to true. There
+was one exception, named and then set aside:
+
+#+begin_quote
+The one caller that does pass false is the *extensions* machinery,
+where falling through to a generic extension handler is the right
+behaviour.
+#+end_quote
+
+This is that caller. Extensions get a default because they have one,
+declared right there in =exts_defaultclass=. The strictness in chapter
+1 exists because a top-level package has no equivalent, and an
+extension does.
+
+* Templates rebind inside an entry
+
+Look at =source_tmpl= in =exts_default_options=:
+
+#+begin_example
+'source_tmpl': '%(name)s_%(version)s.tar.gz'
+#+end_example
+
+=%(name)s= here is not =ExampleRSet=, and =%(version)s= is not =1.0=.
+Inside an extension, those templates resolve to the extension's own
+name and version. That one line becomes
+=directlabels_2024.1.21.tar.gz= for the first entry, and
+=latex2exp_0.9.6.tar.gz= for the second.
+
+That rebinding is the reason =exts_default_options= is useful at all.
+One =source_urls=, one =source_tmpl=, two hundred extensions, and no
+repetition, because the templates are evaluated per entry.
+
+It is also a reliable source of confusion, because the two scopes use
+the same spelling. =%(version)s= inside an extension option will not
+reach the *bundle's* version.
+
+Note that =%(ext_name)s= in =exts_filter= is a third thing again, and
+spelled differently on purpose. It exists because the filter is a
+template evaluated once per extension, from the bundle's scope rather
+than the extension's.
+
+* Chapters 6 and 7 now apply once per extension
+
+=exts_filter= is chapter 6's sanity check, per extension, and it has
+an unusual shape:
+
+#+begin_example
+("R -q --no-save", "library(%(ext_name)s)")
+#+end_example
+
+A pair: a command, and standard input to feed it. So the check for
+=directlabels= runs R and asks it to load the library. The Python
+equivalent is =("python -c 'import %(ext_name)s'", '')=, with an empty
+second element because the command needs no input.
+
+That is the strong kind of check from chapter 6, executed rather than
+existence-tested, and a bundle gets it for every extension at once.
+Two hundred extensions, two hundred loads, each one a real
+verification.
+
+And every entry carries its own =checksums=, which is chapter 7 two
+hundred times over. Each extension has its own bytes, its own source
+URL, and its own opportunity for a checksum that is right about the
+wrong artifact.
+
+* What that costs, and why it matters when reading a failure
+
+A bundle is one module and hundreds of builds. The consequences are
+practical.
+
+It takes a long time. Serial downloads and serial compiles, and the
+useful mental model is not "installing R packages" but "running two
+hundred small builds in one process".
+
+It fails in the middle. When extension 140 of 200 fails, the package
+you asked for did not fail. One extension did, and the error names
+that one.
+
+Reading that failure is chapter 1's discipline unchanged. The error
+names the consequence, and the question is which entry produced it and
+what that entry declared. The answer is a line in =exts_list=, plus
+whatever =exts_default_options= key it inherited without saying so.
+
+The inheritance is the part worth watching. An entry that fails may
+have declared almost nothing, taking its source URL, its template, and
+its easyblock from three different defaults above it. None of those
+appear in the failure.
+
+* What to take from this chapter
+
+1. =exts_list= makes one easyconfig install many packages, each with
+   its own sources, checksums, easyblock and check.
+2. Extensions get a default easyblock, from =exts_defaultclass=. That
+   is the exception chapter 1 named. It exists because an extension
+   has a declared default and a top-level package does not.
+3. =%(name)s= and =%(version)s= inside an extension's options mean the
+   extension's name and version. That rebinding is what makes
+   =exts_default_options= work, and it is not available for reaching
+   the bundle's own values.
+4. =exts_filter= is a command and its standard input, run once per
+   extension, and it is chapter 6's executing check applied at scale.
+5. A failure inside a bundle belongs to one entry. Read that entry
+   together with the defaults it inherited, because the failure
+   message mentions neither.
+
+The next chapter is about hooks. They are the supported way to change
+what EasyBuild does without editing an easyconfig, and a site ends up
+needing them for a specific reason.
