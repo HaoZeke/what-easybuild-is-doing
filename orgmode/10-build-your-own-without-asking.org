@@ -1,0 +1,167 @@
+#+TITLE: Build your own, without asking anyone
+#+OPTIONS: toc:nil num:nil
+
+Every chapter so far read easyconfigs somebody else installed. This one
+installs one, into a directory you own, on a machine where you are not
+an administrator.
+
+That is worth doing for its own sake. It is also the fastest way to put
+the previous nine chapters on a disk you can inspect, and nothing here
+needs a ticket.
+
+* One variable moves everything
+
+EasyBuild writes to five directories. Where it builds, where it
+downloads to, where the software goes, where the modulefiles go, and a
+copy of the easyconfig it used. Set them one at a time and you will
+miss one. Set the prefix instead:
+
+#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-09, EasyBuild 5.3.1" :caption "One environment variable, eight paths"
+$ export EASYBUILD_PREFIX=$HOME/eb-demo
+$ eb --show-config
+#
+# Current EasyBuild configuration
+# (C: command line argument, D: default value, E: environment variable,
+ F: configuration file)
+#
+buildpath         (E) = /home/rohitg/eb-demo/build
+bwrap-installpath (E) = /home/rohitg/eb-demo/bwrap
+containerpath     (E) = /home/rohitg/eb-demo/containers
+installpath       (E) = /home/rohitg/eb-demo
+packagepath       (E) = /home/rohitg/eb-demo/packages
+prefix            (E) = /home/rohitg/eb-demo
+repositorypath    (E) = /home/rohitg/eb-demo/ebfiles_repo
+robot-paths       (D) = /sw/noarch/RHEL9/2025/software/EasyBuild/5.3.1/easybuild/easyconfigs
+rpath             (D) = True
+sourcepath        (E) = /home/rohitg/eb-demo/sources
+sourcepath-data   (E) = /home/rohitg/eb-demo/sources
+#+end_src
+
+Read the letters in brackets before anything else. That legend is the
+configuration model, printed. A value came from the command line, a
+configuration file, the environment, or a default, and =--show-config=
+says which, for every setting. Precedence runs in that order: a flag
+beats a variable, and a variable beats a file.
+
+Eight settings say =(E)= from one variable.
+
+* And one that did not move
+
+=robot-paths= says =(D)=. Still the default, still pointing at the
+easyconfigs that came with the site's EasyBuild.
+
+That is the important line on the page. Your prefix decided where output
+goes. It did not touch where EasyBuild *looks*, and chapter 4 is why:
+those are two different lists.
+
+Which is exactly what you want. The site's easyconfigs stay available,
+so you can build any of the thousands they cover without copying
+anything. Add your own in front when you have one:
+
+#+begin_example
+export EASYBUILD_ROBOT_PATHS=$HOME/my-easyconfigs:
+#+end_example
+
+The trailing colon is chapter 4's empty element, and here it earns its
+keep: your directory first, the site's defaults still behind it. Leave
+the colon off and you have thrown away the defaults.
+
+* The third list, which is the one people forget
+
+There is a list your prefix did not touch and =--show-config= does not
+print, because it does not belong to EasyBuild: =MODULEPATH=.
+
+Chapter 4 showed the robot asking the module system what is installed,
+through =modtool.available()=. So =MODULEPATH= decides what counts as
+already built, and that has two consequences here, pulling in opposite
+directions.
+
+Keep the site's modules on =MODULEPATH=, which they are by default, and
+every dependency the site already installed is satisfied. You build your
+one package and nothing else. That is the difference between twenty
+minutes and two days.
+
+Your own modules, though, are not on it. They are in your prefix, and
+nothing put them there. So after the build:
+
+#+begin_example
+module use $EASYBUILD_PREFIX/modules/all
+#+end_example
+
+Miss that and the symptom is confusing out of proportion to its cause.
+The build succeeded, the tree is on disk, and =module avail= does not
+list it. Nothing is broken. You have not told the module system to
+look.
+
+=modules= is the default =subdir-modules=, and =all= is where the
+default naming scheme files them. Do not take that from me: build one
+thing and read the path EasyBuild prints, or check =--show-config=.
+
+* The whole path, once
+
+Putting it together, on a cluster whose EasyBuild you load as a module:
+
+#+begin_example
+module load EasyBuild
+
+export EASYBUILD_PREFIX=$HOME/eb
+export EASYBUILD_ROBOT_PATHS=$HOME/my-easyconfigs:
+
+eb --show-config                        # confirm the four lines above
+eb GROMACS-2025.2-foss-2025a.eb -r -D   # read the plan first
+eb GROMACS-2025.2-foss-2025a.eb -r      # then build it
+
+module use $EASYBUILD_PREFIX/modules/all
+module avail GROMACS
+#+end_example
+
+The =-D= line is not optional politeness. Chapter 4's plan is a
+function of what is installed on *this* machine. So it is the only
+thing that tells you whether you asked for one build or ninety. Read
+it, then decide.
+
+If the site has no EasyBuild module, install one into a virtual
+environment and use that instead. It is a Python package, and the
+prefix and robot path work the same way afterwards.
+
+* What this costs
+
+Disk. Software plus sources plus build directories under one prefix, in
+a home directory with a quota. Point =sourcepath= at a shared download
+cache if the site has one, and clean the build directory.
+
+Time. From-source is chapter 13's trade, and it does not get cheaper
+because you are the one waiting.
+
+Duplication, if you get =MODULEPATH= wrong. Drop the site's modules and
+every dependency becomes yours to build, which is how a twenty-minute
+job becomes an overnight one.
+
+And support. A module in your prefix is yours. When it breaks after a
+system change, nobody else is going to notice.
+
+* Where this leads
+
+Two directions, and they are the next two chapters.
+
+The first is doing this on top of somebody else's stack rather than your
+site's, which is EESSI.
+
+The second starts from what this chapter actually asked of you: line up
+three lists by hand. A tool could compute that instead.
+
+* What to take from this chapter
+
+1. =EASYBUILD_PREFIX= sets every output path at once. Setting them
+   individually is how you miss one.
+2. =--show-config= prints where each value came from, and the legend is
+   the precedence order: command line, then environment, then file,
+   then default.
+3. Your prefix does not change =robot-paths=, and that is the point. The
+   site's easyconfigs stay findable.
+4. =MODULEPATH= is the third list, it decides what counts as already
+   built, and it is not EasyBuild's to set. Keep the site's on it, and
+   =module use= your own prefix afterwards.
+5. Read =-D= before every build. It is the only thing that distinguishes
+   one install from ninety.
+6. A module you install is a module you maintain.

@@ -2,7 +2,7 @@
 #+OPTIONS: toc:nil num:nil
 
 No widgets in this chapter, and no parameters. It is the one that
-argues against the subject of the other nine, because a book that
+argues against the subject of the other twelve, because a book that
 cannot say where its subject stops is advertising.
 
 * What EasyBuild is built to be good at
@@ -18,7 +18,7 @@ Every part of that carries a cost you have already met. Exact pins
 mean a package cannot follow upstream on its own schedule, which is
 chapter 3. A generation means the whole stack moves at once, once a
 year. From-source means a build takes hours, which chapter 8 puts at a
-few hundred extensions. Modulefiles mean the artifact is an
+few hundred extensions and chapter 10 makes your own problem. Modulefiles mean the artifact is an
 environment rather than a directory a user can copy.
 
 Those are good trades for a national supercomputer with thousands of
@@ -63,11 +63,8 @@ build teaches everyone who reads it afterwards something false.
 
 ** A stack somebody has already built
 
-A good general-purpose stack on a machine already exists, in the
-European Environment for Scientific Software Installations, EESSI. It
-is an optimised software stack, itself built with EasyBuild, and it is
-distributed over a shared filesystem and mounted rather than
-installed.
+Chapter 11 is that case at length: EESSI, an optimised stack built with
+EasyBuild and mounted rather than installed.
 
 Reach for it when the goal is having the software. Reach for EasyBuild
 when the goal is deciding what the software is. That means a version

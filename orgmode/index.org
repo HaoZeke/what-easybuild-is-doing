@@ -62,7 +62,10 @@ reading the log, not watching the progress bar.
    07-a-checksum-is-a-claim-about-bytes
    08-one-easyconfig-many-installs
    09-a-hook-changes-a-file-you-are-not-reading
-   10-when-easybuild-is-the-wrong-tool
+   10-build-your-own-without-asking
+   11-eessi-somebody-elses-stack
+   12-eb-stack-a-second-implementation
+   13-when-easybuild-is-the-wrong-tool
 #+end_export
 
 Chapters are published as they are written, and each one reads on its
@@ -72,8 +75,12 @@ most expensive misreading in EasyBuild, and it is four lines long.
 
 Chapters 1 to 4 are the mechanisms everything else rests on. Chapters
 5 to 9 are the parameters that cost real time when misread, each built
-around a failure that actually happened. Chapter 10 argues for the
-other tools.
+around a failure that actually happened.
+
+Chapters 10 to 12 are the ones where you do something. Install software
+into a directory you own, then do it on top of EESSI. Then read how the
+engine behind these samples decides what it has established. Chapter 13
+argues for the other tools.
 
 * Who wrote this
 

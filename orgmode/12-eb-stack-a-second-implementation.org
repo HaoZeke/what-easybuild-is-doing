@@ -1,0 +1,163 @@
+#+TITLE: eb-stack, a second implementation
+#+OPTIONS: toc:nil num:nil
+
+Chapter 10 ended on an observation. Everything it asked of you was
+lining up three lists by hand: where EasyBuild looks, where it writes,
+and what the module system already provides. A tool could compute that.
+
+This chapter covers the tool that runs the samples in this book. What
+it does differently, and the one idea in it worth taking even if you
+never use it.
+
+* Why a second implementation exists at all
+
+Not to replace EasyBuild. The recipes eb-stack emits are EasyBuild
+easyconfigs, and EasyBuild builds them. Nothing here installs software.
+
+It exists because two questions in the earlier chapters have no good
+answer inside the format.
+
+Chapter 3's question: given a recipe written for one generation, what
+should it say on another? The old versions are floors, the target
+generation's modules are candidates, and something has to choose a
+consistent set. That is a solver's job, and an easyconfig has no place
+to put a constraint.
+
+Chapter 6's question: what does a green build actually establish? A
+sanity check ran on one machine against one tree. Recording *which*
+claim that supports, and refusing to upgrade it, is bookkeeping that no
+build tool does for you.
+
+* Feasibility by solver, not by loop
+
+Chapter 4 read EasyBuild's resolver: take whatever is fully resolved,
+treat it as available, search for the rest, repeat. Incremental, simple,
+and it matches how a site actually builds, one package at a time onto
+what is already there.
+
+eb-stack states that as a set of constraints and hands it to a SAT
+solver. Resolvo decides feasibility with conflict-driven clause
+learning, over a candidate graph built from the easyconfigs in a robot
+tree. The toolchain hierarchy from chapter 2 is a hard constraint.
+
+The trade is worth naming rather than ranking.
+
+A loop is cheap and always makes progress. When it cannot proceed it
+reports the one dependency it failed to find, which is most often the
+message you want. What it cannot tell you is that no consistent
+assignment exists at all, because it never considered the whole problem
+at once.
+
+A solver can answer that, and can say which constraints are in conflict
+when the answer is no. It costs more, needs the whole candidate set up
+front, and gives an answer that is only as good as the universe you fed
+it.
+
+One consequence matters for chapter 3's problem. Feasible is not
+unique, so a solver returning the first satisfying assignment returns
+an arbitrary stack. eb-stack constrains and re-solves to get the newest
+jointly consistent set rather than the first one found. "It resolves"
+and "it resolves to the versions you would have chosen" are different
+claims.
+
+* The pipeline, in one line
+
+A package plan, a profile, a policy plus the solver, a lock, then one
+emitted easyconfig per profile. Then a target that runs it, and
+recorded findings.
+
+The reason to split it that finely is the next section. Each stage
+establishes something different, and the value is in not confusing them.
+
+* The claim ladder
+
+This is the idea worth taking.
+
+Four rungs, and each one names the evidence that establishes it:
+
+| Claim | Established by |
+|---+---|
+| resolves | a dependency selection satisfying the declared constraints |
+| builds | EasyBuild running to completion on one named target |
+| binary-verified | the installed tree passing declared verification on that target |
+| eessi-verified | the same, on top of the EESSI compatibility layer |
+
+The rule is that a rung is only reached by its own evidence. Planning
+may establish =resolves=. Planning may never establish =builds=, however
+clean the plan looks. And a build on one target does not establish
+another, which is chapter 6's per-architecture lesson turned into a
+refusal rather than a caution.
+
+The EESSI rung exists for exactly that reason. Chapter 11's stack
+supplies a different compatibility layer, so a green build on an
+ordinary machine is not evidence about it. Same recipe, different
+sysroot, different claim.
+
+Turned round, as what each piece of evidence leaves open, it is
+sharper:
+
+| Evidence | What it leaves open |
+|---+---|
+| A parsed and normalised recipe | whether the package compiles |
+| A solver lock | whether the chosen versions are ABI-compatible in a real build |
+| An emitted easyconfig matching an expected result | whether the sources, patches, compiler or sanity checks succeed |
+| A campaign on one target | whether it builds on a different target |
+
+Nothing in that table is specific to eb-stack. It is what every "it
+works" in this book reduces to, including the two in chapter 6 that
+were mine and wrong.
+
+* What it does not do
+
+A tool described only by its intentions is a brochure, so here is the
+other half.
+
+It does not build software. Chapter 13's list of what EasyBuild is for
+still applies, and eb-stack sits before the build rather than replacing
+it.
+
+It does not know your cluster. A solve covers the universe you give
+it, so a lock computed against one robot tree says nothing about a
+machine with different modules installed. Chapter 4's point about plans
+not being portable applies here with more force.
+
+It does not make a solver lock into a compatibility guarantee. Versions
+that satisfy every declared constraint can still fail to link, and the
+ladder exists to stop that gap being papered over.
+
+* Which brings this book back to itself
+
+The samples in these chapters run on this engine, and they are a worked
+example of the ladder.
+
+Three of the four sample kinds answer in your browser: template
+resolution, the easyblock name, and the toolchain hierarchy. None of
+them needed the solver. Each reduces to a table exported from eb-stack
+at build time, plus a few lines that apply it. So the page cannot drift
+from EasyBuild's own data. One source feeds the table, and a
+cross-check compares the browser's answers against the binary's on
+every build of this book.
+
+The fourth needs a Python parser. The engine does not compile to
+WebAssembly yet, because its core still reaches for the network and the
+filesystem. That sample says it is read-only rather than guessing.
+
+That is the ladder applied to a book. The chapters claim what the
+samples establish, and no more.
+
+* What to take from this chapter
+
+1. eb-stack answers the two questions the easyconfig format cannot:
+   what a recipe should say on another generation, and what a given
+   piece of evidence establishes.
+2. EasyBuild resolves by a loop, which is cheap and reports the one
+   thing it could not find. A solver decides feasibility over the whole
+   problem and can say that nothing satisfies it. Different costs, not
+   a ranking.
+3. Feasible is not unique, so "it resolves" and "it resolves to the
+   versions you wanted" are separate claims.
+4. The claim ladder is the transferable part. A rung is reached only by
+   its own evidence: planning cannot establish a build, and a build on
+   one target cannot establish another.
+5. A lock is not an ABI guarantee, and a tool that hides that gap is
+   worse than one that leaves it visible.

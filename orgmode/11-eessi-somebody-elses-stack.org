@@ -1,0 +1,225 @@
+#+TITLE: EESSI, somebody else's stack
+#+OPTIONS: toc:nil num:nil
+
+Chapter 10 installed software into a directory you own, on top of what
+your site already provides. This chapter does the same thing on top of a
+stack nobody at your site built.
+
+EESSI is the European Environment for Scientific Software Installations.
+It is a software stack built with EasyBuild, optimised per
+microarchitecture, and served over a distributed filesystem. You do not
+install it. You mount it, or somebody already has.
+
+* The stack is a filesystem
+
+Everything follows from that:
+
+#+begin_example
+ls /cvmfs/software.eessi.io/versions/
+#+end_example
+
+Those are versions of the whole stack. Pick one and initialise it:
+
+#+begin_example
+source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
+#+end_example
+
+That gives you a compatibility layer, a module tree, and a set of
+toolchains, without an install step and without a maintainer having
+approved anything.
+
+Two warnings belong right here, before anything else, because both cost
+real time.
+
+The first is about that =ls=. List the versions directory, and confirm a
+version is real before using it:
+
+#+begin_example
+ls /cvmfs/software.eessi.io/versions/<ver>/init/lmod/bash
+#+end_example
+
+A listed version can be an unpopulated placeholder with no =init/= at
+all. Descending into one speculatively can wedge the filesystem client
+for every user on the host. The lookup neither resolves nor errors, and
+readers pile up in uninterruptible state where a timeout cannot reach
+them. List first. Confirm. Then use.
+
+The second is the generation question, and it decides whether the rest
+of this chapter applies to you at all.
+
+* Check the generation before you plan anything
+
+The compatibility layer lags the newest EasyBuild toolchain generation.
+So a version of EESSI carries some set of top-level toolchains, and your
+easyconfig wants one particular generation, and those two facts have to
+agree.
+
+When they do not, EESSI tells you, and it offers an opt-in:
+
+#+begin_example
+export EESSI_SITE_TOP_LEVEL_TOOLCHAINS_2025_06='[{"name": "GCCcore", "version": "15.2.0"}]'
+#+end_example
+
+Setting that makes EasyBuild *plan* the build. Read what the plan says
+before you run it. When the generation is absent from the compatibility
+layer, every dependency comes back skipped. The run then opens by
+bootstrapping the compiler itself, and downloads a couple of hundred
+megabytes of GCC to do it.
+
+Do not do that. Bootstrapping a whole generation into a user prefix
+duplicates what EESSI's own build bots do centrally. It is also a long
+way round to a stack you cannot share. A generation gap means "not yet
+on this EESSI version", which is a finding rather than a failure.
+
+* Installing on top, with EESSI-extend
+
+EESSI carries a module that configures EasyBuild for installing onto
+the stack. The build bots use the same one, so this path matches what
+the bot will do:
+
+#+begin_example
+source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
+
+export EESSI_USER_INSTALL=$HOME/eessi/2025.06
+mkdir -p $EESSI_USER_INSTALL
+
+module load EESSI-extend
+eb --show-config
+eb <easyconfig>.eb --robot
+#+end_example
+
+Chapter 10's =--show-config= earns its place again. Run it and read
+=installpath=: it comes back qualified by microarchitecture, something
+like =.../software/linux/x86_64/amd/zen5=.
+
+Stop and look at that path. It is chapter 6's per-architecture tree, and
+here the architecture is *in the path* rather than hidden behind a
+symlink. Same arrangement, made visible. A binary built here is for one
+microarchitecture and says so.
+
+There are four prefix variables, and they differ in who can read the
+result:
+
+| Variable | What it means |
+|---+---|
+| =EESSI_USER_INSTALL= | private to you |
+| =EESSI_PROJECT_INSTALL= | shared with a group |
+| =EESSI_SITE_INSTALL= | site-wide, on top of EESSI |
+| =EESSI_CVMFS_INSTALL= | into the distributed repository itself |
+
+Set exactly one, and set it *before* loading the module. =EESSI-extend=
+reads the variable at load time, so setting it afterwards changes
+nothing and the failure looks like the module ignoring you.
+
+* When the filesystem client is the problem
+
+This is worth knowing because the symptoms lie.
+
+A host's client can report healthy while being unusable. The probe says
+fine and the server answers a plain HTTP request in milliseconds. Every
+directory listing into a nested path then blocks forever, and poisons
+the shell it ran in.
+
+Two ways out, in order of preference.
+
+If you have polkit rights on the host, which an ordinary user often
+does, restarting the mount clears the stuck readers. Do it from a
+terminal that did *not* run the hanging command, because that shell is
+itself stuck behind its own filesystem operation.
+
+If you do not, use a container. It mounts the distributed filesystem
+itself, needs only unprivileged user namespaces, and does not care what
+state the host client is in:
+
+#+begin_example
+git clone --depth 1 https://github.com/EESSI/software-layer-scripts.git
+export APPTAINER_CACHEDIR=$PWD/storage/apptainer-cache
+./software-layer-scripts/eessi_container.sh \
+  --mode exec --access ro --storage $PWD/storage \
+  --extra-bind-paths "$PWD/ecs:/ecs:ro" \
+  -- /bin/bash /ecs/run-extend.sh
+#+end_example
+
+Four details that each cost an attempt:
+
+- the script lives in =software-layer-scripts=. It moved, and
+  =software-layer= no longer carries it.
+- =--mode run= warns and behaves as =exec=. Pass =exec=.
+- the script you run must sit inside a bound path. One that resolves
+  outside the bind mount fails as though the file were absent.
+- set =APPTAINER_CACHEDIR=. With the older =SINGULARITY_= name also
+  set, the older one wins and the newer is dropped with no message.
+
+Diagnosing the host client further rarely pays. On one host, root-catalog
+fetches succeeded while nested traversal stalled. A second server,
+disabled timeouts and a wiped cache each changed nothing, and a
+container on the same host and network traversed everything
+instantly.
+
+* Building by hand on top of it
+
+Sometimes something has to be built without EasyBuild. Load the
+toolchain's =buildenv= module rather than improvising:
+
+#+begin_example
+module load buildenv/default-foss-2025b
+module load <dependency modules>
+make
+readelf -d <binary>
+ldd <binary>
+#+end_example
+
+=buildenv= sets =$CC= and =$CFLAGS= the way EasyBuild would. It also
+installs the wrappers that inject RPATH. The two commands after =make=
+are chapter 6's third check, run by hand. Confirm the binary records a
+runtime path, then confirm nothing resolves outside the stack.
+
+* Contributing back
+
+An installation in your prefix helps you. Getting it into EESSI proper
+is a different job, and the order matters:
+
+1. Get the easyconfig into EasyBuild, or open a pull request for it.
+2. Build it in the EESSI build environment with =EESSI-extend=.
+3. Add an entry to the easystack file for that EESSI version and
+   toolchain generation.
+4. Open a pull request against the software layer.
+5. A builder triggers the bot, which builds on every supported CPU
+   target.
+6. On green, the results are signed and published into the distributed
+   repository.
+
+Two conditions worth knowing before you start.
+
+The easyconfig comes first. A software-layer entry references an
+easyconfig rather than restating one. So deployment waits on the
+EasyBuild pull request being merged, even though the two can be open
+at once.
+
+And a green build on your host is not the claim. The bot builds
+x86-64 down to generic and up through Zen and Sapphire Rapids, plus
+aarch64 from generic through Neoverse and Grace. Software that works on
+your microarchitecture and not the others is not ready, however green it
+looks locally. That is the same distinction as chapter 6's, with a
+larger set of trees.
+
+* What to take from this chapter
+
+1. EESSI is a stack you mount rather than install. Initialising it is
+   sourcing one script.
+2. List the versions directory and confirm a version has an =init/=
+   before descending. A speculative listing into a placeholder can
+   wedge the client for everyone on the host.
+3. Check that your toolchain generation is in the compatibility layer
+   first. A gap is a finding, and bootstrapping a generation into a
+   user prefix is the wrong answer to it.
+4. =EESSI-extend= configures EasyBuild the way the bots do. Set exactly
+   one prefix variable, before loading the module.
+5. =installpath= comes back qualified by microarchitecture, which is
+   chapter 6's per-architecture tree with the architecture visible in
+   the path.
+6. When the host client wedges, a container mounts the filesystem
+   itself and does not care.
+7. Contributing means an easyconfig upstream and an easystack entry,
+   in that order, and the all-CPU-target claim belongs to the bot
+   rather than to your host.
