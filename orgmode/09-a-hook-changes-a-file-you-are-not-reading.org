@@ -8,8 +8,8 @@ and about why a site adopts it anyway.
 * The problem a hook solves
 
 An easyconfig is upstream's. A site has policies that apply to every
-build it runs: where installations go, how modules are named, a
-compiler flag everything needs, a workaround for local machines.
+build it runs: where installations go, how modules are named, which
+compiler flags everything needs, what the local machines require.
 
 None of that belongs in an easyconfig. Put it there and you have
 forked upstream's file. Every version bump then becomes a merge, and

@@ -58,12 +58,18 @@ reading the log, not watching the progress bar.
    07-a-checksum-is-a-claim-about-bytes
    08-one-easyconfig-many-installs
    09-a-hook-changes-a-file-you-are-not-reading
+   10-when-easybuild-is-the-wrong-tool
 #+end_export
 
 Chapters are published as they are written, and each one reads on its
 own. If you read exactly one, read the first. If you read two, read the
 third as well. The version number beside a dependency is the single
 most expensive misreading in EasyBuild, and it is four lines long.
+
+Chapters 1 to 4 are the mechanisms everything else rests on. Chapters
+5 to 9 are the parameters that cost real time when misread, each built
+around a failure that actually happened. Chapter 10 argues for the
+other tools.
 
 * Who wrote this
 

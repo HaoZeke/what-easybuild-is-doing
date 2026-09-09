@@ -1,0 +1,148 @@
+#+TITLE: When EasyBuild is the wrong tool
+#+OPTIONS: toc:nil num:nil
+
+No widgets in this chapter, and no parameters. It is the one that
+argues against the subject of the other nine, because a book that
+cannot say where its subject stops is advertising.
+
+* What EasyBuild is built to be good at
+
+Gather the earlier chapters into one sentence and you have the design.
+
+EasyBuild builds software from source, reproducibly, into a curated
+generation of exact versions. It produces modulefiles for a shared
+system whose users outnumber its maintainers by three or four orders
+of magnitude.
+
+Every part of that carries a cost you have already met. Exact pins
+mean a package cannot follow upstream on its own schedule, which is
+chapter 3. A generation means the whole stack moves at once, once a
+year. From-source means a build takes hours, which chapter 8 puts at a
+few hundred extensions. Modulefiles mean the artifact is an
+environment rather than a directory a user can copy.
+
+Those are good trades for a national supercomputer with thousands of
+users. They are not good trades everywhere, and the rest of this
+chapter is the "not".
+
+* When the answer is a different tool for the same job
+
+Three cases, each with a real alternative rather than a complaint.
+
+** A Python environment that changes weekly
+
+A researcher needs eleven packages from PyPI, and next week twelve,
+and the week after that a different version of one of them.
+
+Doing that in EasyBuild means an easyconfig per change, a build per
+easyconfig, and a module for each result. The generation the stack is
+pinned to changes annually and the requirement changes weekly, so the
+two never line up.
+
+The right shape is a Python module from EasyBuild, and a virtual
+environment on top of it that the researcher owns. =pip= or =uv= into
+a venv over =module load Python= gives them the weekly cadence and
+keeps the interpreter, the compiler, and the numerical libraries under
+the stack's control. The parts that need reproducibility get it, and
+the parts that need speed get that instead.
+
+The failure mode of doing it all in EasyBuild is not that it does not
+work. It is that a maintainer becomes the bottleneck on somebody
+else's research week.
+
+** Software that arrives as a container
+
+Some vendors distribute a container image and nothing else. No source,
+no configure, and no way to express the contents as an easyconfig
+without misrepresenting them.
+
+Apptainer or a similar runtime is the tool, and a thin module that
+sets up the invocation is a reasonable EasyBuild contribution around
+it. Wrapping the whole image in an easyconfig to make it look like a
+build teaches everyone who reads it afterwards something false.
+
+** A stack somebody has already built
+
+A good general-purpose stack on a machine already exists, in the
+European Environment for Scientific Software Installations, EESSI. It
+is an optimised software stack, itself built with EasyBuild, and it is
+distributed over a shared filesystem and mounted rather than
+installed.
+
+Reach for it when the goal is having the software. Reach for EasyBuild
+when the goal is deciding what the software is. That means a version
+nobody else needs, a patch you carry, a toolchain your users depend
+on.
+
+* When another packaging system fits the problem better
+
+Two systems solve a similar problem with different trade-offs, and the
+comparison is worth stating precisely rather than tribally.
+
+*Spack* expresses dependency constraints as ranges and resolves them
+per install. =depends_on('hdf5@1.10:')= is a real lower bound, and a
+concretiser picks a version that satisfies every such bound, with
+variants selected at install time.
+
+That is the opposite trade from chapter 3. Spack's format can carry
+the constraint the software actually has, so a package moves across
+environments without editing. In exchange, two installs on one machine
+can legitimately differ, and reproducing a result means recording the
+resolved graph rather than naming a generation.
+
+*conda-forge* distributes binaries and solves over a channel, so
+installing is a download and a solve rather than a build. That gets a
+working environment in minutes, identically on a laptop and a cluster.
+In exchange, those binaries are built for portability rather than for
+one machine's instruction set. Exploiting that instruction set is what
+an HPC stack is for.
+
+So the question is not which is best. It is which cost you would
+rather pay:
+
+- EasyBuild: exact versions, one stack per generation, tuned builds,
+  slow to change, and a maintainer in the loop.
+- Spack: real version ranges, per-install resolution, tuned builds,
+  and a resolved graph you must capture to reproduce.
+- conda-forge: fast, portable, identical everywhere, and not tuned
+  for the hardware you paid for.
+
+A site running a large machine typically uses more than one of these,
+for different populations of users. That is a sound arrangement rather
+than an admission of defeat.
+
+* The part that transfers
+
+If you take one thing from this book to a different packaging system,
+take the questions rather than the parameters.
+
+Chapter 1's question is "what does this name imply that the file does
+not say". Every packaging system has an answer, and in most of them
+the answer is longer than you expect.
+
+Chapter 2's is "what is this dependency allowed to see". Chapter 4's
+is "where is the tool looking, and in what order". Chapter 7's is
+"what exactly does this checksum claim". Chapter 9's is "is the file
+in front of me the whole input".
+
+None of those are EasyBuild questions. EasyBuild has particularly
+crisp answers to them, which is why it makes a good subject for
+learning to ask them.
+
+* What to take from this chapter
+
+1. EasyBuild's design is exact versions, curated generations,
+   from-source builds and modulefiles, for a shared machine with many
+   users and few maintainers. Each of those is a trade, not a
+   universal good.
+2. Requirements that change weekly do not belong in an annual
+   generation. A Python module plus a user-owned virtual environment
+   splits the problem along the line where it actually divides.
+3. Software with no source is not a build. Wrap the runtime and say
+   so.
+4. EESSI is for having the software. EasyBuild is for deciding what
+   the software is.
+5. Spack trades reproducible generations for expressible constraints;
+   conda-forge trades hardware tuning for speed and portability.
+   Naming the trade is more useful than ranking the tools.
+6. The questions in this book outlive the tool. Carry those.
