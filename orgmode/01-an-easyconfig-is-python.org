@@ -180,6 +180,76 @@ for. A match means "no such easyblock"; anything else is reported as
 the easyblock is present and its own dependencies are the problem, and
 no amount of editing your easyconfig will help.
 
+* An aside on reading the error, because you will read a lot of them
+
+Everything in this chapter has been about what EasyBuild infers. Here is
+what that looks like when an inference is wrong, from a real run on a
+real cluster. The package is QMCPACK, a quantum Monte Carlo code, and the
+recipe had just been moved from a pinned development commit onto the 4.4.0
+release.
+
+#+begin_src ebtranscript :source "SURF Snellius, production run 20260909_063530, snel-zen4_h100, EasyBuild 5.3.1" :caption "A build that got everything right and failed anyway"
+== processing EasyBuild easyconfig
+/sw/eb/easyconfigs-surf/q/QMCPACK/QMCPACK-4.4.0-foss-2025a.eb
+== building and installing QMCPACK/4.4.0-foss-2025a...
+== fetching files and verifying checksums...
+  >> download succeeded:
+https://github.com/QMCPACK/QMCPACK/archive/v4.4.0.tar.gz
+  >> sources:
+  >> qmcpack-4.4.0.tar.gz
+[SHA256: 72accd955b59f9040ac8643059bc26c031e94b355299eecd293d10a872b6fc15]
+== unpacking...
+  >> running shell command:
+        tar xzf qmcpack-4.4.0.tar.gz
+  >> command completed: exit 0, ran in 00h00m02s
+== patching...
+== preparing...
+  >> loading toolchain module: foss/2025a
+  >> loading modules for build dependencies:
+  >>  * CMake/3.31.3-GCCcore-14.2.0
+  >>  * Ninja/1.12.1-GCCcore-14.2.0
+  >>  * pkgconf/2.3.0-GCCcore-14.2.0
+== FAILED: Installation ended unsuccessfully: Specified start dir
+/tmp/jenkins/build/QMCPACK/4.4.0/foss-2025a/qmcpack-4.4.0/qmcpack does not exist
+#+end_src
+
+Read what passed before it stopped. The right URL. The checksum verified
+against the archive. =tar xzf= exit 0. Patching, the toolchain, every
+build dependency, all fine. Twenty-two seconds in, and every check a
+person would think to run had already succeeded.
+
+Then a path does not exist.
+
+The error names the *consequence*. Something looked for
+=qmcpack-4.4.0/qmcpack= and did not find it, and the message tells you
+that and nothing else. It does not tell you who looked, or why they
+expected it. Answering those is the whole of the work, and this chapter
+has given you what you need for it: the recipe is a Python file, so
+whatever expected that path is a value somebody assigned in it.
+
+The value was =start_dir=, and it said =qmcpack=. It had been correct
+five minutes earlier, when the recipe built from a git checkout: EasyBuild
+archives a clone under the repository's name, so the sources really did
+sit one level down inside =qmcpack/=. A release tarball extracts to
+=qmcpack-4.4.0/= with the sources at the top. The line was right about the
+old source and wrong about the new one, and nothing about the change from
+one to the other made it obviously so.
+
+Two things worth taking from that, and neither is about QMCPACK.
+
+*An EasyBuild error describes the state it found, not the assumption that
+produced it.* "Does not exist" is true and is never the interesting fact.
+The interesting fact is what expected it to exist, and that is in the
+recipe or in the easyblock the recipe's name selected.
+
+*The parameters that break on a version bump are the ones that describe
+the shape of the source, not the software.* A checksum change is loud and
+you cannot forget it. =start_dir=, patch strip levels, anything naming a
+subdirectory: those are quiet, they were right before, and a diff against
+the previous recipe will tell you they are unchanged, which is exactly the
+wrong question. The right one is whether they are still true of the
+archive you are now unpacking.
+
 * What to take from this chapter
 
 An easyconfig is a Python file evaluated in a prepared namespace, and

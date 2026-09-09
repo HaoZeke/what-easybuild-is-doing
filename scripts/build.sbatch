@@ -82,6 +82,18 @@ else:
     print("ok: no widget assets in the epub archive")
 EOF
 
+    echo "=== transcripts: rendered, with provenance, in all three ==="
+    for f in build/html/01-an-easyconfig-is-python.html \
+             build/singlehtml/index.html \
+             build/epub/01-an-easyconfig-is-python.xhtml; do
+        printf '%-46s ' "$(basename $(dirname $f))/$(basename $f)"
+        if grep -q 'eb-transcript' "$f" && grep -q 'Recorded:' "$f"; then
+            echo "ok"
+        else
+            echo "FAIL: transcript or its provenance missing"
+        fi
+    done
+
     echo "=== engine: the charmap was exported and is well formed ==="
     python3 -c "import json;d=json.load(open('build/html/_static/eb-charmap.json'));print('ok: prefix',d['prefix'],'entries',len(d['charmap']))"
 

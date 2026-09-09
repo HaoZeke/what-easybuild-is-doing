@@ -26,6 +26,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_design",
     "eb_widget",
+    "eb_transcript",
 ]
 
 templates_path = ["_templates"]
@@ -91,3 +92,5 @@ epub_exclude_files = [
     "_static/eb-widget-engine.js",
     "_static/eb-charmap.json",
 ]
+# eb-transcript.css is deliberately absent from that list. A transcript is
+# static text and renders in the EPUB, so its stylesheet belongs there.

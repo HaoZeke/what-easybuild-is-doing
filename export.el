@@ -45,6 +45,9 @@
 (defconst ebguide-widget-language "easyconfig"
   "Src-block language that marks a block as an interactive widget.")
 
+(defconst ebguide-transcript-language "ebtranscript"
+  "Src-block language that marks a block as a recording of a real run.")
+
 (defun ebguide--header-value (args key)
   "Look up KEY in parsed babel header ARGS, returning nil when absent or blank."
   (let ((val (cdr (assq key args))))
@@ -53,8 +56,20 @@
 
 (defun ebguide-rst-src-block (src-block contents info)
   "Translate an `easyconfig' SRC-BLOCK to the eb directive, else defer to rst."
-  (let ((lang (org-element-property :language src-block)))
-    (if (not (string-equal (downcase (or lang "")) ebguide-widget-language))
+  (let ((lang (downcase (or (org-element-property :language src-block) ""))))
+    (if (string-equal lang ebguide-transcript-language)
+        (let* ((args (org-babel-parse-header-arguments
+                      (or (org-element-property :parameters src-block) "")))
+               (src (ebguide--header-value args :source))
+               (cap (ebguide--header-value args :caption))
+               (code (or (org-element-property :value src-block) "")))
+          (concat ".. ebtranscript::\n"
+                  (when src (format "   :source: %s\n" src))
+                  (when cap (format "   :caption: %s\n" cap))
+                  "\n"
+                  (ebguide--indent code 3)
+                  "\n\n"))
+    (if (not (string-equal lang ebguide-widget-language))
         (org-export-with-backend 'rst src-block contents info)
       (let* ((args (org-babel-parse-header-arguments
                     (or (org-element-property :parameters src-block) "")))
@@ -70,7 +85,7 @@
                 (when hydrate (format "   :hydrate: %s\n" hydrate))
                 "\n"
                 (ebguide--indent code 3)
-                "\n\n")))))
+                "\n\n"))))))
 
 (org-export-define-derived-backend 'ebguide-rst 'rst
   :translate-alist '((src-block . ebguide-rst-src-block)))
