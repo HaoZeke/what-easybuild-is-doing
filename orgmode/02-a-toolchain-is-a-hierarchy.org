@@ -22,7 +22,8 @@ open-source compiler stack". That reading will cost you an afternoon.
 structure decides which versions of which libraries your package is
 allowed to see.
 
-What that line names is not one toolchain. It is a list.
+Run the sample. What that line names is not one toolchain. It is a
+list.
 
 * The list has an order, and the order is the point
 
@@ -36,10 +37,17 @@ starts with the most minimal subtoolchains first, ends with specified
 toolchain.
 #+end_quote
 
-For the =foss= family that list runs =GCCcore=, =GCC=, =gompi=, =gfbf=,
-=foss=, each a real toolchain in its own right and each installed as a
-real module. Your package declares the last one and gets to depend on
-things built with any of them.
+For the =foss= family the members are =GCCcore=, =GCC=, =gompi=,
+=gfbf= and =foss=, each a real toolchain in its own right and each
+installed as a real module. Your package declares the last one and gets
+to depend on things built with any of them.
+
+The order matters and it is not a straight line. =GCCcore= comes before
+=GCC=, which comes before both =gompi= and =gfbf=, which both come
+before =foss=. Those middle two sit at the same level: =gompi= is =GCC=
+plus an MPI, =gfbf= is =GCC= plus the numerical libraries, and neither
+is built on the other. So a printed list has to put one of them first,
+and which one carries no meaning. Run the sample and it says so.
 
 That mechanism sits behind a rule you may have absorbed without knowing
 why. A =foss= package can depend on a =GCCcore= build; a =GCCcore=

@@ -29,12 +29,16 @@ reasonable ask of someone who has already decided to use EasyBuild. It
 is an unreasonable one of someone still deciding whether to. What runs
 here runs on your machine, in the page.
 
-Not all of it runs yet. The easyblock-name sample in chapter 1 is live,
-and it applies EasyBuild's own substitution table, exported from the
-framework rather than retyped. The samples that need a Python parser or
-a dependency solver are waiting on those being compiled to WebAssembly.
-Until then each one shows the exact input it will take and says it is
-read-only, and the answer sits in the prose beside it.
+Three of the four sample kinds run: template resolution, the easyblock
+name, and the toolchain hierarchy. Each works off a table exported from
+eb-stack at build time rather than retyped. So a page cannot drift from
+the framework's own data, and a cross-check compares the browser's
+answers against the binary's on every build.
+
+The fourth needs a Python parser, which is the one thing here no table
+replaces. That sample shows the exact input it will take and says it is
+read-only. The answer sits in the prose beside it until the engine
+compiles to WebAssembly.
 
 That gets you a lot, and not everything. Nothing in a browser can
 configure, compile or link, and nothing here pretends to. Where a step

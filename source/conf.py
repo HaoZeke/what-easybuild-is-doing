@@ -91,6 +91,8 @@ epub_exclude_files = [
     "_static/eb-widget.js",
     "_static/eb-widget-engine.js",
     "_static/eb-charmap.json",
+    "_static/eb-templates.json",
+    "_static/eb-hierarchy.json",
 ]
 # eb-transcript.css is deliberately absent from that list. A transcript is
 # static text and renders in the EPUB, so its stylesheet belongs there.

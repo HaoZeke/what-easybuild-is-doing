@@ -1,0 +1,402 @@
+{
+  "constants": [
+    {
+      "name": "APACHE_SOURCE",
+      "value": "https://archive.apache.org/dist/%(namelower)s"
+    },
+    {
+      "name": "BITBUCKET_DOWNLOADS",
+      "value": "https://bitbucket.org/%(bitbucket_account)s/%(namelower)s/downloads"
+    },
+    {
+      "name": "BITBUCKET_SOURCE",
+      "value": "https://bitbucket.org/%(bitbucket_account)s/%(namelower)s/get"
+    },
+    {
+      "name": "CRAN_SOURCE",
+      "value": "https://cran.r-project.org/src/contrib"
+    },
+    {
+      "name": "FTPGNOME_SOURCE",
+      "value": "https://ftp.gnome.org/pub/GNOME/sources/%(namelower)s/%(version_major_minor)s"
+    },
+    {
+      "name": "GITHUB_LOWER_RELEASE",
+      "value": "https://github.com/%(github_account)s/%(namelower)s/releases/download/v%(version)s"
+    },
+    {
+      "name": "GITHUB_LOWER_SOURCE",
+      "value": "https://github.com/%(github_account)s/%(namelower)s/archive"
+    },
+    {
+      "name": "GITHUB_RELEASE",
+      "value": "https://github.com/%(github_account)s/%(name)s/releases/download/v%(version)s"
+    },
+    {
+      "name": "GITHUB_SOURCE",
+      "value": "https://github.com/%(github_account)s/%(name)s/archive"
+    },
+    {
+      "name": "GNU_FTP_SOURCE",
+      "value": "https://ftp.gnu.org/gnu/%(namelower)s"
+    },
+    {
+      "name": "GNU_SAVANNAH_SOURCE",
+      "value": "https://download-mirror.savannah.gnu.org/releases/%(namelower)s"
+    },
+    {
+      "name": "GNU_SOURCE",
+      "value": "https://ftpmirror.gnu.org/gnu/%(namelower)s"
+    },
+    {
+      "name": "GOOGLECODE_SOURCE",
+      "value": "http://%(namelower)s.googlecode.com/files"
+    },
+    {
+      "name": "LAUNCHPAD_SOURCE",
+      "value": "https://launchpad.net/%(namelower)s/%(version_major_minor)s.x/%(version)s/+download/"
+    },
+    {
+      "name": "PYPI_LOWER_SOURCE",
+      "value": "https://pypi.python.org/packages/source/%(nameletterlower)s/%(namelower)s"
+    },
+    {
+      "name": "PYPI_SOURCE",
+      "value": "https://pypi.python.org/packages/source/%(nameletter)s/%(name)s"
+    },
+    {
+      "name": "R_SOURCE",
+      "value": "https://cran.r-project.org/src/base/R-%(version_major)s"
+    },
+    {
+      "name": "SHLIB_EXT",
+      "value": "so"
+    },
+    {
+      "name": "SOURCEFORGE_SOURCE",
+      "value": "https://download.sourceforge.net/%(namelower)s"
+    },
+    {
+      "name": "SOURCELOWER_GTGZ",
+      "value": "%(namelower)s-%(version)s.gtgz"
+    },
+    {
+      "name": "SOURCELOWER_PY2_WHL",
+      "value": "%(namelower)s-%(version)s-py2-none-any.whl"
+    },
+    {
+      "name": "SOURCELOWER_PY3_WHL",
+      "value": "%(namelower)s-%(version)s-py3-none-any.whl"
+    },
+    {
+      "name": "SOURCELOWER_TAR",
+      "value": "%(namelower)s-%(version)s.tar"
+    },
+    {
+      "name": "SOURCELOWER_TAR_BZ2",
+      "value": "%(namelower)s-%(version)s.tar.bz2"
+    },
+    {
+      "name": "SOURCELOWER_TAR_GZ",
+      "value": "%(namelower)s-%(version)s.tar.gz"
+    },
+    {
+      "name": "SOURCELOWER_TAR_XZ",
+      "value": "%(namelower)s-%(version)s.tar.xz"
+    },
+    {
+      "name": "SOURCELOWER_TAR_Z",
+      "value": "%(namelower)s-%(version)s.tar.Z"
+    },
+    {
+      "name": "SOURCELOWER_TB2",
+      "value": "%(namelower)s-%(version)s.tb2"
+    },
+    {
+      "name": "SOURCELOWER_TBZ2",
+      "value": "%(namelower)s-%(version)s.tbz2"
+    },
+    {
+      "name": "SOURCELOWER_TGZ",
+      "value": "%(namelower)s-%(version)s.tgz"
+    },
+    {
+      "name": "SOURCELOWER_TXZ",
+      "value": "%(namelower)s-%(version)s.txz"
+    },
+    {
+      "name": "SOURCELOWER_WHL",
+      "value": "%(namelower)s-%(version)s-py2.py3-none-any.whl"
+    },
+    {
+      "name": "SOURCELOWER_XZ",
+      "value": "%(namelower)s-%(version)s.xz"
+    },
+    {
+      "name": "SOURCELOWER_ZIP",
+      "value": "%(namelower)s-%(version)s.zip"
+    },
+    {
+      "name": "SOURCE_GTGZ",
+      "value": "%(name)s-%(version)s.gtgz"
+    },
+    {
+      "name": "SOURCE_PY2_WHL",
+      "value": "%(name)s-%(version)s-py2-none-any.whl"
+    },
+    {
+      "name": "SOURCE_PY3_WHL",
+      "value": "%(name)s-%(version)s-py3-none-any.whl"
+    },
+    {
+      "name": "SOURCE_TAR",
+      "value": "%(name)s-%(version)s.tar"
+    },
+    {
+      "name": "SOURCE_TAR_BZ2",
+      "value": "%(name)s-%(version)s.tar.bz2"
+    },
+    {
+      "name": "SOURCE_TAR_GZ",
+      "value": "%(name)s-%(version)s.tar.gz"
+    },
+    {
+      "name": "SOURCE_TAR_XZ",
+      "value": "%(name)s-%(version)s.tar.xz"
+    },
+    {
+      "name": "SOURCE_TAR_Z",
+      "value": "%(name)s-%(version)s.tar.Z"
+    },
+    {
+      "name": "SOURCE_TB2",
+      "value": "%(name)s-%(version)s.tb2"
+    },
+    {
+      "name": "SOURCE_TBZ2",
+      "value": "%(name)s-%(version)s.tbz2"
+    },
+    {
+      "name": "SOURCE_TGZ",
+      "value": "%(name)s-%(version)s.tgz"
+    },
+    {
+      "name": "SOURCE_TXZ",
+      "value": "%(name)s-%(version)s.txz"
+    },
+    {
+      "name": "SOURCE_WHL",
+      "value": "%(name)s-%(version)s-py2.py3-none-any.whl"
+    },
+    {
+      "name": "SOURCE_XZ",
+      "value": "%(name)s-%(version)s.xz"
+    },
+    {
+      "name": "SOURCE_ZIP",
+      "value": "%(name)s-%(version)s.zip"
+    },
+    {
+      "name": "VERSION_GTGZ",
+      "value": "%(version)s.gtgz"
+    },
+    {
+      "name": "VERSION_TAR",
+      "value": "%(version)s.tar"
+    },
+    {
+      "name": "VERSION_TAR_BZ2",
+      "value": "%(version)s.tar.bz2"
+    },
+    {
+      "name": "VERSION_TAR_GZ",
+      "value": "%(version)s.tar.gz"
+    },
+    {
+      "name": "VERSION_TAR_XZ",
+      "value": "%(version)s.tar.xz"
+    },
+    {
+      "name": "VERSION_TAR_Z",
+      "value": "%(version)s.tar.Z"
+    },
+    {
+      "name": "VERSION_TB2",
+      "value": "%(version)s.tb2"
+    },
+    {
+      "name": "VERSION_TBZ2",
+      "value": "%(version)s.tbz2"
+    },
+    {
+      "name": "VERSION_TGZ",
+      "value": "%(version)s.tgz"
+    },
+    {
+      "name": "VERSION_TXZ",
+      "value": "%(version)s.txz"
+    },
+    {
+      "name": "VERSION_XZ",
+      "value": "%(version)s.xz"
+    },
+    {
+      "name": "VERSION_ZIP",
+      "value": "%(version)s.zip"
+    },
+    {
+      "name": "V_VERSION_GTGZ",
+      "value": "v%(version)s.gtgz"
+    },
+    {
+      "name": "V_VERSION_TAR",
+      "value": "v%(version)s.tar"
+    },
+    {
+      "name": "V_VERSION_TAR_BZ2",
+      "value": "v%(version)s.tar.bz2"
+    },
+    {
+      "name": "V_VERSION_TAR_GZ",
+      "value": "v%(version)s.tar.gz"
+    },
+    {
+      "name": "V_VERSION_TAR_XZ",
+      "value": "v%(version)s.tar.xz"
+    },
+    {
+      "name": "V_VERSION_TAR_Z",
+      "value": "v%(version)s.tar.Z"
+    },
+    {
+      "name": "V_VERSION_TB2",
+      "value": "v%(version)s.tb2"
+    },
+    {
+      "name": "V_VERSION_TBZ2",
+      "value": "v%(version)s.tbz2"
+    },
+    {
+      "name": "V_VERSION_TGZ",
+      "value": "v%(version)s.tgz"
+    },
+    {
+      "name": "V_VERSION_TXZ",
+      "value": "v%(version)s.txz"
+    },
+    {
+      "name": "V_VERSION_XZ",
+      "value": "v%(version)s.xz"
+    },
+    {
+      "name": "V_VERSION_ZIP",
+      "value": "v%(version)s.zip"
+    },
+    {
+      "name": "XORG_DATA_SOURCE",
+      "value": "https://xorg.freedesktop.org/archive/individual/data/"
+    },
+    {
+      "name": "XORG_LIB_SOURCE",
+      "value": "https://xorg.freedesktop.org/archive/individual/lib/"
+    },
+    {
+      "name": "XORG_PROTO_SOURCE",
+      "value": "https://xorg.freedesktop.org/archive/individual/proto/"
+    },
+    {
+      "name": "XORG_UTIL_SOURCE",
+      "value": "https://xorg.freedesktop.org/archive/individual/util/"
+    },
+    {
+      "name": "XORG_XCB_SOURCE",
+      "value": "https://xorg.freedesktop.org/archive/individual/xcb/"
+    }
+  ],
+  "derived": [
+    {
+      "key": "name",
+      "rule": "field:name"
+    },
+    {
+      "key": "version",
+      "rule": "field:version"
+    },
+    {
+      "key": "versionsuffix",
+      "rule": "field:versionsuffix"
+    },
+    {
+      "key": "toolchain_name",
+      "rule": "field:toolchain_name"
+    },
+    {
+      "key": "toolchain_version",
+      "rule": "field:toolchain_version"
+    },
+    {
+      "key": "namelower",
+      "rule": "lower:name"
+    },
+    {
+      "key": "nameletter",
+      "rule": "first_char:name"
+    },
+    {
+      "key": "nameletterlower",
+      "rule": "first_char_lower:name"
+    },
+    {
+      "key": "github_account",
+      "rule": "lower:name"
+    },
+    {
+      "key": "bitbucket_account",
+      "rule": "lower:name"
+    },
+    {
+      "key": "version_major",
+      "rule": "part:0"
+    },
+    {
+      "key": "version_minor",
+      "rule": "part:1"
+    },
+    {
+      "key": "version_patch",
+      "rule": "part:2"
+    },
+    {
+      "key": "version_major_minor",
+      "rule": "join:0-1"
+    },
+    {
+      "key": "version_minor_patch",
+      "rule": "join:1-2"
+    },
+    {
+      "key": "version_major_minor_patch",
+      "rule": "join:0-2"
+    },
+    {
+      "key": "arch",
+      "rule": "host_arch"
+    },
+    {
+      "key": "pyver",
+      "rule": "field:version;only_if_name:Python"
+    },
+    {
+      "key": "pymajver",
+      "rule": "part:0;only_if_name:Python"
+    },
+    {
+      "key": "pyminver",
+      "rule": "part:1;only_if_name:Python"
+    },
+    {
+      "key": "pyshortver",
+      "rule": "join:0-1;only_if_name:Python"
+    }
+  ]
+}

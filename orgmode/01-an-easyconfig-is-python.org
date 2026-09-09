@@ -71,9 +71,13 @@ templating is not a feature EasyBuild added. It is the language's own
 easyconfig itself. =%(version)s= works because =version= is set above
 it.
 
-Which raises the question of =%(mapped_arch)s=, since nothing in the
-file sets =mapped_arch=. It resolves anyway, and on an x86-64 machine it
-resolves to =amd64=.
+Run the sample and watch =%(version)s= resolve. Then change the version
+and watch it move. Every value derived from it moves with it, and that
+is the whole of what templating does.
+
+The one that does not resolve is =%(mapped_arch)s=, and nothing in the
+file sets =mapped_arch=. On a cluster it resolves anyway, to =amd64= on
+x86-64.
 
 It resolves because something outside the easyconfig put it in the
 dictionary. That something is the easyblock, and it is the subject of

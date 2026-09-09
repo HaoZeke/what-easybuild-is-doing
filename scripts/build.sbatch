@@ -81,7 +81,7 @@ import zipfile
 # different thing and belongs here, because transcripts do render in the epub
 # and epub_exclude_files deliberately keeps it. Asserting on the "eb-" prefix
 # catches that file too and fails a build that is correct.
-WIDGET = ("eb-widget", "eb-charmap")
+WIDGET = ("eb-widget", "eb-charmap", "eb-templates", "eb-hierarchy")
 z = zipfile.ZipFile("build/epub/WhatEasyBuildIsDoing.epub")
 names = z.namelist()
 stowaways = [n for n in names if any(part in n for part in WIDGET)]
@@ -125,8 +125,31 @@ EOF
         done
     done
 
-    echo "=== engine: the charmap was exported and is well formed ==="
-    python3 -c "import json;d=json.load(open('build/html/_static/eb-charmap.json'));print('ok: prefix',d['prefix'],'entries',len(d['charmap']))"
+    echo "=== engine: every exported table reached the html assets ==="
+    python3 - <<'EOF'
+import json
+
+table = json.load(open("build/html/_static/eb-charmap.json"))
+print("ok: charmap prefix", table["prefix"], "entries", len(table["charmap"]))
+
+spec = json.load(open("build/html/_static/eb-templates.json"))
+print("ok: templates", len(spec["constants"]), "constants,",
+      len(spec["derived"]), "derived rules")
+
+hier = json.load(open("build/html/_static/eb-hierarchy.json"))
+gens = [g["parent"]["name"] + "-" + g["parent"]["version"] for g in hier["generations"]]
+print("ok: hierarchies", ", ".join(gens))
+EOF
+
+    echo "=== engine: the browser copy agrees with the binary ==="
+    # Two implementations of one rule, so compare them rather than trust them.
+    # Skipped rather than failed when node is absent: the check runs on the
+    # operator's machine too, and a missing interpreter is not a book defect.
+    if command -v node >/dev/null 2>&1 && command -v "${EB_STACK:-eb-stack}" >/dev/null 2>&1; then
+        node scripts/crosscheck.js || echo "FAIL: engine disagrees with eb-stack"
+    else
+        echo "skipped: node or eb-stack absent on this host"
+    fi
 
     echo "=== islands: a chapter with widgets loads the runtime ==="
     if grep -q 'eb-widget\.js' build/html/01-an-easyconfig-is-python.html; then
