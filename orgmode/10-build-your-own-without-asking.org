@@ -149,19 +149,3 @@ site's, which is EESSI.
 
 The second starts from what this chapter actually asked of you: line up
 three lists by hand. A tool could compute that instead.
-
-* What to take from this chapter
-
-1. =EASYBUILD_PREFIX= sets every output path at once. Setting them
-   individually is how you miss one.
-2. =--show-config= prints where each value came from, and the legend is
-   the precedence order: command line, then environment, then file,
-   then default.
-3. Your prefix does not change =robot-paths=, and that is the point. The
-   site's easyconfigs stay findable.
-4. =MODULEPATH= is the third list, it decides what counts as already
-   built, and it is not EasyBuild's to set. Keep the site's on it, and
-   =module use= your own prefix afterwards.
-5. Read =-D= before every build. It is the only thing that distinguishes
-   one install from ninety.
-6. A module you install is a module you maintain.

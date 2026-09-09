@@ -9,14 +9,17 @@
 //   easyblock   EB_ plus a per-character substitution
 //   template    the framework's TEMPLATE_CONSTANTS, plus derived-key rules
 //   hierarchy   the known toolchain generations, in the framework's order
+//   parse       the evaluated model, over a single-line assignment subset
 //
 // Every table is generated at build time by scripts/gen-engine-data.sh, so the
 // data has one source of truth and cannot drift from the framework's own. What
 // lives here is only the application, and scripts/crosscheck.js compares this
 // file against the Rust binary over many inputs to keep even that honest.
 //
-// `parse` remains unimplemented and says so: it needs a Python parser, which
-// is the one thing here that cannot be reduced to a table.
+// `parse` is the one that is not just a table. It reads single-line
+// assignments and *names what it skipped*, so a reader sees both the model
+// and the limit. The full parser is eb-stack's, and this is a reduced stand-in
+// that refuses to guess rather than one that pretends.
 //
 // This file is deliberately named to match the widget asset prefix, so the
 // per-page stripping in _ext/eb_widget.py removes it from chapters that hold
@@ -99,6 +102,7 @@
   function readAssignments(source) {
     var fields = {};
     var lists = {};
+    var skipped = [];
     var lines = source.split("\n");
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
@@ -111,9 +115,25 @@
       if (!/^[a-z_][a-z0-9_]*$/.test(key)) {
         continue;
       }
-      var scalar = value.match(/^['"](.*)['"]\s*,?$/);
+      // A value that opens a bracket and does not close on this line is a
+      // multi-line structure this reader does not follow. Record the name so
+      // the parse widget can say so rather than reporting a wrong value.
+      var opens = (value.match(/[[{(]/g) || []).length;
+      var closes = (value.match(/[\]})]/g) || []).length;
+      if (opens > closes) {
+        skipped.push(key);
+        continue;
+      }
+      // Triple quotes first: a description uses them, and the single-quote
+      // pattern would otherwise keep the two inner quotes as content.
+      var triple = value.match(/^('{3}|"{3})([\s\S]*?)\1\s*,?$/);
+      if (triple) {
+        fields[key] = triple[2];
+        continue;
+      }
+      var scalar = value.match(/^(['"])(.*)\1\s*,?$/);
       if (scalar) {
-        fields[key] = scalar[1];
+        fields[key] = scalar[2];
         continue;
       }
       if (value.charAt(0) === "[") {
@@ -136,7 +156,7 @@
         fields[key + "_version"] = "";
       }
     }
-    return { fields: fields, lists: lists };
+    return { fields: fields, lists: lists, skipped: skipped };
   }
 
   // Apply one exported rule. The vocabulary is closed and validated at export
@@ -285,6 +305,135 @@
     };
   }
 
+  // --- parse ----------------------------------------------------------------
+
+  // What the reader gets is the evaluated model: the values after assignment,
+  // after templating, and with the easyblock the name implies. That is
+  // chapter 1's three claims in one view.
+  //
+  // This is a reduced reader, not a Python parser. It follows single-line
+  // assignments and reports by name anything it did not follow, because a
+  // widget that quietly drops `checksums` would teach the wrong thing about
+  // a format whose whole point is that it is executable Python.
+  function buildParse(spec, charmap) {
+    var derived = spec.derived;
+    var prefix = charmap.prefix;
+    var chars = Object.create(null);
+    for (var i = 0; i < charmap.charmap.length; i++) {
+      chars[charmap.charmap[i].from] = charmap.charmap[i].to;
+    }
+
+    function encodeName(name) {
+      var out = "";
+      for (var i = 0; i < name.length; i++) {
+        var c = name.charAt(i);
+        out += Object.prototype.hasOwnProperty.call(chars, c) ? chars[c] : c;
+      }
+      return prefix + out;
+    }
+
+    function resolve(text, values) {
+      var once = text.replace(/%\(([a-z_][a-z0-9_]*)\)s/g, function (whole, key) {
+        return Object.prototype.hasOwnProperty.call(values, key) ? values[key] : whole;
+      });
+      return once.replace(/%\(([a-z_][a-z0-9_]*)\)s/g, function (whole, key) {
+        return Object.prototype.hasOwnProperty.call(values, key) ? values[key] : whole;
+      });
+    }
+
+    return function (source) {
+      var read = readAssignments(source);
+      var fields = read.fields;
+
+      if (!fields.name || !fields.version) {
+        return "Set at least `name` and `version`. The model is built from them.";
+      }
+
+      var values = Object.create(null);
+      for (var d = 0; d < derived.length; d++) {
+        var got = applyRule(derived[d].rule, fields);
+        if (got !== null) {
+          values[derived[d].key] = got;
+        }
+      }
+
+      var rows = [];
+      function row(key, value) {
+        rows.push([key, value]);
+      }
+
+      // Order the way a reader reads the file, with the two derived facts
+      // last because they are the ones the file never states.
+      var order = ["name", "version", "versionsuffix", "homepage", "description"];
+      for (var o = 0; o < order.length; o++) {
+        if (Object.prototype.hasOwnProperty.call(fields, order[o])) {
+          row(order[o], resolve(fields[order[o]], values));
+        }
+      }
+
+      if (Object.prototype.hasOwnProperty.call(fields, "toolchain_name")) {
+        // The point of the whole chapter: SYSTEM was a name in the namespace,
+        // and what survives evaluation is a structure.
+        var tn = fields.toolchain_name;
+        var tv = fields.toolchain_version;
+        row("toolchain", "{name: " + tn + ", version: " + (tv || "(none)") + "}");
+      }
+
+      var listKeys = Object.keys(read.lists);
+      for (var l = 0; l < listKeys.length; l++) {
+        var items = read.lists[listKeys[l]].map(function (item) {
+          return resolve(item, values);
+        });
+        row(listKeys[l], "[" + items.join(", ") + "]");
+      }
+
+      for (var f in fields) {
+        if (!Object.prototype.hasOwnProperty.call(fields, f)) continue;
+        if (order.indexOf(f) >= 0) continue;
+        if (f === "toolchain_name" || f === "toolchain_version") continue;
+        row(f, resolve(fields[f], values));
+      }
+
+      var width = 0;
+      for (var r = 0; r < rows.length; r++) {
+        width = Math.max(width, rows[r][0].length);
+      }
+      function pad(text) {
+        var out = text;
+        while (out.length < width) {
+          out += " ";
+        }
+        return out;
+      }
+
+      var out = ["evaluated model:"];
+      for (var q = 0; q < rows.length; q++) {
+        out.push("  " + pad(rows[q][0]) + "   " + rows[q][1]);
+      }
+
+      out.push("");
+      if (Object.prototype.hasOwnProperty.call(fields, "easyblock")) {
+        out.push("easyblock: " + fields.easyblock + ", named in the file");
+      } else {
+        out.push(
+          "easyblock: none in the file, so EasyBuild derives " +
+            encodeName(fields.name)
+        );
+        out.push("           and stops if it cannot import it");
+      }
+
+      if (read.skipped.length) {
+        out.push("");
+        out.push("not modelled by this reader: " + read.skipped.join(", "));
+        out.push("It follows single-line assignments. A multi-line list or");
+        out.push("dict needs the real parser, which is why the full engine");
+        out.push("is eb-stack rather than these few lines.");
+      }
+
+      return out.join("\n");
+    };
+  }
+
   // --- hierarchy ------------------------------------------------------------
 
   function buildHierarchy(table) {
@@ -405,6 +554,7 @@
       engine.easyblock = buildEasyblock(tables[0]);
       engine.template = buildTemplate(tables[1]);
       engine.hierarchy = buildHierarchy(tables[2]);
+      engine.parse = buildParse(tables[1], tables[0]);
       window.EB_STACK_ENGINE = engine;
 
       // The runtime may already have settled its islands as inert; this is

@@ -169,21 +169,28 @@ declaring a dependency on CUDA 12.9.1, both accurate, resolving into a
 13.0 tree. Nothing in the modulefile was false, and the module was
 unusable.
 
-* What to take from this chapter
+* The three checks, side by side
 
-1. =sanity_check_paths= checks existence. That is the default meaning
-   of "installed", and a weaker claim than it sounds.
-2. =sanity_check_commands= executes something, which is a stronger
-   claim. A package has one only if its author or its easyblock
-   supplied it.
-3. The check on the runtime library search path catches binaries that
-   exist, respond to =--help=, and cannot start. Leave it on.
-4. A green check describes the tree it ran against. On a cluster with
-   more than one architecture, say which one, and verify on the node
-   type that failed rather than the nearest one.
-5. =patchelf --set-rpath= writes =DT_RUNPATH=, which loses to
-   =LD_LIBRARY_PATH=. A test the environment can satisfy is not a
-   test.
-6. The modulefile is the only artifact a user meets. It is generated
-   from everything above it. It can be accurate about a tree that does
-   not work.
+| Check | What a pass establishes | What it misses |
+|---+---+---|
+| =sanity_check_paths= | These paths exist | Whether they are executable, the right version, or able to start. A zero-byte file passes. |
+| =sanity_check_commands= | Something ran and returned | Anything the command does not reach. =--help= never touches the code that computes. |
+| The runtime library search path | Everything the binaries link resolves | Whether the program is correct, and whether the same is true on another node |
+
+A package has the first. It has the second only if its author or its
+easyblock supplied one. Knowing which of the three a given package
+carries is knowing what its green build means.
+
+Then the two things that are not about parameters at all.
+
+A pass describes the tree it ran against. On a cluster with more than
+one architecture it names one of them. Verify on the node type that
+failed, however far away it is.
+
+And =patchelf --set-rpath= writes =DT_RUNPATH=, which the dynamic
+linker consults after =LD_LIBRARY_PATH=. A test your own shell can
+satisfy is not a test.
+
+The modulefile at the end of all this is the only artifact a user
+meets. It is generated from every inference in this book, and it can be
+accurate about a tree that does not work.

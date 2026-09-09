@@ -146,21 +146,17 @@ The same distinction applies to pinning. "HDF5 1.14.6 exists" is
 not "HDF5 1.14.6 exists in =foss-2024a=", and an easyconfig cannot tell
 the difference because it names a version and not a generation.
 
-* What to take from this chapter
+* One thing to do differently
 
-1. A dependency is an exact version, because a reproducible stack
-   should have one of each library. The format offers no range syntax,
-   and that absence is deliberate.
-2. That version records the generation the easyconfig was written against.
-   Across generations it asserts a requirement the software never made.
-3. So retargeting means treating the old versions as evidence and the
-   target generation's modules as candidates, and choosing. Editing
-   numbers until the build passes reaches the same place with no record
-   of which numbers mattered.
-4. The real lower bound lives in the project's build system or in a
-   packaging format that can express conditions. "The old stack had an
-   old one and it worked" is a data point. A bound is something else.
+Next time you move an easyconfig to another generation, write down in
+the commit message where each changed version came from. The project's
+own build system, another packaging format that can express a
+condition, or the shelf.
 
-The next chapter is about the machinery that turns a filename into an
-install plan. It is also about what happens when that machinery looks
-in the wrong place.
+The first two are bounds. The third is a build environment you happened
+to meet. The next person to move this file will thank you for saying
+which is which.
+
+The chapter after this is about the machinery that turns a filename
+into an install plan. Also about what happens when it looks in the
+wrong place.

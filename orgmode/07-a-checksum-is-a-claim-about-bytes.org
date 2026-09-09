@@ -121,24 +121,21 @@ needs the URL it was computed over, and the version alone will not do.
 Two ecosystems agreeing on a version number is not two ecosystems
 agreeing on an artifact.
 
-* What to take from this chapter
+* Loud and quiet
 
-1. =checksums= lines up with =sources= by position. A dictionary in
-   one of those positions maps resolved filenames to checksums, which
-   is how one templated source line covers more than one
-   architecture.
-2. The dictionary is keyed by filename, not by architecture, and it
-   says nothing about the filenames it omits. A missing key fails only
-   on the machine that produces that name.
-3. A checksum is a claim about bytes. It carries no claim about the
-   version, and none at all about the layout inside the archive.
-4. Changing a version is loud, because the checksum stops the build.
-   Changing the kind of source is quiet, because the parameters that
-   describe its shape still parse.
-5. A checksum borrowed from another packaging system belongs to that
-   system's artifact. Carry the URL it was computed over, or the
-   verification will be right about the wrong file.
+The reason a version bump is safer than a source change is that the two
+break differently:
 
-The next chapter is about =exts_list=, where one easyconfig installs
-hundreds of packages, and each of them can carry its own sources,
-checksums, and easyblock.
+| Change | How you find out |
+|---+---|
+| The version | The checksum mismatches and the build stops, holding out the value it computed. |
+| The archive's layout | =start_dir= or a patch level still parses, and the build fails later on a path. |
+| The kind of source, tag to release | Both of the above, and only the first announces itself. |
+| A checksum borrowed from another ecosystem | Verification fails against an artifact that really is that version. |
+
+Everything a checksum protects is in the first row. Nothing in the
+other three is a checksum's job, which is why chapter 1's failure got
+past a verification working perfectly.
+
+Next: =exts_list=, where one easyconfig installs hundreds of packages
+and every row above applies to each of them.

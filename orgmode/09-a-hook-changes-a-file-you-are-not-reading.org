@@ -132,23 +132,24 @@ carry a package-specific change gives you a global mechanism whose
 behaviour depends on a guard. The next person reads the easyconfig and
 sees none of it.
 
-* What to take from this chapter
+* The condition this puts on chapter 1
 
-1. A hook is a Python file of functions found by name, called at
-   defined points, and named to EasyBuild with =--hooks=.
-2. =parse_hook= runs before dependency resolution, so it changes what
-   gets built rather than only how.
-3. A hook is called for every easyconfig, so its guards are as much
-   of its behaviour as its body.
-4. Assigning a list parameter in a hook discards what the easyconfig
-   declared, with no diagnostic. Append. Replace only when replacing is
-   what you mean.
-5. A hook means an easyconfig is no longer the whole story. Find out
-   whether one is loaded before reasoning from the file, which is the
-   condition chapter 1's inference needs.
-6. An overlay changes which easyconfig is found; a hook changes what
-   happens to it. Using one for the other's job has a predictable
-   cost.
+Chapter 1 said that whatever expected a path is a value somebody
+assigned in the easyconfig. At a site that uses hooks, that is true
+only once you know no hook touched it. Finding out means reading one
+short Python file and its guards.
 
-The next chapter is the one with no widget and no parameters: when
-EasyBuild is the wrong tool, and what to reach for instead.
+Two rules follow, and the second is the one that bites.
+
+A hook is called for every easyconfig, so its guards are as much of its
+behaviour as its body.
+
+And assigning a list parameter replaces it. =ec['postinstallcmds'] =
+[...]= discards whatever the easyconfig declared, with no diagnostic,
+and stays invisible until somebody adds =postinstallcmds= to a package
+the hook fires on. Append. Replace only when replacing is what you
+mean.
+
+The next three chapters are the ones where you do something. Install
+into a prefix you own, do it on top of EESSI, then read how the engine
+behind these samples decides what it has established.

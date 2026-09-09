@@ -136,23 +136,15 @@ and exists only on GPU nodes. It does not: EasyBuild exempts that
 library by default, along with =libcuda.so=, =libnvidia-ml.so= and
 =libnvidia-ml.so.1=. Anything else it reports is a real finding.
 
-* What to take from this chapter
+* The one-line version
 
-1. =versionsuffix= is part of the module's name. A derived suffix is
-   computed once from a dependency and written into a filename, and
-   nothing revisits it.
-2. The dependency does the binding. The suffix and the dependency are
-   separate statements, and only one of them constrains anything.
-3. From a consumer, a suffix is not a suffix. It arrives folded into
-   the toolchain's version string, and the hierarchy treats two
-   suffixes as two unrelated toolchains.
-4. One syntax carries a derived pin and a hand-written variant label,
-   with nothing to tell them apart. Read the easyconfig, not the
-   module name.
-5. A name can be true and the tree beneath it wrong. The sanity check
-   is what tells you. That is the argument for leaving it on, even
-   when it reports something you cannot fix.
+A =versionsuffix= is part of a module's name, and a name is not a
+mechanism. The dependency does the binding; the suffix reports on it
+once, at parse time, and nothing checks it again.
 
-The next chapter is about what "installed" means. Two things decide
-it: the checks that declare a build finished, and the modulefile that
-is the only part a user ever sees.
+So the test, when a module named for a version behaves as though it
+carried another. Stop reading the name and look at the tree. The sanity
+check is what looks for you, and that is the argument for leaving it on
+even when it reports somebody else's problem.
+
+Next: what "installed" means, and the two things that decide it.

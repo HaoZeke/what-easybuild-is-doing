@@ -138,23 +138,22 @@ have declared almost nothing, taking its source URL, its template, and
 its easyblock from three different defaults above it. None of those
 appear in the failure.
 
-* What to take from this chapter
+* What scales, and what does not
 
-1. =exts_list= makes one easyconfig install many packages, each with
-   its own sources, checksums, easyblock and check.
-2. Extensions get a default easyblock, from =exts_defaultclass=. That
-   is the exception chapter 1 named. It exists because an extension
-   has a declared default and a top-level package does not.
-3. =%(name)s= and =%(version)s= inside an extension's options mean the
-   extension's name and version. That rebinding is what makes
-   =exts_default_options= work, and it is not available for reaching
-   the bundle's own values.
-4. =exts_filter= is a command and its standard input, run once per
-   extension, and it is chapter 6's executing check applied at scale.
-5. A failure inside a bundle belongs to one entry. Read that entry
-   together with the defaults it inherited, because the failure
-   message mentions neither.
+=exts_list= makes one easyconfig install many packages. Three earlier
+chapters then apply per entry rather than per file. Each extension has
+its own sources and checksums, its own easyblock, and its own executing
+check through =exts_filter=.
 
-The next chapter is about hooks. They are the supported way to change
-what EasyBuild does without editing an easyconfig, and a site ends up
-needing them for a specific reason.
+Two things do not scale with it. Chapter 1's rule inverts, because
+=exts_defaultclass= gives extensions the default a top-level package
+does not get. And the templates rebind: =%(name)s= inside an entry is
+the extension's name. That is what lets one =source_tmpl= serve two
+hundred rows, and why reaching the bundle's own version from there
+fails.
+
+When a bundle fails, it failed at one entry. Read that entry together
+with the defaults above it, because the error names neither.
+
+The next chapter is about hooks: the supported way to change what
+EasyBuild does without editing an easyconfig.

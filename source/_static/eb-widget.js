@@ -115,21 +115,27 @@
     // A textarea is the placeholder editor. CodeMirror replaces it once the
     // engine can answer completion queries, which is how janet.guide builds
     // its autocomplete: query the WASM environment at startup.
-    var seed = pre.textContent;
+    //
+    // It goes inside a div.highlight so the theme's own code-block styling
+    // applies to it. Without that the sample visibly degrades the moment it
+    // becomes editable, which reads as something breaking rather than
+    // something waking up.
+    var seed = pre.textContent.replace(/\n+$/, "");
     var editor = document.createElement("textarea");
     editor.className = "eb-widget-editor";
     editor.spellcheck = false;
     editor.value = seed;
     editor.rows = Math.min(24, seed.split("\n").length + 1);
+    editor.setAttribute("aria-label", "editable " + widget + " sample");
+
+    var wrap = document.createElement("div");
+    wrap.className = "highlight eb-widget-editor-wrap";
+    wrap.appendChild(editor);
 
     var output = document.createElement("pre");
     output.className = "eb-widget-output";
 
-    var button = document.createElement("button");
-    button.className = "eb-widget-run";
-    button.type = "button";
-    button.textContent = "Run";
-    button.addEventListener("click", function () {
+    function evaluate() {
       try {
         output.textContent = String(run(editor.value, universe));
       } catch (err) {
@@ -138,11 +144,40 @@
         // accepts.
         output.textContent = String((err && err.message) || err);
       }
+    }
+
+    // Re-run as the reader types, debounced. The prose says "change the
+    // version and watch it move", and a button between the edit and the
+    // answer is exactly what stops that being true.
+    var pending = null;
+    editor.addEventListener("input", function () {
+      if (pending) {
+        clearTimeout(pending);
+      }
+      pending = setTimeout(function () {
+        pending = null;
+        evaluate();
+      }, 150);
     });
 
-    pre.replaceWith(editor);
-    island.appendChild(button);
+    // Ctrl-Enter for anyone who would rather ask explicitly.
+    editor.addEventListener("keydown", function (event) {
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        event.preventDefault();
+        if (pending) {
+          clearTimeout(pending);
+          pending = null;
+        }
+        evaluate();
+      }
+    });
+
+    pre.replaceWith(wrap);
     island.appendChild(output);
+
+    // Answer before being asked. A reader who scrolls past a live sample
+    // should see what it says, not an empty box beside a button.
+    evaluate();
     island.setAttribute("data-eb-state", "live");
   }
 

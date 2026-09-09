@@ -43,9 +43,14 @@ the namespace before evaluating the file. That is why it has no quotes
 around it while =moduleclass= does. The quoting rule that looks
 arbitrary is just Python: one is a variable, the other is a literal.
 
-Once the file has been evaluated, =toolchain= carries a structure with a
-name and a version. The text =SYSTEM= is gone by then: the assignment
-happened before anything read the value.
+Run the sample at the top and read the model it gives back. =toolchain=
+comes out as a structure with a name and a version. The text =SYSTEM=
+is gone by then, because the assignment happened before anything read
+the value.
+
+While you are there, look at the last two lines of that output. The
+file names no easyblock, and the model reports the one EasyBuild will
+derive from the name anyway. That is the rest of this chapter.
 
 The same fact explains a thing that trips people up later. Since the
 file is Python, it can compute. A list comprehension in an easyconfig
@@ -251,10 +256,10 @@ those are quiet. They were right before, and a diff against the previous
 easyconfig reports them unchanged. Unchanged is the wrong question. The
 question is whether they still hold for the archive now being unpacked.
 
-* What to take from this chapter
+* Three consequences
 
 An easyconfig is a Python file evaluated in a prepared namespace, and
-three consequences follow that you will meet constantly:
+you will meet all three of these constantly.
 
 1. Unquoted names like =SYSTEM= are variables EasyBuild supplied. That
    is why the quoting looks inconsistent and is not.

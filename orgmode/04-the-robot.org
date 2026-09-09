@@ -207,25 +207,29 @@ It is also the fastest way to catch a dependency resolving to a version
 you did not expect. That happens most often when a site overlay shadows
 an upstream easyconfig with the same name.
 
-* What to take from this chapter
+* Three lists, and a loop
 
-1. A bare easyconfig filename is a query against the robot path, and so
-   is every dependency. One mechanism, not two.
-2. Resolution is a loop rather than a graph traversal. Take whatever is
-   fully resolved, treat it as available, search the path for what is
-   missing, repeat. The set being resolved grows as it runs.
-3. "Available" comes from your module system, so a build plan depends on
-   =MODULEPATH= as much as on the robot path, and it is not portable
-   between machines.
-4. Anything in this run's own list stops counting as available, so
-   rebuilding a library and its dependent rebuilds both in order.
-5. In =--robot-paths=, an empty element is where the default robot path
-   goes. A trailing colon prepends yours; a leading colon appends it.
-   No colon replaces the default.
-6. A site overlay in front of the defaults is the normal arrangement.
-   An EasyBuild release carries a frozen set of easyconfigs, and
-   upstream keeps moving.
-7. The toolchain hierarchy filters the candidates, so "installed" and
-   "findable" are different properties. The gap between them explains
-   most robot failures that feel impossible.
-8. =-D= answers all of this before you spend the afternoon.
+The robot consults three lists, and confusing them is most of what goes
+wrong:
+
+| List | Set by | Decides |
+|---+---+---|
+| the robot path | =--robot-paths=, empty element for the defaults | which easyconfigs can be found |
+| =MODULEPATH= | your module system, not EasyBuild | what counts as already built |
+| the toolchain hierarchy | chapter 2, computed | which found candidates are eligible |
+
+Around those it runs a loop rather than a graph traversal. Take
+whatever is fully resolved, treat it as available, search the path for
+what is missing, repeat. The set being resolved grows as it goes, which
+is why =--dry-run= names packages you never asked for.
+
+Two consequences worth carrying. A plan is not portable, because the
+second list differs per machine. And anything in this run's own list
+stops counting as available, so rebuilding a library and its dependent
+rebuilds both.
+
+Read =-D= before every non-trivial build. It is the only thing that
+distinguishes one install from ninety.
+
+The next chapter is about =versionsuffix=, which looks like a
+constraint and behaves like a label.

@@ -145,19 +145,21 @@ filesystem. That sample says it is read-only rather than guessing.
 That is the ladder applied to a book. The chapters claim what the
 samples establish, and no more.
 
-* What to take from this chapter
+* The ladder travels; the solver does not
 
-1. eb-stack answers the two questions the easyconfig format cannot:
-   what a recipe should say on another generation, and what a given
-   piece of evidence establishes.
-2. EasyBuild resolves by a loop, which is cheap and reports the one
-   thing it could not find. A solver decides feasibility over the whole
-   problem and can say that nothing satisfies it. Different costs, not
-   a ranking.
-3. Feasible is not unique, so "it resolves" and "it resolves to the
-   versions you wanted" are separate claims.
-4. The claim ladder is the transferable part. A rung is reached only by
-   its own evidence: planning cannot establish a build, and a build on
-   one target cannot establish another.
-5. A lock is not an ABI guarantee, and a tool that hides that gap is
-   worse than one that leaves it visible.
+Feasibility by solver against EasyBuild's loop is a trade rather than a
+ranking. A loop always makes progress and names the one thing it could
+not find. A solver considers the whole problem and can say that nothing
+satisfies it. Either way feasible is not unique, so "it resolves" and
+"it resolves to the versions you wanted" stay separate claims.
+
+The ladder outlives all of that. A rung is reached only by its own
+evidence, so planning cannot establish a build, and a build on one
+target cannot establish another. A lock is not a compatibility
+guarantee. Writing the rungs down keeps that gap visible rather than
+letting it be waved through.
+
+Chapter 6 is where I learned that twice, the hard way. The ladder is
+the same lesson with the bookkeeping attached.
+
+The last chapter argues for the other tools.

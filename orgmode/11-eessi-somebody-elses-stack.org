@@ -203,23 +203,27 @@ your microarchitecture and not the others is not ready, however green it
 looks locally. That is the same distinction as chapter 6's, with a
 larger set of trees.
 
-* What to take from this chapter
+* The three that bite
 
-1. EESSI is a stack you mount rather than install. Initialising it is
-   sourcing one script.
-2. List the versions directory and confirm a version has an =init/=
-   before descending. A speculative listing into a placeholder can
-   wedge the client for everyone on the host.
-3. Check that your toolchain generation is in the compatibility layer
-   first. A gap is a finding, and bootstrapping a generation into a
-   user prefix is the wrong answer to it.
-4. =EESSI-extend= configures EasyBuild the way the bots do. Set exactly
-   one prefix variable, before loading the module.
-5. =installpath= comes back qualified by microarchitecture, which is
-   chapter 6's per-architecture tree with the architecture visible in
-   the path.
-6. When the host client wedges, a container mounts the filesystem
-   itself and does not care.
-7. Contributing means an easyconfig upstream and an easystack entry,
-   in that order, and the all-CPU-target claim belongs to the bot
-   rather than to your host.
+Everything else in this chapter is procedure. These three cost real
+time, and in this order.
+
+*List before you descend.* A version directory can be an unpopulated
+placeholder. One speculative listing into it wedges the filesystem
+client for every user on the host. Confirm an =init/= exists first.
+
+*Check the generation before you plan.* The compatibility layer lags
+the newest toolchain generation. A gap is a finding to report, not
+something to bootstrap a compiler around.
+
+*One prefix variable, set before the module load.* =EESSI-extend=
+reads it at load time. A second one, or a late one, produces a failure
+that looks like the module ignoring you.
+
+After that, two things to keep in view. =installpath= comes back
+microarchitecture-qualified, which is chapter 6's per-architecture tree
+with the architecture visible in the path. And the all-CPU-target claim
+belongs to the bot rather than to your host.
+
+Next: the engine these samples run on, and the one idea in it worth
+taking even if you never use it.

@@ -164,18 +164,18 @@ by version number, with a =TODO: delete with EasyBuild 6.0= beside it.
 
 If =foss-2025a= were a label, that code would be unnecessary.
 
-* What to take from this chapter
+* A name, and what is under it
 
-1. =toolchain= names the *top* of a hierarchy, and the hierarchy is what
-   decides which dependencies are candidates.
-2. The hierarchy is computed rather than declared. A breadth-first walk
-   over a graph produces it. Optional levels appear only when present,
-   and =system= sits at the bottom only when the installation puts it
-   there.
-3. A toolchain module must carry the direct dependencies its class
-   expects, matched by name. When it does not, every package on that
-   generation fails in the prepare step, and the error is about the
-   toolchain rather than about you.
+=toolchain= names the top of a hierarchy, and the hierarchy decides
+which dependencies are candidates at all. It is computed rather than
+declared. A breadth-first walk over a graph produces it. Optional
+levels appear only when installed, and =system= sits at the bottom only
+when the installation put it there.
 
-The next chapter is about the number beside a dependency, which looks
-like a minimum version and is not one.
+The module has its own end to keep up. When its direct dependencies
+stop matching what its class expects, every package on that generation
+fails in the prepare step. The error is about the toolchain rather than
+about you.
+
+Next: the number beside a dependency, which looks like a minimum
+version and is not one.

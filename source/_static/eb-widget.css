@@ -18,6 +18,14 @@
   margin-bottom: 0;
 }
 
+/* The editor sits inside a div.highlight so the theme's own code-block
+   background and colour apply, and then takes them by inheriting rather
+   than naming any theme variable. A sample that is editable should look
+   like the sample that was not. */
+.eb-widget-editor-wrap {
+  margin: 0;
+}
+
 .eb-widget-editor {
   display: block;
   width: 100%;
@@ -27,32 +35,36 @@
   font-size: 0.9rem;
   line-height: 1.5;
   padding: 0.6rem 0.7rem;
-  border: 1px solid var(--eb-widget-border);
-  border-radius: 3px;
+  border: 0;
+  background: transparent;
+  color: inherit;
   resize: vertical;
   tab-size: 4;
 }
 
-.eb-widget-run {
-  margin: 0.6rem 0 0;
-  padding: 0.3rem 0.9rem;
-  font: inherit;
-  font-size: 0.85rem;
-  cursor: pointer;
-  border: 1px solid var(--eb-widget-border);
-  border-radius: 3px;
-  background: transparent;
-  color: inherit;
+/* The caret is the only affordance saying this box takes typing, so it has
+   to be visible against the code background rather than assumed. */
+.eb-widget-editor:focus {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
 }
 
-.eb-widget-run:hover {
-  border-color: currentColor;
-}
-
-/* Empty until something is run, and it should not reserve space while it
-   is. */
+/* The output is filled on hydrate, so an empty one means the engine
+   answered with nothing rather than that nobody has asked yet. */
 .eb-widget-output:empty {
   display: none;
+}
+
+/* A live island says so, quietly, because the difference between a code
+   block and an editable one is otherwise invisible until you click. */
+.eb-widget[data-eb-state="live"]::before {
+  content: "editable, runs as you type";
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  opacity: 0.6;
 }
 
 .eb-widget-output {

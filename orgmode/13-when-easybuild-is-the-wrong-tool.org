@@ -129,20 +129,32 @@ None of those are EasyBuild questions. EasyBuild has particularly
 crisp answers to them, which is why it makes a good subject for
 learning to ask them.
 
-* What to take from this chapter
+* The end of the book
 
-1. EasyBuild's design is exact versions, curated generations,
-   from-source builds and modulefiles, for a shared machine with many
-   users and few maintainers. Each of those is a trade, not a
-   universal good.
-2. Requirements that change weekly do not belong in an annual
-   generation. A Python module plus a user-owned virtual environment
-   splits the problem along the line where it actually divides.
-3. Software with no source is not a build. Wrap the runtime and say
-   so.
-4. EESSI is for having the software. EasyBuild is for deciding what
-   the software is.
-5. Spack trades reproducible generations for expressible constraints;
-   conda-forge trades hardware tuning for speed and portability.
-   Naming the trade is more useful than ranking the tools.
-6. The questions in this book outlive the tool. Carry those.
+EasyBuild's design is exact versions, curated generations, from-source
+builds and modulefiles, for a shared machine whose users vastly
+outnumber its maintainers. Every one of those is a trade.
+
+A requirement that changes weekly does not belong in an annual
+generation. Software with no source is a runtime to wrap rather than a
+build to fake. And a stack you need only to *have* already exists.
+
+What survives all of that is a habit of asking what a thing actually
+says.
+
+An easyconfig says less than it appears to, because a name implies an
+easyblock the file never mentions. A toolchain is not a label but the
+top of a computed hierarchy, and it decides what your dependencies are
+even allowed to see. A version beside a dependency is an exact pin for
+one generation and not a minimum. A filename is a query, and the answer
+depends on three lists you set in three different places. A checksum is
+about bytes and nothing else. A green build describes one tree on one
+machine.
+
+None of those are EasyBuild questions. EasyBuild is a good place to
+learn them because its answers are unusually crisp, and because it
+says when it does not know. No default easyblock, no version ranges,
+no guessing. A tool that refuses to guess is showing you where the
+uncertainty actually sits.
+
+Take that, and the rest is documentation.
