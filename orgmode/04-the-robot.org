@@ -91,22 +91,93 @@ Both true. The fix is not to argue with the first one. It is to put a
 copy where the robot looks, or to point the robot at the commit that
 added it.
 
-* Resolution is a graph problem with an ordering answer
+* How it decides an order
 
-Given the path, the robot builds a dependency graph and returns
-something you can execute. Nothing in that order gets built before what
-it needs.
+Given the path, the robot returns something you can execute: an order in
+which nothing gets built before what it needs.
 
-Two things about that order are worth knowing.
+It does not compute that from a finished graph, because it does not
+have one. The graph is what it is discovering. =resolve_dependencies=
+in =easybuild/tools/robot.py= runs a loop, and that loop's shape
+explains most of what =--dry-run= prints.
 
-It is not unique, and EasyBuild does not promise you a particular one.
-Any topological order of the graph is correct. So the list from =--dry-run=
-is *an* answer, not *the* answer, and diffing two of them across
-versions will show you churn that means nothing.
+One pass does this:
 
-And the hierarchy from chapter 2 filters it. A candidate counts as a
-candidate only when its toolchain belongs to your package's
-hierarchy.
+1. Ask which easyconfigs are *fully resolved*, meaning every dependency
+   they declare is already available. Those go onto the end of the
+   order.
+2. Treat what just went onto the order as available, since by the time
+   it is built it will be.
+3. For anything still unresolved, search the robot path for an
+   easyconfig that provides the missing dependency, and add it to the
+   set being resolved.
+4. Repeat.
+
+Step 3 is the one that surprises people. The set of things being
+resolved *grows* during resolution, which is why =--dry-run= lists
+packages you never named and never asked about.
+
+** Available means what the module tool says
+
+Step 1 turns on the word "available", and the function is blunt about
+where that comes from:
+
+#+begin_example
+avail_modules = modtool.available()
+#+end_example
+
+The robot asks your module system what is installed. So the plan is a
+function of =MODULEPATH= as much as of the robot path. Those are two
+different lists, set in two different ways. A dependency already
+installed is satisfied and never appears in the order at all.
+
+Two consequences follow, and both are useful.
+
+A build plan is not portable. Run the same command on a machine with
+another set of installed modules and you get a different plan, equally
+correct.
+
+And =--dry-run= on a well-stocked cluster is short for a reason. It is
+not telling you the package has few dependencies. It is telling you most
+of them are already there.
+
+Two flags move that line deliberately. =--retain-all-deps= proceeds as
+though nothing is installed, giving the full closure rather than the
+remainder. =--missing-modules= asks the complementary question, which is
+what is absent rather than what would be built.
+
+** What is being rebuilt does not satisfy anything
+
+One detail in the loop is easy to miss and saves an afternoon:
+
+#+begin_example
+being_installed = [p['full_mod_name'] for p in easyconfigs]
+avail_modules = [m for m in avail_modules if m not in being_installed]
+#+end_example
+
+Anything in this run's own list is *removed* from the available set,
+even when it is installed. So asking to rebuild a library and something
+that depends on it rebuilds both, in that order. The old library does
+not satisfy the dependent.
+
+There is a matching escape hatch. A dependency marked as an external
+module is treated as resolved unconditionally, because no easyconfig
+corresponds to it. That is how a site tells the robot about a module
+EasyBuild did not build.
+
+** The order is not unique
+
+Any topological order of the discovered graph is correct, and EasyBuild
+does not promise a particular one. The list from =--dry-run= is *an*
+answer rather than *the* answer, so diffing two of them across versions
+shows churn that means nothing. Chapter 2's sibling toolchains are the
+same fact one level down.
+
+** And the hierarchy filters the candidates
+
+The hierarchy from chapter 2 decides what step 3 is allowed to find. A
+candidate counts as a candidate only when its toolchain belongs to your
+package's hierarchy.
 
 That filter is where the two chapters meet, and it produces the most
 frustrating class of robot failure. The module is installed. You can
@@ -140,13 +211,21 @@ an upstream easyconfig with the same name.
 
 1. A bare easyconfig filename is a query against the robot path, and so
    is every dependency. One mechanism, not two.
-2. In =--robot-paths=, an empty element is where the default robot path
+2. Resolution is a loop rather than a graph traversal. Take whatever is
+   fully resolved, treat it as available, search the path for what is
+   missing, repeat. The set being resolved grows as it runs.
+3. "Available" comes from your module system, so a build plan depends on
+   =MODULEPATH= as much as on the robot path, and it is not portable
+   between machines.
+4. Anything in this run's own list stops counting as available, so
+   rebuilding a library and its dependent rebuilds both in order.
+5. In =--robot-paths=, an empty element is where the default robot path
    goes. A trailing colon prepends yours; a leading colon appends it.
    No colon replaces the default.
-3. A site overlay in front of the defaults is the normal arrangement.
+6. A site overlay in front of the defaults is the normal arrangement.
    An EasyBuild release carries a frozen set of easyconfigs, and
    upstream keeps moving.
-4. The toolchain hierarchy filters the candidates, so "installed" and
+7. The toolchain hierarchy filters the candidates, so "installed" and
    "findable" are different properties. The gap between them explains
    most robot failures that feel impossible.
-5. =-D= answers all of this before you spend the afternoon.
+8. =-D= answers all of this before you spend the afternoon.
