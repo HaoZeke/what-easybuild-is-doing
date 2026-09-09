@@ -34,6 +34,9 @@ epub = { cmd = "sphinx-build -W --keep-going -d build/.doctrees -b epub source b
 # The acceptance test for the stack choice: one source, three renderings.
 all = { depends-on = ["html", "singlehtml", "epub"] }
 clean = { cmd = "rm -rf build source/*.rst source/**/*.rst 2>/dev/null; true" }
+# Reading is not building: this pulls the rendered book off the build host and
+# serves it here. It never invokes sphinx.
+serve = { cmd = "bash scripts/serve.sh", description = "fetch the rendered book from the build host and serve it locally" }
 
 [environments]
 docs = { features = ["docs"] }
