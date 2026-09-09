@@ -13,8 +13,9 @@
 # compute node rather than the login shell.
 # Site-specific: a disk-backed scratch rather than a RAM-backed /tmp.
 export TMPDIR=${TMPDIR:-/var/lib/builds/tmp}
-# pixi is installed per-user and is not on a non-interactive PATH.
-export PATH="$HOME/.pixi/bin:$PATH"
+# pixi is installed per-user and is not on a non-interactive PATH, and
+# neither is the eb-stack binary the charmap export needs.
+export PATH="$HOME/.pixi/bin:$HOME/.local/bin:$PATH"
 set -euo pipefail
 
 SRC=${GUIDE_SRC:-$HOME/Git/tmp/what-easybuild-is-doing}
