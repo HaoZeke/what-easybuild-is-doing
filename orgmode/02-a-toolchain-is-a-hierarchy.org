@@ -10,7 +10,7 @@ toolchain = SYSTEM
 #+end_src
 
 =SYSTEM= is the simplest possible value for that line, and almost
-nothing on a real cluster uses it. What you will actually see is this:
+nothing on a real cluster uses it. What you will see instead:
 
 #+begin_src easyconfig :widget hierarchy
 toolchain = {'name': 'foss', 'version': '2025a'}
@@ -75,9 +75,9 @@ comment in the implementation states it: the search is breadth-first,
 subtoolchains".
 
 Note the asterisks. =GCCcore= is *optional*. A toolchain class carries
-an =OPTIONAL= attribute, and an optional level is included only when it
-is actually there. So "the hierarchy of =foss-2025a=" is not a property
-of the string =foss-2025a=; it is a property of what is installed.
+an =OPTIONAL= attribute, and an optional level counts only when it is
+present. So "the hierarchy of =foss-2025a=" is not a property of the
+string =foss-2025a=; it is a property of what is installed.
 
 * The system toolchain is not always in it
 

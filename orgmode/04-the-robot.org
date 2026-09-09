@@ -8,8 +8,8 @@ eb GROMACS-2025.2-foss-2025a.eb -r
 #+end_example
 
 You have named one file and asked for one package. What arrives is
-forty modules, most of which you have never heard of, in an order that
-works. The =-r= is what did that. It is short for =--robot=, and this
+dozens of modules, most of which you have never heard of, in an order
+that works. The =-r= is what did that. It is short for =--robot=, and this
 chapter is about what it does and, more usefully, about where it
 looks.
 
@@ -20,18 +20,19 @@ Start with something smaller than it appears. You passed
 in a directory that contained it.
 
 That works because a bare easyconfig name is not a path, it is a
-lookup. EasyBuild resolves it against a search path, and every
-dependency it discovers gets resolved the same way. No difference in
-kind separates "find the thing I asked for" from "find the thing that
-the thing I asked for needs". Same query, same path.
+lookup. EasyBuild resolves it against an ordered list of directories,
+the *robot path*, and every dependency it discovers gets resolved the
+same way. No difference in kind separates "find the thing I asked for"
+from "find the thing that the thing I asked for needs". Same query,
+same path.
 
 Which means the interesting question is never "why can EasyBuild not
-find my dependency". It is "what is on the search path".
+find my dependency". It is "what is on the robot path".
 
-* The search path, and the empty element
+* The robot path, and the empty element
 
-The option is =--robot-paths=. Its default is the easyconfigs that came
-with your EasyBuild installation. That is why a fresh install can build
+The option that sets it is =--robot-paths=. Its default is the
+easyconfigs that came with your EasyBuild installation. That is why a fresh install can build
 thousands of packages with no configuration from you.
 
 Now, the part that looks like a typo and is not. The following is a
@@ -42,10 +43,10 @@ legal and common way to set it:
 #+end_example
 
 That trailing colon is deliberate, and leaving it off inverts the
-meaning. Without it you have *replaced* the default search path with
+meaning. Without it you have *replaced* the default robot path with
 your one directory. EasyBuild can then find none of the thousands of
-easyconfigs it came with. With it, your directory is searched first and
-the defaults are still there behind it.
+easyconfigs it came with. With it, EasyBuild searches your directory
+first and still has the defaults behind it.
 
 The mechanism is neither a special case nor a parsing quirk. The option
 is declared with an action called =add_flex=, and its documentation in
@@ -60,7 +61,7 @@ A colon-separated list =/my/site/easyconfigs:= has two elements, the
 second of which is empty. =add_flex= puts the default where the empty
 element was. So the colon is not punctuation, it is a *position*: it is
 where you are asking the defaults to go. Put it at the front instead,
-=:/my/site/easyconfigs=, and your directory is searched last.
+=:/my/site/easyconfigs=, and EasyBuild searches your directory last.
 
 Once you see it that way the whole option stops being fiddly. You are
 writing down an order, and the blank is the default's seat in it.
@@ -102,8 +103,8 @@ Any topological order of the graph is correct. So the list from =--dry-run=
 is *an* answer, not *the* answer, and diffing two of them across
 versions will show you churn that means nothing.
 
-And it is filtered by the hierarchy from chapter 2. A candidate counts
-as a candidate only when its toolchain belongs to your package's
+And the hierarchy from chapter 2 filters it. A candidate counts as a
+candidate only when its toolchain belongs to your package's
 hierarchy.
 
 That filter is where the two chapters meet, and it produces the most
@@ -138,13 +139,13 @@ an upstream easyconfig with the same name.
 
 1. A bare easyconfig filename is a query against the robot path, and so
    is every dependency. One mechanism, not two.
-2. In =--robot-paths=, an empty element is where the default search path
+2. In =--robot-paths=, an empty element is where the default robot path
    goes. A trailing colon prepends yours; a leading colon appends it.
-   No colon replaces the default entirely.
+   No colon replaces the default.
 3. A site overlay in front of the defaults is the normal arrangement.
    An EasyBuild release carries a frozen set of easyconfigs, and
    upstream keeps moving.
-4. Candidates are filtered by the toolchain hierarchy, so "installed"
-   and "findable" are different properties. The gap between them
-   explains most robot failures that feel impossible.
+4. The toolchain hierarchy filters the candidates, so "installed" and
+   "findable" are different properties. The gap between them explains
+   most robot failures that feel impossible.
 5. =-D= answers all of this before you spend the afternoon.

@@ -36,8 +36,8 @@ It is not configuration. It is a Python file, and EasyBuild runs it.
 
 Because everything surprising about easyconfigs follows from it.
 
-An easyconfig is executed in a namespace that has been prepared with a
-set of names it is allowed to use. =SYSTEM= on line seven is not a
+EasyBuild executes an easyconfig in a namespace it has prepared, which
+carries the set of names the file is allowed to use. =SYSTEM= on line seven is not a
 keyword and not a string; it is a value that EasyBuild put in the
 namespace before evaluating the file. That is why it has no quotes
 around it while =moduleclass= does. The quoting rule that looks
@@ -130,7 +130,7 @@ knowing:
 
 - it computes =mapped_arch=, the source of that template value. Any
   architecture that is neither x86-64 nor aarch64 raises an error.
-- it defaults the install step to copying the extracted tree into
+- it defaults the install step to copying the unpacked tree into
   place, because the release archive is already built software.
 - it runs =code-server --help= as a sanity check. The install is not
   finished until the binary has run.
@@ -159,9 +159,9 @@ default to true, and the build path does not override them. The one
 caller that does pass false is the *extensions* machinery, where
 falling through to a generic extension handler is the right behaviour.
 
-Read that in reverse and it becomes a tool. The absence of an
-=easyblock= line is not a shrug; it is a positive claim that a
-software-specific easyblock exists. So in the sample at the top of this
+Read that in reverse and it becomes a tool. A missing =easyblock= line
+is not a shrug. It claims, positively, that a software-specific
+easyblock exists. So in the sample at the top of this
 chapter, the missing line tells you =code_server.py= is out there
 before you have gone looking for it. And an easyconfig that *does* say
 =easyblock = 'ConfigureMake'= is not being verbose: naming a generic
@@ -181,7 +181,7 @@ help.
 Everything in this chapter has been about what EasyBuild infers. Here is
 what that looks like when an inference is wrong, from a real run on a
 real cluster. The package is QMCPACK, a quantum Monte Carlo code, and the
-recipe had just been moved from a pinned development commit onto the 4.4.0
+easyconfig had just been moved from a pinned development commit onto the 4.4.0
 release.
 
 #+begin_src ebtranscript :source "SURF Snellius, production run 20260909_063530, snel-zen4_h100, EasyBuild 5.3.1" :caption "A build that got everything right and failed anyway"
@@ -211,8 +211,8 @@ https://github.com/QMCPACK/QMCPACK/archive/v4.4.0.tar.gz
 
 Read what passed before it stopped. The right URL. The checksum verified
 against the archive. =tar xzf= exit 0. Patching, the toolchain, every
-build dependency, all fine. Twenty-two seconds in, and every check a
-person would think to run had already succeeded.
+build dependency, all fine. Every check a person would think to run had
+already succeeded.
 
 Then a path does not exist.
 
@@ -220,14 +220,14 @@ The error names the *consequence*. Something looked for
 =qmcpack-4.4.0/qmcpack= and did not find it. The message says that and
 nothing else. Who looked, and why they expected it, is missing.
 Answering those two questions is the work. The lever is already in this
-chapter. The recipe is a Python file, so whatever expected that path is
+chapter. The easyconfig is a Python file, so whatever expected that path is
 a value somebody assigned in it.
 
 The value was =start_dir=, and it said =qmcpack=. Five minutes earlier
-that had been correct. The recipe built from a git checkout, and
+that had been correct. The easyconfig built from a git checkout, and
 EasyBuild archives a clone under the repository's name, so the sources
-sat one level down inside =qmcpack/=. A release tarball
-extracts to =qmcpack-4.4.0/= with the sources at the top. The line was
+sat one level down inside =qmcpack/=. A release tarball unpacks to
+=qmcpack-4.4.0/= with the sources at the top. The line was
 right about the old source and wrong about the new one. The change from
 one to the other says nothing about =start_dir= at all.
 
@@ -236,16 +236,16 @@ Two things worth taking from that, and neither is about QMCPACK.
 First: *an EasyBuild error reports the state it found. The assumption
 behind that state appears nowhere in the message.* "Does not exist" is
 accurate and never the interesting fact. What expected the path to exist
-is interesting, and it sits in the recipe or in the easyblock the
-recipe's name selected.
+is interesting, and it sits in the easyconfig or in the easyblock the
+easyconfig's name selected.
 
 Second: *the parameters that break on a version bump describe the shape
 of the source.* The software's own requirements do not move. The
 archive's layout does. A checksum change is loud and you cannot forget
 it. =start_dir=, patch strip levels, anything naming a subdirectory:
 those are quiet. They were right before, and a diff against the previous
-recipe reports them unchanged. Unchanged is the wrong question. The
-question is whether they still hold for the archive now being extracted.
+easyconfig reports them unchanged. Unchanged is the wrong question. The
+question is whether they still hold for the archive now being unpacked.
 
 * What to take from this chapter
 

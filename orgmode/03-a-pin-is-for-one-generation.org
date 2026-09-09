@@ -52,23 +52,23 @@ and the stack has one HDF5 rather than four. A resolver with ranges
 would give you four.
 
 So the exactness earns its place. The trouble starts the moment the
-recipe outlives the generation it was written for.
+easyconfig outlives the generation it was written for.
 
 * The thing that breaks
 
-You have a recipe that works on =foss-2025a=. You want it on
+You have a easyconfig that works on =foss-2025a=. You want it on
 =foss-2024a=, maybe because a user is stuck on the older stack, maybe
-because you are backfilling. The recipe says HDF5 1.14.6, and
+because you are backfilling. The easyconfig says HDF5 1.14.6, and
 =foss-2024a= carried HDF5 1.14.3.
 
 The build fails. Nothing called HDF5 1.14.6 exists in that generation,
 and nothing ever will: generations do not gain new versions
 retroactively.
 
-Now look at what the recipe actually told you. It said "1.14.6". Did
+Now look at what the easyconfig told you. It said "1.14.6". Did
 the software require 1.14.6? Almost certainly not. It required
 something, some feature that landed in some earlier version. 1.14.6 is
-simply *what was on the shelf* when someone wrote the recipe down. The
+*what was on the shelf* when someone wrote the easyconfig down. The
 number records a build environment. It says nothing about what the
 package itself needs.
 
@@ -76,20 +76,20 @@ That is the whole insight, stated flatly:
 
 #+begin_quote
 A dependency version in an easyconfig is an exact pin for the
-generation the recipe was written against. Carried across generations,
+generation the easyconfig was written against. Carried across generations,
 it states a requirement the software never made.
 #+end_quote
 
 * This is why retargeting is not a text edit
 
-The first move that comes to mind, when you want a recipe on another
+The first move that comes to mind, when you want a easyconfig on another
 generation, is to open it and change =2025a= to =2024a=. Then the build
 fails on HDF5, so you change 1.14.6 to 1.14.3. Then it fails on netCDF,
 so you look up what =foss-2024a= provides, and change that. Twenty
-minutes later you have a recipe that builds and no record of which of
+minutes later you have a easyconfig that builds and no record of which of
 those numbers were requirements and which were furniture.
 
-The right shape is different. Treat the old recipe's versions as
+The right shape is different. Treat the old easyconfig's versions as
 *floors*: evidence about what the package was once seen to work with.
 The target generation's available modules are the *candidates*.
 Something then has to choose a set of candidates that satisfies the
@@ -119,12 +119,12 @@ generation carried an older version, and the build passed". That tells
 you a version was sufficient on one machine on one day. Worth having,
 and a different claim.
 
-If you retarget a recipe and you care whether it is right, say in the
+If you retarget a easyconfig and you care whether it is right, say in the
 commit message which of the two your bound came from.
 
 * A worked case, because the abstraction is slippery
 
-Take the code-server recipe from chapter 1. It has no dependencies at
+Take the code-server easyconfig from chapter 1. It has no dependencies at
 all, which makes it a poor example of pinning. It is a perfect example
 of the *other* half of this problem: what a generation contains.
 
@@ -151,7 +151,7 @@ the difference because it names a version and not a generation.
 1. A dependency is an exact version, because a reproducible stack
    should have one of each library. The format offers no range syntax,
    and that absence is deliberate.
-2. That version records the generation the recipe was written against.
+2. That version records the generation the easyconfig was written against.
    Across generations it asserts a requirement the software never made.
 3. So retargeting means treating the old versions as evidence and the
    target generation's modules as candidates, and choosing. Editing
