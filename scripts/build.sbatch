@@ -75,12 +75,27 @@ cd "$SRC"
     # thing and fails on files that never ship.
     python3 - <<'EOF'
 import zipfile
+
+# What must be absent is the island machinery: the runtime, the engine, the
+# widget stylesheet, and the charmap it fetches. eb-transcript.css is a
+# different thing and belongs here, because transcripts do render in the epub
+# and epub_exclude_files deliberately keeps it. Asserting on the "eb-" prefix
+# catches that file too and fails a build that is correct.
+WIDGET = ("eb-widget", "eb-charmap")
 z = zipfile.ZipFile("build/epub/WhatEasyBuildIsDoing.epub")
-stowaways = [n for n in z.namelist() if "eb-" in n]
+names = z.namelist()
+stowaways = [n for n in names if any(part in n for part in WIDGET)]
 if stowaways:
     print("FAIL: widget assets packed into the epub:", stowaways)
 else:
     print("ok: no widget assets in the epub archive")
+
+# And the transcript stylesheet has to be there, or the exclusion list has
+# over-reached and the transcripts render unstyled on an e-reader.
+if any("eb-transcript.css" in n for n in names):
+    print("ok: the epub archive carries eb-transcript.css")
+else:
+    print("FAIL: eb-transcript.css missing from the epub archive")
 EOF
 
     echo "=== transcripts: rendered, with provenance, in all three ==="
