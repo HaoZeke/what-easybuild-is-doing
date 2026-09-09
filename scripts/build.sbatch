@@ -98,6 +98,15 @@ else:
     print("FAIL: eb-transcript.css missing from the epub archive")
 EOF
 
+    echo "=== every chapter reached all three builders ==="
+    for ch in orgmode/[0-9]*.org; do
+        stem=$(basename "$ch" .org)
+        for target in html/$stem.html singlehtml/index.html epub/$stem.xhtml; do
+            [ -f "build/$target" ] || { echo "FAIL: build/$target missing"; }
+        done
+    done
+    echo "ok: checked $(ls orgmode/[0-9]*.org | wc -l) chapters"
+
     echo "=== transcripts: rendered, with provenance, in all three ==="
     for f in build/html/01-an-easyconfig-is-python.html \
              build/singlehtml/index.html \
