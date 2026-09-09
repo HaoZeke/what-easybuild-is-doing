@@ -57,6 +57,7 @@ reading the log, not watching the progress bar.
    06-what-installed-means
    07-a-checksum-is-a-claim-about-bytes
    08-one-easyconfig-many-installs
+   09-a-hook-changes-a-file-you-are-not-reading
 #+end_export
 
 Chapters are published as they are written, and each one reads on its

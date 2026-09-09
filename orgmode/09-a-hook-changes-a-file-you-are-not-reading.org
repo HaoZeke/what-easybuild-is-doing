@@ -1,0 +1,154 @@
+#+TITLE: A hook changes a file you are not reading
+#+OPTIONS: toc:nil num:nil
+
+Every chapter so far has read an easyconfig and reasoned from it. This
+chapter is about the mechanism that makes that reasoning incomplete,
+and about why a site adopts it anyway.
+
+* The problem a hook solves
+
+An easyconfig is upstream's. A site has policies that apply to every
+build it runs: where installations go, how modules are named, a
+compiler flag everything needs, a workaround for local machines.
+
+None of that belongs in an easyconfig. Put it there and you have
+forked upstream's file. Every version bump then becomes a merge, and
+every policy change a sweep across thousands of files.
+
+So EasyBuild takes a file of Python functions and calls them at
+defined points:
+
+#+begin_example
+eb GROMACS-2025.2-foss-2025a.eb -r --hooks=/my/site/hooks.py
+#+end_example
+
+The functions are found by name. =parse_hook= runs after an easyconfig
+is parsed, =pre_configure_hook= before the configure step, and
+=post_module_hook= after the modulefile is written, with one such name
+per step. No registration and no decorator: the name is the
+subscription.
+
+=parse_hook= is the one that matters most, because it runs before
+dependency resolution. A change made there changes what gets built,
+rather than only how.
+
+* A hook sees everything, so it starts with a guard
+
+Here is the shape of a real one, reduced to its structure:
+
+#+begin_src easyconfig :widget parse
+def parse_hook(ec, *args, **kwargs):
+    if ec.name != 'NVHPC':
+        return
+    if 'oldcluster' not in socket.getfqdn():
+        return
+    ec['postinstallcmds'] = ['echo "set LIBDIR=/usr/lib64;" >> %(installdir)s/localrc']
+#+end_src
+
+Three lines of guard before one line of work, and the guards are the
+interesting part.
+
+The first tests the package. A hook is called for every easyconfig the
+site builds, so without that test this one would fire on all of them.
+
+The second tests the hostname. That is a hook doing what a hook is
+for: a workaround for one set of machines, expressed once, applying to
+whichever easyconfig meets it.
+
+Both guards are ordinary Python, evaluated at build time, and neither
+appears in any easyconfig.
+
+* The line of work is where hooks go wrong
+
+Look at the assignment:
+
+#+begin_example
+ec['postinstallcmds'] = [...]
+#+end_example
+
+That replaces the parameter. Whatever the easyconfig declared in
+=postinstallcmds= is gone, with no diagnostic, because assignment to a
+list parameter is not an error.
+
+Compare:
+
+#+begin_example
+ec['postinstallcmds'] = ec['postinstallcmds'] + [...]
+#+end_example
+
+Two versions of one hook, a few characters apart, and the difference
+decides whether an easyconfig's own post-install steps survive.
+
+The hazard is quiet in the ordinary case. Most easyconfigs declare no
+=postinstallcmds=, and replacing an empty list with a one-element list
+is exactly the intent. It becomes a defect the day someone adds
+=postinstallcmds= to an easyconfig the hook fires on.
+The easyconfig is correct, the hook is unchanged, and the commands do
+not run.
+
+This applies to every list- or dictionary-valued parameter a hook
+touches. =dependencies=, =configopts=, =modextravars=, =patches=:
+assignment discards, and nothing warns you.
+
+* Which qualifies chapter 1
+
+Chapter 1 closed a failure with this inference:
+
+#+begin_quote
+The easyconfig is a Python file, so whatever expected that path is a
+value somebody assigned in it.
+#+end_quote
+
+A hook makes that false. The value may have been assigned in the hook,
+after the file was parsed, and the file on disk will not mention it.
+
+So the inference needs a condition attached, and the condition is not
+optional at a site that uses hooks. Reading a failure means knowing
+whether a hook is loaded and what it touches, before concluding that
+an easyconfig says what it appears to say.
+
+The practical form: find out what =--hooks= is set to, in the
+configuration or the wrapper script that invoked =eb=, and read that
+file once. Most are short, and the guards tell you immediately whether
+the hook can have applied to your build.
+
+* Hooks and overlays solve different problems
+
+Chapter 4's robot path and this chapter's hooks are the two ways a site
+changes EasyBuild's behaviour, and they are not interchangeable.
+
+An overlay changes *which* easyconfig gets found. It is the right tool
+when the site needs a different file: a newer version, a local patch,
+a variant upstream does not carry.
+
+A hook changes *what happens to* whichever easyconfig was found. It is
+the right tool when the same change has to reach files the site does
+not own and would rather not adopt.
+
+Reaching for the wrong one has a characteristic outcome each way. An
+overlay used for policy gives you a fork to maintain, one copy per
+package, each drifting from upstream at its own pace. A hook used to
+carry a package-specific change gives you a global mechanism whose
+behaviour depends on a guard. The next person reads the easyconfig and
+sees none of it.
+
+* What to take from this chapter
+
+1. A hook is a Python file of functions found by name, called at
+   defined points, and named to EasyBuild with =--hooks=.
+2. =parse_hook= runs before dependency resolution, so it changes what
+   gets built rather than only how.
+3. A hook is called for every easyconfig, so its guards are as much
+   of its behaviour as its body.
+4. Assigning a list parameter in a hook discards what the easyconfig
+   declared, with no diagnostic. Append unless replacing is the
+   intent.
+5. A hook means an easyconfig is no longer the whole story. Find out
+   whether one is loaded before reasoning from the file, which is the
+   condition chapter 1's inference needs.
+6. An overlay changes which easyconfig is found; a hook changes what
+   happens to it. Using one for the other's job has a predictable
+   cost.
+
+The next chapter is the one with no widget and no parameters: when
+EasyBuild is the wrong tool, and what to reach for instead.
