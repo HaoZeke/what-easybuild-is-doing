@@ -1,0 +1,144 @@
+#+TITLE: A checksum is a claim about bytes
+#+OPTIONS: toc:nil num:nil
+
+Chapter 1's easyconfig spends more lines on where the sources come
+from than on anything else. Here is that part again, on its own:
+
+#+begin_src easyconfig :widget parse
+name = 'code-server'
+version = '4.130.0'
+
+source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
+sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
+checksums = [
+    {
+        'code-server-4.130.0-linux-amd64.tar.gz':
+            '3de23052e34fa705b3817efa66201cbc8d8ba6615b4cd03120c39bfc0ae1b7ab',
+        'code-server-4.130.0-linux-arm64.tar.gz':
+            '795366c40d0b32bc6fbbedf8dc992f9767a6125cc6dce965766c5f79e06bb725',
+    }
+]
+#+end_src
+
+Three parameters, and each one is a different kind of statement. This
+chapter is about the third, which is the one people trust furthest
+beyond what it says.
+
+* The list is positional, and then one entry is a dictionary
+
+=sources= is a list. =checksums= is a list. They line up by position:
+the first checksum is for the first source.
+
+So the outer list here has exactly one element, because =sources= has
+one element. That element is not a string. It is a dictionary from
+filename to checksum, and it carries two entries for one source.
+
+Both facts are needed to read it. The dictionary is there because
+=sources= templates =%(mapped_arch)s=, from chapter 1, so that single
+line resolves to a different filename on x86-64 than on aarch64. One
+source line, two possible files, and the dictionary says which
+checksum belongs to which.
+
+Look at what the keys are. Not =amd64= and =arm64=, and not an
+architecture at all: full resolved filenames. The dictionary does not
+know about architectures. It knows about names, and the templating
+decides which name gets looked up.
+
+That has a consequence worth internalising. Add support for a third
+architecture and the dictionary does not complain about the gap. The
+lookup simply fails to find a key, on that architecture only, on the
+machine that has it. A per-architecture dictionary is silent about the
+architectures it does not mention.
+
+* What a checksum can and cannot tell you
+
+A checksum verifies bytes. That is what it does, and all of what it
+does.
+
+It cannot tell you the archive contains the version you think. If
+upstream re-tags a release and the archive changes, your checksum
+fails and you learn something. Suppose instead that upstream publishes
+a *different* archive also calling itself 4.130.0, and you compute a
+checksum over that one. It passes forever and tells you nothing.
+
+It cannot tell you the archive has the layout your easyconfig expects.
+Chapter 1's failure again, and the two claims are worth putting side
+by side, because they are independent:
+
+#+begin_quote
+The checksum verified against the archive.
+The archive did not contain the directory the build expected.
+#+end_quote
+
+Both true at once. Verification passed, at full strength, over exactly
+the right bytes, and the build then failed on =start_dir=.
+
+* Which is why a source change is the dangerous kind
+
+Chapter 1 put this as a rule about parameters that describe the shape
+of the source. Here it is as a rule about editing.
+
+Change the version and you must change the checksum. Forgetting is
+not available: the build stops on a mismatch and hands you the value
+it computed. That loudness belongs to the parameter, not to your
+diligence.
+
+Change what *kind* of thing you are downloading and nothing is loud.
+The QMCPACK easyconfig in chapter 1 had been building from a pinned
+development commit and moved to a release tarball. That change
+rewrites =sources=, and the checksum with it, so both got attention.
+
+Everything else about the source block also changed, and none of it
+announced itself:
+
+- a git checkout gets archived under the repository's name. The
+  sources sat one level down.
+- a release tarball unpacks to =name-version/=, sources at the top.
+- =start_dir= described the first arrangement, and nobody touched
+  it.
+
+A checksum protects you against the wrong bytes. Nothing in the format
+protects you against the right bytes in a different shape.
+
+* Borrowing a checksum from another packaging system
+
+One more way a verified checksum can be the wrong verified checksum.
+
+One version of a project can exist as more than one legitimate
+archive. GitHub generates a tarball from a tag. The project also
+publishes a release archive, often with vendored dependencies or a
+generated =configure= that the tag does not contain. Both are that
+version. They are not the same bytes, and neither is wrong.
+
+So a checksum copied from a conda-forge recipe or a Spack
+=package.py= can be perfectly correct about the wrong archive: not the
+one your =source_urls= points at. The value is right and the version
+is right. The build then fails a verification that is working exactly
+as designed.
+
+The rule that follows is narrow and worth keeping. A borrowed checksum
+needs the URL it was computed over, and the version alone will not do.
+Two ecosystems agreeing on a version number is not two ecosystems
+agreeing on an artifact.
+
+* What to take from this chapter
+
+1. =checksums= lines up with =sources= by position. A dictionary in
+   one of those positions maps resolved filenames to checksums, which
+   is how one templated source line covers more than one
+   architecture.
+2. The dictionary is keyed by filename, not by architecture, and it
+   says nothing about the filenames it omits. A missing key fails only
+   on the machine that produces that name.
+3. A checksum is a claim about bytes. It carries no claim about the
+   version, and none at all about the layout inside the archive.
+4. Changing a version is loud, because the checksum stops the build.
+   Changing the kind of source is quiet, because the parameters that
+   describe its shape still parse.
+5. A checksum borrowed from another packaging system belongs to that
+   system's artifact. Carry the URL it was computed over, or the
+   verification will be right about the wrong file.
+
+The next chapter is about =exts_list=, where one easyconfig installs
+hundreds of packages, and each of them can carry its own sources,
+checksums, and easyblock.
