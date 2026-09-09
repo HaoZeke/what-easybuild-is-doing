@@ -90,7 +90,7 @@ This applies to every list- or dictionary-valued parameter a hook
 touches. =dependencies=, =configopts=, =modextravars=, =patches=:
 assignment discards, and nothing warns you.
 
-* Which qualifies chapter 1
+* Which qualifies [[file:01-an-easyconfig-is-python.org][chapter 1]]
 
 Chapter 1 closed a failure with this inference:
 

@@ -150,6 +150,10 @@ EOF
         # Rules agreeing is not the same as the functions a page calls
         # working, so exercise those against the chapters' own samples.
         node scripts/smoke-widgets.js || echo "FAIL: a widget entry point is broken"
+        # The tutorial says "you should see X" at every step. Those are
+        # promises to a reader who will conclude the page is broken when one
+        # does not hold, so they are checked rather than trusted.
+        node scripts/check-tutorial.js || echo "FAIL: the tutorial promises something the engine does not do"
         # And the only check that sees what a reader sees. Skips itself when
         # there is no browser or nothing served, which is the case on this
         # host; the operator runs it against scripts/serve.sh.

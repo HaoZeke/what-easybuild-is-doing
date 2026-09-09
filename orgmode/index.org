@@ -2,51 +2,80 @@
 #+AUTHOR: Rohit Goswami
 #+OPTIONS: toc:nil num:nil
 
-This book is about what EasyBuild is doing. EasyBuild's own
-documentation tells you what to type and stays almost silent on what
-happens when you do.
+EasyBuild's own documentation tells you what to type. It stays almost
+silent on what happens when you do.
 
-That silence is expensive. EasyBuild has reference documentation for
-every parameter, and a workshop series with hands-on exercises. Between
-them they will get you to a working install. Neither explains why an
-easyconfig is a Python file, or why a toolchain is a hierarchy rather
-than a name. Neither explains why the version number next to a
-dependency is not a minimum. People learn those three things by
-breaking a production software stack, which is a slow and public way to learn
-them.
+That silence is expensive. Reference documentation covers every
+parameter, and a workshop series covers the exercises. Between them
+they will get you to a working install.
 
-So this is the other book. You need to be able to read code. You do not
-need EasyBuild installed, and you do not need a cluster. The samples in
-it run in your browser.
+Neither explains why an easyconfig is a Python file. Neither explains
+why a toolchain is a hierarchy rather than a name, or why the version
+number next to a dependency is not a minimum.
+
+People learn those three by breaking a production software stack, which
+is a slow and public way to learn anything.
+
+So this is the other book.
+
+* Start here
+
+[[file:00-tutorial-read-an-easyconfig.org][Read an easyconfig the way
+EasyBuild does]]. Twenty minutes, and nothing to install.
+
+At the end you can predict what EasyBuild will download, name the
+easyblock it will look for, and say which dependencies a toolchain
+permits.
+
+After that, pick by what you are doing.
+
+| What you are doing | Read |
+|---+---|
+| working out why a build failed | [[file:01-an-easyconfig-is-python.org][chapter 1]], then chapters 5 to 9 |
+| moving a recipe to a newer stack | [[file:03-a-pin-is-for-one-generation.org][chapter 3]] |
+| told a module exists, but it will not load | [[file:04-the-robot.org][chapter 4]] and [[file:06-what-installed-means.org][chapter 6]] |
+| reading a failure whose cause is not in the file | [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] |
+| installing software with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
+| working on a machine with no stack of its own | [[file:11-eessi-somebody-elses-stack.org][chapter 11]] |
+| deciding whether to use EasyBuild at all | [[file:13-when-easybuild-is-the-wrong-tool.org][chapter 13]] |
+
+Reading straight through works too. Chapters 1 to 4 are the mechanisms
+everything else rests on. Chapters 5 to 9 are the parameters that cost
+the most time when misread, each built around a failure that actually
+happened. Chapters 10 to 12 are the ones where you do something.
 
 * What you need
 
-Nothing. That is the point.
+Nothing, and that is the point.
 
 EasyBuild's own tutorial opens by asking for Linux, Python, an
 environment modules tool and a working EasyBuild install. That is a
-reasonable ask of someone who has already decided to use EasyBuild. It
-is an unreasonable one of someone still deciding whether to. What runs
-here runs on your machine, in the page.
+reasonable ask of someone who has already decided to use EasyBuild, and
+an unreasonable one of someone still deciding whether to.
 
-Every sample runs. Edit one and the answer changes as you type.
+Every sample here runs on your machine, in the page. Edit one and the
+answer changes as you type.
 
-Three of them work off tables exported from eb-stack at build time
-rather than retyped, so a page cannot drift from the framework's own
-data. A cross-check compares the browser's answers against the
-binary's on every build.
+Three of the four kinds work off tables exported from eb-stack at build
+time rather than retyped. So a page cannot drift from the framework's
+own data.
+
+A cross-check compares the browser's answers against the binary's on
+every build. A headless browser then checks that every sample on every
+page is live and answering.
 
 The fourth reads an easyconfig into its evaluated model, and it is a
 reduced reader rather than the real parser. It follows single-line
 assignments and *names what it skipped*. Where the real parser is
-needed it says so instead of guessing, because eb-stack does not
-compile to WebAssembly yet.
+needed it says so instead of guessing.
 
 That gets you a lot, and not everything. Nothing in a browser can
-configure, compile or link, and nothing here pretends to. Where a step
-needs a real toolchain you get a recording of a real run instead. That
-turns out to be the right way to teach it: the operational skill is
-reading the log, not watching the progress bar.
+configure, compile or link, and nothing here pretends to.
+
+Where a step needs a real toolchain you get a recording of a real run
+instead, with where and when it ran printed beside it. That turns out
+to be the right way to teach those steps. The operational skill is
+reading the log rather than watching the progress bar.
 
 * The chapters
 
@@ -55,6 +84,7 @@ reading the log, not watching the progress bar.
    :maxdepth: 1
    :numbered:
 
+   00-tutorial-read-an-easyconfig
    01-an-easyconfig-is-python
    02-a-toolchain-is-a-hierarchy
    03-a-pin-is-for-one-generation
@@ -70,22 +100,8 @@ reading the log, not watching the progress bar.
    13-when-easybuild-is-the-wrong-tool
 #+end_export
 
-Chapters are published as they are written, and each one reads on its
-own. If you read exactly one, read the first. If you read two, read the
-third as well. The version number beside a dependency is the single
-most expensive misreading in EasyBuild, and it is four lines long.
-
-Chapters 1 to 4 are the mechanisms everything else rests on. Chapters
-5 to 9 are the parameters that cost real time when misread, each built
-around a failure that actually happened.
-
-Chapters 10 to 12 are the ones where you do something. Install software
-into a directory you own, then do it on top of EESSI. Then read how the
-engine behind these samples decides what it has established. Chapter 13
-argues for the other tools.
-
 * Who wrote this
 
 Rohit Goswami, who maintains software stacks on a national
 supercomputer and wrote [[https://eb-stack.rgoswami.me][eb-stack]],
-which is the engine running the samples here.
+the engine running the samples here.

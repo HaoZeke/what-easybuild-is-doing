@@ -16,9 +16,9 @@ of magnitude.
 
 Every part of that carries a cost you have already met. Exact pins
 mean a package cannot follow upstream on its own schedule, which is
-chapter 3. A generation means the whole stack moves at once, once a
-year. From-source means a build takes hours, which chapter 8 puts at a
-few hundred extensions and chapter 10 makes your own problem. Modulefiles mean the artifact is an
+[[file:03-a-pin-is-for-one-generation.org][chapter 3]]. A generation means the whole stack moves at once, once a
+year. From-source means a build takes hours, which [[file:08-one-easyconfig-many-installs.org][chapter 8]] puts at a
+few hundred extensions and [[file:10-build-your-own-without-asking.org][chapter 10]] makes your own problem. Modulefiles mean the artifact is an
 environment rather than a directory a user can copy.
 
 Those are good trades for a national supercomputer with thousands of

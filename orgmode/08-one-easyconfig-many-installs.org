@@ -39,7 +39,7 @@ Two extensions here, and a real one of these carries two hundred. Each
 entry is a separate download, a separate build, and a separate check.
 The module at the end is one module.
 
-* The chapter 1 rule inverts here
+* The [[file:01-an-easyconfig-is-python.org][chapter 1]] rule inverts here
 
 Start with =easyblock = 'Bundle'=. Chapter 1 said a missing =easyblock=
 line claims a software-specific easyblock exists, and that naming a
@@ -93,7 +93,7 @@ than the extension's.
 
 * Chapters 6 and 7 now apply once per extension
 
-=exts_filter= is chapter 6's sanity check, per extension, and it has
+=exts_filter= is [[file:06-what-installed-means.org][chapter 6]]'s sanity check, per extension, and it has
 an unusual shape:
 
 #+begin_example
@@ -110,7 +110,7 @@ existence-tested, and a bundle gets it for every extension at once.
 Two hundred extensions, two hundred loads, each one a real
 verification.
 
-And every entry carries its own =checksums=, which is chapter 7 two
+And every entry carries its own =checksums=, which is [[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]] two
 hundred times over. Each extension has its own bytes, its own source
 URL, and its own opportunity for a checksum that is right about the
 wrong artifact.

@@ -54,7 +54,7 @@ Now the check has actually executed the thing. The import resolved,
 the interpreter found the package, the function returned. A zero-byte
 file fails this.
 
-The code-server easyconfig from chapter 1 has no such line, and its
+The code-server easyconfig from [[file:01-an-easyconfig-is-python.org][chapter 1]] has no such line, and its
 install still runs =code-server --help=. That command comes from the
 easyblock, which is chapter 1's point arriving again: behaviour the
 easyconfig never mentions, implied by the name.
@@ -144,7 +144,7 @@ answer for. =LD_PRELOAD= handles a single library; otherwise read the
 resolution rather than the exit code.
 
 A test that can pass for a reason other than the one you are testing
-is not a test. That is the same shape as chapter 5's stale name: an
+is not a test. That is the same shape as [[file:05-a-versionsuffix-is-part-of-the-name.org][chapter 5]]'s stale name: an
 accurate observation carrying a wrong inference.
 
 * The modulefile is the deliverable

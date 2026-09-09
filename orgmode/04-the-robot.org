@@ -75,7 +75,7 @@ preference over =--robot-paths=".
 * Why an overlay is the normal case
 
 A site almost always has its own easyconfigs directory in front of the
-defaults. The reason is chapter 3's closing point: an EasyBuild release
+defaults. The reason is [[file:03-a-pin-is-for-one-generation.org][chapter 3]]'s closing point: an EasyBuild release
 carries a fixed set of easyconfigs. Anything merged upstream after that
 release is not in it. So the moment a site wants a package newer than
 its EasyBuild, it needs somewhere to put that easyconfig. That
@@ -175,7 +175,7 @@ same fact one level down.
 
 ** And the hierarchy filters the candidates
 
-The hierarchy from chapter 2 decides what step 3 is allowed to find. A
+The hierarchy from [[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]] decides what step 3 is allowed to find. A
 candidate counts as a candidate only when its toolchain belongs to your
 package's hierarchy.
 

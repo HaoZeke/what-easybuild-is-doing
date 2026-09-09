@@ -28,11 +28,11 @@ dependencies = [
 #+end_src
 
 Read those two statements as one and you will be wrong about what each
-does. The dependency binds: chapter 3's exact pin, one module, no
+does. The dependency binds: [[file:03-a-pin-is-for-one-generation.org][chapter 3]]'s exact pin, one module, no
 range. The =versionsuffix= reports, and it reports into the module's
 own name.
 
-=%(cudaver)s= is chapter 1's templating, resolved from the CUDA
+=%(cudaver)s= is [[file:01-an-easyconfig-is-python.org][chapter 1]]'s templating, resolved from the CUDA
 dependency, so the two are related by derivation. They are not related
 by enforcement. EasyBuild derives the suffix from the dependency once,
 at parse time, and writes the result into a filename. Nothing checks
@@ -57,7 +57,7 @@ toolchain = {'name': 'NVHPC', 'version': '25.11-CUDA-12.9.1'}
 
 The toolchain's version reads =25.11-CUDA-12.9.1=. Not =25.11= with a
 suffix beside it: one string, with the suffix already folded in. That
-is what the consumer sees, and chapter 2's hierarchy is keyed on
+is what the consumer sees, and [[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s hierarchy is keyed on
 exactly that string.
 
 So a =versionsuffix= is structural for whoever declares it and opaque

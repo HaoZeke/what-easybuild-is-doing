@@ -51,7 +51,7 @@ Eight settings say =(E)= from one variable.
 easyconfigs that came with the site's EasyBuild.
 
 That is the important line on the page. Your prefix decided where output
-goes. It did not touch where EasyBuild *looks*, and chapter 4 is why:
+goes. It did not touch where EasyBuild *looks*, and [[file:04-the-robot.org][chapter 4]] is why:
 those are two different lists.
 
 Which is exactly what you want. The site's easyconfigs stay available,
@@ -130,7 +130,7 @@ Disk. Software plus sources plus build directories under one prefix, in
 a home directory with a quota. Point =sourcepath= at a shared download
 cache if the site has one, and clean the build directory.
 
-Time. From-source is chapter 13's trade, and it does not get cheaper
+Time. From-source is [[file:13-when-easybuild-is-the-wrong-tool.org][chapter 13]]'s trade, and it does not get cheaper
 because you are the one waiting.
 
 Duplication, if you get =MODULEPATH= wrong. Drop the site's modules and

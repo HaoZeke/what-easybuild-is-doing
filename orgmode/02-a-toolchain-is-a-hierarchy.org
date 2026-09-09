@@ -1,7 +1,7 @@
 #+TITLE: A toolchain is a hierarchy
 #+OPTIONS: toc:nil num:nil
 
-The easyconfig in chapter 1 had one line we did not touch:
+The easyconfig in [[file:01-an-easyconfig-is-python.org][chapter 1]] had one line we did not touch:
 
 #+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'

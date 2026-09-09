@@ -34,7 +34,7 @@ one element. That element is not a string. It is a dictionary from
 filename to checksum, and it carries two entries for one source.
 
 Both facts are needed to read it. The dictionary is there because
-=sources= templates =%(mapped_arch)s=, from chapter 1, so that single
+=sources= templates =%(mapped_arch)s=, from [[file:01-an-easyconfig-is-python.org][chapter 1]], so that single
 line resolves to a different filename on x86-64 than on aarch64. One
 source line, two possible files, and the dictionary says which
 checksum belongs to which.

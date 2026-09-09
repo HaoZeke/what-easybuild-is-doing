@@ -124,7 +124,7 @@ commit message which of the two your bound came from.
 
 * A worked case, because the abstraction is slippery
 
-Take the code-server easyconfig from chapter 1. It has no dependencies at
+Take the code-server easyconfig from [[file:01-an-easyconfig-is-python.org][chapter 1]]. It has no dependencies at
 all, which makes it a poor example of pinning. It is a perfect example
 of the *other* half of this problem: what a generation contains.
 

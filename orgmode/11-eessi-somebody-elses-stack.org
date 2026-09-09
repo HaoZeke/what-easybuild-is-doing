@@ -92,7 +92,7 @@ Chapter 10's =--show-config= earns its place again. Run it and read
 =installpath=: it comes back qualified by microarchitecture, something
 like =.../software/linux/x86_64/amd/zen5=.
 
-Stop and look at that path. It is chapter 6's per-architecture tree, and
+Stop and look at that path. It is [[file:06-what-installed-means.org][chapter 6]]'s per-architecture tree, and
 here the architecture is *in the path* rather than hidden behind a
 symlink. Same arrangement, made visible. A binary built here is for one
 microarchitecture and says so.
