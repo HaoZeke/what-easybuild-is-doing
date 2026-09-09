@@ -307,10 +307,18 @@
 
       if (!name) {
         // Accept a bare `foss-2025a` too, because that is how people say it.
+        // Split an unknown one as well, so a typo gets told which generation
+        // is missing rather than the generic help text.
         var bare = source.trim().split("\n")[0].trim();
         if (Object.prototype.hasOwnProperty.call(byKey, bare.toLowerCase())) {
           name = byKey[bare.toLowerCase()].parent.name;
           version = byKey[bare.toLowerCase()].parent.version;
+        } else {
+          var dash = bare.indexOf("-");
+          if (dash > 0 && !/\s/.test(bare)) {
+            name = bare.slice(0, dash);
+            version = bare.slice(dash + 1);
+          }
         }
       }
 
@@ -350,13 +358,20 @@
       var key = (name + "-" + version).toLowerCase();
       var found = byKey[key];
       if (!found) {
-        return (
-          name + "-" + version + " is not one of the exported generations.\n\n" +
-          "The engine carries the ones eb-stack has fixtures for: " +
-          known.join(", ") + ".\n" +
-          "A real hierarchy is a property of what is installed, not of the\n" +
-          "string, so a site's answer can differ from any of these."
-        );
+        var lines = [
+          name + "-" + version + " is not one of the exported generations.",
+          "",
+          "The lookup key is the whole version string. A versionsuffix that",
+          "was folded into it, as in 25.11-CUDA-12.9.1, is part of the key",
+          "rather than a modifier on it: two suffixes are two unrelated",
+          "toolchains to this walk.",
+          "",
+          "The engine carries the generations eb-stack has fixtures for: " +
+            known.join(", ") + ".",
+          "A real hierarchy is a property of what is installed rather than of",
+          "the string, so a site's answer can differ from any of these.",
+        ];
+        return lines.join("\n");
       }
 
       var lines = found.members.map(label);

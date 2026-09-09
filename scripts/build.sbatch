@@ -147,6 +147,9 @@ EOF
     # operator's machine too, and a missing interpreter is not a book defect.
     if command -v node >/dev/null 2>&1 && command -v "${EB_STACK:-eb-stack}" >/dev/null 2>&1; then
         node scripts/crosscheck.js || echo "FAIL: engine disagrees with eb-stack"
+        # Rules agreeing is not the same as the functions a page calls
+        # working, so exercise those against the chapters' own samples.
+        node scripts/smoke-widgets.js || echo "FAIL: a widget entry point is broken"
     else
         echo "skipped: node or eb-stack absent on this host"
     fi
