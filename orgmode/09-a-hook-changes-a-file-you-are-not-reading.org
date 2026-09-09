@@ -8,7 +8,7 @@ and about why a site adopts it anyway.
 * The problem a hook solves
 
 An easyconfig is upstream's. A site has policies that apply to every
-build it runs: where installations go, how modules are named, which
+build it runs. Where installations go, how modules are named, which
 compiler flags everything needs, what the local machines require.
 
 None of that belongs in an easyconfig. Put it there and you have
@@ -141,8 +141,8 @@ sees none of it.
 3. A hook is called for every easyconfig, so its guards are as much
    of its behaviour as its body.
 4. Assigning a list parameter in a hook discards what the easyconfig
-   declared, with no diagnostic. Append unless replacing is the
-   intent.
+   declared, with no diagnostic. Append. Replace only when replacing is
+   what you mean.
 5. A hook means an easyconfig is no longer the whole story. Find out
    whether one is loaded before reasoning from the file, which is the
    condition chapter 1's inference needs.

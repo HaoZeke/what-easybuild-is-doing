@@ -84,9 +84,10 @@ means.
 The failure mode that cost me the most involves no parameter at all.
 
 A sanity check runs on the machine that did the build. On a cluster
-with more than one processor architecture the install tree is separate
-per architecture. A binary tuned for one is not the binary for another.
-A green check is therefore a statement about one of those trees.
+with more than one processor architecture the whole install tree is
+separate per architecture. A binary tuned for one is not the binary
+for another.
+So a green check is a statement about one of those trees.
 
 I once declared a problem fixed after testing on an interactive node.
 The binary started, resolved its libraries, ran. The report was wrong
@@ -155,6 +156,6 @@ unusable.
 5. =patchelf --set-rpath= writes =DT_RUNPATH=, which loses to
    =LD_LIBRARY_PATH=. A test the environment can satisfy is not a
    test.
-6. The modulefile is the only artifact a user meets, it is generated
-   from everything above it, and it can be accurate about a tree that
-   does not work.
+6. The modulefile is the only artifact a user meets. It is generated
+   from everything above it. It can be accurate about a tree that does
+   not work.

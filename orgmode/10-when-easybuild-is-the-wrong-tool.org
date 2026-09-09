@@ -101,11 +101,14 @@ So the question is not which is best. It is which cost you would
 rather pay:
 
 - EasyBuild: exact versions, one stack per generation, tuned builds,
-  slow to change, and a maintainer in the loop.
+  hours per package, one generation a year, and a maintainer in the
+  loop.
 - Spack: real version ranges, per-install resolution, tuned builds,
-  and a resolved graph you must capture to reproduce.
-- conda-forge: fast, portable, identical everywhere, and not tuned
-  for the hardware you paid for.
+  hours per package, and a resolved graph you must capture to
+  reproduce.
+- conda-forge: minutes per environment, identical on a laptop and a
+  cluster, and built for portability rather than for the instruction
+  set you paid for.
 
 A site running a large machine typically uses more than one of these,
 for different populations of users. That is a sound arrangement rather

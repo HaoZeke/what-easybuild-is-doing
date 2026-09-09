@@ -32,8 +32,9 @@ find my dependency". It is "what is on the robot path".
 * The robot path, and the empty element
 
 The option that sets it is =--robot-paths=. Its default is the
-easyconfigs that came with your EasyBuild installation. That is why a fresh install can build
-thousands of packages with no configuration from you.
+easyconfigs that came with your EasyBuild installation. That is why a
+fresh install can build thousands of packages with no configuration
+from you.
 
 Now, the part that looks like a typo and is not. The following is a
 legal and common way to set it:
@@ -80,7 +81,7 @@ release is not in it. So the moment a site wants a package newer than
 its EasyBuild, it needs somewhere to put that easyconfig. That
 somewhere goes first on the robot path.
 
-This is what makes the following two statements true at the same time,
+That freeze is what makes the following two statements true at once,
 which is worth sitting with because it confuses people every time:
 
 - the easyconfig exists upstream, merged, on the development branch;

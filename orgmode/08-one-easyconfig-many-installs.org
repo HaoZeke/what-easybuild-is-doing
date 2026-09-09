@@ -59,10 +59,10 @@ where falling through to a generic extension handler is the right
 behaviour.
 #+end_quote
 
-This is that caller. Extensions get a default because they have one,
-declared right there in =exts_defaultclass=. The strictness in chapter
-1 exists because a top-level package has no equivalent, and an
-extension does.
+The extensions machinery is that caller. Extensions get a default
+because they have one, declared right there in =exts_defaultclass=.
+The strictness in chapter 1 exists because a top-level package has no
+equivalent, and an extension does.
 
 * Templates rebind inside an entry
 
@@ -120,9 +120,9 @@ wrong artifact.
 A bundle is one module and hundreds of builds. The consequences are
 practical.
 
-It takes a long time. Serial downloads and serial compiles, and the
-useful mental model is not "installing R packages" but "running two
-hundred small builds in one process".
+Two hundred serial downloads and two hundred serial compiles take
+hours. The useful mental model is "running two hundred small builds in
+one process" rather than "installing R packages".
 
 It fails in the middle. When extension 140 of 200 fails, the package
 you asked for did not fail. One extension did, and the error names

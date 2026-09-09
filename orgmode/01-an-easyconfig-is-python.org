@@ -37,9 +37,9 @@ It is not configuration. It is a Python file, and EasyBuild runs it.
 Because everything surprising about easyconfigs follows from it.
 
 EasyBuild executes an easyconfig in a namespace it has prepared, which
-carries the set of names the file is allowed to use. =SYSTEM= on line seven is not a
-keyword and not a string; it is a value that EasyBuild put in the
-namespace before evaluating the file. That is why it has no quotes
+carries the set of names the file is allowed to use. =SYSTEM= on line
+seven is not a keyword and not a string. It is a value EasyBuild put in
+the namespace before evaluating the file. That is why it has no quotes
 around it while =moduleclass= does. The quoting rule that looks
 arbitrary is just Python: one is a variable, the other is a literal.
 
@@ -255,8 +255,8 @@ three consequences follow that you will meet constantly:
 1. Unquoted names like =SYSTEM= are variables EasyBuild supplied. That
    is why the quoting looks inconsistent and is not.
 2. =%(...)s= is Python's own string formatting, over a dictionary built
-   from the easyconfig plus whatever the easyblock adds. A template can
-   therefore resolve to something the file never mentions.
+   from the easyconfig plus whatever the easyblock adds. So a template
+   can resolve to something the file never mentions.
 3. The easyblock comes from transforming the software's name. With no
    specific one available the build stops rather than guessing, which
    makes a missing =easyblock= line a claim that one exists.

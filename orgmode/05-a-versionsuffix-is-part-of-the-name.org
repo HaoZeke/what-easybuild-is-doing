@@ -87,8 +87,8 @@ from. The convention is also all you have.
 
 * What happens when the name stops being true
 
-A label that nothing enforces can go stale, and this is where the
-parameter costs real time.
+A label that nothing enforces can go stale, and the staleness is where
+this parameter costs real time.
 
 The 25.11 tarball is a =cuda_multi= build. It carries CUDA 12.9 and
 CUDA 13.0 in one archive, under versioned directories, with
