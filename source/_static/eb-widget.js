@@ -34,17 +34,10 @@
     "The engine is loaded but does not implement this widget yet, so this " +
     "sample is read-only. The code above is the real input it will take.";
 
-  // Derived from this script's own URL so it works at any page depth,
-  // which a relative path from the page would not.
-  function defaultEngineUrl() {
-    var self = document.currentScript;
-    if (!self || !self.src) {
-      return null;
-    }
-    return self.src.replace(/eb-widget\.js(\?.*)?$/, "engine/eb_stack.js");
-  }
-
-  var DEFAULT_ENGINE_URL = defaultEngineUrl();
+  // How long an island waits for the engine before saying so. The engine
+  // fetches its tables, so it is not ready when this script runs, and an
+  // island scheduled immediately would otherwise decide it never will be.
+  var ENGINE_WAIT_MS = 15000;
 
   // One promise for the whole page. Whichever island hydrates first pays
   // for the engine; every other island reuses it. This is the property
@@ -60,21 +53,62 @@
         resolve(window.EB_STACK_ENGINE);
         return;
       }
-      var url = window.EB_STACK_ENGINE_URL || DEFAULT_ENGINE_URL;
-      if (!url) {
-        reject(new Error("no engine configured"));
-        return;
-      }
-      import(/* webpackIgnore: true */ url).then(function (mod) {
-        var engine = mod.engine || mod.default || mod;
-        if (typeof mod.init === "function") {
-          Promise.resolve(mod.init()).then(function () {
-            resolve(engine);
-          }, reject);
+
+      // The engine is a separate script on this page and announces itself
+      // once its tables are in, so wait for the announcement. Guessing a
+      // module URL here is what made the first island on a page settle
+      // inert: it lost the race, took a 404, and rejected the one promise
+      // every later island shares.
+      var settled = false;
+      var timer = null;
+
+      function finish(fn, arg) {
+        if (settled) {
           return;
         }
-        resolve(engine);
-      }, reject);
+        settled = true;
+        window.removeEventListener("eb-stack-ready", onReady);
+        if (timer) {
+          clearTimeout(timer);
+        }
+        fn(arg);
+      }
+
+      function onReady() {
+        if (window.EB_STACK_ENGINE) {
+          finish(resolve, window.EB_STACK_ENGINE);
+        } else {
+          finish(reject, new Error("engine announced but absent"));
+        }
+      }
+
+      window.addEventListener("eb-stack-ready", onReady);
+
+      // An explicitly configured module still wins, for a host that
+      // supplies the engine some other way than a script on the page.
+      if (window.EB_STACK_ENGINE_URL) {
+        import(/* webpackIgnore: true */ window.EB_STACK_ENGINE_URL).then(
+          function (mod) {
+            var engine = mod.engine || mod.default || mod;
+            if (typeof mod.init === "function") {
+              Promise.resolve(mod.init()).then(function () {
+                finish(resolve, engine);
+              }, function (err) {
+                finish(reject, err);
+              });
+              return;
+            }
+            finish(resolve, engine);
+          },
+          function (err) {
+            finish(reject, err);
+          }
+        );
+      }
+
+      timer = setTimeout(function () {
+        finish(reject, new Error("engine did not load"));
+      }, ENGINE_WAIT_MS);
     });
     return enginePromise;
   }
@@ -95,10 +129,23 @@
   }
 
   function activate(island, engine) {
+    // Activating twice is possible: an island can be waiting on the engine
+    // when the engine announces itself, which resolves its own wait and
+    // also brings it back through the listener. The second pass would find
+    // the output element where the source used to be and reseed the editor
+    // with the previous answer, so refuse it here.
+    if (island.querySelector(".eb-widget-editor")) {
+      return;
+    }
+
     var widget = island.getAttribute("data-eb-widget");
     var universe = island.getAttribute("data-eb-universe") || null;
     var run = engine && engine[widget];
-    var pre = island.querySelector("pre");
+    // The highlighted source block specifically. Any pre would also match
+    // this widget's own output, which is a pre by design.
+    var pre =
+      island.querySelector(".highlight pre") ||
+      island.querySelector("pre:not(.eb-widget-output)");
 
     if (!pre) {
       settleInert(island, FAILED_NOTE);
@@ -266,11 +313,17 @@
   }
 
   // An engine that finishes loading independently can announce itself, and
-  // every island that had settled inert reconsiders.
+  // every island that is not already live reconsiders. Islands still marked
+  // hydrating are included on purpose: one of them is whichever island
+  // asked first, and excluding it is the bug this listener existed to
+  // prevent.
   window.addEventListener("eb-stack-ready", function () {
     enginePromise = null;
-    var islands = document.querySelectorAll('.eb-widget[data-eb-state="inert"]');
+    var islands = document.querySelectorAll(
+      '.eb-widget:not([data-eb-state="live"])'
+    );
     for (var i = 0; i < islands.length; i++) {
+      islands[i].removeAttribute("data-eb-hydrating");
       hydrate(islands[i]);
     }
   });

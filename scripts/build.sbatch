@@ -150,6 +150,10 @@ EOF
         # Rules agreeing is not the same as the functions a page calls
         # working, so exercise those against the chapters' own samples.
         node scripts/smoke-widgets.js || echo "FAIL: a widget entry point is broken"
+        # And the only check that sees what a reader sees. Skips itself when
+        # there is no browser or nothing served, which is the case on this
+        # host; the operator runs it against scripts/serve.sh.
+        node scripts/browser-check.js || echo "FAIL: the page is not live in a browser"
     else
         echo "skipped: node or eb-stack absent on this host"
     fi
