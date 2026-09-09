@@ -2,39 +2,39 @@
 #+AUTHOR: Rohit Goswami
 #+OPTIONS: toc:nil num:nil
 
-I want to tell you what EasyBuild is doing, because EasyBuild's
-documentation is very good at telling you what to type and almost
-silent on what happens when you do.
+This book is about what EasyBuild is doing. EasyBuild's own
+documentation tells you what to type and stays almost silent on what
+happens when you do.
 
 That silence is expensive. EasyBuild has reference documentation for
-every parameter and a workshop series with hands-on exercises, and
-between them they will get you to a working install. Neither explains
-why an easyconfig is a Python file, why a toolchain is a hierarchy
-rather than a name, or why the version number next to a dependency is
-not a minimum. People learn those three things by breaking a
-production software stack, which is a slow and public way to learn
+every parameter, and a workshop series with hands-on exercises. Between
+them they will get you to a working install. Neither explains why an
+easyconfig is a Python file, or why a toolchain is a hierarchy rather
+than a name. Neither explains why the version number next to a
+dependency is not a minimum. People learn those three things by
+breaking a production software stack, which is a slow and public way to learn
 them.
 
-So this is the other book. It assumes you can read code, it does not
-assume you have EasyBuild installed, and it does not assume you have a
-cluster. The samples in it run in your browser.
+So this is the other book. You need to be able to read code. You do not
+need EasyBuild installed, and you do not need a cluster. The samples in
+it run in your browser.
 
 * What you need
 
 Nothing. That is the point.
 
-EasyBuild's own tutorial opens by asking for GNU/Linux, Python, an
-environment modules tool and a working EasyBuild install, which is a
-reasonable ask of someone who has already decided to use EasyBuild and
-an unreasonable one of someone deciding whether to. Everything
+EasyBuild's own tutorial opens by asking for Linux, Python, an
+environment modules tool and a working EasyBuild install. That is a
+reasonable ask of someone who has already decided to use EasyBuild. It
+is an unreasonable one of someone still deciding whether to. Everything
 interactive here is a parser and a dependency solver compiled to
 WebAssembly, running on your machine, in the page.
 
-That buys a lot and it does not buy everything. Nothing in a browser
-can configure, compile or link, and nothing here pretends to. Where a
-step needs a real toolchain you get a recording of a real run instead,
-which turns out to be the right way to teach it: the operational skill
-is reading the log, not watching the progress bar.
+That gets you a lot, and not everything. Nothing in a browser can
+configure, compile or link, and nothing here pretends to. Where a step
+needs a real toolchain you get a recording of a real run instead. That
+turns out to be the right way to teach it: the operational skill is
+reading the log, not watching the progress bar.
 
 * The chapters
 
@@ -49,9 +49,9 @@ is reading the log, not watching the progress bar.
    04-the-robot
 #+end_export
 
-Chapters are published as they are written and each one stands alone.
-If you read exactly one, read the first. If you read two, read the
-third as well: the version number beside a dependency is the single
+Chapters are published as they are written, and each one reads on its
+own. If you read exactly one, read the first. If you read two, read the
+third as well. The version number beside a dependency is the single
 most expensive misreading in EasyBuild, and it is four lines long.
 
 * Who wrote this

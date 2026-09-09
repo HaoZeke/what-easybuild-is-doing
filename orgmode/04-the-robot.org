@@ -21,9 +21,9 @@ in a directory that contained it.
 
 That works because a bare easyconfig name is not a path, it is a
 lookup. EasyBuild resolves it against a search path, and every
-dependency it discovers gets resolved the same way. There is no
-difference in kind between "find the thing I asked for" and "find the
-thing that the thing I asked for needs". Same query, same path.
+dependency it discovers gets resolved the same way. No difference in
+kind separates "find the thing I asked for" from "find the thing that
+the thing I asked for needs". Same query, same path.
 
 Which means the interesting question is never "why can EasyBuild not
 find my dependency". It is "what is on the search path".
@@ -31,21 +31,21 @@ find my dependency". It is "what is on the search path".
 * The search path, and the empty element
 
 The option is =--robot-paths=. Its default is the easyconfigs that came
-with your EasyBuild installation, which is why a fresh install can
-build thousands of packages without you configuring anything.
+with your EasyBuild installation. That is why a fresh install can build
+thousands of packages with no configuration from you.
 
-Now, the part that looks like a typo and is not. This is a legal and
-common way to set it:
+Now, the part that looks like a typo and is not. The following is a
+legal and common way to set it:
 
 #+begin_example
 --robot-paths=/my/site/easyconfigs:
 #+end_example
 
-That trailing colon is deliberate, and leaving it off changes the
-meaning completely. Without it you have *replaced* the default search
-path with your one directory, and EasyBuild can no longer find any of
-the thousands of easyconfigs it shipped with. With it, your directory
-is searched first and the defaults are still there behind it.
+That trailing colon is deliberate, and leaving it off inverts the
+meaning. Without it you have *replaced* the default search path with
+your one directory. EasyBuild can then find none of the thousands of
+easyconfigs it came with. With it, your directory is searched first and
+the defaults are still there behind it.
 
 The mechanism is neither a special case nor a parsing quirk. The option
 is declared with an action called =add_flex=, and its documentation in
@@ -73,11 +73,11 @@ preference over =--robot-paths=".
 * Why an overlay is the normal case
 
 A site almost always has its own easyconfigs directory in front of the
-defaults, and the reason is chapter 3's closing point. An EasyBuild
-release ships a fixed set of easyconfigs. Anything merged upstream
-after that release is not in it. So the moment a site wants a package
-newer than its EasyBuild, it needs somewhere to put that easyconfig,
-and that somewhere goes first on the robot path.
+defaults. The reason is chapter 3's closing point: an EasyBuild release
+carries a fixed set of easyconfigs. Anything merged upstream after that
+release is not in it. So the moment a site wants a package newer than
+its EasyBuild, it needs somewhere to put that easyconfig. That
+somewhere goes first on the robot path.
 
 This is what makes the following two statements true at the same time,
 which is worth sitting with because it confuses people every time:
@@ -92,8 +92,8 @@ added it.
 * Resolution is a graph problem with an ordering answer
 
 Given the path, the robot builds a dependency graph and returns
-something you can execute: an order in which nothing is built before
-what it needs.
+something you can execute. Nothing in that order gets built before what
+it needs.
 
 Two things about that order are worth knowing.
 
@@ -102,14 +102,17 @@ Any topological order of the graph is correct. So the list from =--dry-run=
 is *an* answer, not *the* answer, and diffing two of them across
 versions will show you churn that means nothing.
 
-And it is filtered by the hierarchy from chapter 2. A candidate is only
-a candidate if its toolchain is a member of your package's hierarchy.
-This is where the two chapters meet, and it is the source of the most
-frustrating class of robot failure: the module is installed, you can
-see it, =module avail= lists it, and the robot says it cannot find it.
-It is not lying. It is telling you that nothing *in your hierarchy*
-provides that dependency, and a module built with a toolchain outside
-your hierarchy is invisible rather than rejected.
+And it is filtered by the hierarchy from chapter 2. A candidate counts
+as a candidate only when its toolchain belongs to your package's
+hierarchy.
+
+That filter is where the two chapters meet, and it produces the most
+frustrating class of robot failure. The module is installed. You can
+see it. =module avail= lists it. And the robot says it cannot find it.
+
+The robot is not lying. It is reporting that nothing *in your
+hierarchy* provides that dependency. A module built with a toolchain
+outside your hierarchy is invisible rather than rejected.
 
 * Ask before you build
 
@@ -122,25 +125,26 @@ eb GROMACS-2025.2-foss-2025a.eb -r -D
 =-D= is =--dry-run=. You get the resolved list, with a marker beside
 each entry saying whether it is already installed or would be built.
 
-Read it before every non-trivial build, for one specific reason: the
-difference between "this will install two things" and "this will
-install ninety things" is entirely invisible in the command you typed,
-and it is the difference between a coffee and an afternoon. It is also
-the fastest way to catch a dependency resolving to a version you did
-not expect, which happens most often when a site overlay shadows an
-upstream easyconfig with the same name.
+Read it before every non-trivial build, for one specific reason. The
+command you typed hides the difference between "this will install two
+things" and "this will install ninety things". That is the difference
+between a coffee and an afternoon.
+
+It is also the fastest way to catch a dependency resolving to a version
+you did not expect. That happens most often when a site overlay shadows
+an upstream easyconfig with the same name.
 
 * What to take from this chapter
 
 1. A bare easyconfig filename is a query against the robot path, and so
    is every dependency. One mechanism, not two.
 2. In =--robot-paths=, an empty element is where the default search path
-   goes. A trailing colon prepends yours, a leading colon appends it,
-   and no colon replaces the default entirely.
-3. A site overlay in front of the defaults is the normal arrangement,
-   because an EasyBuild release ships a frozen set of easyconfigs and
+   goes. A trailing colon prepends yours; a leading colon appends it.
+   No colon replaces the default entirely.
+3. A site overlay in front of the defaults is the normal arrangement.
+   An EasyBuild release carries a frozen set of easyconfigs, and
    upstream keeps moving.
 4. Candidates are filtered by the toolchain hierarchy, so "installed"
-   and "findable" are different properties, and the gap between them
+   and "findable" are different properties. The gap between them
    explains most robot failures that feel impossible.
 5. =-D= answers all of this before you spend the afternoon.

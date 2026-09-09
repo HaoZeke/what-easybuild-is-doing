@@ -16,11 +16,11 @@ nothing on a real cluster uses it. What you will actually see is this:
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
 
-Read as a name, =foss-2025a= is a label meaning roughly "the 2025a GNU
-stack". That reading is wrong in a way that will cost you an afternoon,
-because =foss-2025a= is not a name. It is the top of a structure, and
-the structure is what EasyBuild uses to decide which versions of which
-libraries your package is allowed to see.
+Read as a name, =foss-2025a= looks like a label for "the 2025a
+open-source compiler stack". That reading will cost you an afternoon.
+=foss-2025a= is not a name. It is the top of a structure, and that
+structure decides which versions of which libraries your package is
+allowed to see.
 
 Run the sample. What comes back is not one toolchain, it is a list.
 
@@ -41,14 +41,14 @@ For the =foss= family that list runs =GCCcore=, =GCC=, =gompi=, =gfbf=,
 real module. Your package declares the last one and gets to depend on
 things built with any of them.
 
-That is the mechanism behind a rule you may have absorbed without
-knowing why: you can depend on a =GCCcore= build from a =foss= package,
-but not the other way round. It is not a convention or a courtesy. A
-=GCCcore= package's hierarchy does not contain =foss=, so a =foss=
-dependency is not a candidate for it, and the robot will tell you it
-cannot find something that is sitting right there on disk.
+That mechanism sits behind a rule you may have absorbed without knowing
+why. A =foss= package can depend on a =GCCcore= build; a =GCCcore=
+package cannot depend on a =foss= build. Convention and courtesy have
+nothing to do with it. A =GCCcore= package's hierarchy does not contain
+=foss=, so a =foss= dependency is never a candidate. The robot then
+reports that it cannot find something sitting right there on disk.
 
-* It is a graph, not a ladder
+* The shape is a graph
 
 The =foss= line is a chain, which makes it a bad example for
 understanding what the code does. EasyBuild's own docstring picks a
@@ -69,8 +69,8 @@ harder one, and draws it:
 #+end_example
 
 Two toolchains sit at the same level with a shared ancestor, so the
-walk cannot be "follow =SUBTOOLCHAIN= upward until it runs out". The
-implementation says so in a comment: the search is breadth-first,
+walk cannot be "follow =SUBTOOLCHAIN= upward until it runs out". A
+comment in the implementation states it: the search is breadth-first,
 "required to take into account the potential for multiple
 subtoolchains".
 
@@ -91,16 +91,16 @@ if the =add_system_to_minimal_toolchains= build option is enabled.
 
 So a =SYSTEM= build is not automatically visible to a =foss= package.
 Whether the bottom of the ladder exists at all is a configuration
-choice made by whoever set up the EasyBuild installation, and it is off
-by default.
+choice, made by whoever set up the EasyBuild installation. It is off by
+default.
 
 If you have ever wondered why a perfectly good =SYSTEM= module refuses
-to satisfy a dependency, that is the answer, and it is not in your
+to satisfy a dependency, that is the answer. It is not in your
 easyconfig.
 
 * What a toolchain module has to contain
 
-A toolchain is not only a position in a graph. It is also a module, and
+A toolchain occupies a position in a graph. It is also a module, and
 the module has to agree with the class. EasyBuild checks:
 
 #+begin_example
@@ -126,16 +126,18 @@ your easyconfig:
 
 The consequence is a failure mode that looks like your package's fault
 and is not. A framework release that renames or splits a toolchain
-element breaks *every* package on that toolchain generation at once,
-and no easyconfig parameter reaches the check. EasyBuild 5.2 did
-exactly this: the compiler element of the NVHPC-based toolchains became
-a module named =nvidia-compilers=, and toolchain modules written before
-the split expected the old name.
+element breaks *every* package on that generation at once. No
+easyconfig parameter reaches the check.
 
-The tell is that the two lists in the error differ by one element.
-Read the lists, not the package. The difference is the element, and the
-fix is a toolchain module that carries it, which usually means moving
-to a generation that already does.
+EasyBuild 5.2 did exactly this. In toolchains built on the NVIDIA HPC
+SDK (=NVHPC=), the compiler element became a module named
+=nvidia-compilers=. Toolchain modules written before the split still
+expected the old name.
+
+The tell is that the two lists in the error differ by one element. Read
+the lists rather than the package. The difference names the element, and
+the fix is a toolchain module that carries it. In practice that means
+moving to a generation whose toolchain modules already do.
 
 * The same name can mean two toolchains
 
@@ -158,10 +160,10 @@ If =foss-2025a= were a label, that code would be unnecessary.
 
 1. =toolchain= names the *top* of a hierarchy, and the hierarchy is what
    decides which dependencies are candidates.
-2. The hierarchy is computed, not declared: it is a breadth-first walk
-   over a graph, optional levels are included only when present, and
-   =system= is at the bottom only if the installation was configured to
-   put it there.
+2. The hierarchy is computed rather than declared. A breadth-first walk
+   over a graph produces it. Optional levels appear only when present,
+   and =system= sits at the bottom only when the installation puts it
+   there.
 3. A toolchain module must carry the direct dependencies its class
    expects, matched by name. When it does not, every package on that
    generation fails in the prepare step, and the error is about the
