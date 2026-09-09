@@ -54,6 +54,7 @@ reading the log, not watching the progress bar.
    03-a-pin-is-for-one-generation
    04-the-robot
    05-a-versionsuffix-is-part-of-the-name
+   06-what-installed-means
 #+end_export
 
 Chapters are published as they are written, and each one reads on its

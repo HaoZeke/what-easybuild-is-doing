@@ -1,0 +1,160 @@
+#+TITLE: What "installed" means
+#+OPTIONS: toc:nil num:nil
+
+A build that reaches the end prints one line and writes one file. The
+line says the install succeeded. The file is a modulefile, and it is
+the only part of all this that a user ever meets.
+
+Neither of those says the software works. The difference is the whole
+of this chapter. The gap between them is where the bugs live that
+reach a user with your name on them.
+
+* Existence is the default claim
+
+After the install step copies files into place, EasyBuild decides
+whether that counted. The parameter it consults first is
+=sanity_check_paths=, and here is a real one:
+
+#+begin_src easyconfig :widget parse
+name = 'VASP6'
+version = '6.5.1'
+
+sanity_check_paths = {
+    'files': ['bin/vasp_std', 'bin/vasp_gam', 'bin/vasp_ncl'],
+    'dirs': [],
+}
+#+end_src
+
+Two keys, both lists of paths relative to the install directory. The
+check is existence. Three files are there, so the build passes.
+
+Read what that does and does not claim. It claims three paths exist.
+It does not claim they are executable, or that they are the right
+version, or that they can start. A zero-byte file at
+=bin/vasp_std= would satisfy it.
+
+That is not a criticism of the parameter, which does its one job
+exactly. It is a caution about the word "installed", which sounds like
+a much stronger claim than the check behind it.
+
+* Running something is a stronger claim, and it is optional
+
+=sanity_check_commands= takes shell commands and runs them:
+
+#+begin_src easyconfig :widget parse
+name = 'archspec'
+version = '0.1.0'
+
+sanity_check_commands = [
+    "python -c 'from archspec.cpu import host; print(host())'"
+]
+#+end_src
+
+Now the check has actually executed the thing. The import resolved,
+the interpreter found the package, the function returned. A zero-byte
+file fails this.
+
+The code-server easyconfig from chapter 1 has no such line, and its
+install still runs =code-server --help=. That command comes from the
+easyblock, which is chapter 1's point arriving again: behaviour the
+easyconfig never mentions, implied by the name.
+
+So a package gets an executing check when its easyblock provides one
+or its author wrote one. Many easyconfigs have neither. For those,
+"installed" means the files are there.
+
+* A third kind of check, for a failure the first two cannot see
+
+Chapter 5 met the check on the recorded runtime library search path,
+the RPATH. It reads the installed binaries, resolves what they link
+against, and reports what it cannot find.
+
+That catches something the other two are structurally unable to. A
+file exists. A =--help= runs. And the binary still cannot start,
+because the library it needs to compute anything is missing, and
+=--help= never reaches that code.
+
+Three checks, three different claims, in increasing strength: the path
+is there, something runs, everything it links resolves. Knowing which
+of the three a given package has is knowing what its green build
+means.
+
+* Where the check ran is part of what it proved
+
+The failure mode that cost me the most involves no parameter at all.
+
+A sanity check runs on the machine that did the build. On a cluster
+with more than one processor architecture the install tree is separate
+per architecture. A binary tuned for one is not the binary for another.
+A green check is therefore a statement about one of those trees.
+
+I once declared a problem fixed after testing on an interactive node.
+The binary started, resolved its libraries, ran. The report was wrong
+twice over. The interactive nodes were a different architecture from
+the node the user was on, so I had verified a different tree. And the
+tree I had verified was the one that was already correct.
+
+The lesson generalises past architectures. "It works" is incomplete
+until it says where, and on a heterogeneous cluster the where is not a
+detail. Verify on the node type that failed.
+
+* And how you check matters as much as where
+
+A related trap, worth knowing because the tool invites it.
+
+=patchelf --set-rpath= writes =DT_RUNPATH=, not =DT_RPATH=. The
+dynamic linker consults those at different points: =DT_RPATH= before
+=LD_LIBRARY_PATH=, and =DT_RUNPATH= after it. Patch a binary that way
+and test it in a shell that already has the library on
+=LD_LIBRARY_PATH=, and the resolution goes through the environment. It
+tells you nothing about the patch.
+
+I did exactly that and watched it work, having proved only that my own
+shell was set up. The fix was to test in a way the environment cannot
+answer for. =LD_PRELOAD= handles a single library; otherwise read the
+resolution rather than the exit code.
+
+A test that can pass for a reason other than the one you are testing
+is not a test. That is the same shape as chapter 5's stale name: an
+accurate observation carrying a wrong inference.
+
+* The modulefile is the deliverable
+
+Everything in chapters 1 through 5 exists to produce one text file.
+
+The easyconfig's parameters, the easyblock's derivations, the
+toolchain hierarchy, the pinned dependency versions, the suffix folded
+into the name: all of it becomes a modulefile. That file sets some
+environment variables and declares some prerequisites. A user runs
+=module load=, gets the variables, and never sees the rest.
+
+Two consequences follow, and both have already appeared.
+
+The modulefile is generated, not written, so it inherits every
+inference in this book. =moduleclass = 'tools'= in chapter 1's sample
+is a modulefile concern that reached the easyconfig.
+
+And the modulefile can be entirely correct about a tree that is
+wrong. That is chapter 5 exactly. A module named for CUDA 12.9.1,
+declaring a dependency on CUDA 12.9.1, both accurate, resolving into a
+13.0 tree. Nothing in the modulefile was false, and the module was
+unusable.
+
+* What to take from this chapter
+
+1. =sanity_check_paths= checks existence. That is the default meaning
+   of "installed", and a weaker claim than it sounds.
+2. =sanity_check_commands= executes something, which is a stronger
+   claim. A package has one only if its author or its easyblock
+   supplied it.
+3. The check on the runtime library search path catches binaries that
+   exist, respond to =--help=, and cannot start. Leave it on.
+4. A green check describes the tree it ran against. On a cluster with
+   more than one architecture, say which one, and verify on the node
+   type that failed rather than the nearest one.
+5. =patchelf --set-rpath= writes =DT_RUNPATH=, which loses to
+   =LD_LIBRARY_PATH=. A test the environment can satisfy is not a
+   test.
+6. The modulefile is the only artifact a user meets, it is generated
+   from everything above it, and it can be accurate about a tree that
+   does not work.
