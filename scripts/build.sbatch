@@ -108,15 +108,21 @@ EOF
     echo "ok: checked $(ls orgmode/[0-9]*.org | wc -l) chapters"
 
     echo "=== transcripts: rendered, with provenance, in all three ==="
-    for f in build/html/01-an-easyconfig-is-python.html \
-             build/singlehtml/index.html \
-             build/epub/01-an-easyconfig-is-python.xhtml; do
-        printf '%-46s ' "$(basename $(dirname $f))/$(basename $f)"
-        if grep -q 'eb-transcript' "$f" && grep -q 'Recorded:' "$f"; then
-            echo "ok"
-        else
-            echo "FAIL: transcript or its provenance missing"
-        fi
+    # Every chapter holding an ebtranscript block, not a hand-written list:
+    # a new transcript in a new chapter has to be checked too, and naming
+    # chapter 1 by hand meant it was not.
+    for ch in $(grep -l 'begin_src ebtranscript' orgmode/[0-9]*.org \
+                | xargs -n1 basename | sed 's/\.org$//'); do
+        for f in "build/html/$ch.html" \
+                 "build/singlehtml/index.html" \
+                 "build/epub/$ch.xhtml"; do
+            printf '%-46s ' "$ch -> $(basename $(dirname "$f"))"
+            if grep -q 'eb-transcript' "$f" && grep -q 'Recorded:' "$f"; then
+                echo "ok"
+            else
+                echo "FAIL: transcript or its provenance missing in $f"
+            fi
+        done
     done
 
     echo "=== engine: the charmap was exported and is well formed ==="

@@ -86,14 +86,42 @@ The failure mode that cost me the most involves no parameter at all.
 A sanity check runs on the machine that did the build. On a cluster
 with more than one processor architecture the whole install tree is
 separate per architecture. A binary tuned for one is not the binary
-for another.
-So a green check is a statement about one of those trees.
+for another. So a green check is a statement about one of those trees.
 
-I once declared a problem fixed after testing on an interactive node.
-The binary started, resolved its libraries, ran. The report was wrong
-twice over. The interactive nodes were a different architecture from
-the node the user was on, so I had verified a different tree. And the
-tree I had verified was the one that was already correct.
+Here is that arrangement, on a real machine:
+
+#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-09, 2025 module environment" :caption "One module name, and the tree it resolves to"
+$ hostname
+int4.local.snellius.surf.nl
+
+$ readlink -f /sw/arch
+/gpfs/admin/_hpc/sw/arch/AMD-ZEN2
+
+$ module load 2025 QMCPACK/4.4.0-foss-2025a
+
+$ echo $EBROOTQMCPACK
+/sw/arch/RHEL9/EB_production/2025/software/QMCPACK/4.4.0-foss-2025a
+
+$ qmcpack --version
+
+QMCPACK version 4.4.0 built on Sep  9 2026
+#+end_src
+
+Read the third and fourth commands together. =$EBROOTQMCPACK= says
+=/sw/arch/...=, carrying no architecture at all. The command above it
+shows =/sw/arch= resolving to a directory named =AMD-ZEN2=.
+
+So the module's text is architecture-neutral and what it points at is
+not. Load the same module on a node of another architecture and the
+same string resolves to a different tree, holding a differently
+compiled binary. Nothing in the module records which tree you got.
+
+That is what makes the next mistake available. I once declared a
+problem fixed after testing on an interactive node. The binary
+started, resolved its libraries, ran. The report was wrong twice over.
+The interactive nodes are the architecture above and the user's node
+was not, so I had verified a different tree. And the tree I had
+verified was the one that was already correct.
 
 The lesson generalises past architectures. "It works" is incomplete
 until it says where, and on a heterogeneous cluster the where is not a
