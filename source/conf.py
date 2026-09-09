@@ -78,4 +78,16 @@ epub_identifier = "https://github.com/HaoZeke/what-easybuild-is-doing"
 epub_scheme = "URL"
 epub_show_urls = "footnote"
 epub_use_index = False
-epub_exclude_files = ["search.html"]
+# The widget assets cannot be used in an EPUB: the visitor emits no mount
+# point there and _register_assets links nothing. Sphinx still *copies*
+# html_static_path into the output, so without this the book ships a
+# stylesheet, a mount script and an encoding table that nothing reads. The
+# charmap also has no mimetype Sphinx recognises, which under -W turns that
+# dead weight into a failed build.
+epub_exclude_files = [
+    "search.html",
+    "_static/eb-widget.css",
+    "_static/eb-widget.js",
+    "_static/eb-widget-engine.js",
+    "_static/eb-charmap.json",
+]

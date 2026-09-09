@@ -67,6 +67,24 @@ cd "$SRC"
     echo "=== and the epub still carries the code itself? ==="
     grep -c 'code-server' build/epub/01-an-easyconfig-is-python.xhtml
 
+    echo "=== islands: the epub archive carries no widget assets ==="
+    # The .epub archive is the artifact, not build/epub/. Sphinx stages
+    # html_static_path there regardless and epub_exclude_files acts on what
+    # gets packed, so asserting on the staging directory tests the wrong
+    # thing and fails on files that never ship.
+    python3 - <<'EOF'
+import zipfile
+z = zipfile.ZipFile("build/epub/WhatEasyBuildIsDoing.epub")
+stowaways = [n for n in z.namelist() if "eb-" in n]
+if stowaways:
+    print("FAIL: widget assets packed into the epub:", stowaways)
+else:
+    print("ok: no widget assets in the epub archive")
+EOF
+
+    echo "=== engine: the charmap was exported and is well formed ==="
+    python3 -c "import json;d=json.load(open('build/html/_static/eb-charmap.json'));print('ok: prefix',d['prefix'],'entries',len(d['charmap']))"
+
     echo "=== islands: a chapter with widgets loads the runtime ==="
     if grep -q 'eb-widget\.js' build/html/01-an-easyconfig-is-python.html; then
         echo "ok: ch1 (3 widgets) links the runtime"
