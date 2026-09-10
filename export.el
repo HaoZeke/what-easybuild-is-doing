@@ -77,12 +77,14 @@
              (universe (ebguide--header-value args :universe))
              (label (ebguide--header-value args :label))
              (hydrate (ebguide--header-value args :hydrate))
+             (fails (ebguide--header-value args :fails))
              (code (or (org-element-property :value src-block) "")))
         (concat ".. eb::\n"
                 (format "   :widget: %s\n" widget)
                 (when universe (format "   :universe: %s\n" universe))
                 (when label (format "   :label: %s\n" label))
                 (when hydrate (format "   :hydrate: %s\n" hydrate))
+                (when fails (format "   :fails: %s\n" fails))
                 "\n"
                 (ebguide--indent code 3)
                 "\n\n"))))))

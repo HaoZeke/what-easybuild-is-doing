@@ -19,7 +19,7 @@ run anywhere. A tiny archive, =wobble-1.0.tar.gz=, containing one shell
 script at =wobble-1.0/bin/wobble=. A recipe that installs it with the
 =Tarball= easyblock and then runs it:
 
-#+begin_src easyconfig :widget parse
+#+begin_src easyconfig :widget parse :fails "on purpose, and working out how is the next block"
 easyblock = 'Tarball'
 
 name = 'wobble'
@@ -30,8 +30,6 @@ sources = [SOURCE_TAR_GZ]
 
 postinstallcmds = ['%(installdir)s/bin/wobble --check-licence']
 #+end_src
-
-Nothing about that is obviously wrong, and it fails.
 
 * The error block
 

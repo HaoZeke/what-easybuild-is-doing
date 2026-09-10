@@ -87,3 +87,36 @@
 .eb-widget pre {
   overflow-x: auto;
 }
+
+/* --- a sample that is meant to fail ---------------------------------------
+ *
+ * Teaching material that shows broken input has to say so where the input
+ * is, not in the paragraph above it: a reader who copies the block did not
+ * read the paragraph. The label is text in the markup, so it survives a
+ * reader stylesheet, a screen reader and the printer, and the colour is the
+ * second signal rather than the only one.
+ */
+article.yue .eb-widget--fails {
+  border-left: 3px solid #bf3989;
+}
+
+article.yue .eb-widget-fails {
+  margin: 0 0 0.5rem;
+  font-family: var(--eb-sans);
+  font-size: 0.84rem;
+  color: var(--eb-fg-muted);
+}
+
+article.yue .eb-widget-fails__tag {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid #bf3989;
+  border-radius: 2px;
+  font-family: var(--eb-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #bf3989;
+}

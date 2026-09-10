@@ -82,6 +82,11 @@ class EbWidget(SphinxDirective):
         "universe": directives.unchanged,
         "label": directives.unchanged,
         "hydrate": lambda arg: directives.choice(arg, HYDRATION_STRATEGIES),
+        # A sample that is meant to fail, marked in the design system rather
+        # than in the prose around it. Every teaching site that shows broken
+        # input eventually needs this: a reader who scrolls past the sentence
+        # and copies the block should still be told.
+        "fails": directives.unchanged,
     }
 
     def run(self) -> list[nodes.Node]:
@@ -112,6 +117,7 @@ class EbWidget(SphinxDirective):
         node["eb_universe"] = self.options.get("universe", "").strip()
         node["eb_label"] = self.options.get("label", "").strip()
         node["eb_hydrate"] = self.options.get("hydrate", DEFAULT_HYDRATION)
+        node["eb_fails"] = self.options.get("fails", "").strip()
         node += literal
         return [node]
 
@@ -125,11 +131,23 @@ def visit_eb_widget_html(self, node: eb_widget) -> None:
         "data-eb-widget": node["eb_widget"],
         "data-eb-hydrate": node["eb_hydrate"],
     }
+    if node.get("eb_fails"):
+        attrs["data-eb-fails"] = node["eb_fails"]
     if node["eb_universe"]:
         attrs["data-eb-universe"] = node["eb_universe"]
     if node["eb_label"]:
         attrs["data-eb-label"] = node["eb_label"]
-    self.body.append(self.starttag(node, "div", CLASS="eb-widget", **attrs))
+    classes = "eb-widget"
+    if node.get("eb_fails"):
+        classes += " eb-widget--fails"
+    self.body.append(self.starttag(node, "div", CLASS=classes, **attrs))
+    if node.get("eb_fails"):
+        # In the markup rather than only in CSS, so it survives reader
+        # stylesheets, a screen reader, and the print stylesheet.
+        self.body.append(
+            '<p class="eb-widget-fails"><span class="eb-widget-fails__tag">'
+            "this sample fails</span> %s</p>\n" % self.encode(node["eb_fails"])
+        )
 
 
 def depart_eb_widget_html(self, node: eb_widget) -> None:
