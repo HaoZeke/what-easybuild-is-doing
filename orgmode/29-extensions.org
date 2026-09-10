@@ -1,0 +1,322 @@
+#+TITLE: Chapter 29. Extensions, and what an entry in exts_list inherits
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Read any =exts_list= entry, in all three of its forms, and say which
+   options it will actually get.
+2. Say which parameters an extension inherits from its parent easyconfig
+   and which are reset before it runs.
+3. Read an =exts_filter= and say what it decides, twice.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:08-one-easyconfig-many-installs.org][Chapter 8]], for what
+  =exts_list= is for.
+- [[file:13-how-a-build-executes.org][Chapter 13]], because =extensions=
+  is one of the eighteen steps and behaves like one.
+- [[file:18-language-ecosystems.org][Chapter 18]] if the extensions in
+  question are Python packages, which they usually are.
+#+end_prerequisites
+
+An extension is software installed *inside* another installation rather
+than as a module of its own. The mechanism is one easyconfig parameter,
+=exts_list=, and one step, =extensions=, the tenth of the eighteen.
+
+The reason it needs a chapter of its own is that an extension is a small
+easyconfig with no file: it has parameters, it has an easyblock, and the
+rules about where those parameters come from are neither documented in one
+place nor guessable.
+
+* Three forms, and the one that gets nothing
+
+An entry may be a bare string, a =(name, version)= tuple, or a
+=(name, version, {options})= tuple. In the framework, from
+=easybuild/framework/easyblock.py=:
+
+#+begin_example
+if len(ext) == 1:
+    exts_sources.append({'name': ext_name})
+else:
+    ext_version = resolve_template(ext[1], self.cfg.template_values)
+    ext_options = copy.deepcopy(self.cfg.get_ref('exts_default_options'))
+    if len(ext) == 3:
+        if isinstance(ext_options, dict):
+            ext_options.update(ext[2])
+#+end_example
+
+Read the branch: =exts_default_options= is only fetched in the =else=, an entry with a
+*name and no version* returns =({'name': ...})= and gets no options at
+all, defaults included. A bare string takes the same path.
+
+So in this easyconfig the two entries are not treated alike:
+
+#+begin_src easyconfig :widget parse
+name = 'example'
+version = '1.0'
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+exts_default_options = {
+    'source_urls': ['https://example.org/downloads'],
+}
+
+exts_list = [
+    ('alpha', '1.2'),
+    'beta',
+]
+#+end_src
+
+=alpha= gets the default =source_urls=. =beta= does not, and nothing warns
+you. =eb -x= shows the difference before a build does.
+
+The merge itself is one shallow =dict.update=. The per-extension dict wins
+outright on a collision, and a colliding *list* is replaced rather than
+extended, so a per-extension =source_urls= discards the default one
+instead of adding to it.
+
+* Two kinds of option, and only one of them is checked
+
+Options in that third element split into two groups that behave
+differently, and telling them apart explains most surprises.
+
+*Read directly by the extensions machinery.* These are not easyconfig
+parameters at all; they are keys the framework looks for in the options
+dict.
+
+#+ATTR_EB: :id ext-option-keys :title The options read straight out of an extension's dict :kind reference
+#+begin_detail
+Verified against EasyBuild 5.3.1 as installed, in
+=easybuild/framework/easyblock.py= and
+=easybuild/framework/extension.py=.
+
+| Key | Default | Note |
+|---+---+---|
+| =easyblock= | =None= | which easyblock installs this extension |
+| =source_urls= | =[]= | |
+| =sources= | =None= | a single-element list; anything longer raises an error |
+| =source_tmpl= | =%(name)s-%(version)s.tar.gz= | the filename to expect |
+| =checksums= | =[]= | |
+| =patches=, =post_install_patches= | =[]= | |
+| =download_instructions= | =None= | what to print when the source cannot be fetched |
+| =nosource= | falsy | for an extension with nothing to download |
+| =github_account= | the parent's | |
+| =start_dir= | =None= | deliberately *not* inherited; see below |
+| =modulename= | =[<name>]= | a list is allowed; =False= skips the check; an empty list is an error |
+
+One key that looks like it belongs here and does not: =extract_cmd= at the
+top level of the options dict is inert. It is only read from inside a
+=sources= dict entry, so a top-level one is silently ignored.
+#+end_detail
+
+*Everything else that happens to be an easyconfig parameter.* Any other
+key is copied into the extension's own configuration. The loop that does
+it also handles the rest:
+
+#+begin_example
+for key, value in self.options.items():
+    if key in self.cfg:
+        self.cfg[key] = value
+        self.log.debug("Customising known easyconfig parameter '%s' ...")
+    else:
+        self.log.debug("Skipping unknown custom easyconfig parameter '%s' ...")
+#+end_example
+
+An unknown key is dropped at =debug= level. No warning, no error, no
+mention in a normal run. Which means a misspelled per-extension option in
+a bundle of two hundred extensions is invisible unless you go looking, and
+that is the single most useful thing in this chapter.
+
+Alternative parameter names are honoured on the way in, so
+=install_opts= works where =installopts= is meant, and real easyconfigs
+in the upstream repository use it.
+
+* What an extension does not inherit
+
+An extension's configuration starts as its parent's, which is convenient
+and would be wrong for exactly the parameters that describe *the parent's*
+sources. So eight are reset to their defaults first, in
+=easybuild/framework/extension.py=:
+
+#+begin_example
+restore_options = (
+    'checksums',
+    'data_sources',
+    'patches',
+    'postinstallcmds',
+    'sanity_check_commands',
+    'sanity_check_paths',
+    'skipsteps',
+    'sources',
+)
+#+end_example
+
+Read that list as a design statement. Everything on it is a claim about
+the software being installed, and an extension is different software. A
+parent's =sanity_check_paths= would look for the parent's files; its
+=checksums= belong to the parent's archive; its =skipsteps= would silence
+a step for two hundred extensions at once.
+
+=start_dir= gets its own treatment two lines later, with the reason in a
+comment: the parent's value "will be set, and will most likely be wrong".
+It comes from the extension's own options or is derived, which is
+[[file:20-reading-a-failed-build.org][chapter 20]]'s descent rule applied
+one level down.
+
+* exts_filter decides the same question twice
+
+=exts_filter= is a pair, =(command, input)=, and each half is a template
+resolved per extension with =%(ext_name)s=, =%(ext_version)s= and
+=%(src)s=. Anything that is not a two-element list or tuple is refused
+with =exts_filter should be a list or tuple of ("command","input")=.
+
+The framework runs it for two different purposes.
+
+*Before installing, to skip what is already there.*
+=EasyBlock.skip_extensions= builds one command per extension and runs
+them, sequentially or in parallel, to decide which entries can be left
+alone. That is what makes a resumed bundle cheap instead of a re-run.
+
+*After installing each extension, as its sanity check.*
+=Extension.sanity_check_step= builds the same commands and runs them with
+=fail_on_error=False=; the exit code settles it, and a failure is collected
+with the command, its input and its output rather than aborting the run.
+
+Two consequences follow from it being one mechanism.
+
+An extension whose =modulename= is =False= produces *no* commands, so it
+is skipped in both roles: not checked before, not checked after. That is
+the escape hatch for an extension whose importable name does not exist.
+
+And because =get_modulenames= can return several names, an extension that
+provides three importable modules gets three commands, all of which must
+pass.
+
+For Python the conventional filter is an import:
+
+#+begin_example
+exts_filter = ("python -c 'import %(ext_name)s'", '')
+#+end_example
+
+which is a different assertion from =sanity_pip_check=.
+[[file:18-language-ecosystems.org][Chapter 18]]'s =pip check= asks whether
+the environment's declared versions are mutually consistent;
+=exts_filter= asks whether the thing imports. A package can satisfy either
+one and fail the other: a consistent metadata set whose module fails to
+import because a shared library is missing, or an importable module whose
+declared dependency versions conflict.
+
+#+ATTR_EB: :id docs-vs-code-exts :title Documentation and code, on extension options :kind discrepancy
+#+begin_detail
+Three behaviours that are in the code and not on the documentation site,
+all read from EasyBuild 5.3.1 as installed on 2026-09-10.
+
+*=exts_default_options= does not reach every entry.* It is fetched only in
+the branch that has a version, so a bare-string or one-element entry
+receives no options at all. The parameter's own description does not say
+so.
+
+*An unknown per-extension option is dropped at =debug= level.* Not a
+warning. The comment above it explains the intent, which is to let an
+easyblock accept keys that are meaningful only for extensions, and the
+cost is that a typo is silent.
+
+*The merge is a shallow =update=.* A per-extension list value replaces the
+default rather than extending it, so an extension that adds one URL loses
+the others.
+#+end_detail
+
+#+ATTR_EB: :id sources-29 :title Where this chapter comes from :kind sources
+#+begin_detail
+Every claim here was read out of EasyBuild 5.3.1 as installed from PyPI
+and checked on 2026-09-10:
+
+- =easybuild/framework/easyblock.py=: the =exts_list= branch and the
+  =exts_default_options= merge; =skip_extensions= and its sequential and
+  parallel forms; the per-extension keys read from the options dict
+- =easybuild/framework/extension.py=: =construct_exts_filter_cmds= and
+  its template values; =get_modulenames= and the =False= case;
+  =Extension.sanity_check_step=; the reset list and the =start_dir=
+  comment; the known-versus-unknown parameter loop
+- =easybuild/framework/extensioneasyblock.py=: how an easyblock supplies
+  a default =exts_filter=
+- =easybuild/easyblocks/generic/pythonpackage.py=: the extra options
+  =PythonPackage= contributes, including =use_pip=, =sanity_pip_check=
+  and =download_dep_fail=
+
+Upstream documentation, for the parameters themselves:
+[[https://docs.easybuild.io/version-specific/easyconfig-parameters/][the parameter reference]]
+and [[https://docs.easybuild.io/writing-easyconfig-files/][writing easyconfig files]].
+#+end_detail
+
+#+ATTR_EB: :id EB-Exts-1 :title Four entries, four outcomes
+#+begin_exercise
+An easyconfig sets
+
+#+begin_example
+exts_default_options = {
+    'source_urls': ['https://example.org/dl'],
+    'preinstallopts': 'echo DEFAULT &&',
+}
+#+end_example
+
+and then lists four entries:
+
+#+begin_example
+exts_list = [
+    ('alpha', '1.2'),
+    ('beta', '2.0', {'preinstallopts': 'echo MINE &&'}),
+    ('gamma', '3.1', {'source_urls': ['https://other.example/dl']}),
+    'delta',
+]
+#+end_example
+
+1. For each, say which =source_urls= and which =preinstallopts= it ends
+   up with.
+2. A fifth entry adds ={'instalopts': '--verbose'}=. What happens, and
+   where would you see it?
+3. The parent easyconfig has =sanity_check_paths= naming its own binary,
+   and =skipsteps = ['test']=. Which of those two does =beta= inherit?
+4. =exts_filter = ("python -c 'import %(ext_name)s'", '')= is set, and
+   =gamma= is a package whose importable name is =gamma_core=. What do
+   you change, and what happens if you instead set =modulename= to
+   =False=?
+
+#+begin_solution
+1. =alpha= gets both defaults. =beta= gets the default =source_urls= and
+   its own =preinstallopts=. =gamma= gets its own =source_urls=, which
+   *replaces* the default rather than adding to it, and the default
+   =preinstallopts=. =delta= gets neither default, because a bare string
+   never reaches the branch that reads them.
+
+2. Nothing, visibly. =instalopts= is not a known parameter, so it is
+   dropped with a =debug= line reading "Skipping unknown custom
+   easyconfig parameter". You would see it by running with =--debug= and
+   searching the log, which is the only place it appears.
+
+3. Neither. Both are on the reset list, along with =checksums=,
+   =sources=, =patches=, =postinstallcmds=, =sanity_check_commands= and
+   =data_sources=, because each is a claim about the parent's software.
+
+4. Set =modulename= to ='gamma_core'= in =gamma='s options, so the filter
+   command imports the name that exists. Setting it to =False= instead
+   produces no filter commands at all for that extension, which means it
+   is neither skipped when already installed nor checked after
+   installation: you have switched the check off rather than corrected
+   it, which is [[file:23-testing.org][chapter 23]]'s argument in
+   miniature.
+#+end_solution
+#+end_exercise
+
+#+begin_keypoints
+- =exts_default_options= reaches only entries that carry a version; a
+  bare-string entry gets no options at all.
+- The merge is a shallow update, so a per-extension list replaces the
+  default list instead of extending it.
+- An unknown per-extension option is dropped at =debug= level, with no
+  warning: a typo in a bundle of two hundred extensions is silent.
+- Eight parameters plus =start_dir= are reset before an extension runs,
+  because each is a claim about the parent's software.
+- =exts_filter= is one mechanism doing two jobs, skipping what is already
+  installed and checking what was just installed, and =modulename: False=
+  switches off both.
+#+end_keypoints

@@ -72,6 +72,7 @@ Three hours. Needs D.
 | [[file:21-writing-one-from-nothing.org][chapter 21]] | an easyconfig for software that has none |
 | [[file:08-one-easyconfig-many-installs.org][chapter 8]] | =exts_list= and bundles |
 | [[file:18-language-ecosystems.org][chapter 18]] | Python, R, Rust, and the ecosystem with no easyblock |
+| [[file:29-extensions.org][chapter 29]] | what an exts_list entry inherits, and what it does not |
 | [[file:22-writing-an-easyblock.org][chapter 22]] | when a parameter is not enough |
 | [[file:23-testing.org][chapter 23]] | the four things called testing |
 

@@ -158,6 +158,7 @@ reading the log rather than watching the progress bar.
    26-the-same-stack-somewhere-else
    27-four-things-that-actually-happened
    28-your-first-week
+   29-extensions
    learning-path
    glossary
    keypoints
