@@ -1,4 +1,4 @@
-#+TITLE: What "installed" means
+#+TITLE: Chapter 6. What "installed" means
 #+OPTIONS: toc:nil num:nil
 
 A build that reaches the end prints one line and writes one file. The

@@ -49,6 +49,10 @@ nitpicky = True
 
 html_theme = "shibuya"
 html_static_path = ["_static"]
+# Typography and layout for long-form reading, layered over the theme rather
+# than replacing it. Scoped to article.yue so navigation keeps the theme's
+# own design; see the file for what it changes and why.
+html_css_files = ["eb-book.css"]
 html_title = project
 html_copy_source = False
 html_show_sourcelink = False
@@ -93,6 +97,10 @@ epub_exclude_files = [
     "_static/eb-charmap.json",
     "_static/eb-templates.json",
     "_static/eb-hierarchy.json",
+    # Sphinx leaves this behind when a build is interrupted, and the epub
+    # builder then refuses a file it has no mimetype for. Under -W that turns
+    # a stale artifact from a previous run into a failed build.
+    ".buildinfo.bak",
 ]
 # eb-transcript.css is deliberately absent from that list. A transcript is
 # static text and renders in the EPUB, so its stylesheet belongs there.

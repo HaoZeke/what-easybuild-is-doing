@@ -1,4 +1,4 @@
-#+TITLE: Build your own, without asking anyone
+#+TITLE: Chapter 10. Build your own, without asking anyone
 #+OPTIONS: toc:nil num:nil
 
 Every chapter so far read easyconfigs somebody else installed. This one

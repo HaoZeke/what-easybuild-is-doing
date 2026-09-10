@@ -1,4 +1,4 @@
-#+TITLE: A checksum is a claim about bytes
+#+TITLE: Chapter 7. A checksum is a claim about bytes
 #+OPTIONS: toc:nil num:nil
 
 Chapter 1's easyconfig spends more lines on where the sources come

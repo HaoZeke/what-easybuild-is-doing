@@ -1,4 +1,4 @@
-#+TITLE: eb-stack, a second implementation
+#+TITLE: Chapter 12. eb-stack, a second implementation
 #+OPTIONS: toc:nil num:nil
 
 Chapter 10 ended on an observation. Everything it asked of you was

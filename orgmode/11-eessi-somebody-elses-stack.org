@@ -1,4 +1,4 @@
-#+TITLE: EESSI, somebody else's stack
+#+TITLE: Chapter 11. EESSI, somebody else's stack
 #+OPTIONS: toc:nil num:nil
 
 Chapter 10 installed software into a directory you own, on top of what

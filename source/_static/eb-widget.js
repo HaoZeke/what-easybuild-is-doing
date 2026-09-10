@@ -128,6 +128,64 @@
     island.setAttribute("data-eb-state", "inert");
   }
 
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  // A small tokeniser for the easyconfig subset the samples use. It is not a
+  // Python lexer and does not need to be: what a reader has to pick out is a
+  // string from a name, a comment from code, and above all a %(...)s template
+  // from the text around it, because the template is what half these chapters
+  // are about.
+  //
+  // Order matters. Comments and strings are matched before anything else, so
+  // a # inside a string stays a string and a keyword inside a comment stays a
+  // comment.
+  var EC_TOKEN = /(#[^\n]*)|('''[\s\S]*?'''|"""[\s\S]*?""")|('[^'\n]*'|"[^"\n]*")|\b(True|False|None|SYSTEM)\b|\b(\d[\w.]*)\b|^([A-Za-z_][A-Za-z0-9_]*)(?=\s*=)/gm;
+
+  function paintString(text) {
+    // Inside a string, a template is the part that will change when the
+    // reader edits a version. Marking it is the reason this is coloured.
+    return escapeHtml(text).replace(
+      /%\(([a-z_][a-z0-9_]*)\)s/g,
+      '<span class="ec-tpl">%($1)s</span>'
+    );
+  }
+
+  function highlightEasyconfig(source) {
+    var out = "";
+    var last = 0;
+    var m;
+    EC_TOKEN.lastIndex = 0;
+    while ((m = EC_TOKEN.exec(source)) !== null) {
+      out += escapeHtml(source.slice(last, m.index));
+      if (m[1]) {
+        out += '<span class="ec-comment">' + escapeHtml(m[1]) + "</span>";
+      } else if (m[2] || m[3]) {
+        out += '<span class="ec-str">' + paintString(m[2] || m[3]) + "</span>";
+      } else if (m[4]) {
+        out += '<span class="ec-const">' + escapeHtml(m[4]) + "</span>";
+      } else if (m[5]) {
+        out += '<span class="ec-num">' + escapeHtml(m[5]) + "</span>";
+      } else if (m[6]) {
+        out += '<span class="ec-key">' + escapeHtml(m[6]) + "</span>";
+      }
+      last = m.index + m[0].length;
+      // A zero-width match would spin here. The alternation cannot produce
+      // one, but a hang is unrecoverable and the guard costs nothing.
+      if (m[0].length === 0) {
+        EC_TOKEN.lastIndex += 1;
+      }
+    }
+    out += escapeHtml(source.slice(last));
+    // A trailing newline collapses in a <pre>, which would shorten the
+    // backdrop by a line and misalign it against the textarea.
+    return out + "\n";
+  }
+
   function activate(island, engine) {
     // Activating twice is possible: an island can be waiting on the engine
     // when the engine announces itself, which resolves its own wait and
@@ -159,25 +217,51 @@
       return;
     }
 
-    // A textarea is the placeholder editor. CodeMirror replaces it once the
-    // engine can answer completion queries, which is how janet.guide builds
-    // its autocomplete: query the WASM environment at startup.
-    //
-    // It goes inside a div.highlight so the theme's own code-block styling
-    // applies to it. Without that the sample visibly degrades the moment it
-    // becomes editable, which reads as something breaking rather than
-    // something waking up.
+    // A textarea, with a highlighted copy of its own text painted behind it.
+    // The textarea keeps every native behaviour a reader expects; the <pre>
+    // behind it restores the colour the static block had. Without that, a
+    // sample visibly degrades the moment it becomes editable, which reads as
+    // something breaking rather than something waking up.
     var seed = pre.textContent.replace(/\n+$/, "");
     var editor = document.createElement("textarea");
     editor.className = "eb-widget-editor";
     editor.spellcheck = false;
+    editor.autocapitalize = "off";
+    editor.autocomplete = "off";
+    editor.setAttribute("autocorrect", "off");
     editor.value = seed;
-    editor.rows = Math.min(24, seed.split("\n").length + 1);
     editor.setAttribute("aria-label", "editable " + widget + " sample");
 
+    // Deliberately not the theme's `highlight` class. That class carries
+    // rules meant for a static block, including `display: grid` on the pre
+    // for line highlighting, which turns every token of the backdrop into
+    // its own row. The wrapper styles itself.
     var wrap = document.createElement("div");
-    wrap.className = "highlight eb-widget-editor-wrap";
+    wrap.className = "eb-widget-editor-wrap";
+
+    // The easyblock widget takes bare software names rather than easyconfig
+    // syntax, so colouring it as code would assert a grammar it has not got.
+    var backdrop = null;
+    if (widget !== "easyblock") {
+      backdrop = document.createElement("pre");
+      backdrop.className = "eb-widget-highlight";
+      backdrop.setAttribute("aria-hidden", "true");
+      wrap.appendChild(backdrop);
+    }
     wrap.appendChild(editor);
+
+    function paint() {
+      if (backdrop) {
+        backdrop.innerHTML = highlightEasyconfig(editor.value);
+      }
+    }
+
+    // Grow to fit rather than scroll. A sample that hides its own last line
+    // behind an inner scrollbar is worse than a tall page.
+    function fit() {
+      editor.style.height = "auto";
+      editor.style.height = editor.scrollHeight + "px";
+    }
 
     var output = document.createElement("pre");
     output.className = "eb-widget-output";
@@ -198,6 +282,10 @@
     // answer is exactly what stops that being true.
     var pending = null;
     editor.addEventListener("input", function () {
+      // Paint and size follow the keystroke; only the answer waits, so the
+      // text never lags behind the caret.
+      paint();
+      fit();
       if (pending) {
         clearTimeout(pending);
       }
@@ -221,6 +309,9 @@
 
     pre.replaceWith(wrap);
     island.appendChild(output);
+
+    paint();
+    fit();
 
     // Answer before being asked. A reader who scrolls past a live sample
     // should see what it says, not an empty box beside a button.

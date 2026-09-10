@@ -1,4 +1,4 @@
-#+TITLE: One easyconfig, many installs
+#+TITLE: Chapter 8. One easyconfig, many installs
 #+OPTIONS: toc:nil num:nil
 
 Every easyconfig so far installed one thing. Here is the shape that

@@ -1,4 +1,4 @@
-#+TITLE: A versionsuffix is part of the name
+#+TITLE: Chapter 5. A versionsuffix is part of the name
 #+OPTIONS: toc:nil num:nil
 
 Here is a module name from a real cluster:

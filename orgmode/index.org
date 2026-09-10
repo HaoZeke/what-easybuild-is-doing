@@ -1,6 +1,12 @@
 #+TITLE: What EasyBuild Is Doing
-#+AUTHOR: Rohit Goswami
 #+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. rst-class:: eb-subtitle
+
+An interactive book about the build system behind a supercomputer's
+software, and about the four things everyone gets wrong about it.
+#+end_export
 
 EasyBuild's own documentation tells you what to type. It stays almost
 silent on what happens when you do.
@@ -82,7 +88,6 @@ reading the log rather than watching the progress bar.
 #+begin_export rst
 .. toctree::
    :maxdepth: 1
-   :numbered:
 
    00-tutorial-read-an-easyconfig
    01-an-easyconfig-is-python

@@ -1,4 +1,4 @@
-#+TITLE: When EasyBuild is the wrong tool
+#+TITLE: Chapter 13. When EasyBuild is the wrong tool
 #+OPTIONS: toc:nil num:nil
 
 No widgets in this chapter, and no parameters. It is the one that

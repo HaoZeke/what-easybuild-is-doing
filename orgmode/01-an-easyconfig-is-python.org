@@ -1,4 +1,4 @@
-#+TITLE: An easyconfig is Python
+#+TITLE: Chapter 1. An easyconfig is Python
 #+OPTIONS: toc:nil num:nil
 
 Here is a complete, real easyconfig. It installs a browser-based VS

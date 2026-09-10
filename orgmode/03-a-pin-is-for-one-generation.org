@@ -1,4 +1,4 @@
-#+TITLE: A pin is for one generation
+#+TITLE: Chapter 3. A pin is for one generation
 #+OPTIONS: toc:nil num:nil
 
 This is the chapter I would keep if I had to throw the rest away.

@@ -28,6 +28,11 @@ cd "$SRC"
     echo "=== host: $(hostname), job ${SLURM_JOB_ID}, $(date -Is) ==="
     pixi --version
     echo
+    # An interrupted build leaves artifacts the epub builder cannot classify,
+    # and -W makes the next build fail on them. Clear them rather than
+    # carrying a previous run's wreckage into this one.
+    find build -name '*.bak' -type f -delete 2>/dev/null || true
+
     echo "=== pixi run -e docs all ==="
     pixi run -e docs all
     echo

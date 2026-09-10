@@ -1,0 +1,663 @@
+/* Typography and layout for reading this for an hour at a time.
+ *
+ * The theme is built for documentation: a 16px sans body running to about
+ * ninety characters a line, which is a reference-lookup setting. A book is
+ * read in long passes, so this layer changes four things and leaves the rest
+ * of the theme alone.
+ *
+ *   1. Measure. Prose is capped at 66ch. Ninety characters costs the reader
+ *      the return sweep: the eye loses which line it came from.
+ *   2. A text face and a size meant for continuous reading, 18px serif.
+ *   3. Links you can see. The theme renders them undecorated and slightly
+ *      dimmer than body text, which is invisible in practice.
+ *   4. A gutter grid, so a sample or a recording can be wider than the prose
+ *      without widening the prose.
+ *
+ * Everything is scoped to article.yue, the theme's content container, so the
+ * navigation, sidebars and search keep the theme's own design.
+ */
+
+article.yue {
+  /* Measured for continuous reading rather than for scanning. Literata and
+     Source Serif were both drawn for long-form screen text; Charter and
+     Georgia are the durable fallbacks. No webfont is fetched, so the book
+     renders the same offline and costs no request. */
+  --eb-serif: Literata, "Source Serif 4", "Source Serif Pro", "IBM Plex Serif",
+    Charter, "Bitstream Charter", "Iowan Old Style", Georgia, Cambria, serif;
+  --eb-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+    sans-serif;
+  --eb-mono: ui-monospace, SFMono-Regular, "SF Mono", "IBM Plex Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+
+  /* One measure, stated once. In px rather than ch: ch is the advance of
+     "0", which in a serif is much wider than the average lowercase letter,
+     so a column set in ch is wider than the character count it claims.
+     Verified by rendering: 640px at 18px Literata measures about 70
+     characters, which is the middle of the 45 to 90 range. */
+  --eb-measure: 640px;
+  --eb-gutter: 2.5rem;
+
+  /* Two gaps, not one. Paragraphs sit close enough to read as one
+     argument; anything that is not a paragraph is separated unmistakably.
+     A single step makes a page of prose and code look mushy. */
+  --eb-space: 1rem;
+  --eb-space-block: 2rem;
+
+  font-family: var(--eb-serif);
+  font-size: 18px;
+  line-height: 1.7;
+  /* Avoids a one-word last line, which a narrow measure makes more likely. */
+  text-wrap: pretty;
+  hanging-punctuation: first last;
+}
+
+/* --- palette ---------------------------------------------------------------
+ *
+ * Six values, defined once in light and redefined once in dark. The accent is
+ * used for exactly two things: a link, and the rule that marks a live sample.
+ * Anything that needs a third colour is usually a structure problem.
+ */
+article.yue {
+  --eb-fg: #24292f;
+  --eb-fg-muted: #57606a;
+  --eb-rule: #d8dee4;
+  --eb-accent: #0b6bcb;
+  --eb-accent-quiet: #0b6bcb26;
+  --eb-surface: #f6f8fa;
+  --eb-surface-edge: #d0d7de;
+  --eb-code-fg: #7c4a03;
+}
+
+@media (prefers-color-scheme: dark) {
+  article.yue {
+    --eb-fg: #e6edf3;
+    --eb-fg-muted: #9198a1;
+    --eb-rule: #30363d;
+    --eb-accent: #6cb6ff;
+    --eb-accent-quiet: #6cb6ff26;
+    --eb-surface: #161b22;
+    --eb-surface-edge: #30363d;
+    --eb-code-fg: #e3b341;
+  }
+}
+
+/* The theme toggles a class rather than relying only on the media query, so
+   both routes have to set the same values or a manual switch does nothing. */
+html[data-theme="dark"] article.yue,
+.dark article.yue {
+  --eb-fg: #e6edf3;
+  --eb-fg-muted: #9198a1;
+  --eb-rule: #30363d;
+  --eb-accent: #6cb6ff;
+  --eb-accent-quiet: #6cb6ff26;
+  --eb-surface: #161b22;
+  --eb-surface-edge: #30363d;
+  --eb-code-fg: #e3b341;
+}
+
+html[data-theme="light"] article.yue {
+  --eb-fg: #24292f;
+  --eb-fg-muted: #57606a;
+  --eb-rule: #d8dee4;
+  --eb-accent: #0b6bcb;
+  --eb-accent-quiet: #0b6bcb26;
+  --eb-surface: #f6f8fa;
+  --eb-surface-edge: #d0d7de;
+  --eb-code-fg: #7c4a03;
+}
+
+/* --- the gutter grid -------------------------------------------------------
+ *
+ * Prose sits in a fixed centre column. A sample, a recording or a wide table
+ * spans one gutter either side, so it has room without dragging the measure
+ * out with it. This is the layout every long-form technical site converges
+ * on, because the alternative is either cramped figures or unreadable text.
+ */
+article.yue {
+  display: grid;
+  grid-template-columns:
+    [page-left] minmax(0, 1fr)
+    [wide-left] minmax(0, var(--eb-gutter))
+    [text-left] min(100%, var(--eb-measure))
+    [text-right] minmax(0, var(--eb-gutter))
+    [wide-right] minmax(0, 1fr)
+    [page-right];
+  column-gap: 0;
+}
+
+/* Sphinx wraps every heading's content in a <section>, which would sit
+   between the grid and the elements it is meant to place. Taking the
+   sections out of the layout lets their children be grid items directly,
+   while the elements themselves, and their ids for deep links, stay. */
+article.yue section {
+  display: contents;
+}
+
+article.yue > *,
+article.yue section > * {
+  grid-column: text-left / text-right;
+  min-width: 0;
+}
+
+/* The elements allowed to breathe wider than the prose. */
+article.yue .eb-widget,
+article.yue .eb-transcript,
+article.yue div[class^="highlight-"],
+article.yue .table-wrapper,
+article.yue > table,
+article.yue section > table,
+article.yue figure {
+  grid-column: wide-left / wide-right;
+}
+
+/* A code block inside a widget is not a grid item; only the widget is. */
+article.yue .eb-widget div[class^="highlight-"],
+article.yue .eb-widget .eb-widget-editor-wrap {
+  grid-column: auto;
+}
+
+/* --- running text ---------------------------------------------------------- */
+
+article.yue,
+article.yue p,
+article.yue li {
+  color: var(--eb-fg);
+}
+
+/* Reset first, then space. The theme's own paragraph margins are uneven
+   (16px top, 20px bottom), which reads as an accidental rhythm. */
+article.yue p,
+article.yue ul,
+article.yue ol,
+article.yue blockquote,
+article.yue pre,
+article.yue table {
+  margin: 0;
+}
+
+/* Blocks get the large gap. */
+article.yue > * + *,
+article.yue section > * + * {
+  margin-top: var(--eb-space-block);
+}
+
+/* Consecutive paragraphs get the small one. */
+article.yue p + p,
+article.yue li + li {
+  margin-top: var(--eb-space);
+}
+
+/* With sections out of the layout, the first element of a new section is
+   not adjacent to the last of the previous one, so the heading carries the
+   space itself. */
+article.yue section > :first-child {
+  margin-top: var(--eb-space);
+}
+
+article.yue > section:first-child > :first-child {
+  margin-top: 0;
+}
+
+
+/* Sphinx renders document metadata as a field list at the top of the page.
+   The book says who wrote it in a section at the end, so the box above the
+   first sentence is a second answer to a question nobody asked yet. */
+article.yue dl.docinfo,
+article.yue blockquote > div > dl.field-list:only-child {
+  display: none;
+}
+
+/* --- headings --------------------------------------------------------------
+ *
+ * Sans against the serif body, so a heading reads as a different kind of
+ * thing rather than as louder prose. The rule under h1 and h2 is the device
+ * that gives a long page its structure when you scroll it quickly.
+ */
+article.yue h1,
+article.yue h2,
+article.yue h3,
+article.yue h4 {
+  font-family: var(--eb-sans);
+  color: var(--eb-fg);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+article.yue h1 {
+  font-size: 2.05rem;
+  font-weight: 620;
+  letter-spacing: -0.021em;
+  margin: 0 0 calc(var(--eb-space) * 1.4);
+  padding-bottom: calc(var(--eb-space) * 0.6);
+  border-bottom: 1px solid var(--eb-rule);
+}
+
+article.yue h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin: calc(var(--eb-space) * 2.4) 0 0;
+  padding-bottom: calc(var(--eb-space) * 0.35);
+  border-bottom: 1px solid var(--eb-rule);
+}
+
+article.yue h3 {
+  font-size: 1.13rem;
+  font-weight: 600;
+  margin: calc(var(--eb-space) * 1.8) 0 0;
+}
+
+/* Sphinx puts a permalink after every heading. It should appear on approach
+   rather than sit in the type. */
+article.yue .headerlink {
+  opacity: 0;
+  margin-left: 0.35em;
+  font-weight: 400;
+  text-decoration: none;
+  transition: opacity 0.12s ease-in-out;
+}
+
+article.yue h1:hover .headerlink,
+article.yue h2:hover .headerlink,
+article.yue h3:hover .headerlink,
+article.yue .headerlink:focus {
+  opacity: 0.55;
+}
+
+/* --- links -----------------------------------------------------------------
+ *
+ * The theme's own link is undecorated and dimmer than the body text, which
+ * makes a cross-reference unfindable. An underline is the accessible signal:
+ * it does not depend on the reader distinguishing two greys.
+ */
+article.yue a,
+article.yue a:visited {
+  /* Colour is reserved for the one thing on the page a reader can act on,
+     which is a live sample. A cross-reference is marked by its underline. */
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-decoration-skip-ink: auto;
+  transition: text-decoration-color 0.12s ease-in-out;
+}
+
+article.yue a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* An inline code span inside a link keeps the link's underline rather than
+   opting out of it. */
+article.yue a code {
+  text-decoration: inherit;
+}
+
+article.yue a:focus-visible {
+  outline: 2px solid var(--eb-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- lists ----------------------------------------------------------------- */
+
+article.yue ul,
+article.yue ol {
+  padding-left: 1.35em;
+}
+
+article.yue li + li {
+  margin-top: 0.4em;
+}
+
+article.yue li > * + * {
+  margin-top: 0.5em;
+}
+
+/* --- quotes ----------------------------------------------------------------
+ *
+ * Several chapters quote a docstring or a framework comment. A left rule
+ * marks it as somebody else's words without shrinking or italicising it,
+ * both of which make a quotation harder to read than the prose around it.
+ */
+article.yue blockquote {
+  margin-left: 0;
+  padding-left: 1.1em;
+  border-left: 2px solid var(--eb-rule);
+  color: var(--eb-fg-muted);
+  font-style: normal;
+}
+
+/* --- code ------------------------------------------------------------------
+ *
+ * Monospace runs large next to a serif at the same nominal size, so it is set
+ * down. Blocks are calm: one surface, one hairline, no shadow. The sample is
+ * the thing a reader looks at, and decoration around it competes.
+ */
+article.yue code,
+article.yue kbd,
+article.yue pre {
+  font-family: var(--eb-mono);
+  font-size: 0.87em;
+  /* != and -> have to stay countable and copy-pasteable. */
+  font-variant-ligatures: none;
+}
+
+article.yue :not(pre) > code {
+  background: none;
+  color: var(--eb-code-fg);
+  padding: 0 0.1em;
+  /* A parameter name is one word; break it only if it cannot fit. */
+  overflow-wrap: break-word;
+}
+
+/* Monospace runs large beside a display face, so it is set down again in
+   headings rather than left to tower over the words around it. */
+article.yue h1 code,
+article.yue h2 code,
+article.yue h3 code,
+article.yue h4 code {
+  font-size: 0.92em;
+}
+
+article.yue div[class^="highlight-"],
+article.yue .highlight {
+  border-radius: 6px;
+}
+
+article.yue .highlight pre {
+  line-height: 1.55;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  /* Some of what this book quotes carries literal tabs. */
+  tab-size: 4;
+}
+
+/* --- the live sample ------------------------------------------------------
+ *
+ * A widget is the one element on the page a reader can act on, so it is the
+ * one element that gets an accent. The label above it says what it is; the
+ * rule down the left says it is not ordinary prose.
+ */
+article.yue .eb-widget {
+  --eb-widget-border: var(--eb-surface-edge);
+  border: 1px solid var(--eb-surface-edge);
+  border-left: 3px solid var(--eb-accent);
+  border-radius: 6px;
+  padding: 0.85rem 1rem 1rem;
+  background: var(--eb-surface);
+}
+
+article.yue .eb-widget[data-eb-state="live"]::before {
+  font-family: var(--eb-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--eb-accent);
+  opacity: 1;
+}
+
+/* The editable sample keeps the size, the surface and the colour of the
+   block it replaced, so becoming editable is not a visual downgrade.
+   
+   The textarea is transparent and sits exactly on top of a <pre> holding a
+   highlighted copy of the same text. Every metric that affects where a
+   glyph lands has to match between the two, or the colour drifts away from
+   the characters as you type: family, size, line height, letter spacing,
+   padding, border, and white-space handling. */
+article.yue .eb-widget-editor-wrap {
+  position: relative;
+  border-radius: 5px;
+  border: 1px solid var(--eb-surface-edge);
+  background: var(--eb-surface);
+  overflow: hidden;
+}
+
+article.yue .eb-widget-editor,
+article.yue .eb-widget-highlight {
+  margin: 0;
+  border: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--eb-mono);
+  /* em, so it matches the code block it replaced rather than the root. */
+  font-size: 0.86em;
+  line-height: 1.6;
+  letter-spacing: normal;
+  tab-size: 4;
+  /* Both layers wrap by the same rule, at the same width, in the same font,
+     so a wrapped line lands in the same place in each. Hard `pre` would
+     clip a long source_urls line instead, and a horizontal scrollbar
+     cannot be kept in sync between a textarea and a pre. */
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+  box-sizing: border-box;
+}
+
+article.yue .eb-widget-highlight {
+  position: absolute;
+  inset: 0;
+  /* Explicit, because a theme that styles `pre` for line highlighting may
+     make it a grid container, which would stack every token in its own
+     row. */
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--eb-fg);
+  background: none;
+}
+
+article.yue .eb-widget-editor {
+  position: relative;
+  display: block;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  /* The text is painted by the layer underneath; only the caret and the
+     selection come from the textarea itself. */
+  color: transparent;
+  caret-color: var(--eb-fg);
+}
+
+article.yue .eb-widget-editor::selection {
+  background: color-mix(in srgb, var(--eb-accent) 32%, transparent);
+}
+
+/* Without a backdrop, as in the easyblock sample, the textarea paints its
+   own text. */
+article.yue .eb-widget-editor-wrap:not(:has(.eb-widget-highlight))
+  .eb-widget-editor {
+  color: var(--eb-fg);
+}
+
+/* The tokens. Deliberately few: a reader has to pick out a string from a
+   name, a comment from code, and above all a template from the text around
+   it, because the template is what changes when they edit a version. */
+article.yue .ec-comment {
+  color: var(--eb-fg-muted);
+  font-style: italic;
+}
+
+article.yue .ec-str {
+  color: var(--eb-code-fg);
+}
+
+article.yue .ec-key {
+  color: var(--eb-fg);
+  font-weight: 600;
+}
+
+article.yue .ec-num,
+article.yue .ec-const {
+  color: var(--eb-accent);
+}
+
+/* The one thing on the sample worth a box. Editing a version and watching
+   every %(version)s follow is the point of the widget. */
+article.yue .ec-tpl {
+  color: var(--eb-accent);
+  background: var(--eb-accent-quiet);
+  border-radius: 3px;
+  padding: 0 0.1em;
+  font-weight: 600;
+}
+
+article.yue .eb-widget-output {
+  font-family: var(--eb-mono);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--eb-fg);
+  border: 0;
+  border-top: 1px dashed var(--eb-surface-edge);
+  border-radius: 0;
+  padding: 0.7rem 0.1rem 0;
+  margin-top: 0.7rem;
+  white-space: pre-wrap;
+}
+
+article.yue .eb-widget-note {
+  font-family: var(--eb-sans);
+  font-size: 0.82rem;
+  color: var(--eb-fg-muted);
+  font-style: normal;
+}
+
+/* --- a recording -----------------------------------------------------------
+ *
+ * A transcript is evidence, not a sample: it happened, on a named machine, on
+ * a date. It is styled as a quotation of a terminal rather than as something
+ * to act on, and it carries its provenance where a figure carries a caption.
+ */
+article.yue .eb-transcript {
+  border: 1px solid var(--eb-surface-edge);
+  border-left: 3px solid var(--eb-fg-muted);
+  border-radius: 6px;
+  background: var(--eb-surface);
+  padding: 0.85rem 1rem;
+}
+
+article.yue .eb-transcript-caption {
+  font-family: var(--eb-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--eb-fg-muted);
+  margin: 0 0 0.6rem;
+}
+
+article.yue .eb-transcript pre {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+article.yue .eb-transcript-source {
+  font-family: var(--eb-sans);
+  font-size: 0.75rem;
+  color: var(--eb-fg-muted);
+  margin: 0.6rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--eb-rule);
+}
+
+article.yue .eb-transcript-source em {
+  font-style: normal;
+}
+
+/* --- tables ----------------------------------------------------------------
+ *
+ * Three chapters compare things in columns because a comparison belongs in
+ * columns. Ruled rows, no vertical lines, no zebra: the data is short and
+ * the reader is comparing across a row.
+ */
+article.yue table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+article.yue table th,
+article.yue table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.55rem 0.9rem 0.55rem 0;
+  border-bottom: 1px solid var(--eb-rule);
+}
+
+article.yue table th {
+  font-family: var(--eb-sans);
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--eb-fg-muted);
+  border-bottom-color: var(--eb-fg-muted);
+}
+
+article.yue table tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- the landing page -----------------------------------------------------
+ *
+ * A reader arriving at a book decides in a few seconds whether it is for
+ * them. The subtitle answers that before the argument starts.
+ */
+article.yue .eb-subtitle {
+  font-family: var(--eb-sans);
+  font-size: 1.22rem;
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--eb-fg-muted);
+  text-wrap: balance;
+  /* The sibling rule already supplies the space below; adding more here
+     stacks two gaps and leaves a band under the subtitle. */
+  margin-top: calc(var(--eb-space) * -0.7);
+  margin-bottom: 0;
+}
+
+article.yue .eb-subtitle + * {
+  margin-top: calc(var(--eb-space) * 1.35);
+}
+
+/* The one action on the page. It is a link rather than a button because it
+   goes to a page, and dressing a link as a button lies about that. */
+article.yue #start-here p:first-of-type a {
+  font-weight: 600;
+  text-decoration-color: var(--eb-accent);
+}
+
+/* --- the first paragraph ---------------------------------------------------
+ *
+ * Every chapter opens on a claim. Setting it slightly larger is the oldest
+ * device in book design for saying "start here", and it costs nothing.
+ */
+article.yue > h1 + p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: var(--eb-fg);
+}
+
+/* --- print -----------------------------------------------------------------
+ *
+ * A book gets printed. Widgets cannot run on paper, so they print as what
+ * they are: the sample, and a note saying where the live one is.
+ */
+@media print {
+  article.yue {
+    font-size: 11pt;
+    --eb-measure: 100%;
+  }
+
+  article.yue .eb-widget-output,
+  article.yue .eb-widget::before {
+    display: none;
+  }
+
+  article.yue a {
+    text-decoration: none;
+    color: inherit;
+  }
+}

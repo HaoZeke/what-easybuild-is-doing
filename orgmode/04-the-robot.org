@@ -1,4 +1,4 @@
-#+TITLE: The robot
+#+TITLE: Chapter 4. The robot
 #+OPTIONS: toc:nil num:nil
 
 You type this:
