@@ -218,6 +218,45 @@ it.
 Neither check knows whether the software works. That is a separate
 question, and it is [[file:23-testing.org][chapter 23]]'s.
 
+#+ATTR_EB: :id EB-Write-2 :title Read a checksums block
+#+begin_exercise
+Three easyconfigs, three checksum blocks. Say what each one asserts, and
+which of the three you would question.
+
+#+begin_example
+# A
+checksums = ['e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855']
+
+# B
+checksums = [(
+    'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+)]
+
+# C
+checksums = [{
+    'thing-1.0.tar.gz': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    'thing-1.0-fix.patch': '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+}]
+#+end_example
+
+#+begin_solution
+A is one SHA256 for one file, recognised as SHA256 by its length.
+
+B is a *tuple*, which means logical OR: either archive satisfies the
+check. It exists for an upstream that re-cut a release without changing
+the version, and it is the one to question, because "either of these two
+archives is fine" is a claim somebody has to have actually checked byte
+for byte. Ask which two archives, and why they are equivalent.
+
+C is a dict mapping filename to checksum, which is what injection writes
+when there are two or more files, and the form that survives somebody
+reordering =sources=. A list of two bare strings would have been
+positional, and positional is the form that breaks silently when a patch
+is inserted at the top.
+#+end_solution
+#+end_exercise
+
 * Sending it upstream
 
 The mechanism is =eb --new-pr <file>=, and it does more than a

@@ -176,6 +176,49 @@ resolution has to be measured on the architecture it will run on.* The
 first command in that diagnosis is =readlink -f= on the per-node symlink,
 on the node the user's job ran on.
 
+#+ATTR_EB: :id EB-Week-2 :title The commit you would write
+#+begin_exercise
+You have just fixed the toolchain from task two: the unversioned library
+directories now point at the CUDA version the module declares, set in
+=postinstallcmds=.
+
+Write the commit message. Specifically decide:
+
+1. What has to be in it for the person who reads it in a year.
+2. Whether the rebuilt packages need anything, and how you would say so.
+3. What you would say about the twenty days, and to whom.
+4. Which of these belongs in the commit and which belongs somewhere else:
+   the loader error, the architectures affected, how you measured it, the
+   ticket, and the fact that a sanity check had been switched off.
+
+#+begin_solution
+1. What was wrong, in one line a search will find: the unversioned
+   =math_libs= and =comm_libs= entries pointed into the newer CUDA tree
+   the same tarball carries. Then why the fix is where it is:
+   =postinstallcmds= runs before the sanity check, so the check that had
+   been failing can pass honestly.
+
+2. Yes: anything built against the broken toolchain linked the wrong
+   library and has to be rebuilt. Say which packages, and say that the
+   rebuild flag is temporary and who removes it. A temporary flag with no
+   named owner becomes permanent.
+
+3. That the check had been switched off, that it was reporting this
+   defect, and that the twenty days are the cost of that decision rather
+   than of the defect. It goes to whoever will make the same call next
+   month, which means the commit message and the team's notes, not the
+   ticket. The user gets a working module and a date, not an autopsy.
+
+4. In the commit: the error string, because it is what the next person
+   will search for; the architectures affected, because that is the shape
+   of the bug; how you measured it, in one line, because a claim about
+   library resolution is only as good as the node it was made on. Not in
+   the commit: the ticket reference on its own, which ages out, and the
+   detail of the earlier retracted diagnosis, which belongs in the notes
+   where somebody can read the whole sequence.
+#+end_solution
+#+end_exercise
+
 * Task three: a user says a module is broken and you cannot reproduce it
 
 The request: *"this module works for me and fails for them"*, which is the
@@ -201,8 +244,28 @@ The sequence is a bisection over the four things that differ:
 
 Three of the four checks pass, the module looks identical, and the
 temptation is to reply that it works. The fourth is where the difference
-usually is, and a reply that closes a ticket names the node and the
+tends to be, and a reply that closes a ticket names the node and the
 architecture it was tested on.
+
+** A pipeline's summary can be empty for two different reasons
+
+One more trap, from a bump that went green on three architecture classes
+and red on one, with the same prebuilt archive.
+
+A pipeline that summarises a run typically fills a field like
+=EasyBuild log:= by grepping its own output for the line =eb= prints at
+the end, =Results of the build can be found in the log file(s)=. =eb=
+prints that line on failed builds too. So an *empty* log field does not
+mean "no information": it means =eb= never got as far as printing it,
+which puts the failure before the easyconfig was processed at all, in the
+fetch phase.
+
+And a field like =Last successful build:= reporting *never* carries no
+signal for a line you have just added, because it is a search of previous
+runs for that filename and your filename has never appeared.
+
+Read your pipeline's summariser once, and find out which of its fields
+can be empty for a reason other than absence.
 
 #+ATTR_EB: :id first-week-habits :title Four habits that shorten the week :kind reference
 #+begin_detail
