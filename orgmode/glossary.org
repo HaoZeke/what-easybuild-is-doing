@@ -1,0 +1,284 @@
+#+TITLE: Glossary
+
+#+OPTIONS: toc:nil num:nil
+
+Every term here is born once, on this page, and any chapter can open it in
+place. So a reader who meets =versionsuffix= in chapter 8 does not have to
+come here, and a reader who wants the whole vocabulary at once has it.
+
+Definitions are mechanical rather than descriptive: what the thing *is*
+in the code, and what changes if it changes.
+
+* The recipe
+
+#+ATTR_EB: :id term-easyconfig :title easyconfig :kind term :name easyconfig
+#+begin_detail
+A Python file, conventionally named
+=<name>-<version>[-<toolchain>][<versionsuffix>].eb=, whose top-level
+assignments are read as parameters. EasyBuild 5.3.1 defines 110 of them
+in eight categories; five are enforced as mandatory (=name=, =version=,
+=homepage=, =description=, =toolchain=).
+
+It is executed, not parsed as data, which is why an easyconfig can
+compute a value and why a variable EasyBuild does not recognise has to be
+named =local_*=.
+
+[[file:01-an-easyconfig-is-python.org][Chapter 1]].
+#+end_detail
+
+#+ATTR_EB: :id term-easyblock :title easyblock :kind term :name easyblock
+#+begin_detail
+The Python class that carries out a build. Chosen by the =easyblock=
+parameter, or computed from =name= when that parameter is absent:
+=EB_<name>= with characters escaped (=-= to =_minus_=, =_= to
+=_underscore_=, space to =_=), in a module file whose name is lowercased
+with dashes turned to underscores.
+
+EasyBuild 5.3.1 ships 82 generic classes in 47 modules and 282
+software-specific ones. Generic ones carry no =EB_= prefix.
+=configure_step=, =build_step= and =install_step= raise
+=NotImplementedError= on the abstract base, so every easyblock supplies
+those three or inherits them.
+
+[[file:22-writing-an-easyblock.org][Chapter 22]].
+#+end_detail
+
+#+ATTR_EB: :id term-toolchain :title toolchain :kind term :name toolchain
+#+begin_detail
+A named set of compilers and libraries, and the thing that decides which
+dependencies a build may see. =foss/2025a= is GCC, OpenMPI, OpenBLAS,
+FFTW and ScaLAPACK at one generation; its subtoolchains are
+=gompi/2025a=, =GCC/14.2.0=, =GCCcore/14.2.0= and the system toolchain.
+
+A dependency built with a *subtoolchain* of yours is usable; one built
+with a sibling or a parent is not, and the check fires in the =prepare=
+step before anything is unpacked.
+
+[[file:02-a-toolchain-is-a-hierarchy.org][Chapter 2]].
+#+end_detail
+
+#+ATTR_EB: :id term-versionsuffix :title versionsuffix :kind term :name versionsuffix
+#+begin_detail
+A string appended to the module's version, making it part of the
+installation's identity rather than a label on it.
+=-CUDA-12.9.1= in a module name means the module tree, the install
+directory and the =$EBROOT*= variable all differ from the same software
+without it. Two installations differing only in =versionsuffix= are two
+different installations that can both exist.
+
+[[file:05-a-versionsuffix-is-part-of-the-name.org][Chapter 5]].
+#+end_detail
+
+#+ATTR_EB: :id term-start-dir :title start_dir :kind term :name start_dir
+#+begin_detail
+The directory a build runs in, relative to the *guessed* top of the
+unpacked source rather than to the extraction directory.
+
+The guess is =find_base_dir=, which descends while a directory has
+exactly one entry, ignoring dotfiles and a directory named =easybuild=.
+So an archive containing only =pkg-1.0/src/= starts in =pkg-1.0/src=,
+and a =start_dir= correct for a git checkout can be silently wrong for a
+release tarball of the same software.
+
+[[file:20-reading-a-failed-build.org][Chapter 20]].
+#+end_detail
+
+#+ATTR_EB: :id term-exts-list :title exts_list :kind term :name exts_list
+#+begin_detail
+A list of things installed inside one installation rather than as modules
+of their own: Python packages, R packages, Perl modules. Entries are a
+bare name, a =(name, version)= tuple, or a
+=(name, version, {options})= tuple. Handled by the =extensions= step,
+which is the tenth of the eighteen.
+
+[[file:08-one-easyconfig-many-installs.org][Chapter 8]].
+#+end_detail
+
+* The run
+
+#+ATTR_EB: :id term-steps :title the eighteen steps :kind term :name steps
+#+begin_detail
+In order: =fetch=, =ready=, =extract=, =patch=, =prepare=, =configure=,
+=build=, =test=, =install=, =extensions=, =postiter=, =postproc=,
+=sanitycheck=, =cleanup=, =module=, =permissions=, =package=,
+=testcases=.
+
+=ready= through =extensions= are the iterated block, repeated once per
+entry when a parameter like =configopts= is a list. Every easyconfig
+parameter belongs to one step, and most error messages name one.
+
+[[file:13-how-a-build-executes.org][Chapter 13]].
+#+end_detail
+
+#+ATTR_EB: :id term-robot :title the robot :kind term :name robot
+#+begin_detail
+Dependency resolution. =--robot= walks the dependency graph, finds an
+easyconfig for each unmet dependency by constructing its filename, and
+installs in order. It resolves *exact* versions: a dependency line is a
+pin, not a minimum.
+
+[[file:04-the-robot.org][Chapter 4]].
+#+end_detail
+
+#+ATTR_EB: :id term-sanity-check :title sanity check :kind term :name sanity_check
+#+begin_detail
+The step that decides whether an installation exists.
+=sanity_check_paths= takes =files= and =dirs=, both keys required and at
+least one non-empty, and asserts they are there.
+=sanity_check_commands= runs commands, which means the check executes the
+software. An RPATH check runs alongside, exempting =libcuda.so=,
+=libcuda.so.1=, =libnvidia-ml.so= and =libnvidia-ml.so.1= because those
+belong to the driver.
+
+[[file:06-what-installed-means.org][Chapter 6]].
+#+end_detail
+
+#+ATTR_EB: :id term-hook :title hook :kind term :name hook
+#+begin_detail
+A Python function a site registers to run before or after any step:
+=pre_fetch_hook= through =post_testcases_hook=, plus parse and module
+hooks. Hooks change builds without changing easyconfigs, which is why a
+recipe can be correct and produce something you did not expect, and why
+=eb --show-config= is the first thing to read on somebody else's
+machine.
+
+[[file:09-a-hook-changes-a-file-you-are-not-reading.org][Chapter 9]].
+#+end_detail
+
+#+ATTR_EB: :id term-optarch :title optarch :kind term :name optarch
+#+begin_detail
+The toolchain option, on by default, that tells the compiler to optimise
+for the microarchitecture it is running on. It is why binaries are not
+interchangeable between node types and why sites keep one install tree
+per architecture. =toolchainopts = {'optarch': False}= turns it off for
+one package; =--optarch= sets a site-wide baseline.
+
+[[file:16-what-a-toolchain-injects.org][Chapter 16]].
+#+end_detail
+
+#+ATTR_EB: :id term-rpath :title RPATH :kind term :name RPATH
+#+begin_detail
+A list of library search paths recorded inside a binary. EasyBuild's
+=--rpath= writes the dependencies' library directories into every binary
+it links, so a module does not need =$LD_LIBRARY_PATH= to work.
+
+On a heterogeneous system an RPATH containing a per-node symlink such as
+=/sw/arch/...= resolves against *the node you are standing on*, which is
+why =ldd= on a login node can report zero missing libraries for a binary
+that is broken on a GPU node.
+
+[[file:27-four-things-that-actually-happened.org][Chapter 27]].
+#+end_detail
+
+* What comes out
+
+#+ATTR_EB: :id term-modulefile :title modulefile :kind term :name modulefile
+#+begin_detail
+The generated Lua or Tcl file a user loads. Nothing writes it by hand:
+=help= and =whatis= come from =description= and =homepage=, =conflict=
+from the name, =depends_on= from =dependencies=, and the =prepend_path=
+lines from the directories that exist in the install.
+
+It always sets =$EBROOT<NAME>=, =$EBVERSION<NAME>= and
+=$EBDEVEL<NAME>=, with the name uppercased and stripped of
+non-alphanumerics.
+
+[[file:19-what-a-module-exports.org][Chapter 19]].
+#+end_detail
+
+#+ATTR_EB: :id term-devel-module :title devel module :kind term :name devel module
+#+begin_detail
+A second modulefile, generated for every install, at
+=<installdir>/easybuild/<name>-<version>-easybuild-devel= and named by
+=$EBDEVEL<NAME>=. Loading it reproduces the environment the build had,
+because it records every environment change the build made, including
+=$PATH= and the modules tool's own bookkeeping variables. It cannot be
+unloaded through =$EBDEVELNAME=.
+
+[[file:24-development-environments.org][Chapter 24]].
+#+end_detail
+
+#+ATTR_EB: :id term-reprod :title reprod/ :kind term :name reprod
+#+begin_detail
+A directory inside every installation, at
+=<installdir>/easybuild/reprod/=, holding the easyconfig as parsed, a
+shell script that recreates the build environment, and *the source of the
+easyblock that ran*, including component and extension easyblocks. It is
+written before the steps run, and it is what makes an installation
+self-describing a year later.
+
+[[file:24-development-environments.org][Chapter 24]].
+#+end_detail
+
+#+ATTR_EB: :id term-mns :title module naming scheme :kind term :name module naming scheme
+#+begin_detail
+The rule mapping an installation to a module name and path. The default
+is =EasyBuildMNS=, flat: =name/version-toolchain-versionsuffix= in one
+directory. =CategorizedModuleNamingScheme= files those under
+=moduleclass=. =HierarchicalMNS= moves the toolchain out of the name and
+into =MODULEPATH=, so loading a compiler reveals the modules built with
+it.
+
+A site decision made once: changing it renames every module the site has.
+
+[[file:19-what-a-module-exports.org][Chapter 19]].
+#+end_detail
+
+* Delivery
+
+#+ATTR_EB: :id term-cvmfs :title CernVM-FS :kind term :name CernVM-FS
+#+begin_detail
+A read-only filesystem delivered over plain HTTP, with content-addressed
+immutable objects, SQLite file catalogs, and a signed manifest at the
+root. Files are fetched on demand and cached locally, and the whole tree
+is verifiable from one signature because the catalogs form a Merkle tree.
+
+[[file:25-cvmfs-and-the-stratum.org][Chapter 25]].
+#+end_detail
+
+#+ATTR_EB: :id term-stratum :title Stratum 0 and Stratum 1 :kind term :name Stratum
+#+begin_detail
+The Stratum 0 is the single writer: a release manager machine where
+=cvmfs_server transaction= and =publish= turn changes into
+content-addressed objects, atomically. A Stratum 1 is a web server
+mirroring those objects and the signed manifest, kept current by
+=cvmfs_server snapshot=. Clients talk to Stratum 1s, usually through a
+Squid forward proxy.
+
+[[file:25-cvmfs-and-the-stratum.org][Chapter 25]].
+#+end_detail
+
+#+ATTR_EB: :id term-variant-symlink :title variant symlink :kind term :name variant symlink
+#+begin_detail
+A symlink whose *stored target* is a variable reference, expanded by the
+CernVM-FS client from its own configuration:
+=$(VAR)= or =$(VAR:-/a/default)=. What is signed is the string, so a site
+can point the link elsewhere without invalidating the repository
+signature. EESSI's =host_injections= is stored as
+=$(EESSI_HOST_INJECTIONS:-/opt/eessi)=.
+
+[[file:26-the-same-stack-somewhere-else.org][Chapter 26]].
+#+end_detail
+
+#+ATTR_EB: :id term-eessi :title EESSI :kind term :name EESSI
+#+begin_detail
+Three layers: CernVM-FS for delivery, a Gentoo Prefix compatibility layer
+so the host distribution stops mattering, and an EasyBuild software layer
+built per microarchitecture. The host still provides the kernel, the
+drivers, the filesystem clients and the scheduler.
+
+[[file:11-eessi-somebody-elses-stack.org][Chapter 11]] and
+[[file:26-the-same-stack-somewhere-else.org][chapter 26]].
+#+end_detail
+
+#+ATTR_EB: :id term-archdetect :title archdetect :kind term :name archdetect
+#+begin_detail
+=eessi_archdetect.sh=, the shell script EESSI uses by default to pick
+which build a host gets. =-a cpupath= returns an ordered
+colon-separated list from most specific to most generic, and the
+initialisation script takes the first entry that exists on disk. The
+selected value lands in =$EESSI_SOFTWARE_SUBDIR=;
+=$EESSI_CPU_FAMILY= is only =uname -m=.
+
+[[file:26-the-same-stack-somewhere-else.org][Chapter 26]].
+#+end_detail

@@ -154,6 +154,7 @@ reading the log rather than watching the progress bar.
    25-cvmfs-and-the-stratum
    26-the-same-stack-somewhere-else
    27-four-things-that-actually-happened
+   glossary
    exercises
    afterword-when-easybuild-is-the-wrong-tool
 #+end_export

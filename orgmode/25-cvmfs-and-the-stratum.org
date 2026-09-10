@@ -207,7 +207,7 @@ $ sqlite3 cat.db "select name from catalog where flags=3"
 
 So the root catalog of the entire EESSI software stack is 26 kilobytes
 and knows almost nothing. It knows the top-level layout, and for each
-EESSI version it holds a hash and a promise. Ask for anything under
+EESSI version it has a hash and a promise. Ask for anything under
 =/versions/2025.06= and the client fetches that catalog first, verifies
 it the same way, and continues. There is no limit on the nesting, and a
 client that never enters a subtree never downloads its metadata.
@@ -298,7 +298,7 @@ the cache.
 New content enters at exactly one place, the *Stratum 0*, on a machine
 called the release manager or publisher. The publisher mounts the
 repository read-only and puts a union filesystem over it, so a change
-lands in a scratch area rather than in the repository.
+goes to a scratch area rather than into the repository.
 =cvmfs_server transaction= opens that, =publish= converts what changed
 into the storage format above, =abort= discards it. Upstream's phrase for
 the property that matters is three words: "Publishing is an atomic

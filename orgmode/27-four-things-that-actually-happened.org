@@ -35,8 +35,8 @@ cannot open shared object file: No such file or directory
 
 Three things about this one outlast the fix.
 
-*It was not a version-detection fault, and the obvious fix would have
-changed nothing.* =EBNVHPCCUDAVER= read =12.9= in the generated
+*It was not a version-detection fault, and the fix everyone reaches for
+first would have changed nothing.* =EBNVHPCCUDAVER= read =12.9= in the generated
 modulefiles on all four architectures. The easyblock had resolved the
 active CUDA version correctly and patched the installer's own
 =DESIREDCUDA= with it. The installer linked the unversioned entries at
@@ -101,7 +101,7 @@ skipsteps = ['sanitycheck']
 #+end_example
 
 The reasoning was that the sanity check reported a failure the package
-could not fix. Both halves of that were true. The check was reporting
+could not fix. Each half of that was true. The check was reporting
 =libnvJitLink.so.13=, the defect was in the toolchain module, and no
 change to the VASP easyconfig could have repaired it.
 
@@ -146,7 +146,7 @@ Two things this one taught that the others did not.
 
 A dry run cannot catch it. =eb -x= never extracts anything, so a
 =start_dir= that names a directory the archive does not contain looks
-fine right up to the point where a build unpacks the archive. The
+fine right up to the point where a build extracts the archive. The
 verification I ran before pushing was structurally incapable of finding
 the fault.
 

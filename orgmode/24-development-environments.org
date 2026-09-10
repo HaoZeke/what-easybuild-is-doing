@@ -265,7 +265,7 @@ same problem has an EESSI-specific answer, and it is a module:
 that location on top of the mounted stack, which is
 [[file:11-eessi-somebody-elses-stack.org][chapter 11]]'s subject.
 =EESSI_EASYBUILD_HOOKS_OVERRIDE= replaces the hooks it uses, which
-matters because those hooks are what make an EESSI build EESSI-shaped;
+replaces the hooks that make an EESSI build EESSI-shaped;
 overriding them is how you get a build that is not.
 
 #+ATTR_EB: :id sources-24 :title Where this chapter comes from :kind sources

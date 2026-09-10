@@ -316,7 +316,7 @@ here were read out of the =software.eessi.io= root catalog at revision
 23927 by the method in chapter 25.
 #+end_detail
 
-#+ATTR_EB: :id EB-EESSI-1 :title Four machines
+#+ATTR_EB: :id EB-Elsewhere-1 :title Four machines
 #+begin_exercise
 For each machine, name the route, the two configuration decisions you
 would make, and the one check you would run before believing the result.

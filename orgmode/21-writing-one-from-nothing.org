@@ -13,8 +13,7 @@
 Every chapter so far has read an easyconfig that existed. This one writes
 one.
 
-The order below is the order that wastes least time, and the first step
-is the one people skip.
+In the order that wastes least time.
 
 * Look for it first
 
@@ -37,7 +36,7 @@ this chapter's. What follows is for when nothing comes back.
 
 =eb -a= lists every easyconfig parameter, in eight categories, and in
 EasyBuild 5.3.1 there are 110 of them. The first category is called
-MANDATORY and it holds eight.
+MANDATORY and has eight in it.
 
 Only five are enforced:
 

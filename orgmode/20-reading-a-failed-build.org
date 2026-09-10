@@ -126,7 +126,7 @@ drwxr-xr-x 3 rgoswami rgoswami 60 Sep 10 07:06 ..
 Exit 127 was telling the truth.
 
 Two ways to fix it, and they are not equivalent. =start_dir = ''= stops
-the descent, so =bin/wobble= lands where the recipe expects; or the
+the descent, so =bin/wobble= sits where the recipe expects; or the
 =postinstallcmds= line is corrected to the path that exists. The first
 changes the layout the module exports, which is what a user meets, so it
 is usually the right one.
@@ -148,9 +148,8 @@ line at the end of a failed run,
 =Results of the build can be found in the log file(s) ...=, points at the
 second.
 
-=eb --last-log= prints the path to the most recent one. It is worth
-knowing what it actually does, because it explains its one surprise: it
-globs the log path, keeps only files owned by your uid, and returns the
+=eb --last-log= prints the path to the most recent one. It globs the log
+path, keeps only files owned by your uid, and returns the
 newest by modification time. So on a shared build host it finds *your*
 last log rather than the machine's, and it implies =--terse=, which is
 why =vim $(eb --last-log)= works.
@@ -227,8 +226,7 @@ sibling =env.sh=, with the failing command as the previous history entry.
 So the loop is: press up, edit, run, repeat, in the environment the build
 had rather than in an approximation of it.
 
-That matters because of
-[[file:14-the-isolation-policy.org][chapter 14]]: your login shell is not
+That is [[file:14-the-isolation-policy.org][chapter 14]] again: your login shell is not
 the build's environment, and a command that works in one and fails in the
 other tells you nothing until you know which environment you were in.
 
@@ -236,7 +234,7 @@ For a failure you want to poke at *before* it happens, rather than after,
 =eb --dump-env-script <easyconfig>= writes =<name>.env= in the current
 directory: the =module load= lines for the toolchain and its
 dependencies, and the build environment the toolchain object sets. Source
-it and you are standing where the build stands. That is
+it and your shell has what the build has. That is
 [[file:24-development-environments.org][chapter 24]]'s whole subject.
 
 * What is left behind, and what is not
