@@ -187,9 +187,9 @@ An extension whose =modulename= is =False= produces *no* commands, so it
 is skipped in both roles: not checked before, not checked after. That is
 the escape hatch for an extension whose importable name does not exist.
 
-And because =get_modulenames= can return several names, an extension that
-provides three importable modules gets three commands, all of which must
-pass.
+And =get_modulenames= can return more than one name, so an extension
+providing three importable modules gets three commands, and every one has
+to pass.
 
 For Python the conventional filter is an import:
 
