@@ -279,6 +279,42 @@ directory: EESSI ships the easyconfig, the environment script and the
 easyblock source for everything in the stack, catalogued separately so
 they cost nothing until asked for.
 
+#+ATTR_EB: :id EB-CVMFS-2 :title Verify a repository yourself
+#+begin_exercise
+Do this one rather than reading it. You need =curl=, =python3= and
+=sqlite3=, and no privileges.
+
+1. Fetch =.cvmfspublished= from a public Stratum 1 and read off =C=, =B=,
+   =S= and =D=.
+2. Fetch the root catalog object by its hash and check =sha1sum= against
+   the name you requested.
+3. Decompress it and compare the byte count with =B=.
+4. Open it with =sqlite3= and count the entries by =flags=.
+5. Then answer: what would you have to compromise to serve a reader a
+   modified file without them noticing?
+
+#+begin_solution
+Steps 1 to 4 are the transcripts in this chapter, against whichever
+repository you pick; the numbers will differ and the relationships will
+not. If =sha1sum= disagrees with the object name, you have found either a
+corrupted mirror or a much more interesting problem.
+
+Step 5 is the point of the exercise. To change one file you need a catalog
+that names its new hash; to change a catalog you need its parent to name
+*that* new hash, recursively, up to the root; and the root catalog's hash
+is in the signed manifest. So you need the repository's private key, and
+then also to defeat the whitelist, which is signed by a different key
+whose public part reached the client out of band.
+
+What you do *not* need to compromise: any Stratum 1, any proxy, or the
+network. Those carry immutable objects that the client checks for itself,
+which is why the transport can be plain HTTP.
+
+The one place the chain stops is the local cache, which the client trusts
+once an object is in it.
+#+end_solution
+#+end_exercise
+
 * Two keys
 
 The signature at the bottom of the manifest is made with the *repository*

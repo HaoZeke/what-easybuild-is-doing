@@ -35,10 +35,18 @@ NO_EXERCISE = {
 NO_OBJECTIVES = {"13-when-easybuild-is-the-wrong-tool"}
 
 BLOCK = re.compile(
-    r"^#\+begin_(objectives|exercise|solution)\s*$(.*?)^#\+end_\1\s*$",
+    r"^#\+begin_(objectives|exercise|solution|keypoints|prerequisites"
+    r"|predict|reveal)\s*$(.*?)^#\+end_\1\s*$",
     re.S | re.M,
 )
 ATTR = re.compile(r"^#\+ATTR_EB:\s*(.*)$", re.M)
+
+# An ATTR_EB line precedes several kinds of block, and only some of them are
+# addressable. An exercise and a dive-in detail are referred to by id, from
+# the index and from other chapters; a prediction and a widget are read where
+# they stand. So the id requirement is decided by what follows the line
+# rather than applied to every line.
+NEEDS_ID = ("exercise", "detail")
 
 
 def numbered_items(body: str) -> int:
@@ -107,10 +115,41 @@ def main() -> int:
                     f"{stem}: {n_ex} exercise(s) but {n_solutions} "
                     f"solution(s); a reader working alone has nobody to ask"
                 )
-        for attrs in ATTR.findall(text):
+        # Keypoints: the receipt for the objectives, and the pairing is the
+        # device. A chapter with objectives and no keypoints made a promise
+        # and never said whether it kept it.
+        n_kp = kinds.count("keypoints")
+        if n_kp > 1:
+            problems.append(f"{stem}: {n_kp} keypoints blocks, wants at most 1")
+        if n_kp == 1:
+            n = len(re.findall(r"^\s*-\s", next(b for k, b in blocks if k == "keypoints"), re.M))
+            if not 3 <= n <= 6:
+                problems.append(
+                    f"{stem}: {n} keypoints; three to six is the range that "
+                    f"stays readable as a digest"
+                )
+
+        # A prediction with no answer is a rhetorical question.
+        n_predict = kinds.count("predict")
+        n_reveal = text.count("#+begin_reveal")
+        if n_predict != n_reveal:
+            problems.append(
+                f"{stem}: {n_predict} predict block(s) but {n_reveal} "
+                f"reveal(s); a prediction has to be answerable"
+            )
+
+        for attrs, rest in (
+            (m.group(1), text[m.end():m.end() + 200]) for m in ATTR.finditer(text)
+        ):
+            follows = re.search(r"#\+begin_(\w+)", rest)
+            kind = follows.group(1) if follows else ""
             m = re.search(r":id\s+(\S+)", attrs)
             if not m:
-                problems.append(f"{stem}: an ATTR_EB line carries no :id")
+                if kind in NEEDS_ID:
+                    problems.append(
+                        f"{stem}: an ATTR_EB line before a {kind} block "
+                        f"carries no :id"
+                    )
                 continue
             ident = m.group(1)
             if ident in seen_ids:

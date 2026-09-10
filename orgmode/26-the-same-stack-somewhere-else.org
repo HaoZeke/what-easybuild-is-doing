@@ -202,6 +202,36 @@ Both remain true of the versions read on 2026-09-10, and a reader
 debugging target selection needs the script rather than the library.
 #+end_detail
 
+#+ATTR_EB: :id EB-Elsewhere-2 :title Which target did you get
+#+begin_exercise
+A user reports that a job using an EESSI module is three times slower on
+one node type than on another, with the same module name loaded.
+
+1. What is the first variable you read, and on which machine?
+2. Two mechanisms could produce this. Name both.
+3. What would you have to do to confirm which one, and what would you
+   have to avoid concluding from a login-node measurement?
+
+#+begin_solution
+1. =$EESSI_SOFTWARE_SUBDIR=, on the slow node, inside the job. Not
+   =$EESSI_CPU_FAMILY=, which is only =uname -m= and will be the same on
+   both.
+
+2. Either that node's microarchitecture has no native build and archdetect
+   fell back to a more generic one, which is the fallback policy working as
+   designed; or an override is set in the job's environment, naming a
+   target that is not the best available. The second is not validated, so
+   nothing warns you.
+
+3. Read the ordered list with =eessi_archdetect.sh -a cpupath= on that node
+   and compare the first entry against the directory that exists, then
+   check the environment for the override variables. What a login node
+   cannot tell you is which target a compute node resolves, because the
+   detection reads that node's own =/proc/cpuinfo=. Same lesson as
+   chapter 27, one layer up.
+#+end_solution
+#+end_exercise
+
 * What a site adds without writing to /cvmfs
 
 Chapter 25 ended on the mechanism: a symlink whose stored target is a

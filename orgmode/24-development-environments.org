@@ -232,6 +232,43 @@ sets no compiler variables. Run it on a =foss= easyconfig and both
 sections fill up. The two comments are the tool declining to write an
 empty file and calling it an environment.
 
+#+ATTR_EB: :id EB-DevEnv-2 :title Archaeology on one install
+#+begin_exercise
+You have shell access to a machine with an EasyBuild stack and one module
+name: =Foo/2.1-foss-2023a=. Nobody who built it is reachable.
+
+Using only what is on that machine, say how you would answer each of
+these, and which artifact answers it:
+
+1. Which EasyBuild version built it?
+2. Which patches were applied, and what did they change?
+3. Which compiler flags did the build get?
+4. Would rebuilding it today produce the same thing?
+
+#+begin_solution
+1. The build log in =<installdir>/easybuild/=, which records the framework
+   version in its header. The easyconfig does not carry it.
+
+2. The archived easyconfig names the patches, and =reprod/= carries the
+   easyconfig as parsed. The patch *files* are not necessarily there,
+   which is a real gap: if they came from the site's repository and that
+   repository moved, the names are all you have.
+
+3. =reprod/<ec>.env=, which is the environment script, or the devel module,
+   which records what the build's environment actually became. Both are on
+   disk. Loading the toolchain module would not tell you, for chapter 14's
+   reason.
+
+4. Probably not, and the artifacts say why rather than hiding it.
+   =reprod/easyblocks/= pins the code that ran, so that much is settled.
+   What is not pinned: the framework version (in the log, and installing
+   that exact version is on you), the sources (upstream, and possibly
+   moved), the dependency installations (modules that may have been
+   removed), and the operating system. An honest answer to a user asking
+   for a rebuild names those four.
+#+end_solution
+#+end_exercise
+
 * When somebody else needs it
 
 A dumped script is yours. For a team, the mechanism is a module, and

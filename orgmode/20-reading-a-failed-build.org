@@ -148,6 +148,51 @@ the descent, so =bin/wobble= sits where the recipe expects; or the
 changes the layout the module exports, which is what a user meets, so it
 is usually the right one.
 
+#+ATTR_EB: :id EB-Failure-2 :title Read this log fragment
+#+begin_exercise
+A log you have never seen, opened at the end and scrolled up:
+
+#+begin_example
+== ... (took 4 min 18 sec)
+== sanity checking...
+  >> file 'lib/libfoo.so' or 'lib64/libfoo.so' found: FAILED
+== FAILED: Installation ended unsuccessfully
+#+end_example
+
+Then, 900 lines earlier:
+
+#+begin_example
+  >> running shell command:
+	make -j 16
+	[working dir: /scratch/build/foo/1.2/gcc-13.2.0/foo-1.2]
+  >> command completed: exit 0, ran in 4 min 12 sec
+#+end_example
+
+1. Which step failed, and which steps therefore succeeded?
+2. The build ran =make= for four minutes and exited 0. What does that let
+   you rule out, and what does it not?
+3. Name the two places you would look next, in order, and say what each
+   one would settle.
+
+#+begin_solution
+1. =sanitycheck= failed, so =configure=, =build= and =install= all
+   succeeded: something was compiled and something was installed. The
+   twelve steps before the check are not suspects.
+
+2. It rules out a compile failure and a link failure of the thing =make=
+   built. It does not tell you that =make install= put anything where the
+   easyconfig expected, and it does not tell you that what got built is
+   named =libfoo.so=: a library built as =libfoo.so.1.2= with no
+   development symlink passes =make= and fails this check.
+
+3. First the install directory, which is still there, because it settles
+   whether the file exists under another name or in another directory.
+   Then the =install= step's own commands in the log, which settle whether
+   the build system was told a prefix it disagreed with. Nothing in the
+   configure output is worth reading until those two are answered.
+#+end_solution
+#+end_exercise
+
 * The log, and how to search it
 
 The error message carries only the first 300 characters of a failing
