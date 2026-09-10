@@ -163,6 +163,10 @@ EOF
         # there is no browser or nothing served, which is the case on this
         # host; the operator runs it against scripts/serve.sh.
         node scripts/browser-check.js || echo "FAIL: the page is not live in a browser"
+        # The reader's own three mechanisms, in a real browser for the same
+        # reason: a knowl that does not fetch, a search that ranks nothing and
+        # a note that does not come back all look fine to a node stub.
+        node scripts/browser-check-reader.js || echo "FAIL: a reader mechanism is broken"
     else
         echo "skipped: node or eb-stack absent on this host"
     fi
