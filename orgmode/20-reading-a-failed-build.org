@@ -35,6 +35,25 @@ Nothing about that is obviously wrong, and it fails.
 
 * The error block
 
+#+ATTR_EB: :title Before you read the next block
+#+begin_predict
+That recipe installs one shell script and then runs it. Write down, in
+order: which of the eighteen steps fails, and what the exit code is.
+
+#+begin_reveal
+=postproc=, and 127.
+
+=postproc= because =postinstallcmds= runs after the install rather than
+during it, so configure, build and install all succeeded. 127 because it
+is the shell's code for a command that is not there: the file being run
+does not exist at the path the easyconfig named.
+
+If you predicted a licence error from =--check-licence=, that is the
+reading the flag invites and the exit code rules out.
+#+end_reveal
+#+end_predict
+
+
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; long scratch paths elided to /scratch" :caption "What EasyBuild says when a shell command fails"
 $ eb wobble-1.0.eb
 ERROR: Shell command failed!
@@ -312,3 +331,16 @@ For each, say what you read first and what you would rule out with it.
    different ones.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- The exit code narrows the search before any log does: 127 is not found,
+  126 is not executable, 2 from =make= means a rule failed and the cause is
+  higher up.
+- The step in the error message rules out every step before it.
+- =find_base_dir= descends while a directory has exactly one entry, so the
+  start directory can differ from the archive's top.
+- A failed build keeps its build directory, and =config.log= or
+  =CMakeError.log= in it says what the build system actually tried.
+- =cmd.sh= reproduces the failing command in the environment it failed in;
+  =eb -x= cannot see any fault that depends on the contents of an archive.
+#+end_keypoints

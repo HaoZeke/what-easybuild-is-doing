@@ -83,6 +83,26 @@ service with its own state.
 
 * Content addressing, checked rather than believed
 
+#+ATTR_EB: :title Two numbers, before you look
+#+begin_predict
+The manifest above says the root catalog hashes to =7ca4fb...= and
+=B26624=. You are about to fetch that object over HTTP and hash it.
+
+Predict two things: what =sha1sum= of the downloaded bytes will be, and
+how many bytes the download will be.
+
+#+begin_reveal
+=sha1sum= returns =7ca4fb6b5db9c1432243b47e306e46327cdeda19=: exactly the
+name it was requested under. That is what content addressing means, and it
+is checkable without trusting the server that sent it.
+
+The download is 5511 bytes, not 26624. The hash covers the *compressed*
+form, and =B= in the manifest is the uncompressed size. Decompressing the
+5511 bytes gives exactly 26624, and what comes out is a SQLite database.
+#+end_reveal
+#+end_predict
+
+
 The manifest says the root catalog is =7ca4fb...=. Objects live under
 =data/=, split into 256 directories by the first two hex digits of their
 own hash:
@@ -493,3 +513,16 @@ For each, name the layer and the check.
    under =host_injections=.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- A repository is verifiable from one signature because the manifest names
+  the root catalog's hash and every catalog names its children's.
+- Objects are named by the hash of their compressed bytes, so any client can
+  check what it was given without trusting the transport.
+- A catalog is a SQLite database keyed by the MD5 of the absolute path, cut
+  into nested catalogs that are fetched on first access.
+- Two keys: the repository key signs each revision, the master key signs the
+  whitelist, and only the master public key has to reach clients out of band.
+- A cache miss is a sequence, and the client trusts its cache once the object
+  is in it.
+#+end_keypoints

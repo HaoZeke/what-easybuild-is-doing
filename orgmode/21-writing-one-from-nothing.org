@@ -317,3 +317,15 @@ that it needs HDF5 and a C++17 compiler.
    why the author of a pull request is not allowed to merge it.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- Five parameters are enforced: =name=, =version=, =homepage=,
+  =description=, =toolchain=. The MANDATORY category lists eight.
+- Search before writing; a copy of an existing easyconfig with a new
+  version is almost always the cheaper correct answer.
+- =--inject-checksums= downloads, backs the file up, reorders parameters and
+  refuses to overwrite an existing checksum without =--force=.
+- A local variable in an easyconfig has to be named =local_*=.
+- =--check-style= and =--check-contrib= are what upstream CI runs; neither
+  runs the software, which is why a test report from a human is required.
+#+end_keypoints

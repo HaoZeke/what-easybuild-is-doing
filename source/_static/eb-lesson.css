@@ -133,3 +133,108 @@ article.yue .eb-exercise-index ul {
     display: block !important;
   }
 }
+
+/* --- keypoints, prerequisites, predict ------------------------------------
+ *
+ * The Carpentries pair objectives with keypoints, and the pairing is the
+ * device: a promise at the top, a receipt at the bottom. So keypoints share
+ * the objectives block's shape and reverse its accent, rather than being a
+ * third kind of box a reader has to learn.
+ */
+
+article.yue .eb-keypoints {
+  grid-column: wide-left / wide-right;
+  margin: var(--eb-space-block) 0;
+  padding: 0.9rem 1.1rem 0.75rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-top: 3px solid var(--eb-accent);
+  border-radius: 3px;
+  background: var(--eb-surface);
+}
+
+article.yue .eb-prerequisites {
+  grid-column: text-left / text-right;
+  margin: var(--eb-space-block) 0;
+  padding: 0.75rem 1rem 0.6rem;
+  border-left: 3px solid var(--eb-fg-muted);
+  background: transparent;
+}
+
+article.yue .eb-keypoints > p:first-child,
+article.yue .eb-prerequisites > p:first-child {
+  margin: 0 0 0.5rem;
+  font-family: var(--eb-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--eb-fg-muted);
+}
+
+article.yue .eb-keypoints > *,
+article.yue .eb-prerequisites > *,
+article.yue .eb-predict > *,
+article.yue .eb-reveal-body > * {
+  grid-column: auto;
+}
+
+/* Predict-then-reveal. The prompt is a question the reader answers before
+ * the book does, so it must not look like an aside that can be skimmed: it
+ * gets the exercise block's weight and its own label. */
+article.yue .eb-predict {
+  grid-column: text-left / text-right;
+  margin: var(--eb-space-block) 0;
+  padding: 0.9rem 1.1rem 0.7rem;
+  border: 1px dashed var(--eb-accent);
+  border-radius: 3px;
+}
+
+article.yue .eb-predict-label {
+  margin: 0 0 0.5rem;
+  font-family: var(--eb-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--eb-accent);
+}
+
+article.yue .eb-reveal {
+  margin-top: 0.7rem;
+  border-top: 1px solid var(--eb-rule);
+  padding-top: 0.5rem;
+}
+
+article.yue .eb-reveal-summary {
+  cursor: pointer;
+  font-family: var(--eb-sans);
+  font-size: 0.85rem;
+  color: var(--eb-accent);
+}
+
+article.yue .eb-reveal-body {
+  margin-top: 0.6rem;
+}
+
+article.yue .eb-reveal-body > * + * {
+  margin-top: var(--eb-space);
+}
+
+/* The digest page: one heading per chapter, its keypoints under it. */
+article.yue .eb-keypoints-index-chapter {
+  margin-top: var(--eb-space-block);
+  font-family: var(--eb-sans);
+  font-weight: 600;
+}
+
+/* Print opens a prediction's answer, because a printed page cannot be
+ * clicked and a reader with paper still deserves the answer. */
+@media print {
+  article.yue .eb-reveal[open],
+  article.yue .eb-reveal {
+    border-top: 1px solid #ccc;
+  }
+  article.yue .eb-reveal > .eb-reveal-body {
+    display: block !important;
+  }
+}

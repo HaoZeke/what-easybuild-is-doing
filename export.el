@@ -99,7 +99,9 @@
 ;; `#+ATTR_EB:' carries the attributes because a special block's own header
 ;; line has nowhere to put them.
 
-(defconst ebguide-lesson-blocks '("objectives" "exercise" "solution")
+(defconst ebguide-lesson-blocks
+  '("objectives" "exercise" "solution" "keypoints" "prerequisites"
+    "predict" "reveal")
   "Special-block types that become lesson directives.")
 
 ;; A dive-in detail is born in one place and transcluded from anywhere, so

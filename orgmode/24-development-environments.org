@@ -99,6 +99,27 @@ that way carries less than one built normally.
 
 * The devel module
 
+#+ATTR_EB: :title What is in it
+#+begin_predict
+Every install carries a devel module whose purpose is to reproduce the
+build's environment. Before reading the next block: name three variables
+you expect to find in it, and one you would be unhappy to find.
+
+#+begin_reveal
+=$CC=, =$CXX= and the toolchain's flags are there, which is the point.
+
+The one to be unhappy about is =$PATH=, and it is there in full, because
+the implementation records *every* environment change the build made rather
+than a chosen set. On the run in the next transcript that also captured two
+variables named =_ModuleTable001_= and =_ModuleTable002_=, which are Lmod's
+own base64 bookkeeping.
+
+So a devel module is a faithful record rather than a curated one, and
+loading it into a shell you care about is a decision rather than a habit.
+#+end_reveal
+#+end_predict
+
+
 The fourth artifact is a modulefile, and it is the direct answer to
 chapter 14's problem.
 
@@ -330,3 +351,16 @@ makes the others worse.
    compatibility layer rather than on top of a distribution.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- Every install already carries the easyconfig, the log, a test report, a
+  devel module and a =reprod/= directory holding the easyblock source.
+- =module load $EBDEVEL<NAME>= reproduces the environment that build had,
+  including =$PATH= and the modules tool's own bookkeeping.
+- =eb --dump-env-script= writes the toolchain's environment for a recipe
+  before any build, and refuses to overwrite.
+- =BuildEnv= turns a toolchain's environment into a module other people can
+  load, and copies in the RPATH wrappers.
+- What =reprod/= does not carry: the framework version, the sources, the
+  dependency installations, and the operating system.
+#+end_keypoints

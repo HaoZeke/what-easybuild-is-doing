@@ -10,6 +10,14 @@
    anything.
 #+end_objectives
 
+#+begin_prerequisites
+- [[file:13-how-a-build-executes.org][Chapter 13]], because an easyblock is
+  organised around the steps.
+- [[file:21-writing-one-from-nothing.org][Chapter 21]], because the decision
+  in this chapter is whether an easyconfig was enough.
+- Enough Python to read a class and call a parent method. Nothing more.
+#+end_prerequisites
+
 An easyblock is Python that EasyBuild runs. That makes it the most
 powerful thing in this book and the one most often reached for too early.
 
@@ -259,3 +267,16 @@ instead if not.
    person will assume the iteration would have worked.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- Reach for =configopts= first, a generic easyblock second, and your own
+  code only when more than one easyconfig will need it.
+- =configure_step=, =build_step= and =install_step= are the three the
+  abstract class refuses to implement.
+- =extra_options= is how a parameter is born; =setvar= is how an
+  environment variable is set so the dry run can see it.
+- =--include-easyblocks= shadows the shipped easyblock, and
+  =--list-easyblocks=detailed= is how you confirm which file loaded.
+- Under =--module-only= most steps do not run, so state carried between
+  steps arrives as =None=.
+#+end_keypoints

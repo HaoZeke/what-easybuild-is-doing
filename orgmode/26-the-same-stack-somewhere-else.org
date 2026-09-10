@@ -10,6 +10,13 @@
 3. Say what a site adds on top without writing to =/cvmfs=.
 #+end_objectives
 
+#+begin_prerequisites
+- [[file:25-cvmfs-and-the-stratum.org][Chapter 25]]: this chapter uses the
+  format that one takes apart.
+- A machine you can install a package on, or a container runtime, or
+  neither and read it as reference.
+#+end_prerequisites
+
 [[file:25-cvmfs-and-the-stratum.org][Chapter 25]] took a repository
 apart. This chapter uses one, on machines that have no software stack of
 their own: a laptop, a continuous-integration runner, a cloud instance,
@@ -355,3 +362,17 @@ would make, and the one check you would run before believing the result.
    27]]'s whole subject.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- Three routes onto a machine: a native client with root, =cvmfsexec= or a
+  container without it, and the same two on an ephemeral runner where the
+  cache is the only thing that matters.
+- The compatibility layer is why the host distribution stops mattering.
+- =eessi_archdetect.sh -a cpupath= returns an ordered list and the first
+  target that exists on disk wins, so read =$EESSI_SOFTWARE_SUBDIR= rather
+  than assuming.
+- Overrides are not validated: a target that does not exist gives an empty
+  =module avail=.
+- A site adds software and drivers through a variant symlink, without
+  writing to =/cvmfs= and without invalidating a signature.
+#+end_keypoints

@@ -1,0 +1,100 @@
+#+TITLE: A path through this book
+
+#+OPTIONS: toc:nil num:nil
+
+The chapters are numbered, and numbering is not a curriculum. This page is
+the curriculum: levels sized at about an hour each, with the prerequisite
+edges named, so you can start where your work starts.
+
+The shape is Aalto's, from their *Hands-on Scientific Computing* map, and so
+is the reasoning behind it: a reader arrives with a task rather than at
+lesson one, and a map they can enter anywhere serves them better than a
+sequence they have to abandon.
+
+* Level A. Read a recipe
+
+An hour. Nothing installed, nothing to configure.
+
+| Read | For |
+|---+---|
+| [[file:00-tutorial-read-an-easyconfig.org][the tutorial]] | predicting what EasyBuild will do with a file |
+| [[file:01-an-easyconfig-is-python.org][chapter 1]] | why the file is Python, and what that costs |
+| [[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]] | which dependencies a toolchain permits |
+
+At the end you can read an easyconfig aloud and say what it will download,
+which easyblock it will look for, and which dependencies it may use.
+
+* Level B. Understand why a build fails
+
+Two hours, and the level most support tickets live in. Needs level A.
+
+| Read | For |
+|---+---|
+| [[file:03-a-pin-is-for-one-generation.org][chapter 3]] | why a version is a pin and not a floor |
+| [[file:04-the-robot.org][chapter 4]] | what =--robot= resolves, and in what order |
+| [[file:05-a-versionsuffix-is-part-of-the-name.org][chapter 5]] | why a suffix is identity |
+| [[file:06-what-installed-means.org][chapter 6]] | what a sanity check asserts |
+| [[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]] | what a checksum does and does not promise |
+
+* Level C. Work on a machine
+
+Two hours. Needs level A; level B makes it faster.
+
+| Read | For |
+|---+---|
+| [[file:20-reading-a-failed-build.org][chapter 20]] | reading the error block and the log |
+| [[file:24-development-environments.org][chapter 24]] | standing in the build's own environment |
+| [[file:10-build-your-own-without-asking.org][chapter 10]] | installing with no admin rights |
+
+Level C is the one to read while something is failing. Chapter 20 is
+written to be read in that state.
+
+* Level D. Build the machinery
+
+Three hours. Needs B and C.
+
+| Read | For |
+|---+---|
+| [[file:13-how-a-build-executes.org][chapter 13]] | the eighteen steps, and which parameter belongs to which |
+| [[file:14-the-isolation-policy.org][chapter 14]] | what a build is allowed to see |
+| [[file:15-build-dependencies-are-not-dependencies.org][chapter 15]] | the three dependency kinds |
+| [[file:16-what-a-toolchain-injects.org][chapter 16]] | =toolchainopts= and =optarch= |
+| [[file:17-patches.org][chapter 17]] | strip levels, and applying cleanly against applying correctly |
+| [[file:19-what-a-module-exports.org][chapter 19]] | what a user actually meets |
+
+* Level E. Write it yourself
+
+Three hours. Needs D.
+
+| Read | For |
+|---+---|
+| [[file:21-writing-one-from-nothing.org][chapter 21]] | an easyconfig for software that has none |
+| [[file:08-one-easyconfig-many-installs.org][chapter 8]] | =exts_list= and bundles |
+| [[file:18-language-ecosystems.org][chapter 18]] | Python, R, Rust, and the ecosystem with no easyblock |
+| [[file:22-writing-an-easyblock.org][chapter 22]] | when a parameter is not enough |
+| [[file:23-testing.org][chapter 23]] | the four things called testing |
+
+* Level F. Distribute a stack
+
+Two hours. Needs A; the rest is independent of B to E, which is why it is
+last rather than hard.
+
+| Read | For |
+|---+---|
+| [[file:11-eessi-somebody-elses-stack.org][chapter 11]] | using a stack nobody at your site built |
+| [[file:25-cvmfs-and-the-stratum.org][chapter 25]] | how a stack reaches a machine, verified |
+| [[file:26-the-same-stack-somewhere-else.org][chapter 26]] | four machines, three routes |
+| [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] | why a site's builds differ from your reading of the file |
+
+* Whenever
+
+Not a level. Read these when the question comes up.
+
+| Read | When |
+|---+---|
+| [[file:12-eb-stack-a-second-implementation.org][chapter 12]] | you want to know how sure any of this is |
+| [[file:27-four-things-that-actually-happened.org][chapter 27]] | you want the failures in full, with the diagnosis |
+| [[file:glossary.org][the glossary]] | a word in this book means something specific |
+| [[file:keypoints.org][the keypoints]] | you read a chapter last week |
+| [[file:exercises.org][the exercises]] | you are running a session, or want to check yourself |
+| [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] | you are deciding whether to use EasyBuild at all |

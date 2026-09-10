@@ -10,6 +10,12 @@
 3. Produce a test report, and say why upstream requires one from a human.
 #+end_objectives
 
+#+begin_prerequisites
+- [[file:06-what-installed-means.org][Chapter 6]], for the sanity check.
+- [[file:13-how-a-build-executes.org][Chapter 13]], for where the =test= and
+  =testcases= steps sit.
+#+end_prerequisites
+
 "Did you test it" is four different questions, and answering the wrong
 one is how a broken module ships. In order of when they happen:
 
@@ -207,3 +213,17 @@ do?
    the mistake, not the build.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- Four different things are called testing: the package's own suite, the
+  sanity check, a test report, and a portable run on hardware you care
+  about. None of them subsumes another.
+- =runtest= is a whole command on the base class and an argument to =make=
+  under =ConfigureMake=.
+- =--ignore-test-failure= records a failure, =--skip-test-step= avoids it,
+  and =skipsteps= removes it for everyone.
+- The RPATH check already exempts =libcuda.so.1= and the other driver
+  libraries, so anything else it reports is real.
+- Upstream CI never builds an easyconfig, which is why the evidence is a
+  human's test report and why an author cannot merge their own.
+#+end_keypoints

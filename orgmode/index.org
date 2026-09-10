@@ -34,7 +34,9 @@ At the end you can predict what EasyBuild will download, name the
 easyblock it will look for, and say which dependencies a toolchain
 permits.
 
-After that, pick by what you are doing.
+After that, either follow [[file:learning-path.org][the path]], which is
+six levels of about an hour each with the prerequisites named, or pick by
+what you are doing.
 
 | What you are doing | Read |
 |---+---|
@@ -154,7 +156,9 @@ reading the log rather than watching the progress bar.
    25-cvmfs-and-the-stratum
    26-the-same-stack-somewhere-else
    27-four-things-that-actually-happened
+   learning-path
    glossary
+   keypoints
    exercises
    afterword-when-easybuild-is-the-wrong-tool
 #+end_export
