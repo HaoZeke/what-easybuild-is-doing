@@ -1,0 +1,270 @@
+#+TITLE: Chapter 28. Your first week on somebody's stack
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Take a "bump this package" ticket from the request to a built module,
+   in the order that finds the problems early.
+2. Say what your site's pipeline adds on top of =eb=, and find those parts
+   in a repository you have never seen.
+3. Diagnose a failure that a build host reports as green.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:20-reading-a-failed-build.org][Chapter 20]], because two of these
+  three tasks end in a failed build.
+- [[file:03-a-pin-is-for-one-generation.org][Chapter 3]] and
+  [[file:05-a-versionsuffix-is-part-of-the-name.org][chapter 5]], for
+  versions and suffixes.
+- Read access to whatever repository your site keeps its easyconfigs in.
+#+end_prerequisites
+
+Everything so far has been a mechanism. This chapter is the job.
+
+Three tasks, all real, all of the kind handed to somebody in their first
+month. Each is written as a sequence you can follow, with the point where
+a first-timer goes wrong marked, because the interesting part of each one
+is not the fix.
+
+* What sits between you and eb
+
+Nothing in this chapter is about EasyBuild's defaults, because no site
+runs them. Before the first task, find these five things in your site's
+repository. Every site has them, under different names, and a newcomer who
+finds them in the first hour stops guessing.
+
+*The recipes.* One directory per initial in most site repositories,
+matching upstream's layout, with patches beside the easyconfig that needs
+them.
+
+*The build list.* A file per stack generation naming what gets built, in
+order, one entry per line, often with per-entry flags. A human edits that
+file to schedule a build; the easyconfig alone schedules nothing.
+
+*The pipeline.* Something reads that list and calls =eb= once per entry,
+per architecture, with the site's configuration: install prefix,
+=--optarch=, CUDA compute capabilities, module naming, hooks. Read the
+whole of it once. Every difference between your site and this book's
+transcripts starts there.
+
+*The hooks.* [[file:09-a-hook-changes-a-file-you-are-not-reading.org][Chapter
+9]]'s subject, and the reason a recipe can say one thing and the build do
+another. Find the directory, and find which hook applies to the package
+you are about to touch.
+
+*The templates.* Starter easyconfigs, one per easyblock shape. Copy the
+site's template rather than upstream's example, and your first
+contribution comes out looking like everybody else's.
+
+#+ATTR_EB: :id site-questions :title Five questions to answer before your first build :kind reference
+#+begin_detail
+Write the answers down; you will need them all week.
+
+| Question | Where to look |
+|---+---|
+| Which generation am I building into, and which is in production? | the build lists, and the install prefix each pipeline uses |
+| Which architectures does one entry become? | the pipeline's per-architecture configuration |
+| What does a build inherit that is not in the easyconfig? | =eb --show-config=, then the hooks directory |
+| How do I schedule one package rather than the whole list? | the pipeline's test or single-entry mode |
+| Where do the logs of a failed build end up, and for how long? | the pipeline's output directory, and its retention |
+
+The last one decides whether you can diagnose a failure tomorrow. On a
+site that discards build directories nightly,
+[[file:20-reading-a-failed-build.org][chapter 20]]'s advice about
+=config.log= has a deadline.
+#+end_detail
+
+* Task one: bump a version
+
+The request: *"users want version 4.4.0 of this, we have 4.3.1"*.
+
+The sequence, and the first three steps cost minutes:
+
+1. =eb --search '^QMCPACK'=. Find what your site already has, and what
+   upstream has. If upstream already carries an easyconfig for the version
+   you need, on a toolchain your site has, the rest of this task is a
+   two-line change to a build list.
+2. Copy the existing easyconfig to the new version. Change =version=, and
+   nothing else yet.
+3. Delete the checksum and run =eb --inject-checksums=. It downloads the
+   new archive and writes a real checksum. If the download fails here, the
+   upstream URL changed and that is your whole ticket for now.
+4. Read the diff between the old and the new *source archive*, not between
+   the easyconfigs. =tar tzf= both and compare the top-level layout.
+5. Build it, into whatever sandbox your pipeline gives you.
+
+*Where a first-timer goes wrong: step 4 gets skipped.* Steps 1 to 3 all
+succeed, the diff between the two easyconfigs is one line and a checksum,
+and everything says this is a trivial bump.
+
+[[file:01-an-easyconfig-is-python.org][Chapter 1]] is what happens next: a
+recipe that had been building from a pinned git commit, where EasyBuild
+archives a checkout under the repository's name, now builds from a release
+tarball that unpacks to =qmcpack-4.4.0/=. =start_dir = 'qmcpack'=
+described the old arrangement and nothing asked it to change. The build
+gets a verified checksum, a clean extract, a clean patch, a full
+environment, and then a path that does not exist.
+
+The general form, and the reason this is task one: *a version bump is a
+change of source, and every parameter that describes the shape of the
+source has to be re-read.* =start_dir=, patch strip levels,
+=sanity_check_paths=, anything with a directory name in it.
+
+#+ATTR_EB: :title Before you look it up
+#+begin_predict
+You have bumped the version, injected a checksum, and the build fails in
+the =configure= step with a path that does not exist. You have not yet
+opened the log.
+
+Which two commands do you run first, and which one of them a dry run
+could have replaced?
+
+#+begin_reveal
+=eb --last-log= and then =tar tzf= on the new archive.
+
+Neither is replaceable by a dry run, and that is the point: =eb -x= never
+extracts anything, so a parameter that names a directory the archive does
+not contain looks fine under it. The archive listing is the only thing
+that settles it.
+
+If you reached for =--force= or a rebuild first, that is the reflex worth
+losing: nothing about this failure is stale state.
+#+end_reveal
+#+end_predict
+
+* Task two: build a package on a vendor toolchain
+
+The request: *"the group wants the GPU build of this code, and it needs
+the vendor compiler rather than the open-source one"*.
+
+This task is longer, and it changes the shape of the work: you are no
+longer bumping a recipe, you are choosing a toolchain.
+
+1. Establish what the code needs, from its own documentation, in the
+   vendor's terms: which compiler, which CUDA, which MPI implementation, and
+   whether it wants OpenACC or OpenMP offload.
+2. Find whether your site has that toolchain at the generation you are
+   building into. If it does not, you are now also installing a toolchain,
+   which is a decision about the whole stack rather than about this
+   package. [[file:02-a-toolchain-is-a-hierarchy.org][Chapter 2]].
+3. Check what the toolchain module actually provides.
+   [[file:14-the-isolation-policy.org][Chapter 14]]: loading it gives you
+   =EBROOT*= and not =$CC=. To see the build environment, use
+   =eb --dump-env-script= from
+   [[file:24-development-environments.org][chapter 24]].
+4. Build, then *run the binary on the hardware it targets*. Not on the
+   build host, and not on a login node.
+
+*Where a first-timer goes wrong: step 4, and it is worse than it looks.*
+
+[[file:27-four-things-that-actually-happened.org][Chapter 27]]'s first two
+cases are this task. A vendor toolchain came as a single tarball
+containing two CUDA generations, and its unversioned library directories
+pointed at the newer one on two architectures out of four. The module
+declared the older CUDA and depended on it. Every check on the build host
+passed, because the build host was one of the two architectures where the
+symlinks were right.
+
+And then the second trap, which cost a day: pointing at the other
+architecture's tree with an absolute path does not rescue the test either,
+because the [[dive:term-rpath]] inside the binary contains a per-node
+symlink that resolves against the node you are standing on. So =ldd= reports zero
+missing libraries for a binary that cannot start.
+
+The general form: *on a heterogeneous system, a claim about library
+resolution has to be measured on the architecture it will run on.* The
+first command in that diagnosis is =readlink -f= on the per-node symlink,
+on the node the user's job ran on.
+
+* Task three: a user says a module is broken and you cannot reproduce it
+
+The request: *"this module works for me and fails for them"*, which is the
+commonest ticket in this job and the one with the most wrong answers.
+
+The sequence is a bisection over the four things that differ:
+
+1. *Which architecture.* Resolve the per-node path on their node and on
+   yours. Different trees mean different installs, and the module name
+   tells you nothing.
+2. *Which module.* Have them send =module list= rather than the name they
+   think they loaded. A different generation on =MODULEPATH= is the second
+   most common answer.
+3. *Which environment.* =eb --show-config= on your side, their shell's
+   environment on theirs. A site hook or a user's own =MODULEPATH= is
+   [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]].
+4. *Which node.* A GPU library, a filesystem client, a fabric: all
+   host-provided, none in the module.
+   [[file:26-the-same-stack-somewhere-else.org][Chapter 26]]'s last
+   section is this list.
+
+*Where a first-timer goes wrong: they answer the ticket after step 3.*
+
+Three of the four checks pass, the module looks identical, and the
+temptation is to reply that it works. The fourth is where the difference
+usually is, and a reply that closes a ticket names the node and the
+architecture it was tested on.
+
+#+ATTR_EB: :id first-week-habits :title Four habits that shorten the week :kind reference
+#+begin_detail
+1. *State where a result came from.* Every claim you make about a build
+   carries a machine and an architecture, in the ticket and in the commit
+   message. This book's transcripts do it for the same reason.
+2. *Read the archive, not the diff.* A version bump is a change of source.
+3. *Do not switch a check off to make a build pass.* A failing check on a
+   package you cannot fix is a report about something else.
+   [[file:23-testing.org][Chapter 23]].
+4. *Write the diagnosis down where the next person will look.* The
+   install already carries the easyconfig, the log and =reprod/=; what it
+   does not carry is why you chose what you chose.
+#+end_detail
+
+#+ATTR_EB: :id EB-Week-1 :title Your actual first ticket
+#+begin_exercise
+A user writes: "Could you install version 6.5.1? We need the GPU build,
+and the version you have is too old for our workflow."
+
+Write the plan before you type anything. Specifically:
+
+1. The first four things you find out, and from where.
+2. Which of the three tasks above this is, and which parts of the other
+   two it also contains.
+3. The two failures you expect, and the check that would catch each one
+   before a user does.
+4. What you will put in the reply, and what you will refuse to say until
+   you have measured it.
+
+#+begin_solution
+1. Whether upstream has an easyconfig for 6.5.1 at all
+   (=eb --search=); which toolchain the GPU build needs and whether your
+   site has it at this generation; what the site's current version was
+   built with, from the archived easyconfig in its install directory; and
+   whether the licence covers this group, which is the question that
+   blocks everything else and has nothing to do with EasyBuild.
+
+2. Mostly task two, with task one inside it: a version change *and* a
+   toolchain choice. If the toolchain is new to the site it is also a
+   stack decision, and that is somebody else's call as much as yours.
+
+3. A source-shape failure, caught by listing the archive and re-reading
+   every parameter that names a directory. And an architecture-specific
+   runtime failure, caught only by running the binary on the target
+   hardware; the build host passing tells you about the build host.
+
+4. The reply says which version, which toolchain, which architectures it
+   was built for, and on which architecture it was actually run. It does
+   not say "it works" on the strength of a login-node check, and it does
+   not promise a date before the toolchain question is settled.
+#+end_solution
+#+end_exercise
+
+#+begin_keypoints
+- A site's pipeline, build lists and hooks are what stand between an
+  easyconfig and a module; find all three before your first build.
+- A version bump is a change of source: re-read every parameter that
+  describes the shape of the archive.
+- A dry run cannot see a fault that depends on the contents of an archive.
+- On a heterogeneous system, measure library resolution on the
+  architecture that will run the binary, not on the one you are on.
+- Every claim about a build carries the machine and the architecture it
+  was measured on, or it is not a claim.
+#+end_keypoints

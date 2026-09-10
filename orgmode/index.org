@@ -44,6 +44,7 @@ what you are doing.
 | moving a recipe to a newer stack | [[file:03-a-pin-is-for-one-generation.org][chapter 3]] |
 | told a module exists, but it will not load | [[file:04-the-robot.org][chapter 4]] and [[file:06-what-installed-means.org][chapter 6]] |
 | reading a failure whose cause is not in the file | [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] |
+| starting a job like this one next Monday | [[file:28-your-first-week.org][chapter 28]] |
 | staring at a failed build right now | [[file:20-reading-a-failed-build.org][chapter 20]] |
 | writing a recipe for software that has none | [[file:21-writing-one-from-nothing.org][chapter 21]] |
 | wondering how a stack gets onto a thousand machines | [[file:25-cvmfs-and-the-stratum.org][chapter 25]] |
@@ -156,6 +157,7 @@ reading the log rather than watching the progress bar.
    25-cvmfs-and-the-stratum
    26-the-same-stack-somewhere-else
    27-four-things-that-actually-happened
+   28-your-first-week
    learning-path
    glossary
    keypoints

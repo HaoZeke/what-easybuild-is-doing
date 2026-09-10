@@ -45,6 +45,7 @@ Two hours. Needs level A; level B makes it faster.
 | [[file:20-reading-a-failed-build.org][chapter 20]] | reading the error block and the log |
 | [[file:24-development-environments.org][chapter 24]] | standing in the build's own environment |
 | [[file:10-build-your-own-without-asking.org][chapter 10]] | installing with no admin rights |
+| [[file:28-your-first-week.org][chapter 28]] | three tasks of the kind handed to a newcomer |
 
 Level C is the one to read while something is failing. Chapter 20 is
 written to be read in that state.
