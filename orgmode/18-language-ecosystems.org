@@ -1,0 +1,183 @@
+#+TITLE: Chapter 18. Languages that bring their own package manager
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Say how EasyBuild installs a Python, R, Perl, Rust or Julia package,
+   and what it forbids the language's own tool from doing.
+2. Say why the dependency set has to be enumerated rather than resolved.
+3. Say what to do about an ecosystem EasyBuild has no easyblock for.
+#+end_objectives
+
+Most of the software on a cluster is C, C++ or Fortran, and
+[[file:13-how-a-build-executes.org][chapter 13]]'s steps map onto it
+directly. Then there is everything written in a language that arrived with its own
+package manager. A package manager is a second opinion about what should
+be installed.
+
+EasyBuild's answer is the same for every one of them, and worth stating
+before the details. *The language's tool is allowed to build, and not to
+resolve.*
+
+* Python
+
+=PythonPackage= is the easyblock, and its defaults are the policy:
+
+#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "PythonPackage defaults, abridged from thirty-one"
+$ python3 -c 'from easybuild.easyblocks.generic.pythonpackage \
+>   import PythonPackage
+> ex = PythonPackage.extra_options()
+> for k in sorted(ex): print(" ", k, "=", repr(ex[k][0])[:34])'
+  download_dep_fail = None
+  fix_python_shebang_for = ['bin/*']
+  pip_ignore_installed = True
+  pip_no_build_isolation = True
+  pip_no_index = None
+  sanity_pip_check = True
+  source_urls = ['https://pypi.python.org/packages
+  use_pip = True
+  use_pip_for_deps = False
+#+end_src
+
+Read =use_pip_for_deps = False= first. =pip= runs, and it is not
+permitted to work out what else it needs. Every dependency is declared in
+the easyconfig, resolved by the robot from
+[[file:04-the-robot.org][chapter 4]], and installed as its own module or
+its own =exts_list= entry.
+
+The rest of that list enforces it. =download_dep_fail= turns a dependency
+download into a build failure rather than a quiet success.
+=pip_no_index= forbids the index entirely. =pip_ignore_installed= stops
+pip deciding that something already present is good enough, which would
+make the build depend on what happened to be there.
+
+=sanity_pip_check= runs =pip check= at the end, which is worth having. It
+asks pip whether the environment it now sees is internally consistent. A
+declared version set that does not satisfy the packages' own metadata is
+caught here. It is
+[[file:06-what-installed-means.org][chapter 6]]'s executing check, in a
+form specific to Python.
+
+=fix_python_shebang_for = ['bin/*']= is the small detail that saves a
+support case. A wheel's scripts carry a =#!= line pointing at whatever
+interpreter built them; EasyBuild rewrites it to the module's Python.
+Without that, an installed script runs under the system Python and fails
+in a way that mentions neither.
+
+For a set of packages rather than one, =PythonBundle= is the
+=exts_list= pattern from
+[[file:08-one-easyconfig-many-installs.org][chapter 8]]. Two turn up
+constantly: =SciPy-bundle= and
+=Python-bundle-PyPI=. They exist so the fifty packages everything needs
+are installed once rather than fifty times.
+
+* R, Perl, Julia, Go, Rust
+
+The same shape, different names. =RPackage= and the =R-bundle-CRAN=
+collection. =PerlModule= and =PerlBundle=. =JuliaPackage= and
+=JuliaBundle=. =GoPackage=.
+
+Rust is the interesting one, because its defaults say the policy out
+loud:
+
+#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The Cargo easyblock, in full"
+$ python3 -c 'from easybuild.easyblocks.generic.cargo import Cargo
+> ex = Cargo.extra_options()
+> for k in sorted(ex): print(" ", k, "=", repr(ex[k][0])[:30])'
+  crates = []
+  enable_tests = True
+  lto = None
+  offline = True
+  options = {}
+#+end_src
+
+=offline = True=, by default. And =crates=, which is a list you fill in
+with every crate and version the build needs, the same job =exts_list=
+does for Python.
+
+So a Rust easyconfig enumerates its entire dependency tree, vendors it,
+and builds with the network off. That is more work than =cargo build=
+and it is the only way to get a build that will produce the same thing
+next year.
+
+* The ecosystem with no easyblock
+
+There are 363 generic easyblocks in EasyBuild 5.3. None of them is for
+npm.
+
+That absence is informative rather than an oversight. npm's model is a
+resolver that runs at install time against a live registry, producing a
+tree that depends on when you ran it. Nothing in that is compatible with
+enumerate-and-vendor. A generic easyblock would have to either forbid
+what npm is for, or accept a build nobody can reproduce.
+
+So Node packages on a cluster get handled one of three ways, and it is
+worth knowing which you are looking at.
+
+*Vendored by hand.* The easyconfig carries a =package-lock.json= as a
+source or a patch, and the build runs =npm ci --offline= against a
+pre-populated cache. Reproducible, and somebody has to maintain the lock.
+
+*Installed as a black box.* A =Binary= or =Tarball= easyblock unpacks a
+release that already contains =node_modules=. Reproducible in the sense
+that the bytes are fixed, and opaque: nothing in the easyconfig says what
+is inside.
+
+*Not EasyBuild's problem.* The user gets a Node module and installs their
+own packages into their own directory. That is the
+[[file:afterword-when-easybuild-is-the-wrong-tool.org][afterword]]'s
+argument, applied to one ecosystem.
+
+None of the three is wrong. Choosing the first and not maintaining the
+lock is wrong, and so is choosing the second while telling people it is
+reproducible.
+
+* The rule underneath all of it
+
+An ecosystem fits EasyBuild when its dependency set can be *written
+down*. Python, R, Perl, Rust and Julia all can: a version list, a lock
+file, a =crates= array. The language's tool then compiles rather than
+decides.
+
+An ecosystem resists EasyBuild when resolution is the point and happens
+at install time. That is not a judgement about the language. It is a
+statement about what a stack is for. Everything in
+[[file:03-a-pin-is-for-one-generation.org][chapter 3]] about exact pins
+applies here, one layer down. A package manager that will not be pinned
+cannot be part of a pinned stack.
+
+#+ATTR_EB: :id EB-Languages-1 :title Three requests, three answers
+#+begin_exercise
+Three users ask for software on the same day.
+
+1. A Python tool with eleven dependencies, all on PyPI, all pure Python.
+2. A Rust command-line tool with a =Cargo.lock= listing 180 crates.
+3. A JavaScript build tool whose install instructions are
+   =npm install -g thing=.
+
+For each: which easyblock or approach, what has to be enumerated, and
+what would go wrong if you let the language's own tool resolve.
+
+Then say which of the three you would push back on, and what you would
+offer instead.
+
+#+begin_solution
+1 is =PythonBundle= with eleven =exts_list= entries, or =PythonPackage=
+plus dependencies if some are already modules. Enumerate the eleven with
+versions. Letting pip resolve would give you whatever PyPI served that
+afternoon, so the same easyconfig would install different software next
+month and nobody could say which.
+
+2 is =Cargo=, with all 180 crates in the =crates= list, taken from the
+lock file. =offline = True= is already the default, so the build will
+fail rather than fetch. That failure is the feature: it is what makes the
+easyconfig a complete statement of what gets built.
+
+3 has no easyblock, and =npm install -g= is the shape that cannot be
+made reproducible as written. Push back on this one. Offer a vendored
+build if there is a committed lock file, a =Binary= install of an
+official release if there is one, or a Node module and their own prefix
+if neither, with the trade stated plainly: the third option is theirs to
+maintain and it is available today.
+#+end_solution
+#+end_exercise

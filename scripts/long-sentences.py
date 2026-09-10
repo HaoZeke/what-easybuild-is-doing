@@ -3,6 +3,11 @@
 proseguard reports a line number and a word count, which is enough to know
 a sentence is too long and not enough to fix it. This prints the sentence.
 
+Known limit: the split requires the next sentence to begin with a capital,
+an = or a *, so a sentence starting with a lowercase identifier ("npm's
+model is ...") is joined to the one before it and the pair is reported as
+one long sentence. Read the text before splitting anything.
+
 Run: python3 scripts/long-sentences.py orgmode/13-*.org
 """
 
@@ -24,7 +29,11 @@ def prose_lines(text: str) -> list[str]:
         if low.startswith("#+end_"):
             skip = False
             continue
-        if skip or line.startswith(("#+", "|", ":", "*")):
+        # An org heading is one or more asterisks then whitespace. Bold
+        # markup also starts a line with an asterisk when the paragraph
+        # happens to wrap there, and dropping those lines silently removes
+        # prose from the count.
+        if skip or line.startswith(("#+", "|", ":")) or re.match(r"^\*+\s", line):
             continue
         # An org link is one phrase to a reader; counting its target as
         # words would flag sentences that are not long.

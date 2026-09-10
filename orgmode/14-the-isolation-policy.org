@@ -45,7 +45,7 @@ It does *not* give you =$CC=, =$CXX=, =$CFLAGS=, =$LIBBLAS= or
 
 Those exist only inside a build, where EasyBuild's toolchain object sets
 them from the toolchain class and from =toolchainopts=. That is
-chapter 16's subject, and the
+[[file:16-what-a-toolchain-injects.org][chapter 16]]'s subject, and the
 consequence for this chapter is the important half: *you cannot reproduce
 a build's environment by loading its toolchain*. Anyone who has tried to debug a compile by loading =foss= and running
 the failing command by hand has met this. Few of them found out why the

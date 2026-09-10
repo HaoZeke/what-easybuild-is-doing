@@ -1,0 +1,151 @@
+#+TITLE: Chapter 17. Patches, and what a patch is relative to
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Read a =patches= entry, in both its forms, and say where it will be
+   applied from.
+2. Say what a strip level is and why a patch carries one.
+3. Decide whether a change belongs in a patch or upstream.
+#+end_objectives
+
+A patch is the only place an easyconfig changes the software rather than
+describing it. That makes it the parameter with the most power and the
+one most likely to be wrong in a way nothing notices.
+
+* Two forms
+
+#+begin_src easyconfig :widget parse
+name = 'VASP6'
+version = '6.5.1'
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+patches = [
+    'VASP6-6.5.1_fix-hdf5-detection.patch',
+    ('extra-makefile.include', '.'),
+    ('vendored-config.h', 'src/config'),
+]
+#+end_src
+
+The first form is a filename. EasyBuild finds it beside the easyconfig,
+verifies its checksum along with the sources, and applies it with =patch=
+inside the unpacked source tree.
+
+The second form is a tuple, and it does something different: it *copies*
+a file into the source tree at the given path. No =patch=, no diff, just
+a file placed where the build expects one. That is how a recipe supplies a whole makefile fragment rather than a
+diff against one. Some packages expect you to write their build
+configuration as a file, and this is how you hand it over.
+
+Two things follow that catch people. A tuple whose second element is a
+directory is a copy. A tuple whose second element is a *number* is a diff
+with a strip level, which is the next section. Either way the file needs
+a checksum, because
+[[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]] applies to
+patches exactly as it does to sources.
+
+* The strip level
+
+A diff carries paths, and those paths have a prefix nobody wants:
+
+#+begin_example
+--- vasp.6.5.1/src/main.F	2025-03-01 10:00:00
++++ vasp.6.5.1-fixed/src/main.F	2025-03-02 11:00:00
+#+end_example
+
+=patch -p1= drops one leading component, so it looks for =src/main.F=.
+=patch -p0= would look for =vasp.6.5.1/src/main.F=. EasyBuild defaults to
+=-p1=, which is what =git diff= produces, and you override it with a
+number:
+
+#+begin_example
+patches = [('odd-layout.patch', 2)]
+#+end_example
+
+Which brings us back to
+[[file:01-an-easyconfig-is-python.org][chapter 1]]'s failure. A strip
+level is *relative to the unpacked source tree*. It is exactly the class
+of parameter that describes the shape of the source rather than the
+software. Change from a git checkout to a release tarball and the number
+of leading components changes with it, silently, in the same way
+=start_dir= did.
+
+* Applying cleanly is not the same as applying correctly
+
+This is the part worth internalising, because =patch= is more helpful
+than you want it to be.
+
+=patch= matches on context, not on line numbers. It will apply a hunk
+that has moved, and report the offset. It will apply a hunk with fuzz,
+matching approximately, and report that too. Both are usually right and occasionally catastrophic. A hunk can apply to
+the wrong function, if that function happens to have similar surrounding
+lines.
+
+So a patch that applies with offsets against a new version is not
+evidence that it still does the right thing. It is evidence that =patch=
+found somewhere plausible to put it. After a version bump, a patch that
+still applies deserves the same suspicion as a =start_dir= that still
+parses.
+
+The check is to read the patched file, not the patch output.
+
+* When it should not be a patch
+
+A patch is a fork you are maintaining. Three questions before writing
+one.
+
+*Is it a bug?* Then it belongs upstream, and the patch is what you carry
+while the pull request is open. Say so in the patch's own header, with a
+link, so the next person knows whether to drop it.
+
+*Is it a build-system fact about your site?* Then it probably belongs in
+=configopts= or =preconfigopts= rather than in a diff. A patch that only
+changes a path is a patch that will conflict on every version bump for no
+reason.
+
+*Is it a configuration file the package expects you to write?* Then it is
+the copy form above, and not really a patch.
+
+The one case where a long-lived patch is right is a package whose
+upstream is unresponsive or gone, where the patch is the maintenance. In
+that case the patch should carry a comment saying so, because a patch
+with no explanation is indistinguishable from one somebody forgot to
+remove.
+
+#+ATTR_EB: :id EB-Patches-1 :title It still applies, and it is still wrong
+#+begin_exercise
+A recipe carries =patches = ['fix-alignment.patch']= and has done for
+three versions. You bump to a fourth. The build succeeds and the patch
+output says:
+
+: patching file src/kernel.c
+: Hunk #1 succeeded at 412 (offset 87 lines).
+
+1. What has =patch= told you, and what has it not?
+2. What would you read to find out whether the patch did the right
+   thing?
+3. The patch has no comment and no upstream link. What do you do about
+   that, and what do you write down either way?
+
+#+begin_solution
+It has told you that it found a place where the context matched, 87 lines
+from where the patch expected it. It has not told you that the place it
+found is the place you meant. Context matching does not know what a
+function is for.
+
+Read the patched file. Find the hunk in =src/kernel.c= at its new
+location and check that the surrounding code is the code the patch was
+written against. If the function was refactored, "applied with offset"
+and "applied to the right thing" have come apart.
+
+For the missing comment: find out whether the fix is upstream now. If it
+is, delete the patch and note the version it landed in. If it is not,
+add a header to the patch saying what it fixes and linking the issue or
+pull request, so the next person can answer this question without
+archaeology.
+
+Either way, write the answer in the commit message. A patch that survives
+a bump because somebody checked, and a patch that survives because nobody
+looked, are indistinguishable a year later, and only one of them is safe.
+#+end_solution
+#+end_exercise
