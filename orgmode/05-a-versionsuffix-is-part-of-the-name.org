@@ -140,10 +140,19 @@ and a linker find.
 
 The SDK's own installer decides where they point, and it does not
 reliably follow the version EasyBuild resolved. One install of that
-tarball, on 2026-01-27, covered four architectures. The two CPU
-architectures came out linked at 12.9, the two GPU architectures at
-13.0. =EBNVHPCCUDAVER= read 12.9 on all four. So the easyblock had
-resolved the version correctly, and the installer had ignored it.
+tarball, on 2026-01-27, covered four architectures:
+
+| Architecture | =math_libs/lib64= points at |
+|---+---|
+| AMD-ZEN2 | 12.9 |
+| AMD-ZEN4 | 12.9 |
+| AMD-ZEN4-H100 | *13.0* |
+| INTEL-AVX512 | *13.0* |
+
+Two of four, and not along any line you would guess: INTEL-AVX512 has no
+GPU in it. =EBNVHPCCUDAVER= read 12.9 on all four, so the easyblock had
+resolved the version correctly and the installer had ignored it, on two
+architectures out of four, in one batch.
 
 Nothing about that contradicts the module's name. The name still said
 =-CUDA-12.9.1=, and the dependency still pinned CUDA 12.9.1, and both

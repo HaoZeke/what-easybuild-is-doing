@@ -108,6 +108,7 @@ reading the log rather than watching the progress bar.
    16-what-a-toolchain-injects
    17-patches
    18-language-ecosystems
+   19-what-a-module-exports
    exercises
    afterword-when-easybuild-is-the-wrong-tool
 #+end_export
