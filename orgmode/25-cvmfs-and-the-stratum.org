@@ -362,6 +362,44 @@ once an object is in it.
 #+end_solution
 #+end_exercise
 
+#+ATTR_EB: :id EB-CVMFS-3 :title Where would that number come from
+#+begin_exercise
+The root catalog of a repository holding 51.7 million files is 26
+kilobytes and lists twenty-five entries.
+
+1. Where does the 51.7 million come from, if the catalog lists
+   twenty-five things? Name the table and the column.
+2. A client mounts the repository and runs =ls /cvmfs/<repo>=. How many
+   catalogs does it fetch, and how many objects?
+3. The same client then opens one file inside one package. What does it
+   fetch, in order?
+4. Somebody proposes flattening the repository into a single catalog for
+   simplicity. Using the numbers, say what that would cost the client in
+   part 2.
+
+#+begin_solution
+1. The =statistics= table, column =subtree_regular=. Every catalog
+   carries counters for itself (=self_*=) and for everything below it
+   (=subtree_*=), so a 26 kB file can account for a subtree it does not
+   list.
+
+2. One catalog, the root, and the objects for whatever =ls= needs, which
+   is metadata rather than content: the entries are in the catalog it
+   already fetched. The three version directories are transition points,
+   and their catalogs are not fetched until something enters them.
+
+3. The version catalog, then the CPU target's =software= catalog, then
+   the nested catalog for that installation directory, then the file's
+   own object, verified against the hash the catalog gave. Four fetches
+   where a flat design would have needed one enormous one.
+
+4. The client would download metadata for 51.7 million files and 8.4
+   million directories to answer =ls= on a directory with three entries
+   in it. That is the argument for nesting, in one sentence, and it is
+   why 40,070 catalogs is a feature rather than an accident.
+#+end_solution
+#+end_exercise
+
 * Two keys
 
 The signature at the bottom of the manifest is made with the *repository*

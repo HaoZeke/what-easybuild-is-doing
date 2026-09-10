@@ -74,41 +74,47 @@ site that discards build directories nightly,
 =config.log= has a deadline.
 #+end_detail
 
-* Task one: bump a version
+* Task one: the bump that was verified four ways and still failed
 
-The request: *"users want version 4.4.0 of this, we have 4.3.1"*.
+The request: *"this package is pinned to a development commit, because no
+release carried the feature the group needs. Release 4.4.0 has it. Move
+the four recipes onto the release."*
 
-The sequence, and the first three steps cost minutes:
+What was done, in order, before anything was built:
 
-1. =eb --search '^QMCPACK'=. Find what your site already has, and what
-   upstream has. If upstream already carries an easyconfig for the version
-   you need, on a toolchain your site has, the rest of this task is a
-   two-line change to a build list.
-2. Copy the existing easyconfig to the new version. Change =version=, and
-   nothing else yet.
-3. Delete the checksum and run =eb --inject-checksums=. It downloads the
-   new archive and writes a real checksum. If the download fails here, the
-   upstream URL changed and that is your whole ticket for now.
-4. Read the diff between the old and the new *source archive*, not between
-   the easyconfigs. =tar tzf= both and compare the top-level layout.
-5. Build it, into whatever sandbox your pipeline gives you.
+1. Four recipes copied and pointed at the release archive.
+2. Four lines added to the current generation's build list.
+3. =eb-stack recipe lint=: clean.
+4. Dependency resolution: clean.
+5. The SHA256 of the release archive, compared against the one written
+   into the recipes: identical.
+6. A diff of build flags, dependencies and sanity checks against the
+   previous version's recipes: identical.
 
-*Where a first-timer goes wrong: step 4 gets skipped.* Steps 1 to 3 all
-succeed, the diff between the two easyconfigs is one line and a checksum,
-and everything says this is a trivial bump.
+All four builds then failed, before compiling anything:
 
-[[file:01-an-easyconfig-is-python.org][Chapter 1]] is what happens next: a
-recipe that had been building from a pinned git commit, where EasyBuild
-archives a checkout under the repository's name, now builds from a release
-tarball that unpacks to =qmcpack-4.4.0/=. =start_dir = 'qmcpack'=
-described the old arrangement and nothing asked it to change. The build
-gets a verified checksum, a clean extract, a clean patch, a full
-environment, and then a path that does not exist.
+#+begin_example
+Specified start dir /scratch/build/.../qmcpack-4.4.0/qmcpack does not exist
+#+end_example
 
-The general form, and the reason this is task one: *a version bump is a
-change of source, and every parameter that describes the shape of the
-source has to be re-read.* =start_dir=, patch strip levels,
-=sanity_check_paths=, anything with a directory name in it.
+*Where it went wrong: =start_dir= was carried across.* It had been correct
+for as long as the recipe built from a git commit, because EasyBuild
+archives a clone under the repository's name, so the sources did sit in
+=qmcpack/=. The release tarball extracts to =qmcpack-4.4.0/= with
+=CMakeLists.txt= at the top, and
+[[file:20-reading-a-failed-build.org][chapter 20]]'s descent rule then
+resolves a relative =start_dir= under that.
+
+The method failure is the more useful half. The verifying diff in step 6
+*deliberately excluded the source block*, on the grounds that the source
+block is the thing meant to change. =start_dir= is not in that block, and
+it is a function of it. So six checks passed, each of them correctly, and
+not one of them could see the fault.
+
+The general form: *a version bump is a change of source, and every
+parameter that describes the shape of the source has to be re-read.*
+=start_dir=, patch strip levels, =sanity_check_paths=, anything holding a
+directory name.
 
 #+ATTR_EB: :title Before you look it up
 #+begin_predict
@@ -132,49 +138,74 @@ losing: nothing about this failure is stale state.
 #+end_reveal
 #+end_predict
 
-* Task two: build a package on a vendor toolchain
+* Task two: the check that was switched off over the defect it found
 
-The request: *"the group wants the GPU build of this code, and it needs
-the vendor compiler rather than the open-source one"*.
+The request, as it arrived twenty days late: *"the GPU build of this code
+will not start."*
 
-This task is longer, and it changes the shape of the work: you are no
-longer bumping a recipe, you are choosing a toolchain.
+#+begin_example
+vasp_std: error while loading shared libraries: libnvJitLink.so.13:
+cannot open shared object file: No such file or directory
+#+end_example
 
-1. Establish what the code needs, from its own documentation, in the
-   vendor's terms: which compiler, which CUDA, which MPI implementation, and
-   whether it wants OpenACC or OpenMP offload.
-2. Find whether your site has that toolchain at the generation you are
-   building into. If it does not, you are now also installing a toolchain,
-   which is a decision about the whole stack rather than about this
-   package. [[file:02-a-toolchain-is-a-hierarchy.org][Chapter 2]].
-3. Check what the toolchain module actually provides.
-   [[file:14-the-isolation-policy.org][Chapter 14]]: loading it gives you
-   =EBROOT*= and not =$CC=. To see the build environment, use
-   =eb --dump-env-script= from
-   [[file:24-development-environments.org][chapter 24]].
-4. Build, then *run the binary on the hardware it targets*. Not on the
-   build host, and not on a login node.
+The whole sequence, because the sequence is the lesson:
 
-*Where a first-timer goes wrong: step 4, and it is worse than it looks.*
+1. A production run installs the package on a vendor toolchain. After two
+   hours and sixteen minutes, the RPATH sanity check fails:
+   =Library libnvJitLink.so.13 not found=.
+2. =skipsteps = ['sanitycheck']= goes into the recipe, with a comment
+   naming the newer CUDA tree inside the vendor toolchain. The reasoning:
+   the check reports a defect this package cannot fix.
+3. A second recipe, for another version of the same package on the same
+   toolchain, is added and inherits the =skipsteps=.
+4. Twenty days pass. A user loads the module and gets the loader error
+   above.
+5. =skipsteps= comes out of both recipes.
+6. A root cause is published, and then *retracted*, having been checked
+   from a login node.
+7. The root cause is re-established, on the hardware, and the toolchain's
+   own recipe is fixed: =postinstallcmds= relinking the unversioned
+   =math_libs= and =comm_libs= entries at the CUDA version the module
+   declares.
+8. A temporary =--rebuild= goes on the build-list lines for everything
+   built against the broken toolchain, and comes off once the results are
+   checked on a node of each architecture class.
 
-[[file:27-four-things-that-actually-happened.org][Chapter 27]]'s first two
-cases are this task. A vendor toolchain came as a single tarball
-containing two CUDA generations, and its unversioned library directories
-pointed at the newer one on two architectures out of four. The module
-declared the older CUDA and depended on it. Every check on the build host
-passed, because the build host was one of the two architectures where the
-symlinks were right.
+Three separate mistakes are in that list, and only one of them is the
+symlink.
 
-And then the second trap, which cost a day: pointing at the other
-architecture's tree with an absolute path does not rescue the test either,
-because the [[dive:term-rpath]] inside the binary contains a per-node
-symlink that resolves against the node you are standing on. So =ldd= reports zero
-missing libraries for a binary that cannot start.
+*Switching the check off moved the discovery to a user.* Step 2's
+reasoning was true in both halves: the check was reporting a real defect,
+and no change to this package could repair it. The conclusion did not
+follow. The check was carrying information about the *toolchain*, and
+deleting the report left the toolchain broken and the package shipping.
+[[file:23-testing.org][Chapter 23]].
 
-The general form: *on a heterogeneous system, a claim about library
-resolution has to be measured on the architecture it will run on.* The
-first command in that diagnosis is =readlink -f= on the per-node symlink,
-on the node the user's job ran on.
+*The workaround spread while the defect was hidden.* Step 3 is what a
+skipped check costs beyond one package: the next recipe copied the
+workaround along with everything else, because copying a recipe is how
+recipes get written.
+
+*The retraction is the part to learn from.* Step 6 happened because
+=/sw/arch= resolves to the architecture of the node reading it, and the
+binary's own [[dive:term-rpath]] carries that prefix. So =ldd= on the GPU
+binary, run from a login node, reports zero missing libraries. Pointing at
+the other architecture's tree by its full path does not rescue the test
+either: the RPATH inside the binary still resolves against the node you
+are on.
+
+*Where a first-timer goes wrong: they publish step 6.* A clean check is
+persuasive, it is cheap, and on a heterogeneous machine it is evidence
+about the node it ran on and nothing else.
+
+The general form: *a claim about library resolution has to be measured on
+the architecture that will run the binary.* The first command in that
+diagnosis is =readlink -f= on the per-node path, on the node the user's
+job ran on.
+
+And the thing to take from step 8: a rebuild flag added to fix a batch is
+temporary, so it needs a named owner and a date, or it becomes permanent
+and nobody remembers what it was for.
 
 #+ATTR_EB: :id EB-Week-2 :title The commit you would write
 #+begin_exercise
