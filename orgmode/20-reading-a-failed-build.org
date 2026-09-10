@@ -375,6 +375,28 @@ For each, say what you read first and what you would rule out with it.
 #+end_solution
 #+end_exercise
 
+#+ATTR_EB: :id sources-20 :title Where this chapter comes from :kind sources
+#+begin_detail
+The failing build, the error block, the log paths, =out.txt= and =cmd.sh=
+were produced on a workstation on 2026-09-10 with EasyBuild 5.3.1
+installed from PyPI, using a one-file archive made for the purpose. No
+cluster was involved.
+
+Upstream documentation, fetched 2026-09-10:
+
+- [[https://docs.easybuild.io/interactive-debugging-failing-shell-commands/][interactive debugging of failing shell commands]]: the six fields, =out.txt=, =cmd.sh= and the =eb-shell>= prompt
+- [[https://docs.easybuild.io/log-files/][log files]]: the temporary log, the per-installation log, and the filename template
+- [[https://docs.easybuild.io/tracing-progress/][tracing progress]]: what =--trace= adds, and that it is on by default in EasyBuild 5
+- [[https://docs.easybuild.io/extended-dry-run/][the extended dry run]]: what =-x= reports, and its closing line
+- [[https://tutorial.easybuild.io/2022-isc22/troubleshooting/][the tutorial's troubleshooting page]]: the search patterns, the advice to read upward, and the note that a failed build keeps its build directory
+- [[https://docs.easybuild.io/version-specific/eb-help/][the generated option table]]: =--last-log=, =--stop=, =--cleanup-builddir=
+
+Code, from EasyBuild 5.3.1 as installed: =find_base_dir= in
+=easybuild/tools/filetools.py= for the single-child descent, and
+=find_last_log= in =easybuild/tools/config.py= for what =--last-log=
+actually returns.
+#+end_detail
+
 #+begin_keypoints
 - The exit code narrows the search before any log does: 127 is not found,
   126 is not executable, 2 from =make= means a rule failed and the cause is

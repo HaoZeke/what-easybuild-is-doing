@@ -214,6 +214,27 @@ do?
 #+end_solution
 #+end_exercise
 
+#+ATTR_EB: :id sources-23 :title Where this chapter comes from :kind sources
+#+begin_detail
+Upstream documentation, fetched 2026-09-10:
+
+- [[https://docs.easybuild.io/unit-tests/][unit tests]]: the three suites, and the statement that they do not build the supported software
+- [[https://docs.easybuild.io/contributing/][contributing]]: the merge requirements, and the review process
+- [[https://docs.easybuild.io/integration-with-github/][GitHub integration]]: =--upload-test-report=, its gist permission, and =--test-report-env-filter=
+- [[https://docs.easybuild.io/version-specific/easyconfig-parameters/][the parameter reference]]: =runtest= against =tests=
+- [[https://docs.easybuild.io/version-specific/eb-help/][the option table]]: =--ignore-test-failure=, =--skip-test-step=, =--keep-going=
+
+Code, from EasyBuild 5.3.1: =EasyBlock._test_step= and
+=report_test_failure= in =easybuild/framework/easyblock.py= for how a
+failure is routed; =ConfigureMake.test_step= for how =runtest= composes
+with =make=; and the RPATH check's default exemptions for the driver
+libraries.
+
+The portable-test material is EESSI's:
+[[https://github.com/EESSI/test-suite][EESSI/test-suite]] and the mapping
+file it keys tests to software with.
+#+end_detail
+
 #+begin_keypoints
 - Four different things are called testing: the package's own suite, the
   sanity check, a test report, and a portable run on hardware you care

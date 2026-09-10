@@ -318,6 +318,25 @@ that it needs HDF5 and a C++17 compiler.
 #+end_solution
 #+end_exercise
 
+#+ATTR_EB: :id sources-21 :title Where this chapter comes from :kind sources
+#+begin_detail
+The searches, the injection refusal and the style check were run on a
+workstation on 2026-09-10 against EasyBuild 5.3.1 with pycodestyle
+installed. =MANDATORY_PARAMS= was read out of the installed package.
+
+Upstream documentation, fetched 2026-09-10:
+
+- [[https://docs.easybuild.io/writing-easyconfig-files/][writing easyconfig files]]: the mandatory parameters, the filename scheme, the checksum grammar, and =--inject-checksums= including its refusal and its reordering
+- [[https://docs.easybuild.io/using-easybuild/][using EasyBuild]]: =--search= and =-S=, and the =--try-*= family with its trickle-down limits
+- [[https://docs.easybuild.io/code-style/][code style]]: the 120-character limit, and the parts no linter checks
+- [[https://docs.easybuild.io/contributing/][contributing]]: the merge requirements, including the test report and that an author does not merge their own
+- [[https://docs.easybuild.io/integration-with-github/][GitHub integration]]: what =--new-pr= and =--update-pr= do, and their defaults
+
+Code: =check_easyconfigs_style= in
+=easybuild/framework/easyconfig/style.py= for the 120-character limit, the
+=W299= substitution and the =E741= exemption.
+#+end_detail
+
 #+begin_keypoints
 - Five parameters are enforced: =name=, =version=, =homepage=,
   =description=, =toolchain=. The MANDATORY category lists eight.

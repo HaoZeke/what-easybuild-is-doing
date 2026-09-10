@@ -268,6 +268,26 @@ instead if not.
 #+end_solution
 #+end_exercise
 
+#+ATTR_EB: :id sources-22 :title Where this chapter comes from :kind sources
+#+begin_detail
+The counts and the =NotImplementedError= were read out of EasyBuild 5.3.1
+as installed on 2026-09-10: 82 generic classes in 47 modules and 282
+software-specific ones, from =eb --list-easyblocks= and the package tree.
+
+Upstream documentation, fetched 2026-09-10:
+
+- [[https://docs.easybuild.io/implementing-easyblocks/][implementing easyblocks]]: the class hierarchy, the naming and escaping rules, =extra_options=, and the testing order
+- [[https://docs.easybuild.io/including-additional-python-modules/][including additional Python modules]]: what =--include-easyblocks= does to the Python path, and its precedence
+- [[https://docs.easybuild.io/hooks/][hooks]]: the most reliable published enumeration of the steps
+- [[https://docs.easybuild.io/easybuild-v5/run_shell_cmd/][the run_shell_cmd migration]]
+
+One caution repeated in the chapter because it costs an afternoon: the
+implementing-easyblocks page documents the EasyBuild 4 shell API
+(=run_cmd=, =run_cmd_qa=) and imports =LooseVersion= from =distutils=,
+which was removed from Python's standard library in 3.12. The framework's
+own step methods use =run_shell_cmd=.
+#+end_detail
+
 #+begin_keypoints
 - Reach for =configopts= first, a generic easyblock second, and your own
   code only when more than one easyconfig will need it.
