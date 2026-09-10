@@ -102,11 +102,42 @@
 (defconst ebguide-lesson-blocks '("objectives" "exercise" "solution")
   "Special-block types that become lesson directives.")
 
+;; A dive-in detail is born in one place and transcluded from anywhere, so
+;; unlike a lesson block it carries its title as the directive's argument
+;; rather than as an option. It still reads its attributes from `#+ATTR_EB:',
+;; because a special block's own begin line has nowhere to put them:
+;;
+;;   #+ATTR_EB: :id steps-order :title The eighteen steps :kind reference
+;;   #+begin_detail
+;;   ...the table...
+;;   #+end_detail
+
+(defun ebguide-rst-detail-block (special-block contents _info)
+  "Translate a detail SPECIAL-BLOCK to the eb-detail directive."
+  (let* ((attrs (org-export-read-attribute :attr_eb special-block))
+         (id (plist-get attrs :id))
+         (title (plist-get attrs :title))
+         (kind (plist-get attrs :kind))
+         (name (plist-get attrs :name)))
+    (unless (and id title)
+      (error "detail block needs #+ATTR_EB: :id ... :title ..."))
+    (concat (format ".. eb-detail:: %s\n" title)
+            (format "   :id: %s\n" id)
+            (when kind (format "   :kind: %s\n" kind))
+            (when name (format "   :name: %s\n" name))
+            "\n"
+            (ebguide--indent (or contents "") 3)
+            "\n\n")))
+
 (defun ebguide-rst-special-block (special-block contents info)
   "Translate a lesson SPECIAL-BLOCK to its directive, else defer to rst."
   (let ((type (downcase (or (org-element-property :type special-block) ""))))
-    (if (not (member type ebguide-lesson-blocks))
-        (org-export-with-backend 'rst special-block contents info)
+    (cond
+     ((string= type "detail")
+      (ebguide-rst-detail-block special-block contents info))
+     ((not (member type ebguide-lesson-blocks))
+      (org-export-with-backend 'rst special-block contents info))
+     (t
       (let* ((attrs (org-export-read-attribute :attr_eb special-block))
              (id (plist-get attrs :id))
              (title (plist-get attrs :title)))
@@ -115,7 +146,22 @@
                 (when title (format "   :title: %s\n" title))
                 "\n"
                 (ebguide--indent (or contents "") 3)
-                "\n\n")))))
+                "\n\n"))))))
+
+;; And the reference to one, as its own link type so it reads as a link in
+;; the org source and follows in an editor:
+;;
+;;   [[dive:steps-order]]  or  [[dive:steps-order][the eighteen steps]]
+
+(defun ebguide-dive-link-export (path desc backend _info)
+  "Export a dive: link to the :dive: role."
+  (if (org-export-derived-backend-p backend 'rst)
+      (if (and desc (not (string= desc "")))
+          (format ":dive:`%s <%s>`" desc path)
+        (format ":dive:`%s`" path))
+    (or desc path)))
+
+(org-link-set-parameters "dive" :export #'ebguide-dive-link-export)
 
 (org-export-define-derived-backend 'ebguide-rst 'rst
   :translate-alist '((src-block . ebguide-rst-src-block)

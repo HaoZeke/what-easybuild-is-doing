@@ -1,0 +1,203 @@
+/* Dive-in details: the born block, the link, and the box that opens.
+ *
+ * Three surfaces, and they have to read as one mechanism. A reader who opens
+ * a knowl should recognise the box as the same thing they saw born in a
+ * chapter, or the transclusion teaches them nothing about where they are.
+ *
+ * The tokens come from eb-book.css. Nothing here defines a colour that is
+ * not derived from one, so the two themes and the toggle keep working
+ * without this file knowing they exist.
+ */
+
+/* --- the link ------------------------------------------------------------- */
+
+/* A knowl is not a link to elsewhere, and should not look like one. The
+ * dotted underline is the convention long-form sites have settled on for
+ * "this expands", and the marker says which way it is about to go. */
+article.yue a.eb-knowl {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--eb-accent);
+  cursor: pointer;
+  padding-bottom: 0.05em;
+}
+
+article.yue a.eb-knowl:hover,
+article.yue a.eb-knowl:focus-visible {
+  border-bottom-style: solid;
+  background: var(--eb-accent-quiet);
+}
+
+article.yue a.eb-knowl .eb-knowl__mark::after {
+  content: "\00a0\25be"; /* a small triangle, pointing down: it opens below */
+  font-size: 0.8em;
+  color: var(--eb-accent);
+  vertical-align: 0.08em;
+}
+
+article.yue a.eb-knowl[aria-expanded="true"] .eb-knowl__mark::after {
+  content: "\00a0\25b4";
+}
+
+/* --- the born block ------------------------------------------------------- */
+
+article.yue .eb-detail {
+  grid-column: wide-left / wide-right;
+  margin: var(--eb-space-block) 0;
+  padding: 1rem 1.1rem 0.75rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-left: 3px solid var(--eb-accent);
+  border-radius: 3px;
+  background: var(--eb-surface);
+}
+
+article.yue .eb-detail__title {
+  font-family: var(--eb-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+  color: var(--eb-fg);
+}
+
+/* The kind, set small and in front of the title, so a reference table and a
+ * definition are distinguishable at a glance in a page full of both. */
+article.yue .eb-detail__kind {
+  display: inline-block;
+  margin-right: 0.55rem;
+  padding: 0.08rem 0.4rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 2px;
+  background: transparent;
+  font-family: var(--eb-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--eb-fg-muted);
+  vertical-align: 0.1em;
+}
+
+/* Inside a detail the prose is not a grid item; the detail is. */
+article.yue .eb-detail__body > * {
+  grid-column: auto;
+}
+
+article.yue .eb-detail__body > * + * {
+  margin-top: var(--eb-space);
+}
+
+/* --- the box that opens --------------------------------------------------- */
+
+.eb-knowl-box {
+  grid-column: text-left / text-right;
+  margin: var(--eb-space) 0;
+  padding: 0.9rem 1rem 0.6rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-left: 3px solid var(--eb-accent);
+  border-radius: 3px;
+  background: var(--eb-surface);
+  /* The reader's eye has to find it. A whole-box animation moves the text
+   * they were reading, so only the edge announces itself. */
+  animation: eb-knowl-in 140ms ease-out;
+}
+
+@keyframes eb-knowl-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eb-knowl-box {
+    animation: none;
+  }
+}
+
+.eb-knowl-box:focus-visible {
+  outline: 2px solid var(--eb-accent);
+  outline-offset: 2px;
+}
+
+.eb-knowl-box--loading::after {
+  content: "opening\2026";
+  display: block;
+  font-family: var(--eb-sans);
+  font-size: 0.85rem;
+  color: var(--eb-fg-muted);
+}
+
+.eb-knowl-box .eb-knowl__title {
+  font-family: var(--eb-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.eb-knowl-box .eb-knowl__inner > * + * {
+  margin-top: var(--eb-space);
+}
+
+/* Beezer's rule, and it earns its place: the box carries the way out, so a
+ * reader who wants the surrounding argument is one click from it. */
+.eb-knowl-box .eb-knowl__back {
+  margin-top: 0.75rem;
+  font-family: var(--eb-sans);
+  font-size: 0.82rem;
+}
+
+.eb-knowl-box .eb-knowl__back a {
+  color: var(--eb-accent);
+}
+
+.eb-knowl-box__close {
+  display: block;
+  margin: 0.75rem 0 0 auto;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 2px;
+  background: transparent;
+  font-family: var(--eb-sans);
+  font-size: 0.78rem;
+  color: var(--eb-fg-muted);
+  cursor: pointer;
+}
+
+.eb-knowl-box__close:hover {
+  color: var(--eb-fg);
+  border-color: var(--eb-accent);
+}
+
+/* A knowl inside a box, one level down, so nesting reads as depth rather
+ * than as a second box at the same level. */
+.eb-knowl-box .eb-knowl-box {
+  margin-left: 0.75rem;
+  border-left-color: var(--eb-fg-muted);
+}
+
+/* Tables are the commonest thing to dive into and the likeliest to be
+ * wider than the box. */
+.eb-knowl-box table,
+.eb-knowl-box .table-wrapper {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Print takes the born blocks and nothing else: a box that only exists after
+ * a click cannot be on paper, and the born block is where it lives. */
+@media print {
+  article.yue a.eb-knowl {
+    border-bottom: none;
+  }
+  article.yue a.eb-knowl .eb-knowl__mark {
+    display: none;
+  }
+  .eb-knowl-box {
+    display: none;
+  }
+}

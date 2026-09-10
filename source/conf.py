@@ -28,6 +28,10 @@ extensions = [
     "eb_widget",
     "eb_transcript",
     "eb_lesson",
+    # Dive-in details, and retrieval over the book. Both are html-only by
+    # construction; see their modules for what the epub gets instead.
+    "eb_knowl",
+    "eb_ask",
 ]
 
 templates_path = ["_templates"]
@@ -92,6 +96,15 @@ epub_use_index = False
 # dead weight into a failed build.
 epub_exclude_files = [
     "search.html",
+    # A knowl fetches a fragment and Ask ranks a pack, and an e-reader can do
+    # neither. The extensions emit no mount points there, so these assets
+    # would be dead weight that the epub builder also has no mimetype for.
+    "_static/eb-knowl.css",
+    "_static/eb-knowl.js",
+    "_static/eb-knowls.json",
+    "_static/eb-ask.css",
+    "_static/eb-ask.js",
+    "_static/eb-ask-pack.json",
     "_static/eb-widget.css",
     "_static/eb-widget.js",
     "_static/eb-widget-engine.js",

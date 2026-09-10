@@ -1,0 +1,359 @@
+/* Ask: the launcher, the panel, and the passages.
+ *
+ * The panel is a reading surface, not a menu. A result carries a real
+ * passage rather than a title and a promise, so it is set at the book's own
+ * measure and rhythm instead of the tight leading a command palette uses.
+ */
+
+/* The panel floats above the page, so it needs an opaque ground of its own.
+ * eb-book.css defines surfaces but no page background, and inheriting the
+ * theme's would make the panel transparent over the scrim. Three blocks,
+ * matching eb-book.css: the default, the system preference, and the
+ * explicit toggle in both directions. */
+:root {
+  --eb-panel: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --eb-panel: #0d1117;
+  }
+}
+
+:root[data-theme="dark"] {
+  --eb-panel: #0d1117;
+}
+
+:root[data-theme="light"] {
+  --eb-panel: #ffffff;
+}
+
+/* --- the launcher --------------------------------------------------------- */
+
+.eb-ask-launcher {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 1.1rem;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 999px;
+  background: var(--eb-surface);
+  color: var(--eb-fg);
+  font-family: var(--eb-sans);
+  font-size: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 18px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+.eb-ask-launcher:hover {
+  border-color: var(--eb-accent);
+}
+
+.eb-ask-launcher__key {
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 3px;
+  font-family: var(--eb-mono);
+  font-size: 0.72rem;
+  color: var(--eb-fg-muted);
+}
+
+@media print {
+  .eb-ask-launcher,
+  .eb-ask {
+    display: none !important;
+  }
+}
+
+/* --- the panel ------------------------------------------------------------ */
+
+html.eb-ask-open {
+  overflow: hidden;
+}
+
+.eb-ask {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 4vh 1rem 1rem;
+}
+
+.eb-ask__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.eb-ask__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 720px);
+  max-height: 88vh;
+  overflow: hidden auto;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 6px;
+  background: var(--eb-panel);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.28);
+  font-family: var(--eb-sans);
+  color: var(--eb-fg);
+}
+
+.eb-ask__bar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.eb-ask__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--eb-fg);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.eb-ask__input:focus-visible {
+  outline: 2px solid var(--eb-accent);
+  outline-offset: 1px;
+}
+
+.eb-ask__x {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--eb-fg-muted);
+  font-family: var(--eb-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.eb-ask__note {
+  margin: 0.6rem 0 0;
+  font-size: 0.84rem;
+  color: var(--eb-fg-muted);
+}
+
+.eb-ask__note a {
+  color: var(--eb-accent);
+}
+
+/* --- the answer, when a reader brought a model ---------------------------- */
+
+.eb-ask__answer {
+  margin: 0.8rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border-left: 3px solid var(--eb-accent);
+  background: var(--eb-surface);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.eb-ask__answer p {
+  margin: 0;
+}
+
+/* The no-model case is the default case, and it should read as a statement
+ * rather than as an error. */
+.eb-ask__answer--none {
+  border-left-color: var(--eb-fg-muted);
+  color: var(--eb-fg-muted);
+}
+
+.eb-ask__answerfoot {
+  margin-top: 0.5rem !important;
+  font-size: 0.78rem;
+  color: var(--eb-fg-muted);
+}
+
+/* --- the results --------------------------------------------------------- */
+
+.eb-ask__results {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eb-ask__result + .eb-ask__result {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--eb-rule);
+}
+
+.eb-ask__head {
+  display: block;
+  color: var(--eb-fg);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.eb-ask__head:hover strong {
+  text-decoration: underline;
+}
+
+.eb-ask__crumb {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--eb-fg-muted);
+}
+
+.eb-ask__kind {
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 2px;
+  font-family: var(--eb-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--eb-fg-muted);
+}
+
+/* A definition and an exercise are what a reader most often wants, so they
+ * are the two kinds that get a colour rather than a grey box. */
+.eb-ask__kind--term,
+.eb-ask__kind--reference {
+  border-color: var(--eb-accent);
+  color: var(--eb-accent);
+}
+
+.eb-ask__snippet {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--eb-fg);
+}
+
+.eb-ask__snippet mark,
+.eb-ask__full mark {
+  padding: 0 0.1em;
+  border-radius: 2px;
+  background: var(--eb-accent-quiet);
+  color: inherit;
+}
+
+.eb-ask__more {
+  margin-top: 0.35rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--eb-accent);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* The passage itself. Monospace would be wrong: this is prose from the book,
+ * and it should read the way it reads in the book. */
+.eb-ask__full {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--eb-rule);
+  border-radius: 3px;
+  background: var(--eb-surface);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  max-height: 40vh;
+  overflow: auto;
+}
+
+/* --- the foot, and the model the reader may bring ------------------------- */
+
+.eb-ask__foot {
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--eb-rule);
+  font-size: 0.78rem;
+  color: var(--eb-fg-muted);
+}
+
+.eb-ask__foot kbd {
+  padding: 0.02rem 0.3rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 3px;
+  font-family: var(--eb-mono);
+  font-size: 0.72rem;
+}
+
+.eb-ask__model {
+  margin-bottom: 0.6rem;
+}
+
+.eb-ask__model summary {
+  cursor: pointer;
+  color: var(--eb-accent);
+}
+
+.eb-ask__modelnote {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.eb-ask__model label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.35rem 0;
+}
+
+.eb-ask__model input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--eb-fg);
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.eb-ask__modelrow {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.eb-ask__modelrow button {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--eb-fg);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.eb-ask__modelrow button:hover {
+  border-color: var(--eb-accent);
+}
+
+@media (max-width: 640px) {
+  .eb-ask {
+    padding: 0;
+  }
+  .eb-ask__panel {
+    max-height: 100vh;
+    height: 100%;
+    border-radius: 0;
+  }
+  .eb-ask-launcher__label {
+    display: none;
+  }
+}
