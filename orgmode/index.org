@@ -42,6 +42,9 @@ After that, pick by what you are doing.
 | moving a recipe to a newer stack | [[file:03-a-pin-is-for-one-generation.org][chapter 3]] |
 | told a module exists, but it will not load | [[file:04-the-robot.org][chapter 4]] and [[file:06-what-installed-means.org][chapter 6]] |
 | reading a failure whose cause is not in the file | [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] |
+| staring at a failed build right now | [[file:20-reading-a-failed-build.org][chapter 20]] |
+| writing a recipe for software that has none | [[file:21-writing-one-from-nothing.org][chapter 21]] |
+| wondering how a stack gets onto a thousand machines | [[file:25-cvmfs-and-the-stratum.org][chapter 25]] |
 | installing software with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
 | working on a machine with no stack of its own | [[file:11-eessi-somebody-elses-stack.org][chapter 11]] |
 | running any of this on your own machine | [[file:24-development-environments.org][chapter 24]] and [[file:26-the-same-stack-somewhere-else.org][chapter 26]] |
@@ -51,6 +54,11 @@ Reading straight through works too. Chapters 1 to 4 are the mechanisms
 everything else rests on. Chapters 5 to 9 are the parameters that cost
 the most time when misread, each built around a failure that actually
 happened. Chapters 10 to 12 are the ones where you do something.
+Chapters 13 to 19 are the machinery: the steps a build runs, what it is
+allowed to see, and what comes out. Chapters 20 to 24 are the working
+chapters, from reading a failure to writing a recipe, an easyblock and a
+development environment. Chapters 25 and 26 are how a stack reaches a
+machine that never built it, and chapter 27 is four failures in full.
 
 * Where this runs
 
@@ -138,6 +146,14 @@ reading the log rather than watching the progress bar.
    17-patches
    18-language-ecosystems
    19-what-a-module-exports
+   20-reading-a-failed-build
+   21-writing-one-from-nothing
+   22-writing-an-easyblock
+   23-testing
+   24-development-environments
+   25-cvmfs-and-the-stratum
+   26-the-same-stack-somewhere-else
+   27-four-things-that-actually-happened
    exercises
    afterword-when-easybuild-is-the-wrong-tool
 #+end_export

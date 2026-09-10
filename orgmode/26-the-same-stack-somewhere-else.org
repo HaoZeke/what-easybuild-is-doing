@@ -1,0 +1,357 @@
+#+TITLE: Chapter 26. The same stack somewhere else
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Get an optimised software stack onto a machine you do not administer,
+   by three different routes, and say which route fits which machine.
+2. Say how EESSI decides which build to give the host it lands on, and
+   override that decision.
+3. Say what a site adds on top without writing to =/cvmfs=.
+#+end_objectives
+
+[[file:25-cvmfs-and-the-stratum.org][Chapter 25]] took a repository
+apart. This chapter uses one, on machines that have no software stack of
+their own: a laptop, a continuous-integration runner, a cloud instance,
+and a cluster whose stack is somebody else's problem.
+
+The claim being tested is EESSI's own: "The host OS still provides a
+couple of things, like drivers for network and GPU, support for shared
+filesystems like GPFS and Lustre, a resource manager like Slurm, and so
+on." Everything above that arrives over HTTP.
+
+* Three layers, and what each one refuses to do
+
+EESSI is three layers, and the division is the interesting part because
+each layer exists to stop the layer above it caring about something.
+
+*The filesystem layer* is CernVM-FS, chapter 25. It delivers bytes and
+verifies them, and it knows nothing about software.
+
+*The compatibility layer* is Gentoo Prefix: a set of Gentoo packages
+installed into a non-standard prefix with Portage. It provides the libc,
+the shell, the coreutils and the linker that everything above is built
+against, so the host distribution stops mattering. The prefix path is
+=$EESSI_PREFIX/compat/$EESSI_OS_TYPE/$EESSI_CPU_FAMILY=, for example
+=/cvmfs/software.eessi.io/versions/2023.06/compat/linux/x86_64=.
+
+*The software layer* is EasyBuild output: everything from
+[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]] onwards, built per
+microarchitecture, with Lmod modulefiles.
+
+The layer boundary that matters for a reader on a laptop is the second
+one. A stack built against your distribution's libc would need your
+distribution. A stack built against a prefix that travels with it needs
+a kernel and not much else.
+
+* Route one: mount it
+
+#+begin_src ebtranscript :source "EESSI native-installation instructions, https://www.eessi.io/docs/getting_access/native_installation/, read 2026-09-10" :caption "The whole of a native install, on any machine you have root on"
+# install the CernVM-FS client and the EESSI configuration package
+# (cvmfs-config-eessi ships the public key that verifies the repository)
+
+$ sudo bash -c 'echo "CVMFS_CLIENT_PROFILE=single" > /etc/cvmfs/default.local'
+$ sudo bash -c 'echo "CVMFS_QUOTA_LIMIT=10000" >> /etc/cvmfs/default.local'
+$ sudo cvmfs_config setup
+$ ls /cvmfs/software.eessi.io
+#+end_src
+
+Two configuration lines, and both matter on a single machine.
+=CVMFS_CLIENT_PROFILE=single= is the shipped setting for "laptops or
+fewer than 5 machines", which stops the client expecting a site proxy.
+=CVMFS_QUOTA_LIMIT=10000= raises the cache from the default 4000
+megabytes, because a software stack's working set is larger than the
+default assumes and eviction to half the quota, as chapter 25 describes,
+otherwise thrashes.
+
+Then the stack is a =module use= away:
+
+#+begin_example
+module use /cvmfs/software.eessi.io/init/modules
+module load EESSI/2023.06
+#+end_example
+
+or, if Lmod is older than 8.6 or you would rather not touch
+=MODULEPATH=:
+
+#+begin_example
+source /cvmfs/software.eessi.io/versions/2023.06/init/bash
+#+end_example
+
+* Route two: no root
+
+Two mechanisms, for two different reasons.
+
+=cvmfsexec= mounts a repository *without* privileges, using user
+namespaces, and CernVM-FS documents it as the supported way to do that.
+It is the route for a shared machine where you are not an administrator
+and cannot become one.
+
+A container is the other, and EESSI publishes the script:
+=eessi_container.sh=, which runs Apptainer or Singularity with the
+repository mounted inside. This is also the route their own build bot
+takes, which is worth noticing: the thing that *builds* the stack runs in
+a container mounting the stack.
+
+* Route three: a runner that exists for ninety seconds
+
+Continuous integration is the case where "install a software stack" and
+"the job is already over" collide, and EESSI is a good answer precisely
+because nothing is installed: the runner mounts, resolves the modules it
+needs, and downloads only the files those modules touch.
+
+The mechanics are the same as route one or two depending on whether the
+runner has privileges. What changes is the cache: a fresh runner has an
+empty one, so the first job pays for every object it touches. A shared
+cache directory, or a site proxy, is what makes the second job fast, and
+without one every job is a first job.
+
+* How it chooses what to give you
+
+This is the part that decides whether the stack is fast or merely
+present. The initialisation script asks a detector for an *ordered* list
+of targets and takes the first one that exists on disk:
+
+#+begin_example
+all_cpupaths=$(${EESSI_INIT_DIR_PATH}/eessi_archdetect.sh -a cpupath)
+IFS=: read -r -a archs <<< "${all_cpupaths}"
+for arch in "${archs[@]}"; do
+  if [ -d "${EESSI_PREFIX}/software/${EESSI_OS_TYPE}/${arch}" ]; then
+    export EESSI_SOFTWARE_SUBDIR="${arch}"
+    show_msg "archdetect says ${EESSI_SOFTWARE_SUBDIR}"
+    break
+  fi
+done
+#+end_example
+
+=eessi_archdetect.sh -a cpupath= returns a colon-separated list from most
+specific to most generic. On an Ice Lake host, from EESSI's own
+documentation:
+
+#+begin_example
+x86_64/intel/icelake:x86_64/intel/cascadelake:x86_64/intel/skylake_avx512:x86_64/intel/haswell:x86_64/generic
+#+end_example
+
+So a host whose exact microarchitecture has no build gets the best
+*subset* of its instruction set that does, and =x86_64/generic= is the
+floor. That is the whole fallback policy, and it is four lines of shell
+rather than a resolver.
+
+Two variables are commonly confused and they are not the same thing.
+=EESSI_CPU_FAMILY= is literally =uname -m=: =x86_64=, =aarch64=,
+=riscv64=. The microarchitecture is =EESSI_SOFTWARE_SUBDIR=, and it is
+what the loop above sets.
+
+#+ATTR_EB: :id eessi-overrides :title The override variables, and what they do not check :kind reference
+#+begin_detail
+All of these must be set *before* initialisation, from
+[[https://www.eessi.io/docs/using_eessi/setting_up_environment/][EESSI: setting up your environment]]:
+
+| Variable | Overrides |
+|---+---|
+| =EESSI_CVMFS_REPO_OVERRIDE= | the repository path |
+| =EESSI_VERSION_OVERRIDE= | the version subdirectory |
+| =EESSI_SOFTWARE_SUBDIR_OVERRIDE= | the detected microarchitecture |
+| =EESSI_ACCELERATOR_TARGET_OVERRIDE= | the detected accelerator |
+| =EESSI_ARCHDETECT_OPTIONS_OVERRIDE= | the archdetect options wholesale |
+| =EESSI_ACCEL_SOFTWARE_SUBDIR_OVERRIDE= | a different CPU subdir for the accelerator stack |
+| =EESSI_BASIC_ENV= | =1= for a minimal initialisation |
+| =EESSI_SILENT= | =1= to suppress non-error output |
+| =EESSI_USE_ARCHDETECT= | =0= to switch the detector off |
+| =EESSI_OVERRIDE_GPU_CHECK= | =1= to load accelerator modules with no driver present |
+
+The documentation notes there is no validation of the values. An
+override naming a target that does not exist gives you a =MODULEPATH=
+pointing at nothing, and the failure appears later as an empty
+=module avail=.
+
+Which makes =EESSI_SOFTWARE_SUBDIR_OVERRIDE= the tool for the
+measurement in [[file:27-four-things-that-actually-happened.org][chapter
+27]]: to see what a different architecture's stack contains, name it,
+rather than reasoning about it from the architecture you are standing on.
+#+end_detail
+
+#+ATTR_EB: :id eessi-archdetect-docs :title Two selectors, and the page that names the wrong one :kind discrepancy
+#+begin_detail
+[[https://www.eessi.io/docs/software_layer/][The software-layer page]]
+says archspec chooses: "We leverage the *archspec* Python library to
+automatically select the best suited part of the software stack for a
+particular host, based on its system architecture."
+
+The shipped initialisation defaults say otherwise. In
+[[https://github.com/EESSI/software-layer-scripts/blob/main/init/eessi_defaults][init/eessi_defaults]]:
+
+#+begin_example
+export EESSI_USE_ARCHDETECT="${EESSI_USE_ARCHDETECT:=1}"
+export EESSI_USE_ARCHSPEC="${EESSI_USE_ARCHSPEC:=0}"
+#+end_example
+
+So the default selector is =eessi_archdetect.sh=, a shell script reading
+=/proc/cpuinfo= against spec files, and archspec is off unless asked for.
+archspec is still the source of the target *names*: "The names of these
+CPU targets correspond to the names used by archspec."
+
+Both remain true of the versions read on 2026-09-10, and a reader
+debugging target selection needs the script rather than the library.
+#+end_detail
+
+* What a site adds without writing to /cvmfs
+
+Chapter 25 ended on the mechanism: a symlink whose stored target is a
+variable reference, expanded by the client. EESSI's is
+=host_injections=, and the live repository stores it as
+=$(EESSI_HOST_INJECTIONS:-/opt/eessi)=.
+
+Point it somewhere writable and a site has a tree that behaves as though
+it were inside the repository:
+
+#+begin_example
+sudo bash -c "echo 'EESSI_HOST_INJECTIONS=/shared_fs/path/to/host/injections/' \
+  > /etc/cvmfs/domain.d/eessi.io.local"
+sudo cvmfs_config reload
+#+end_example
+
+Three uses, all of them things a stack built somewhere else cannot know:
+
+*GPU drivers.* The driver belongs to the host kernel and cannot ship in a
+repository. EESSI's script
+=link_nvidia_host_libraries.sh= populates the injection tree with links
+to the host's driver libraries, and their documentation is explicit about
+the maintenance: "You should re-run this script every time you update the
+NVIDIA GPU drivers on the host system, as it may expose libraries that
+are new to your driver version."
+
+*A full CUDA installation.* The CUDA and cuDNN in the repository "have
+been stripped down to contain only the runtime libraries", so compiling
+CUDA code needs more, and
+=install_cuda_and_libraries.sh= installs it into the injection tree
+through EasyBuild.
+
+*Site software and site MPI.* The initialisation script derives the site
+tree from the stack path by string substitution:
+
+#+begin_example
+site_software_path="${EESSI_SOFTWARE_PATH/versions/host_injections}"
+export EESSI_SITE_MODULEPATH="${site_software_path}/modules/all"
+#+end_example
+
+So =/cvmfs/software.eessi.io/versions/2023.06/software/linux/x86_64/amd/zen2=
+has its site twin at
+=/cvmfs/software.eessi.io/host_injections/2023.06/software/linux/x86_64/amd/zen2=,
+and that path is on =MODULEPATH= alongside the mounted one. Which is
+[[file:10-build-your-own-without-asking.org][chapter 10]]'s three lists,
+with the site's list living behind a symlink the site controls.
+
+Per-node-type differences are supported and are the reason the mechanism
+is a client-side variable rather than a repository path: two kinds of GPU
+node with drivers in different places get different
+=EESSI_HOST_INJECTIONS= values in their own CernVM-FS configuration.
+
+* What it is, and what it is not
+
+#+ATTR_EB: :id eessi-versions :title Versions and targets, as published :kind reference
+#+begin_detail
+From [[https://www.eessi.io/docs/repositories/versions/][EESSI versions]]
+and [[https://www.eessi.io/docs/software_layer/cpu_targets/][CPU targets]],
+read 2026-09-10:
+
+| Version | Toolchains |
+|---+---|
+| 2023.06 (default) | =foss/2022b=, =foss/2023a=, =foss/2023b= |
+| 2025.06 | =foss/2024a=, =foss/2025a=, =foss/2025b= |
+| 2026.06 | under development |
+
+The live repository agrees: its root catalog has exactly three nested
+catalogs, =/versions/2023.06=, =/versions/2025.06= and
+=/versions/2026.06=, which is chapter 25's transcript.
+
+x86_64 targets: =generic=, =amd/zen2=, =amd/zen3=, =amd/zen4=,
+=amd/zen5=, =intel/haswell=, =intel/skylake_avx512=,
+=intel/cascadelake=, =intel/icelake=, =intel/sapphirerapids=,
+=intel/graniterapids=. aarch64: =generic=, =a64fx=, =neoverse_n1=,
+=neoverse_v1=, =nvidia/grace=, =aws/graviton4=. Plus
+=riscv64/generic=. Not every target exists in every version; the table
+on that page says which, and the fallback list means a host with no exact
+match still gets something.
+
+Accelerator targets are named =accel/nvidia/cc<XY>=, and the
+initialisation script downgrades a compute capability that has no build
+to the nearest lower one ending in zero.
+#+end_detail
+
+Two limits to state plainly, because a reader deciding whether to rely on
+this needs them.
+
+The stack is built for a *microarchitecture*, and the fallback means a
+host can silently get a more generic build than it deserves. Reading
+=$EESSI_SOFTWARE_SUBDIR= after initialisation is the check, and it is one
+line.
+
+And the host still provides the driver, the network stack, the filesystem
+client and the scheduler. An MPI from the repository talking to a site
+fabric is exactly the case the site-specific configuration pages exist
+for, and it is the one place where "mount it and go" is not the whole
+story.
+
+#+ATTR_EB: :id sources-26 :title Where this chapter comes from :kind sources
+#+begin_detail
+EESSI documentation, fetched 2026-09-10:
+
+- [[https://www.eessi.io/docs/overview/][overview]]: the three layers, and what the host OS still provides
+- [[https://www.eessi.io/docs/filesystem_layer/][filesystem layer]]: CernVM-FS, the Stratum 1s, the status page
+- [[https://www.eessi.io/docs/compatibility_layer/][compatibility layer]]: Gentoo Prefix and Portage
+- [[https://www.eessi.io/docs/software_layer/][software layer]]: EasyBuild, Lmod, and the archspec claim
+- [[https://www.eessi.io/docs/software_layer/cpu_targets/][CPU targets]]: the target list and the fallback policy
+- [[https://www.eessi.io/docs/repositories/versions/][versions]]: which toolchains each version carries
+- [[https://www.eessi.io/docs/using_eessi/setting_up_environment/][setting up your environment]]: both initialisation routes and every override variable
+- [[https://www.eessi.io/docs/getting_access/native_installation/][native installation]]: the client configuration for a machine of your own
+- [[https://www.eessi.io/docs/site_specific_config/host_injections/][host injections]] and [[https://www.eessi.io/docs/site_specific_config/gpu/][GPU support]]: the variant symlink, and the two scripts
+
+Code, from [[https://github.com/EESSI/software-layer-scripts][EESSI/software-layer-scripts]], =main= branch, read 2026-09-10:
+=init/eessi_defaults=, =init/minimal_eessi_env=,
+=init/eessi_environment_variables=, =init/eessi_archdetect.sh=.
+
+Live evidence: the nested catalogs and the stored variant symlinks quoted
+here were read out of the =software.eessi.io= root catalog at revision
+23927 by the method in chapter 25.
+#+end_detail
+
+#+ATTR_EB: :id EB-EESSI-1 :title Four machines
+#+begin_exercise
+For each machine, name the route, the two configuration decisions you
+would make, and the one check you would run before believing the result.
+
+1. Your laptop, root available, 40 GB free.
+2. A university cluster login node where you have no privileges and the
+   administrators are slow.
+3. A GitHub Actions runner, for a project whose test suite needs a recent
+   compiler.
+4. A GPU node whose driver was updated last night.
+
+#+begin_solution
+1. Route one, native. Set =CVMFS_CLIENT_PROFILE=single= and raise
+   =CVMFS_QUOTA_LIMIT=; 40 GB allows a generous cache and the default
+   4000 MB will thrash. Check =$EESSI_SOFTWARE_SUBDIR= after
+   initialisation, because a laptop CPU is exactly the case where the
+   fallback list matters.
+
+2. =cvmfsexec=, or a container with =eessi_container.sh=. The decisions
+   are where the cache goes, since your home directory may be quota'd and
+   on a network filesystem, and which version you pin. Check that the
+   modules you need exist for your target rather than in general, with
+   =module avail= after initialisation.
+
+3. Either, depending on privileges; the runner is ephemeral so the
+   decisions are the cache location and pinning the EESSI version so the
+   pipeline does not change under you. Check the first job's wall time
+   against the second's: if they are the same, the cache is not being
+   reused and every run is paying full price.
+
+4. Route one, plus host injections, and this is the case that needs the
+   fourth step. The driver update is exactly when
+   =link_nvidia_host_libraries.sh= has to be re-run, per EESSI's own
+   documentation. The check is to run something CUDA on that node, not on
+   a login node, which is [[file:27-four-things-that-actually-happened.org][chapter
+   27]]'s whole subject.
+#+end_solution
+#+end_exercise

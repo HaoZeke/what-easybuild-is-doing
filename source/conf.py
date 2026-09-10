@@ -57,7 +57,11 @@ html_static_path = ["_static"]
 # Typography and layout for long-form reading, layered over the theme rather
 # than replacing it. Scoped to article.yue so navigation keeps the theme's
 # own design; see the file for what it changes and why.
-html_css_files = ["eb-book.css"]
+html_css_files = ["eb-book.css", "eb-annotate.css"]
+# Annotations are the reader's own, stored in their browser and exported by
+# them; see _static/eb-annotate.js for the anchoring model and the
+# accessibility requirements it has to meet.
+html_js_files = [("eb-annotate.js", {"defer": "defer"})]
 html_title = project
 html_copy_source = False
 html_show_sourcelink = False
@@ -105,6 +109,9 @@ epub_exclude_files = [
     "_static/eb-ask.css",
     "_static/eb-ask.js",
     "_static/eb-ask-pack.json",
+    # Annotations need a browser to store them in.
+    "_static/eb-annotate.css",
+    "_static/eb-annotate.js",
     "_static/eb-widget.css",
     "_static/eb-widget.js",
     "_static/eb-widget-engine.js",

@@ -1,0 +1,363 @@
+/* Annotations: the highlight, the launcher, the panel.
+ *
+ * Two rules run through this file. Nothing is signalled by colour alone: a
+ * highlight is underlined as well as tinted, and an orphaned note carries a
+ * word rather than a shade. And the reader's own marks must not be mistaken
+ * for the book's own emphasis, so they get an underline the book never uses
+ * elsewhere.
+ */
+
+/* --- the highlight -------------------------------------------------------- */
+
+article.yue mark.eb-annot {
+  background: color-mix(in srgb, var(--eb-accent) 16%, transparent);
+  color: inherit;
+  padding: 0 0.05em;
+  border-radius: 2px;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: from-font;
+  text-decoration-color: var(--eb-accent);
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+
+/* A highlight with a note behind it is not the same object as a bare
+ * highlight, and the difference is legible without colour. */
+article.yue mark.eb-annot--noted {
+  text-decoration-style: solid;
+  text-decoration-thickness: 2px;
+}
+
+article.yue mark.eb-annot:focus-visible {
+  outline: 2px solid var(--eb-accent);
+  outline-offset: 2px;
+}
+
+/* The note text, in the document for assistive technology, out of the way
+ * visually. Not display:none, which would remove it from the accessibility
+ * tree along with everything else. */
+.eb-note-desc {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.eb-annot-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- the launcher --------------------------------------------------------- */
+
+.eb-annot-launcher {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 4.1rem; /* above the Ask launcher */
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 999px;
+  background: var(--eb-surface);
+  color: var(--eb-fg);
+  font-family: var(--eb-sans);
+  font-size: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 18px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+.eb-annot-launcher:hover {
+  border-color: var(--eb-accent);
+}
+
+.eb-annot-launcher__count {
+  min-width: 1.4em;
+  padding: 0.02rem 0.3rem;
+  border-radius: 999px;
+  background: var(--eb-accent-quiet);
+  color: var(--eb-accent);
+  font-family: var(--eb-mono);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* --- the panel ------------------------------------------------------------ */
+
+/* A side panel rather than a modal: a reader annotating is reading at the
+ * same time, and a dialog over the text would hide the thing being noted.
+ * Hence aria-modal="false" in the markup, and no scrim. */
+.eb-annot-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  width: min(100%, 26rem);
+  overflow-y: auto;
+  padding: 1rem 1.1rem 2rem;
+  border-left: 1px solid var(--eb-surface-edge);
+  background: var(--eb-panel, var(--eb-surface));
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.18);
+  font-family: var(--eb-sans);
+  font-size: 0.88rem;
+  color: var(--eb-fg);
+}
+
+.eb-annot-panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eb-annot-panel__head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.eb-annot-x {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--eb-fg-muted);
+  font-family: var(--eb-mono);
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.eb-annot-panel__note {
+  margin: 0.6rem 0 0.9rem;
+  color: var(--eb-fg-muted);
+  line-height: 1.5;
+}
+
+.eb-annot-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.eb-annot-add button,
+.eb-annot-form button,
+.eb-annot-io button,
+.eb-annot-item__row button,
+.eb-annot-jump {
+  padding: 0.28rem 0.6rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--eb-fg);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.eb-annot-add button:hover,
+.eb-annot-form button:hover,
+.eb-annot-io button:hover,
+.eb-annot-item__row button:hover,
+.eb-annot-jump:hover {
+  border-color: var(--eb-accent);
+}
+
+/* --- the form ------------------------------------------------------------- */
+
+.eb-annot-form {
+  margin: 0.9rem 0;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-left: 3px solid var(--eb-accent);
+  border-radius: 3px;
+  background: var(--eb-surface);
+}
+
+.eb-annot-form__quote {
+  margin: 0 0 0.6rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid var(--eb-rule);
+  color: var(--eb-fg-muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  max-height: 8rem;
+  overflow: auto;
+}
+
+.eb-annot-form label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--eb-fg-muted);
+}
+
+.eb-annot-form textarea {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--eb-fg);
+  font: inherit;
+  font-size: 0.86rem;
+  resize: vertical;
+}
+
+.eb-annot-form textarea:focus-visible,
+.eb-annot-panel button:focus-visible,
+.eb-annot-panel a:focus-visible,
+.eb-annot-panel input:focus-visible {
+  outline: 2px solid var(--eb-accent);
+  outline-offset: 1px;
+}
+
+.eb-annot-form__row {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+/* --- the list ------------------------------------------------------------- */
+
+.eb-annot-list {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eb-annot-item {
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--eb-rule);
+}
+
+.eb-annot-item--empty {
+  color: var(--eb-fg-muted);
+}
+
+.eb-annot-item__where {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  color: var(--eb-fg-muted);
+}
+
+.eb-annot-item__where a {
+  color: var(--eb-accent);
+}
+
+/* An orphan is labelled, and only then also tinted. */
+.eb-annot-item__flag {
+  margin-left: 0.5rem;
+  padding: 0.03rem 0.35rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-family: var(--eb-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.eb-annot-item--orphan .eb-annot-item__flag {
+  color: #bf3989;
+}
+
+.eb-annot-item--orphan blockquote {
+  opacity: 0.75;
+}
+
+.eb-annot-item blockquote {
+  margin: 0 0 0.4rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid var(--eb-accent);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.eb-annot-item__body {
+  margin: 0 0 0.4rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.eb-annot-item__row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* --- export and import --------------------------------------------------- */
+
+.eb-annot-io {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-top: 1.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--eb-rule);
+}
+
+.eb-annot-import {
+  padding: 0.28rem 0.6rem;
+  border: 1px dashed var(--eb-surface-edge);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.eb-annot-import input {
+  display: block;
+  margin-top: 0.35rem;
+  max-width: 100%;
+  font-size: 0.78rem;
+}
+
+/* On a narrow screen the panel takes the screen, so the page underneath
+ * must not scroll behind it. */
+@media (max-width: 640px) {
+  .eb-annot-panel {
+    width: 100%;
+    border-left: 0;
+  }
+  html.eb-annot-open body {
+    overflow: hidden;
+  }
+  .eb-annot-launcher__label {
+    display: none;
+  }
+}
+
+/* Print keeps the highlights, drops the machinery. A reader who printed a
+ * chapter they had annotated should see their marks. */
+@media print {
+  .eb-annot-launcher,
+  .eb-annot-panel {
+    display: none !important;
+  }
+  article.yue mark.eb-annot {
+    background: transparent;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+  .eb-note-desc {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0 0 0 0.4em;
+    clip-path: none;
+    white-space: normal;
+    overflow: visible;
+    font-style: italic;
+    color: #444;
+  }
+}
