@@ -516,6 +516,32 @@ article.yue .eb-widget-output {
   white-space: pre-wrap;
 }
 
+/* Offered only once the sample has been changed, so it is absent from a
+   page nobody has touched and present the moment it is useful. */
+article.yue .eb-widget-reset {
+  font-family: var(--eb-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--eb-fg-muted);
+  background: none;
+  border: 1px solid var(--eb-surface-edge);
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  margin-top: 0.6rem;
+  cursor: pointer;
+}
+
+article.yue .eb-widget-reset:hover {
+  color: var(--eb-fg);
+  border-color: var(--eb-fg-muted);
+}
+
+article.yue .eb-widget-reset:focus-visible {
+  outline: 2px solid var(--eb-accent);
+  outline-offset: 2px;
+}
+
 article.yue .eb-widget-note {
   font-family: var(--eb-sans);
   font-size: 0.82rem;

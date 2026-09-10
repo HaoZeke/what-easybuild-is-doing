@@ -184,6 +184,57 @@ async function main() {
         }
       }
 
+      // Reset has to bring the sample back, and only offer itself once the
+      // reader has changed something.
+      if (kinds.includes("template")) {
+        const undo = (
+          await cmd("Runtime.evaluate", {
+            returnByValue: true,
+            awaitPromise: true,
+            expression: `(async () => {
+              const island = [...document.querySelectorAll('.eb-widget')]
+                .find(el => el.getAttribute('data-eb-widget') === 'template');
+              const ed = island.querySelector('.eb-widget-editor');
+              const btn = island.querySelector('.eb-widget-reset');
+              const before = ed.value;
+              const hiddenAtRest = btn.hidden;
+              ed.value = 'name = ' + String.fromCharCode(39) + 'broken' + String.fromCharCode(39);
+              ed.dispatchEvent(new Event('input', { bubbles: true }));
+              await new Promise(r => setTimeout(r, 500));
+              const shownAfterEdit = !btn.hidden;
+              btn.click();
+              await new Promise(r => setTimeout(r, 500));
+              return { hiddenAtRest, shownAfterEdit,
+                       restored: ed.value === before, hiddenAgain: btn.hidden };
+            })()`,
+          })
+        ).result.value;
+        if (!undo.hiddenAtRest) {
+          fail(`${page}: reset is offered on a sample nobody has touched`);
+        }
+        if (!undo.shownAfterEdit) {
+          fail(`${page}: reset stays hidden after an edit`);
+        }
+        if (!undo.restored) {
+          fail(`${page}: reset did not restore the original sample`);
+        }
+        if (!undo.hiddenAgain) {
+          fail(`${page}: reset stays visible after restoring`);
+        }
+      }
+
+      // The answer changes without being asked for, so it has to announce.
+      const announces = (
+        await cmd("Runtime.evaluate", {
+          returnByValue: true,
+          expression: `[...document.querySelectorAll('.eb-widget-output')]
+            .every(o => o.getAttribute('aria-live') === 'polite')`,
+        })
+      ).result.value;
+      if (!announces) {
+        fail(`${page}: an output is not a live region`);
+      }
+
       // Typing has to change the answer, since the prose promises it does.
       if (kinds.includes("template")) {
         const moved = (

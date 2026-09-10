@@ -265,6 +265,23 @@
 
     var output = document.createElement("pre");
     output.className = "eb-widget-output";
+    // The answer changes without the reader asking, so a screen reader has
+    // to be told. polite rather than assertive: it is an update, not an
+    // emergency, and it should not interrupt what is being read.
+    output.setAttribute("aria-live", "polite");
+    output.setAttribute("aria-atomic", "true");
+
+    // Every good implementation of this has a way back. A reader who breaks
+    // a sample to see what happens, which this book asks them to do, must be
+    // able to restore the canonical one without reloading and losing their
+    // place on the page.
+    var reset = document.createElement("button");
+    reset.className = "eb-widget-reset";
+    reset.type = "button";
+    reset.textContent = "Reset";
+    reset.title = "Restore the original sample";
+    reset.setAttribute("aria-label", "Reset this sample to its original text");
+    reset.hidden = true;
 
     function evaluate() {
       try {
@@ -286,13 +303,26 @@
       // text never lags behind the caret.
       paint();
       fit();
+      reset.hidden = editor.value === seed;
       if (pending) {
         clearTimeout(pending);
       }
+      // Long enough to fire on a pause rather than per keystroke. A shorter
+      // delay answers a half-typed line, and half a line is usually an
+      // error the reader did not ask about.
       pending = setTimeout(function () {
         pending = null;
         evaluate();
-      }, 150);
+      }, 320);
+    });
+
+    reset.addEventListener("click", function () {
+      editor.value = seed;
+      paint();
+      fit();
+      reset.hidden = true;
+      evaluate();
+      editor.focus();
     });
 
     // Ctrl-Enter for anyone who would rather ask explicitly.
@@ -308,6 +338,7 @@
     });
 
     pre.replaceWith(wrap);
+    island.appendChild(reset);
     island.appendChild(output);
 
     paint();
