@@ -298,9 +298,21 @@ read 2026-09-10:
 | 2025.06 | =foss/2024a=, =foss/2025a=, =foss/2025b= |
 | 2026.06 | under development |
 
-The live repository agrees: its root catalog has exactly three nested
-catalogs, =/versions/2023.06=, =/versions/2025.06= and
-=/versions/2026.06=, which is chapter 25's transcript.
+The live repository agrees, and says more than the table does. Its root
+catalog has exactly three nested catalogs, =/versions/2023.06=,
+=/versions/2025.06= and =/versions/2026.06=. Counting modulefiles in every
+one of the 165 =modules= catalogs under =/versions/2025.06=, on
+2026-09-10: *1079 modules across 529 packages* on each x86_64 target, and
+1071 across 526 on each aarch64 target. The same count against 2023.06
+gives 1226 modules across 670 packages, and against 2026.06 gives 137
+across 132, which is what "under development" looks like from the
+outside. The root catalog's =/init/modules/EESSI/.modulerc.lua= is
+consistent with it: it makes 2023.06 the default and *hides* 2026.06.
+
+The 165 is itself the shape of the stack: five aarch64 targets, four of
+them with five NVIDIA accelerator subdirectories each, and ten x86_64
+targets with thirteen accelerator subdirectories each. Five plus twenty
+plus a hundred and thirty.
 
 x86_64 targets: =generic=, =amd/zen2=, =amd/zen3=, =amd/zen4=,
 =amd/zen5=, =intel/haswell=, =intel/skylake_avx512=,
@@ -313,7 +325,12 @@ match still gets something.
 
 Accelerator targets are named =accel/nvidia/cc<XY>=, and the
 initialisation script downgrades a compute capability that has no build
-to the nearest lower one ending in zero.
+to the nearest lower one ending in zero. In 2025.06 the ones that exist
+are =cc70=, =cc80=, =cc90=, =cc100= and =cc120= for NVIDIA, on four
+aarch64 targets and all ten x86_64 ones, plus =gfx908=, =gfx90a=,
+=gfx942=, =gfx1030=, =gfx1100=, =gfx1101=, =gfx1200= and =gfx1201= for
+AMD, x86_64 only. Those counts come from the catalogs rather than from the
+GPU-targets page, so they are what is on the wire today.
 #+end_detail
 
 Two limits to state plainly, because a reader deciding whether to rely on

@@ -210,7 +210,14 @@ entries with flag 3.
 Three, not two. The documentation says a nested-catalog transition
 directory "appears as empty directory in the parent catalog with flags set
 to 2", and in the live catalog those entries carry 3, because bit 1,
-directory, is also set. They are exactly the three the =nested_catalogs=
+directory, is also set. The =statistics= table settles it arithmetically
+rather than by argument: in the =/versions/2025.06= catalog, =self_nested=
+is 501 and exactly 501 entries carry flags 3, while =self_dir= is 755,
+which is 501 plus the 253 entries with flags 1 plus the single entry with
+flags 33, the nested catalog's own root directory. Transition points are
+counted as directories, because they are directories.
+
+The three in the root catalog are exactly the three the =nested_catalogs=
 table names:
 
 #+begin_src ebtranscript :source "sqlite3 on the same root catalog, 2026-09-10" :caption "Where the repository is cut"
@@ -236,6 +243,46 @@ Which is also why signing the manifest is enough: the root catalog's hash
 is in the signed manifest, each nested catalog's hash is in its parent,
 and each file's hash is in the catalog that lists it. A Merkle tree, with
 one signature at the top.
+
+#+ATTR_EB: :id cvmfs-scale :title What a 26-kilobyte catalog accounts for :kind reference
+#+begin_detail
+Every catalog carries a =statistics= table covering itself and its whole
+subtree. Read out of the root catalog of =software.eessi.io= at revision
+23927, on 2026-09-10:
+
+| Counter | Value |
+|---+---|
+| =self_dir= | 19 |
+| =self_regular= | 3 |
+| =self_symlink= | 33 |
+| =self_nested= | 3 |
+| =subtree_dir= | 8,381,258 |
+| =subtree_regular= | 51,703,169 |
+| =subtree_symlink= | 3,507,752 |
+| =subtree_nested= | 40,070 |
+| =subtree_chunks= | 47,045 |
+| =subtree_file_size= | 6,808,996,874,851 |
+
+Fifty-one million files and 6.8 terabytes, accounted for by a 26-kilobyte
+database that itself lists twenty-five entries. Forty thousand nested
+catalogs is what makes that work: a client mounting the repository fetches
+this one file, and the metadata for anything it does not open costs it
+nothing.
+
+One level down, =/versions/2025.06= is a 247-kilobyte catalog with 891
+entries, of which 501 are transition points into further catalogs, and its
+own subtree accounts for 3.68 terabytes. Its =properties= table carries
+=root_prefix= =/versions/2025.06= and revision 9291, and *no* TTL row:
+the time to live lives in the root catalog only.
+
+Deeper again, for one CPU target, the split is visible in the shape of the
+two catalogs: =x86_64/amd/zen4/modules= has 3241 entries and no nested
+catalogs, because a =module avail= should not touch a thousand databases;
+=x86_64/amd/zen4/software= has 1609 entries and 1078 nested catalogs, one
+per installation directory, accounting for 114.7 gigabytes. So listing the
+modules is cheap and opening one package's files is cheap, which is the
+pair of properties a software stack needs.
+#+end_detail
 
 * The cut points are declared, and you can read the declaration
 
