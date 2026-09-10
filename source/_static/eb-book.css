@@ -572,10 +572,19 @@ article.yue .eb-transcript-caption {
   margin: 0 0 0.6rem;
 }
 
+article.yue .eb-transcript div[class^="highlight-"],
+article.yue .eb-transcript .highlight,
+article.yue .eb-widget div[class^="highlight-"] {
+  background: none;
+  border: 0;
+}
+
 article.yue .eb-transcript pre {
   font-size: 0.8rem;
   line-height: 1.5;
   margin: 0;
+  padding: 0;
+  background: none;
 }
 
 article.yue .eb-transcript-source {
@@ -604,26 +613,65 @@ article.yue table {
   line-height: 1.5;
 }
 
-article.yue table th,
-article.yue table td {
+/* Sphinx wraps a table in .table-wrapper and the theme styles through
+   that, so these selectors have to name it too or they lose on class
+   count. Rules between rows only: the theme draws verticals, an outer
+   box and a striped row as well, which is four separations doing the job
+   of one. A reader comparing along a row needs a floor, not a cage. */
+article.yue .table-wrapper,
+article.yue .table-wrapper table,
+article.yue .table-wrapper tr,
+article.yue .table-wrapper thead,
+article.yue .table-wrapper tbody {
+  border: 0;
+  background: none;
+}
+
+article.yue .table-wrapper {
+  margin-top: var(--eb-space-block);
+  margin-bottom: var(--eb-space-block);
+  overflow-x: auto;
+}
+
+article.yue .table-wrapper th,
+article.yue .table-wrapper td {
   text-align: left;
   vertical-align: top;
-  padding: 0.55rem 0.9rem 0.55rem 0;
+  padding: 0.6rem 1.2rem 0.6rem 0;
+  border: 0;
   border-bottom: 1px solid var(--eb-rule);
+  background: none;
 }
 
-article.yue table th {
+article.yue .table-wrapper th {
   font-family: var(--eb-sans);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 650;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--eb-fg-muted);
-  border-bottom-color: var(--eb-fg-muted);
+  border-bottom: 1px solid var(--eb-fg-muted);
+  background: none;
+  padding-bottom: 0.45rem;
 }
 
-article.yue table tr:last-child td {
-  border-bottom: none;
+article.yue .table-wrapper tr:last-child td {
+  border-bottom: 0;
+}
+
+/* The striped row is a third separator on top of the rule and the
+   column gap. Its selector carries a pseudo-class, so removing it needs
+   one too. */
+article.yue .table-wrapper tbody tr:nth-child(2n),
+article.yue .table-wrapper tbody tr:nth-child(odd),
+article.yue .table-wrapper tbody tr:hover {
+  background: none;
+}
+
+/* The last column carries the long text and needs no trailing gutter. */
+article.yue .table-wrapper th:last-child,
+article.yue .table-wrapper td:last-child {
+  padding-right: 0;
 }
 
 /* --- the landing page -----------------------------------------------------
