@@ -1,6 +1,14 @@
 #+TITLE: Chapter 5. A versionsuffix is part of the name
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say what a =versionsuffix= does, and what it does not.
+2. Tell a derived suffix from a hand-written one, and say why the format
+   cannot tell you which is which.
+3. Say what a module named for a version does and does not guarantee
+   about the tree under it.
+#+end_objectives
+
 Here is a module name from a real cluster:
 
 #+begin_example
@@ -65,6 +73,39 @@ to whoever depends on it. =NVHPC-25.11-CUDA-12.9.1= and
 =NVHPC-25.11-CUDA-12.8.0= are two unrelated toolchains as far as the
 hierarchy walk is concerned, in the same way that =foss-2025a= and
 =foss-2024a= are.
+
+#+ATTR_EB: :id EB-Suffix-1 :title Are these the same toolchain
+#+begin_exercise
+Four module names:
+
+: NVHPC/25.11-CUDA-12.9.1
+: NVHPC/25.11-CUDA-12.8.0
+: NVHPC/25.11
+: VASP6/6.5.1-NVHPC-25.11-CUDA-12.9.1-ACC
+
+1. A package declares =toolchain = {'name': 'NVHPC', 'version': '25.11-CUDA-12.9.1'}=.
+   Which of the first three satisfies it?
+2. To the hierarchy walk of chapter 2, how many distinct toolchains do
+   the first three names represent?
+3. In the fourth name, which part is derived from a dependency and which
+   is a label somebody typed?
+
+#+begin_solution
+Only the first. The toolchain's version is the whole string
+=25.11-CUDA-12.9.1=, suffix folded in, and a version match is exact.
+
+Three. The suffix is not a modifier the walk looks through; it is part of
+the key. =25.11-CUDA-12.9.1= and =25.11-CUDA-12.8.0= are as unrelated to
+each other as =foss-2025a= and =foss-2024a=, and =25.11= on its own is a
+third thing again.
+
+In the fourth, =-CUDA-12.9.1= belongs to the toolchain and was derived
+from its CUDA dependency through =%(cudaver)s=. =-ACC= is VASP6's own
+=versionsuffix= and names a build variant: the OpenACC target rather than
+the CPU one. Nothing derives it, and nothing in the format marks the
+difference between the two.
+#+end_solution
+#+end_exercise
 
 * The same syntax carries two unrelated meanings
 

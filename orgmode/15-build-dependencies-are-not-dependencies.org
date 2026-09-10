@@ -1,0 +1,166 @@
+#+TITLE: Chapter 15. Build dependencies are not dependencies
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Say which list a given dependency belongs in.
+2. Say what each list does to the generated module.
+3. Recognise both directions of getting it wrong from the symptom.
+#+end_objectives
+
+Two lists, almost the same syntax, and the difference decides what a
+user gets when they load your module.
+
+#+begin_src easyconfig :widget parse
+name = 'QMCPACK'
+version = '4.4.0'
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+builddependencies = [
+    ('CMake', '3.31.3'),
+    ('Ninja', '1.12.1'),
+    ('pkgconf', '2.3.0'),
+]
+
+dependencies = [
+    ('Boost', '1.88.0'),
+    ('HDF5', '1.14.6'),
+    ('Python', '3.13.1'),
+    ('libxml2', '2.13.4'),
+]
+#+end_src
+
+Both lists are loaded during =prepare=, so both are on the path while the
+compiler runs. Reading the easyconfig, they look interchangeable.
+
+They are not, and the modulefile is where you can see it.
+
+* The module is the difference
+
+That easyconfig is real, and so is what it produced:
+
+#+begin_src ebtranscript :source "SURF Snellius, generated modulefile, 2026-09-10, EasyBuild 5.3.1" :caption "Seven dependencies went in; four came out"
+$ sed -n '/^depends_on/p' \
+>   /sw/arch/.../modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua
+depends_on("foss/2025a")
+depends_on("Boost/1.88.0-GCC-14.2.0")
+depends_on("HDF5/1.14.6-gompi-2025a")
+depends_on("Python/3.13.1-GCCcore-14.2.0")
+depends_on("libxml2/2.13.4-GCCcore-14.2.0")
+#+end_src
+
+The toolchain and the four =dependencies=. CMake, Ninja and pkgconf are
+not there, and they are not there on purpose.
+
+That is the whole rule: *=dependencies= go into the module, and
+=builddependencies= do not.*
+
+Which makes the question you have to ask about each entry a runtime
+question rather than a build question. Not "does the build need it",
+because the build needs all seven. The question is: *when a user runs
+this software, does the software still need it?*
+
+QMCPACK needs HDF5 at run time, because it opens HDF5 files. It does not
+need CMake, because CMake produced a Makefile months ago and the compiled
+binary has never heard of it.
+
+* Getting it wrong in each direction
+
+The two mistakes fail differently, and neither error message names the
+list.
+
+*A runtime dependency in =builddependencies=.* The build succeeds, the
+sanity check may well pass, and the module is missing a =depends_on=. A
+user loads it and the binary cannot find a shared library, or finds a
+different version of it that happened to be loaded. The failure is at run
+time, for someone else, and it looks like
+[[file:06-what-installed-means.org][chapter 6]]'s third check catching
+something, if anyone is running that check.
+
+*A build tool in =dependencies=.* Everything works, which is why this is
+the mistake that never announces itself. It costs in two ways.
+
+Every user of your module now loads CMake whether they need it or not.
+That is how somebody ends up with a CMake older than the one they
+installed themselves, and no idea where it came from.
+
+And it constrains the module. Anything that conflicts with that CMake now
+conflicts with your package, for no reason.
+
+Neither is caught by a build. Both are caught by asking the runtime
+question about every entry once.
+
+* The awkward cases
+
+Three where the answer is not obvious.
+
+*Python*, in the sample above, is in =dependencies= rather than
+=builddependencies=, because QMCPACK installs Python tools a user runs. A
+package that merely uses Python to generate a header at build time would
+put it in =builddependencies=. The same package name goes in a different
+list depending on what survives into the install.
+
+*A header-only library*, Boost being the common example. Nothing links
+against it, so a strict reading says build-time. It is in =dependencies=
+here for two reasons. Parts of Boost are not header-only. And being wrong
+in this direction costs a needless module load, where being wrong in the
+other direction is a runtime failure.
+
+*A code generator whose output is compiled in.* Build-time, always. The
+generated code is in your binary; the generator is not.
+
+When you cannot decide, the tie-break is =ldd= on the installed binaries
+and =grep= through the installed scripts. If nothing in the install
+mentions it, it is a build dependency.
+
+* And the hierarchy still applies
+
+One more constraint, from
+[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]. Look at the
+versions in that modulefile: =Boost/1.88.0-GCC-14.2.0=,
+=HDF5/1.14.6-gompi-2025a=, =Python/3.13.1-GCCcore-14.2.0=. Three
+different toolchains, all members of =foss-2025a='s hierarchy, none of
+them =foss= itself.
+
+The easyconfig named only =('Boost', '1.88.0')=. The robot resolved each
+to whichever hierarchy member actually provides it, which is why a
+dependency list is short and a modulefile is specific. Both lists resolve
+this way, so a build dependency answers to the same hierarchy rule and
+fails to resolve in the same circumstances.
+
+#+ATTR_EB: :id EB-Builddeps-1 :title Which list, and how would you check
+#+begin_exercise
+You are writing an easyconfig for a C++ application. It needs:
+
+1. CMake, to configure.
+2. Catch2, a header-only test framework, used only by its test suite.
+3. HDF5, which it links against.
+4. Python, which its build uses to generate a lookup table, and which it
+   also installs three analysis scripts for.
+5. =pkgconf=, so CMake can find things.
+
+Put each in a list. Then say what single command on the finished install
+would confirm you got HDF5 right, and what would confirm Python.
+
+#+begin_solution
+=builddependencies=: CMake, Catch2, pkgconf. Catch2 because the tests run
+during the build and are not installed; if the easyconfig installed the
+test binary for users to run, the answer would change.
+
+=dependencies=: HDF5, Python. Python is in both roles and the runtime one
+wins, because those three analysis scripts need an interpreter after the
+build is long gone.
+
+For HDF5: =ldd= on the installed binaries, looking for
+=libhdf5.so=. If the binary links it, the module must declare it.
+
+For Python: read the installed scripts. A =#!= line naming an interpreter,
+or an =import= of anything, means the install needs Python at run time.
+If the only Python in the whole install was a build-time generator whose
+output is a compiled-in table, it would be a build dependency.
+
+Both checks look at the install rather than the easyconfig, which is the
+point: the lists are a claim about the finished thing, and the finished
+thing can be asked.
+#+end_solution
+#+end_exercise

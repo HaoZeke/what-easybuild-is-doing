@@ -1,0 +1,135 @@
+/* Lesson blocks.
+ *
+ * Three blocks and one index, styled so a reader can tell them apart at a
+ * glance and so none of them competes with a live sample for attention.
+ * The sample is the only thing on a page carrying the accent; these carry
+ * a rule and a label, which is the every-layout treatment: mark the edge,
+ * do not fill the box.
+ */
+
+article.yue .eb-objectives,
+article.yue .eb-exercise {
+  border-left: 3px solid var(--eb-rule);
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  margin-top: var(--eb-space-block);
+  margin-bottom: var(--eb-space-block);
+}
+
+article.yue .eb-objectives-label,
+article.yue .eb-exercise-label {
+  font-family: var(--eb-sans);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--eb-fg-muted);
+  margin: 0 0 0.5rem;
+}
+
+/* An exercise is a thing to do, so its edge is stated more firmly than an
+   objective's, which is a thing to know. */
+article.yue .eb-exercise {
+  border-left-color: var(--eb-fg-muted);
+}
+
+article.yue .eb-objectives > *:last-child,
+article.yue .eb-exercise > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Objectives are a short list and read better tight than spaced. */
+article.yue .eb-objectives ol,
+article.yue .eb-objectives ul {
+  margin-top: 0;
+}
+
+article.yue .eb-objectives li + li {
+  margin-top: 0.25rem;
+}
+
+/* A real <details>: it opens with no JavaScript, the browser's own find
+   searches inside it, and the print stylesheet can force it open. */
+article.yue .eb-solution {
+  margin-top: var(--eb-space);
+}
+
+article.yue .eb-solution-summary {
+  font-family: var(--eb-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--eb-fg-muted);
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0;
+}
+
+article.yue .eb-solution-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A disclosure triangle drawn rather than borrowed, so it points the same
+   way in every browser. */
+article.yue .eb-solution-summary::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform 0.12s ease-in-out;
+}
+
+article.yue .eb-solution[open] > .eb-solution-summary::before {
+  transform: rotate(90deg);
+}
+
+article.yue .eb-solution-summary:hover {
+  color: var(--eb-fg);
+}
+
+article.yue .eb-solution-summary:focus-visible {
+  outline: 2px solid var(--eb-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+article.yue .eb-solution-body {
+  margin-top: var(--eb-space);
+  padding-left: 1.1rem;
+  border-left: 1px solid var(--eb-rule);
+}
+
+article.yue .eb-solution-body > *:first-child {
+  margin-top: 0;
+}
+
+/* The index of every exercise in the book. */
+article.yue .eb-exercise-index-chapter {
+  font-family: var(--eb-sans);
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--eb-fg-muted);
+  margin-top: var(--eb-space-block);
+  margin-bottom: 0.4rem;
+}
+
+article.yue .eb-exercise-index ul {
+  margin-top: 0.3rem;
+}
+
+/* A solution the reader asked to see should still be there on paper. */
+@media print {
+  article.yue .eb-solution {
+    display: block;
+  }
+
+  article.yue .eb-solution-body {
+    display: block !important;
+  }
+}

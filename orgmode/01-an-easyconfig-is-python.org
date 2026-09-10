@@ -1,6 +1,15 @@
 #+TITLE: Chapter 1. An easyconfig is Python
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say why =SYSTEM= carries no quotes and ='tools'= does.
+2. Predict the easyblock class EasyBuild will look for, from a software
+   name alone, and read one backwards to the name.
+3. Say what an easyconfig with no =easyblock= line is claiming.
+4. Read an EasyBuild error for the assumption behind it rather than the
+   state it reports.
+#+end_objectives
+
 Here is a complete, real easyconfig. It installs a browser-based VS
 Code onto a supercomputer, and it is twenty lines long.
 
@@ -134,6 +143,31 @@ is broken rather than mechanical.
 Surprising exactly once, and then it explains a whole category of "why is
 my easyblock not being found".
 
+#+ATTR_EB: :id EB-Python-1 :title Read a class name backwards
+#+begin_exercise
+A traceback names a class you have never seen:
+
+: EB_Python_minus_bundle_minus_PyPI
+
+1. What software is it?
+2. Two different packages are called =a-b= and =a_minus_b=. Work out
+   both class names. Does the encoding keep them apart?
+
+Use the sample above for the second one rather than doing it in your
+head.
+
+#+begin_solution
+=Python-bundle-PyPI=. Each =_minus_= is a hyphen, and nothing else in the
+name was transformed.
+
+=a-b= gives =EB_a_minus_b=. =a_minus_b= gives
+=EB_a_underscore_minus_underscore_b=, because the underscores are encoded
+too. So they stay apart, and that is the entire reason the underscore is
+not left alone: without encoding it, both names would collide on
+=EB_a_minus_b= and one package would silently get the other's easyblock.
+#+end_solution
+#+end_exercise
+
 For =code-server= the class exists, and it does three things worth
 knowing:
 
@@ -239,6 +273,33 @@ sat one level down inside =qmcpack/=. A release tarball unpacks to
 =qmcpack-4.4.0/= with the sources at the top. The line was
 right about the old source and wrong about the new one. The change from
 one to the other says nothing about =start_dir= at all.
+
+#+ATTR_EB: :id EB-Python-2 :title The smallest change that fixes it
+#+begin_exercise
+The recipe above fails with:
+
+: Specified start dir /tmp/.../qmcpack-4.4.0/qmcpack does not exist
+
+You have the released tarball, and =tar tzf= on it shows every path
+beginning =qmcpack-4.4.0/=.
+
+What is the smallest change to the easyconfig that fixes this, and what
+would you have to check before making it?
+
+#+begin_solution
+Delete the =start_dir= line.
+
+=start_dir= is relative to the unpacked source directory. The tarball
+already puts the sources at the top of =qmcpack-4.4.0/=, which is where
+EasyBuild starts by default, so the parameter has nothing left to say.
+
+What to check first: that no other parameter assumes the old layout.
+Patch strip levels and any path naming a subdirectory were written
+against a git checkout archived under the repository's name, and they
+are quiet in exactly the same way. A diff against the previous recipe
+will report them unchanged, which is the wrong question.
+#+end_solution
+#+end_exercise
 
 Two things worth taking from that, and neither is about QMCPACK.
 

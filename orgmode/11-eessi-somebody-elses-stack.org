@@ -1,6 +1,14 @@
 #+TITLE: Chapter 11. EESSI, somebody else's stack
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Initialise EESSI and install on top of it into a prefix you own.
+2. Decide whether your toolchain generation is available before planning
+   anything.
+3. Say what a green build on your own host establishes about the other
+   CPU targets.
+#+end_objectives
+
 Chapter 10 installed software into a directory you own, on top of what
 your site already provides. This chapter does the same thing on top of a
 stack nobody at your site built.
@@ -110,6 +118,35 @@ result:
 Set exactly one, and set it *before* loading the module. =EESSI-extend=
 reads the variable at load time, so setting it afterwards changes
 nothing and the failure looks like the module ignoring you.
+
+#+ATTR_EB: :id EB-EESSI-1 :title Every dependency says SKIPPED
+#+begin_exercise
+You have set one prefix variable, loaded =EESSI-extend=, and run a plan
+for an easyconfig on =foss-2025b=. Every dependency comes back
+=[SKIPPED]=, and the run opens by fetching a couple of hundred megabytes
+of GCC.
+
+1. What has happened?
+2. You could let it run. Give two reasons not to.
+3. What is the honest thing to report, and to whom?
+
+#+begin_solution
+The compatibility layer for that EESSI version does not carry your
+toolchain generation. Nothing above the compiler exists to be reused, so
+the plan is to build the generation itself, starting with the compiler.
+
+Two reasons not to. It duplicates work the EESSI build bots do centrally
+for every supported CPU target, where yours would cover one. And what you
+end up with is a whole generation inside a user prefix that nobody else
+can use and that you now maintain.
+
+The honest report is a generation gap: this recipe needs =foss-2025b=,
+this EESSI version's layer stops short of it, so the ceiling here is a
+build on an ordinary target rather than an EESSI-verified one. That goes
+to whoever asked for the software, and the software-layer entry waits for
+an EESSI version whose layer carries the generation.
+#+end_solution
+#+end_exercise
 
 * When the filesystem client is the problem
 

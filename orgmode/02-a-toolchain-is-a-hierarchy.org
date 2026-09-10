@@ -1,6 +1,14 @@
 #+TITLE: Chapter 2. A toolchain is a hierarchy
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say what a toolchain names, and why it is not a label.
+2. Given a package's toolchain, say which other toolchains its
+   dependencies may have been built with.
+3. Recognise a =_verify_toolchain= failure as belonging to the toolchain
+   module rather than to your easyconfig.
+#+end_objectives
+
 The easyconfig in [[file:01-an-easyconfig-is-python.org][chapter 1]] had one line we did not touch:
 
 #+begin_src easyconfig :widget parse :hydrate load
@@ -86,6 +94,37 @@ Note the asterisks. =GCCcore= is *optional*. A toolchain class carries
 an =OPTIONAL= attribute, and an optional level counts only when it is
 present. So "the hierarchy of =foss-2025a=" is not a property of the
 string =foss-2025a=; it is a property of what is installed.
+
+#+ATTR_EB: :id EB-Toolchain-1 :title What may this package depend on
+#+begin_exercise
+Ask the sample above for =foss-2025a= and read the members back.
+
+Now suppose you are writing an easyconfig whose toolchain is
+=GCCcore-14.2.0=.
+
+1. Which of the members it printed could your dependencies have been
+   built with?
+2. Which could they not?
+3. A colleague says "but the =foss= module is right there, I can see it
+   in =module avail=". What has gone wrong with that reasoning?
+
+#+begin_solution
+Your package is on =GCCcore=, so its hierarchy is =system= then
+=GCCcore-14.2.0=, and nothing above. A dependency built with =GCC=,
+=gompi=, =gfbf= or =foss= is not a candidate.
+
+The direction is the thing people invert. A =foss= package may depend on
+a =GCCcore= build, because =GCCcore= is in the =foss= hierarchy. A
+=GCCcore= package may not depend on a =foss= build, because =foss= is not
+in the =GCCcore= one.
+
+Your colleague is reading =module avail=, which lists what is installed.
+The robot is asking a different question: what is installed *and in this
+package's hierarchy*. The module is there and it is not a candidate, so
+the error says it cannot be found. Nothing is lying, and the two
+questions are not the same one.
+#+end_solution
+#+end_exercise
 
 * The system toolchain is not always in it
 

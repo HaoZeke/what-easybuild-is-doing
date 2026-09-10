@@ -1,6 +1,13 @@
 #+TITLE: Chapter 6. What "installed" means
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Name the three checks EasyBuild can run, and say what a pass of each
+   establishes.
+2. Say which of them a given package actually has.
+3. Say what a green build describes, and what it does not.
+#+end_objectives
+
 A build that reaches the end prints one line and writes one file. The
 line says the install succeeded. The file is a modulefile, and it is
 the only part of all this that a user ever meets.
@@ -126,6 +133,42 @@ verified was the one that was already correct.
 The lesson generalises past architectures. "It works" is incomplete
 until it says where, and on a heterogeneous cluster the where is not a
 detail. Verify on the node type that failed.
+
+#+ATTR_EB: :id EB-Installed-1 :title What has this green build established
+#+begin_exercise
+Three packages install without error on a cluster with two processor
+architectures. Their easyconfigs differ:
+
+- =alpha= declares =sanity_check_paths= naming three binaries, and
+  nothing else.
+- =beta= declares the same, plus =sanity_check_commands= running
+  =beta --version=.
+- =gamma= declares the same as =beta=, and its build had
+  =skipsteps = ['sanitycheck']=.
+
+For each, say what the green build establishes. Then say what none of
+the three establishes.
+
+#+begin_solution
+=alpha=: three paths exist, on one of the two architectures. Not that
+they are executable, not that they are the right version, not that they
+can start. A zero-byte file would have passed.
+
+=beta=: the same, plus one command ran and returned. That is genuinely
+stronger, and it is still bounded by what =--version= touches, which is
+usually argument parsing and a string.
+
+=gamma=: that the files were copied. Nothing else. =skipsteps= removed
+the step that would have decided whether the install counted, so the
+green means the build reached the end rather than that anything was
+verified.
+
+None of the three establishes anything about the other architecture. The
+install tree is separate per architecture, and a check runs where the
+build ran. On a heterogeneous cluster "it works" is incomplete until it
+says where, and the node to verify on is the one that failed.
+#+end_solution
+#+end_exercise
 
 * And how you check matters as much as where
 

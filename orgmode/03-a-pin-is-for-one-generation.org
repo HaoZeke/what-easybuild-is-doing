@@ -1,6 +1,14 @@
 #+TITLE: Chapter 3. A pin is for one generation
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say what a version beside a dependency claims, and what it does not.
+2. Say why that claim stops holding the moment the easyconfig moves to
+   another generation.
+3. Find the real lower bound when there is one, and say where you found
+   it.
+#+end_objectives
+
 This is the chapter I would keep if I had to throw the rest away.
 
 Here is a dependency list:
@@ -121,6 +129,45 @@ and a different claim.
 
 If you retarget an easyconfig and you care whether it is right, say in the
 commit message which of the two your bound came from.
+
+#+ATTR_EB: :id EB-Pin-1 :title Two numbers, two different claims
+#+begin_exercise
+You are moving an easyconfig from =foss-2025a= to =foss-2024a=. It pins
+two dependencies:
+
+: ('HDF5', '1.14.6'),
+: ('netCDF', '4.9.3'),
+
+=foss-2024a= carries HDF5 1.14.3 and netCDF 4.9.2. You change both
+numbers and the build passes.
+
+1. What have you established?
+2. What have you not?
+3. Where would you look to find out whether HDF5 1.14.3 is actually
+   enough for this package, and what would count as an answer?
+
+#+begin_solution
+You have established that the package builds against those two versions,
+on that machine, on that day. That is a data point and it is worth
+having.
+
+You have not established that 1.14.3 satisfies what the software needs. A
+passing build is consistent with the requirement being 1.10. It is
+equally consistent with the requirement being 1.14.3 and you having been
+lucky about which symbols the build exercised.
+
+The real bound is in the project's own build system, or in a packaging
+format that can express a condition. =find_package(HDF5 1.10 REQUIRED)=
+in CMake is an answer. A =requires-python= or a dependency specifier in
+=pyproject.toml= is an answer. A conda-forge recipe or a Spack
+=package.py= is an answer, because both formats have somewhere to put a
+constraint.
+
+"The older generation carried an older one and the build passed" is not
+an answer to that question, though it answers a different one perfectly
+well.
+#+end_solution
+#+end_exercise
 
 * A worked case, because the abstraction is slippery
 

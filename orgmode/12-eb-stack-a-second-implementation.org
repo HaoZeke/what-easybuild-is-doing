@@ -1,6 +1,13 @@
 #+TITLE: Chapter 12. eb-stack, a second implementation
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say which two questions the easyconfig format cannot answer.
+2. State the trade between resolving by a loop and deciding by a solver.
+3. Given a piece of evidence, say which claim it establishes and which it
+   does not.
+#+end_objectives
+
 Chapter 10 ended on an observation. Everything it asked of you was
 lining up three lists by hand: where EasyBuild looks, where it writes,
 and what the module system already provides. A tool could compute that.
@@ -107,12 +114,46 @@ Nothing in that table is specific to eb-stack. It is what every "it
 works" in this book reduces to, including the two in chapter 6 that
 were mine and wrong.
 
+#+ATTR_EB: :id EB-Ladder-1 :title Which rung does this reach
+#+begin_exercise
+Four things happened, in order. For each, say the highest rung it
+establishes, and for which target.
+
+1. A solver returns a lock in which every declared constraint is
+   satisfied.
+2. =eb= runs to completion on an x86-64 build host and writes a module.
+3. The installed tree passes its declared verification on that host.
+4. The same easyconfig is built by the EESSI bot on fourteen CPU targets
+   and deployed.
+
+Then: which of the four lets you tell a user on an aarch64 login node
+that the software works there?
+
+#+begin_solution
+1 reaches =resolves=, and no further. A lock says the versions are
+mutually consistent against the constraints you declared. It says nothing
+about whether they link.
+
+2 reaches =builds=, for that target only.
+
+3 reaches =binary-verified=, for that target only.
+
+4 reaches =eessi-verified=, and it is the only one of the four covering
+targets you did not run on yourself, because the bot ran on each of them.
+
+None of 1, 2 or 3 lets you tell the aarch64 user anything. That is what
+writing the rungs down is for: each is reached by its own evidence, and a
+build on one target does not establish another. 4 does, because the
+evidence is fourteen builds rather than an inference from one.
+#+end_solution
+#+end_exercise
+
 * What it does not do
 
 A tool described only by its intentions is a brochure, so here is the
 other half.
 
-It does not build software. Chapter 13's list of what EasyBuild is for
+It does not build software. The afterword's list of what EasyBuild is for
 still applies, and eb-stack sits before the build rather than replacing
 it.
 

@@ -10,13 +10,13 @@ afterwards.
 you are about to. You do not need EasyBuild, a cluster, an account, or
 Python, and you will not need them here.
 
-*What you will be able to do at the end.*
-
+#+begin_objectives
 1. Say what an easyconfig means, as against what it says.
 2. Predict which file EasyBuild will download from a version number.
 3. Name the easyblock EasyBuild will look for, for any software name.
 4. Say which dependencies a toolchain lets a package see.
 5. Recognise the four mistakes that cost the most time.
+#+end_objectives
 
 * Before you start
 
@@ -197,7 +197,7 @@ Pick by what you are doing.
 | told a module exists but cannot load it | [[file:04-the-robot.org][chapter 4]], on the three lists, and [[file:06-what-installed-means.org][chapter 6]] |
 | installing something with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
 | doing that on a machine with no stack | [[file:11-eessi-somebody-elses-stack.org][chapter 11]], on EESSI |
-| deciding whether to use EasyBuild at all | [[file:13-when-easybuild-is-the-wrong-tool.org][chapter 13]] |
+| deciding whether to use EasyBuild at all | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
 
 If you would rather read straight through, [[file:01-an-easyconfig-is-python.org][chapter 1]] is next, and it starts
 with the sample from step 1.

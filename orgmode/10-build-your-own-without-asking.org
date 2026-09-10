@@ -1,6 +1,14 @@
 #+TITLE: Chapter 10. Build your own, without asking anyone
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Install software into a directory you own, on a machine where you are
+   not an administrator.
+2. Read =--show-config= and say where each value came from.
+3. Name the three lists involved, and say which one your prefix does not
+   touch.
+#+end_objectives
+
 Every chapter so far read easyconfigs somebody else installed. This one
 installs one, into a directory you own, on a machine where you are not
 an administrator.
@@ -124,13 +132,43 @@ If the site has no EasyBuild module, install one into a virtual
 environment and use that instead. It is a Python package, and the
 prefix and robot path work the same way afterwards.
 
+#+ATTR_EB: :id EB-Own-1 :title It built, and it will not load
+#+begin_exercise
+You set =EASYBUILD_PREFIX=$HOME/eb=, ran a build, and it finished. The
+tree is on disk under =$HOME/eb/software=. =module avail= does not list
+it.
+
+1. Which of the three lists is wrong, and why is it not either of the
+   other two?
+2. What is the one command that fixes it?
+3. A colleague hits the opposite problem: their build takes all night and
+   rebuilds forty things the site already has. Which list is wrong for
+   them?
+
+#+begin_solution
+=MODULEPATH=. The robot path was fine, because the build found every
+easyconfig it needed. The prefix was fine, because the software is on
+disk where you asked for it. Nothing is broken. You have not told the
+module system to look in your prefix.
+
+=module use $EASYBUILD_PREFIX/modules/all=.
+
+Your colleague has the same list wrong in the other direction. Something
+has dropped the site's module tree from =MODULEPATH=, so nothing counts
+as already built and the whole closure becomes theirs to compile.
+Chapter 4 restated: the robot path decides what can be found, and
+=MODULEPATH= decides what counts as already there. This is the one
+EasyBuild does not set for you.
+#+end_solution
+#+end_exercise
+
 * What this costs
 
 Disk. Software plus sources plus build directories under one prefix, in
 a home directory with a quota. Point =sourcepath= at a shared download
 cache if the site has one, and clean the build directory.
 
-Time. From-source is [[file:13-when-easybuild-is-the-wrong-tool.org][chapter 13]]'s trade, and it does not get cheaper
+Time. From-source is [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]]'s trade, and it does not get cheaper
 because you are the one waiting.
 
 Duplication, if you get =MODULEPATH= wrong. Drop the site's modules and

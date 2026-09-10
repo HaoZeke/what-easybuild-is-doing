@@ -1,0 +1,15 @@
+#+TITLE: Every exercise in this book
+#+OPTIONS: toc:nil num:nil
+
+Each chapter carries one or two, placed where the chapter has just taught
+the thing they test. This page lists them all, in reading order. A taught
+session can take a subset, and a reader working alone can find the one
+they wanted.
+
+Each has an id, and the id is stable across edits. So it is safe to refer
+to one out loud, in a message, or in a shared document during a
+workshop.
+
+#+begin_export rst
+.. exercise-index::
+#+end_export

@@ -27,6 +27,7 @@ extensions = [
     "sphinx_design",
     "eb_widget",
     "eb_transcript",
+    "eb_lesson",
 ]
 
 templates_path = ["_templates"]

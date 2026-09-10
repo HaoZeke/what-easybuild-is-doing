@@ -1,6 +1,14 @@
 #+TITLE: Chapter 7. A checksum is a claim about bytes
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Read a =checksums= block, including the case where one entry is a
+   dictionary, and say why it is one.
+2. Say what a verified checksum establishes and what it leaves open.
+3. Say which parameters break loudly on a version bump and which break
+   quietly.
+#+end_objectives
+
 Chapter 1's easyconfig spends more lines on where the sources come
 from than on anything else. Here is that part again, on its own:
 
@@ -72,6 +80,38 @@ The archive did not contain the directory the build expected.
 
 Both true at once. Verification passed, at full strength, over exactly
 the right bytes, and the build then failed on =start_dir=.
+
+#+ATTR_EB: :id EB-Checksum-1 :title One architecture, one missing key
+#+begin_exercise
+A site adds aarch64 support to the code-server easyconfig. The build
+passes on every x86-64 worker and fails on the aarch64 one, before
+anything is compiled.
+
+The =sources= line is unchanged. The =checksums= block still carries the
+two entries from the chapter's sample.
+
+1. What is the failure, precisely?
+2. Why did no x86-64 build catch it?
+3. What is the smallest change that fixes it, and what would you need in
+   order to make that change?
+
+#+begin_solution
+The dictionary has no key for the filename that architecture produces.
+=%(mapped_arch)s= resolved to something the block does not mention, so
+the lookup found nothing to verify against.
+
+No x86-64 build could catch it, because on x86-64 the template resolves
+to =amd64= and that key is present. The dictionary is keyed by resolved
+filename rather than by architecture, and it says nothing at all about
+the filenames it omits. A per-architecture gap is invisible on every
+architecture except the one with the gap.
+
+The fix is one more entry in the dictionary. To make it you need the
+actual checksum of the actual archive for that architecture, which means
+fetching it, which is the point: you cannot derive it from the others,
+and copying a value from anywhere else would verify the wrong file.
+#+end_solution
+#+end_exercise
 
 * Which is why a source change is the dangerous kind
 

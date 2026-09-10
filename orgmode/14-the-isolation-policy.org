@@ -1,0 +1,166 @@
+#+TITLE: Chapter 14. What a build is allowed to see
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Say what environment a build runs in, and what EasyBuild removes from
+   it.
+2. Say why a build that works in your shell can fail in a job, and the
+   other way round.
+3. Name what EasyBuild does not isolate, and what that means for
+   reproducibility.
+#+end_objectives
+
+A build that works for you and fails for the desk is the most common
+support case in this subject. Nearly every instance is one question. What
+could your shell see that the build could not, or the reverse.
+
+So it is worth knowing exactly what a build is allowed to see. The
+answer is a policy, it is deliberate, and it has holes that are also
+deliberate.
+
+* The environment is constructed, not inherited
+
+EasyBuild does not build in your shell's environment. During =prepare=,
+it unloads what was loaded, loads the toolchain module and the dependency
+modules from
+[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s hierarchy, and
+sets the compiler variables itself.
+
+The last part surprises people, so here it is measured rather than
+asserted:
+
+#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, 2025 module environment" :caption "What a toolchain module does and does not export"
+$ module purge && module load 2025 foss/2025a
+$ echo "CC=[$CC] CFLAGS=[$CFLAGS] LIBBLAS=[$LIBBLAS]"
+CC=[] CFLAGS=[] LIBBLAS=[]
+
+$ echo "EBROOTFOSS=[$EBROOTFOSS]"
+EBROOTFOSS=[/sw/arch/RHEL9/EB_production/2025/software/foss/2025a]
+#+end_src
+
+Loading a toolchain gives you =EBROOT= and =EBVERSION= and nothing else.
+It does *not* give you =$CC=, =$CXX=, =$CFLAGS=, =$LIBBLAS= or
+=$LIBSCALAPACK=.
+
+Those exist only inside a build, where EasyBuild's toolchain object sets
+them from the toolchain class and from =toolchainopts=. That is
+chapter 16's subject, and the
+consequence for this chapter is the important half: *you cannot reproduce
+a build's environment by loading its toolchain*. Anyone who has tried to debug a compile by loading =foss= and running
+the failing command by hand has met this. Few of them found out why the
+command behaved differently.
+
+Chapter 24 is how to get that
+environment for real.
+
+* What gets removed, and why
+
+Two mechanisms.
+
+=module purge= at the start means an inherited module set does not leak
+in. A build that used a module you happened to have loaded, without
+saying so, is a build nobody else can reproduce. The failure surfaces
+months later, on a machine where that module is absent. EasyBuild refuses
+the whole class of problem by starting from nothing.
+
+=--filter-env-vars= removes named variables from the build environment. A
+site sets it for the variables that break builds when inherited.
+=LD_LIBRARY_PATH= is the common one: a path in it overrides what the
+toolchain provides, with no message, and the build links against
+something nobody declared.
+
+There is an escape hatch, =--allow-loaded-modules=, which names modules
+that may remain loaded. It exists because some sites have a module that
+must always be there. It is also the first thing to check when a build is
+reproducible for one person and not another.
+
+* Which is why RPATH matters
+
+If the build environment is constructed, the *runtime* environment is
+not. A user loads your module in whatever shell they have.
+
+So a binary that finds its libraries through =LD_LIBRARY_PATH= at build
+time may not find them at run time.
+[[file:06-what-installed-means.org][Chapter 6]] is about how that failure
+reaches a user.
+
+EasyBuild's answer is RPATH linking, on by default in recent versions:
+the path to each library is recorded in the binary itself. The module
+still sets =LD_LIBRARY_PATH=, because plenty of software needs it, but
+the binary does not depend on it having been set correctly.
+
+Chapter 19 opens a real modulefile, which both prepends
+=LD_LIBRARY_PATH= and belongs to a tree whose binaries carry their own
+RPATH.
+
+* What is not isolated
+
+The word "reproducible" gets used loosely, so this is the part to be
+precise about.
+
+*The kernel and the C library.* A build links against the system glibc.
+Two machines with different glibc versions can produce binaries that are
+not interchangeable, and nothing in an easyconfig records which one you
+had.
+
+*The driver.* A GPU build links against a library belonging to the
+driver rather than to the toolchain. That is why =libcuda.so.1= is exempt
+from the sanity check by default. It is absent on a node without a GPU
+and present on one with, and no build can carry it.
+
+*The filesystem and its layout.* An easyconfig that hardcodes a path
+outside its own install directory is describing one machine.
+
+*The CPU.* =optarch= is on by default, so the compiler is told to
+optimise for the machine it is running on. A binary built on one
+microarchitecture may not run on another. That is why a site with mixed
+hardware keeps separate install trees, and why
+[[file:06-what-installed-means.org][chapter 6]]'s per-architecture lesson
+exists at all.
+
+*Anything declared as a system dependency.* =osdependencies= names
+packages EasyBuild expects the operating system to provide and will not
+build. It is the deliberate hole. Some things do belong to the
+distribution, and listing them says so instead of pretending to control
+them.
+
+So what EasyBuild isolates is the software it built and the environment
+it built in. What it does not isolate is the machine. A stack is
+reproducible against a fixed operating system and processor. Chapter 26
+is about what to do when those are not fixed either.
+
+#+ATTR_EB: :id EB-Isolation-1 :title Works for me, fails for the desk
+#+begin_exercise
+A user reports that their package builds fine in their own prefix and
+fails for the desk on the same cluster, in the same generation, from the
+same easyconfig. The error is a missing header from a library that is
+not in =dependencies=.
+
+1. What is the most likely difference, and which mechanism from this
+   chapter is involved?
+2. Whose build is wrong, and why is it the one that succeeded?
+3. What is the fix, and what is the wrong fix that would make the
+   symptom go away?
+
+#+begin_solution
+The user has something loaded that the desk does not, or has a path in
+an environment variable the desk's build filters out. Their build found
+the header through the ambient environment rather than through a declared
+dependency.
+
+The build that succeeded is the wrong one. It depends on something the
+easyconfig does not state, so it is not reproducible: it works in that
+shell, on that day, and will fail for the next person and for the same
+person after a system change. The desk's failure is the correct
+behaviour, and it is the whole reason =module purge= is there.
+
+The fix is to add the library to =dependencies=, so =prepare= loads it
+and the build finds it through something written down.
+
+The wrong fix is =--allow-loaded-modules= for the module the user
+happened to have, or unsetting the filter so the ambient path comes back.
+Both make the symptom go away and leave the easyconfig still lying about
+what it needs.
+#+end_solution
+#+end_exercise

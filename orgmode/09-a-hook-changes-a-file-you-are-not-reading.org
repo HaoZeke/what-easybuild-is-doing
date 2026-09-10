@@ -1,6 +1,14 @@
 #+TITLE: Chapter 9. A hook changes a file you are not reading
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say what a hook is and when it runs.
+2. Say what condition a hook puts on chapter 1's way of reading a
+   failure.
+3. Spot the one-line hook bug that silently discards an easyconfig's own
+   parameter.
+#+end_objectives
+
 Every chapter so far has read an easyconfig and reasoned from it. This
 chapter is about the mechanism that makes that reasoning incomplete,
 and about why a site adopts it anyway.
@@ -111,6 +119,42 @@ The practical form: find out what =--hooks= is set to, in the
 configuration or the wrapper script that invoked =eb=, and read that
 file once. Most are short, and the guards tell you immediately whether
 the hook can have applied to your build.
+
+#+ATTR_EB: :id EB-Hook-1 :title The commands that never ran
+#+begin_exercise
+A site hook has worked for two years:
+
+: def parse_hook(ec, *args, **kwargs):
+:     if ec.name != 'NVHPC':
+:         return
+:     ec['postinstallcmds'] = ['echo "set LIBDIR=/usr/lib64;" >> ...']
+
+Somebody adds a =postinstallcmds= line to the NVHPC easyconfig, to fix up
+a set of symlinks. The build passes. The symlinks are not there.
+
+1. Why not?
+2. Why did nobody notice this in the two years before?
+3. What is the one-line change, and what would you grep for to find the
+   same bug elsewhere in the hook?
+
+#+begin_solution
+The hook *assigns* =postinstallcmds=, so whatever the easyconfig declared
+is replaced. Assignment to a list parameter is not an error and produces
+no diagnostic, so the build is green and the commands never ran.
+
+Nobody noticed because for two years the easyconfig declared no
+=postinstallcmds=, and replacing an empty list with a one-element list is
+indistinguishable from appending to it. The defect was there the whole
+time, dormant until the value it discards stopped being empty.
+
+The change is =ec['postinstallcmds'] = ec['postinstallcmds'] + [...]=.
+
+To find the rest, grep the hook for assignment to any parameter holding a
+list or a dictionary: =dependencies=, =builddependencies=, =configopts=,
+=patches=, =modextravars=, =sanity_check_commands=. Every one has the
+same failure mode and the same silence.
+#+end_solution
+#+end_exercise
 
 * Hooks and overlays solve different problems
 

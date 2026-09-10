@@ -1,6 +1,13 @@
 #+TITLE: Chapter 4. The robot
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say what a bare easyconfig filename is, and what resolves it.
+2. Read a =--robot-paths= value and say where the site defaults sit in it.
+3. Name the three lists the robot consults, and say which one is not
+   EasyBuild's to set.
+#+end_objectives
+
 You type this:
 
 #+begin_example
@@ -71,6 +78,39 @@ One related detail, since it decides ties: paths given to =--robot=
 itself are placed ahead of =--robot-paths=. The framework does this
 explicitly, with the comment "paths specified to =--robot= have
 preference over =--robot-paths=".
+
+#+ATTR_EB: :id EB-Robot-1 :title Where do the defaults go
+#+begin_exercise
+Three settings, one of them wrong for almost every purpose:
+
+: A.  --robot-paths=/my/site/easyconfigs
+: B.  --robot-paths=/my/site/easyconfigs:
+: C.  --robot-paths=:/my/site/easyconfigs
+
+1. For each, say where EasyBuild looks and in what order.
+2. Which one leaves a fresh install unable to find any of the thousands
+   of easyconfigs it came with?
+3. You want your directory consulted only when the defaults have nothing.
+   Which do you pick?
+
+#+begin_solution
+The value is a colon-separated list, and the *empty element* is where the
+defaults are inserted. That is the whole rule, and everything else
+follows from it.
+
+A has one element and no empty one, so the defaults have nowhere to go
+and your directory replaces them. That is the answer to question 2, and
+it is the common mistake, because the failure looks like EasyBuild having
+forgotten every package it ships with.
+
+B has two elements, the second empty, so it reads: yours, then the
+defaults. This is what almost everyone wants.
+
+C also has two, the first empty: defaults, then yours. That answers
+question 3, and it is the right shape when your directory holds a
+fallback rather than an override.
+#+end_solution
+#+end_exercise
 
 * Why an overlay is the normal case
 
@@ -186,6 +226,38 @@ see it. =module avail= lists it. And the robot says it cannot find it.
 The robot is not lying. It is reporting that nothing *in your
 hierarchy* provides that dependency. A module built with a toolchain
 outside your hierarchy is invisible rather than rejected.
+
+#+ATTR_EB: :id EB-Robot-2 :title The same command, two different plans
+#+begin_exercise
+You run the same command with =-D= on two machines, from the same
+easyconfig and the same robot path:
+
+: eb GROMACS-2025.2-foss-2025a.eb -r -D
+
+On the cluster it lists three things to build. On your laptop it lists
+ninety.
+
+1. What differs, given that the robot path is the same?
+2. Which flag makes the cluster print the ninety as well, and when would
+   you want that?
+
+#+begin_solution
+=MODULEPATH=. The robot asks the module system what is installed, through
+=modtool.available()=, and treats anything already there as satisfied.
+The cluster has eighty-seven of those dependencies installed and your
+laptop has none.
+
+So a build plan is a property of the machine as much as of the
+easyconfig, and it does not travel between them. The robot path decides
+what can be *found*; =MODULEPATH= decides what counts as already *built*.
+
+=--retain-all-deps= proceeds as though nothing were installed, which
+gives the full closure rather than the remainder. Reach for it when the
+question is "what does this package depend on" rather than "what would
+this build do here": an audit, a new generation, or working out what a
+fresh machine would need.
+#+end_solution
+#+end_exercise
 
 * Ask before you build
 

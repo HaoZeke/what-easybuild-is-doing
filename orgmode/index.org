@@ -43,7 +43,7 @@ After that, pick by what you are doing.
 | reading a failure whose cause is not in the file | [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] |
 | installing software with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
 | working on a machine with no stack of its own | [[file:11-eessi-somebody-elses-stack.org][chapter 11]] |
-| deciding whether to use EasyBuild at all | [[file:13-when-easybuild-is-the-wrong-tool.org][chapter 13]] |
+| deciding whether to use EasyBuild at all | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
 
 Reading straight through works too. Chapters 1 to 4 are the mechanisms
 everything else rests on. Chapters 5 to 9 are the parameters that cost
@@ -102,7 +102,11 @@ reading the log rather than watching the progress bar.
    10-build-your-own-without-asking
    11-eessi-somebody-elses-stack
    12-eb-stack-a-second-implementation
-   13-when-easybuild-is-the-wrong-tool
+   13-how-a-build-executes
+   14-the-isolation-policy
+   15-build-dependencies-are-not-dependencies
+   exercises
+   afterword-when-easybuild-is-the-wrong-tool
 #+end_export
 
 * Who wrote this

@@ -1,0 +1,197 @@
+#+TITLE: Chapter 13. How a build executes
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Name the steps a build runs through, and say which ones an easyconfig
+   can influence.
+2. Say which parameter reaches which step.
+3. Stop a build part way, or resume it, on purpose.
+#+end_objectives
+
+Everything so far has been about what an easyconfig means. This chapter
+is about what happens after EasyBuild has finished reading one.
+
+A build is a fixed sequence of named steps. Not a script, not a
+dependency graph: a list, run in order, the same list for every package.
+EasyBuild 5.3 has eighteen of them, and you can ask it:
+
+#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The whole sequence, from the framework itself"
+$ python3 -c 'from easybuild.framework.easyblock import EasyBlock
+> for s in EasyBlock.get_steps(): print(s[0])'
+fetch
+ready
+extract
+patch
+prepare
+configure
+build
+test
+install
+extensions
+postiter
+postproc
+sanitycheck
+cleanup
+module
+permissions
+package
+testcases
+#+end_src
+
+Learning that list is worth more than learning any single parameter.
+Every parameter belongs to one of these steps, and most errors name
+one.
+
+* What each step is for
+
+Read them in three groups.
+
+*Getting the source in place.* =fetch= downloads and verifies, which is
+[[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]]'s subject.
+=ready= checks the toolchain module and the dependencies, which is where
+[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s
+=_verify_toolchain= failure comes from. =extract= unpacks, =patch=
+applies patches, =prepare= loads the toolchain and the dependency modules
+and sets up the build environment.
+
+By the end of =prepare=, nothing has been compiled and everything has
+been decided. Most of what this book has covered is settled here. That is
+why so many failures land in the first twenty seconds of a build that was
+going to take four hours.
+
+*Building.* =configure=, =build=, =test=, =install=. The four steps that
+correspond to what you would type by hand, and the four an easyconfig
+most often has something to say about.
+
+*Deciding it worked, and publishing it.* =extensions= installs the
+=exts_list= entries from
+[[file:08-one-easyconfig-many-installs.org][chapter 8]]. =postproc= runs
+=postinstallcmds=. =sanitycheck= is
+[[file:06-what-installed-means.org][chapter 6]]. =cleanup= removes the
+build directory. =module= writes the modulefile. =permissions= fixes the
+mode bits so other people can read what you installed. =package= and
+=testcases= are optional and most sites never use them.
+
+=postiter= is the odd one out. Some easyblocks run the build steps more
+than once, an iterated build, and =postiter= marks the boundary between
+iterations.
+
+* The parameters are named after their steps
+
+Once you know the sequence, the parameter names stop looking arbitrary:
+
+#+begin_src easyconfig :widget parse
+name = 'example'
+version = '1.0'
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+preconfigopts = 'unset LIBS && '
+configopts = '--enable-mpi --with-hdf5=$EBROOTHDF5'
+prebuildopts = 'cp arch/makefile.include.gcc ./makefile.include && '
+buildopts = 'all'
+preinstallopts = 'DESTDIR= '
+installopts = 'PREFIX=%(installdir)s'
+#+end_src
+
+Three prefixes, and they mean exactly what they look like. =pre*opts= is
+text prepended to the command. That is why nearly every one of them ends
+in =&&= or a space: you are gluing something onto the front of a shell
+command. =*opts= is appended as arguments. Each of the four building steps has a
+matching pair.
+
+That is the whole convention, and it says where to look when a build
+fails. The step named in the error is the step whose =pre= and plain
+options you read.
+
+=$EBROOTHDF5= in that sample is worth noticing. It comes from the HDF5
+module, loaded during =prepare=. Pointing a configure script at a
+dependency that way, rather than at a hardcoded path, is the convention.
+Chapter 19 is about where those
+variables come from.
+
+* Where the work happens
+
+Three directories, and confusing them is a common way to lose an
+afternoon.
+
+The *build directory* is scratch. =buildpath= from
+[[file:10-build-your-own-without-asking.org][chapter 10]], with the
+package name, version and toolchain under it. Sources are unpacked here,
+the compiler runs here, and =cleanup= deletes it. Nothing worth keeping
+lives here.
+
+The *install directory* is the destination, =%(installdir)s= in the
+sample above, and the only path that survives.
+
+=TMPDIR= is where EasyBuild puts its own working files, including the
+log. On a cluster it matters more than it looks. A login node's =/tmp= is
+often small and shared. A build that fills it fails in a way that names
+neither EasyBuild nor your package.
+
+Parallelism is =max_parallel= in the easyconfig, or =--parallel= on the
+command line. EasyBuild passes it to the build tool as =-j=. Some
+packages cannot build in parallel at all. That is why =max_parallel = 1=
+appears in a recipe, and why to leave it alone when it does.
+
+* Cutting the sequence short
+
+Four ways, and they are not interchangeable.
+
+=--stop= runs up to a named step and stops. =eb foo.eb --stop=configure=
+leaves you with an unpacked, patched, configured tree and no compiler
+time spent. That is the fastest way to answer "does the configure line
+work" without waiting for a build.
+
+=--skip-test-step= and =--skip-sanity-check= drop one step. The names say
+which.
+
+=skipsteps= in the easyconfig drops a step permanently, for everyone,
+every time. [[file:05-a-versionsuffix-is-part-of-the-name.org][Chapter
+5]] is a case of somebody using it on =sanitycheck=. It moved a real
+defect from the build host to a user.
+
+=--module-only= runs only the =module= step, against an install already
+there. Useful when a modulefile needs regenerating and the
+software does not, and dangerous for exactly that reason: it writes a
+module for an install nobody re-checked.
+
+#+ATTR_EB: :id EB-Steps-1 :title Which step, and which parameter
+#+begin_exercise
+Four failures. For each, name the step and the parameter you would read
+first.
+
+1. =Couldn't find file example-1.0.tar.gz anywhere=
+2. =List of toolchain dependency modules and toolchain definition do not
+   match=
+3. =configure: error: cannot find HDF5=
+4. =Sanity check failed: no file found at 'bin/example'=
+
+Then: which of the four could you have found with =--stop=configure=,
+and roughly how much compiler time would that have saved?
+
+#+begin_solution
+1 is =fetch=. Read =sources= and =source_urls=, and remember that
+=sources= is templated, so the name that failed may not be the text in
+the file.
+
+2 is =ready=, and it is not about your package: the toolchain module's
+direct dependencies do not match what its class expects. No parameter of
+yours reaches that check.
+
+3 is =configure=. Read =configopts= and =preconfigopts=. The usual cause
+is a dependency that is not in =dependencies=, so =prepare= never loaded
+it and =$EBROOTHDF5= is empty.
+
+4 is =sanitycheck=. Read =sanity_check_paths=, and then ask whether the
+install step actually put the binary where the check is looking, which is
+usually a =files_to_copy= or an =installopts= question rather than a
+check question.
+
+The first three are all before =build=, so =--stop=configure= would have
+found every one of them, in the time it takes to unpack and run a
+configure script rather than the time it takes to compile. That is the
+argument for using it while iterating on a new easyconfig: three of the
+four most common failures happen before any compiler runs.
+#+end_solution
+#+end_exercise

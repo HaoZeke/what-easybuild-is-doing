@@ -1,6 +1,14 @@
 #+TITLE: Chapter 8. One easyconfig, many installs
 #+OPTIONS: toc:nil num:nil
 
+#+begin_objectives
+1. Say what =exts_list= installs, and which earlier chapters then apply
+   per entry.
+2. Say what =%(name)s= means inside an extension's options, and what it
+   does not.
+3. Read a failure inside a bundle back to the entry that caused it.
+#+end_objectives
+
 Every easyconfig so far installed one thing. Here is the shape that
 installs hundreds, and most of a real software stack is made of it:
 
@@ -90,6 +98,39 @@ Note that =%(ext_name)s= in =exts_filter= is a third thing again, and
 spelled differently on purpose. It exists because the filter is a
 template evaluated once per extension, from the bundle's scope rather
 than the extension's.
+
+#+ATTR_EB: :id EB-Extensions-1 :title Which name is this
+#+begin_exercise
+A bundle is named =ExampleRSet=, version =1.0=, and its
+=exts_default_options= carries:
+
+: 'source_tmpl': '%(name)s_%(version)s.tar.gz',
+
+Its =exts_list= has an entry for =latex2exp= at =0.9.6=.
+
+1. What filename does that entry download?
+2. A colleague wants the bundle's own version in an extension's option
+   and writes =%(version)s= there. What do they get?
+3. They then try =%(ext_version)s= for the extension's version in the
+   bundle's own =versionsuffix=. Why is that a different kind of
+   question?
+
+#+begin_solution
+=latex2exp_0.9.6.tar.gz=. Inside an entry, those templates bind to the
+extension, which is exactly what lets one =source_tmpl= serve two
+hundred rows.
+
+They get =0.9.6=, the extension's version, not =1.0=. The rebinding is
+not optional and there is no template inside an entry that reaches back
+out to the bundle. If they need =1.0= there, they have to write it.
+
+The third is different because it asks the bundle to know something about
+one of its extensions, and the bundle is evaluated before any of them.
+=%(ext_name)s= exists for =exts_filter=, which is a template the bundle
+expands once per extension at check time; a =versionsuffix= is resolved
+long before that and has no extension in scope to ask about.
+#+end_solution
+#+end_exercise
 
 * Chapters 6 and 7 now apply once per extension
 

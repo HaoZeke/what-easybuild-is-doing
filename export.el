@@ -87,8 +87,39 @@
                 (ebguide--indent code 3)
                 "\n\n"))))))
 
+;; Lesson blocks ride on a *special* block, for the opposite reason widgets
+;; cannot: their content is prose, with emphasis and inline code and links,
+;; and a special block is what gets markup treatment.
+;;
+;;   #+ATTR_EB: :id EB-Easyconfig-1 :title What will it download
+;;   #+begin_exercise
+;;   Change the version to 4.131.0. Which two lines move?
+;;   #+end_exercise
+;;
+;; `#+ATTR_EB:' carries the attributes because a special block's own header
+;; line has nowhere to put them.
+
+(defconst ebguide-lesson-blocks '("objectives" "exercise" "solution")
+  "Special-block types that become lesson directives.")
+
+(defun ebguide-rst-special-block (special-block contents info)
+  "Translate a lesson SPECIAL-BLOCK to its directive, else defer to rst."
+  (let ((type (downcase (or (org-element-property :type special-block) ""))))
+    (if (not (member type ebguide-lesson-blocks))
+        (org-export-with-backend 'rst special-block contents info)
+      (let* ((attrs (org-export-read-attribute :attr_eb special-block))
+             (id (plist-get attrs :id))
+             (title (plist-get attrs :title)))
+        (concat (format ".. %s::\n" type)
+                (when id (format "   :id: %s\n" id))
+                (when title (format "   :title: %s\n" title))
+                "\n"
+                (ebguide--indent (or contents "") 3)
+                "\n\n")))))
+
 (org-export-define-derived-backend 'ebguide-rst 'rst
-  :translate-alist '((src-block . ebguide-rst-src-block)))
+  :translate-alist '((src-block . ebguide-rst-src-block)
+                     (special-block . ebguide-rst-special-block)))
 
 (defun ebguide-publish-to-rst (plist filename pub-dir)
   "Publish FILENAME as RST through the ebguide-rst backend."

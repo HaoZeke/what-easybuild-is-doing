@@ -1,9 +1,9 @@
-#+TITLE: Chapter 13. When EasyBuild is the wrong tool
+#+TITLE: Afterword: when EasyBuild is the wrong tool
 #+OPTIONS: toc:nil num:nil
 
 No widgets in this chapter, and no parameters. It is the one that
-argues against the subject of the other twelve, because a book that
-cannot say where its subject stops is advertising.
+argues against the subject of every other one, because a book that cannot
+say where its subject stops is advertising.
 
 * What EasyBuild is built to be good at
 
