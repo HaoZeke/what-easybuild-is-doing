@@ -67,10 +67,14 @@ ASSET_MARKER = "eb-knowl"
 
 #: What a detail is for. ``term`` is a glossary entry, ``reference`` is a
 #: table or list somebody will come back to, ``aside`` is an argument that
-#: would derail the paragraph it hangs off. The kind reaches the markup as a
-#: class and the ask pack as a field, so a search can rank a definition above
-#: a passing mention of the word.
-KINDS = ("reference", "term", "aside")
+#: would derail the paragraph it hangs off. ``discrepancy`` records a place
+#: where upstream documentation and upstream code disagree, with how the
+#: disagreement was checked. ``sources`` is a chapter's citations.
+#:
+#: The kind reaches the markup as a class and the ask pack as a field, so a
+#: search can rank a definition above a passing mention of the word, and a
+#: reader can find every discrepancy in the book by asking for one.
+KINDS = ("reference", "term", "aside", "discrepancy", "sources")
 DEFAULT_KIND = "reference"
 
 

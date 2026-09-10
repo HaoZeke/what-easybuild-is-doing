@@ -1,0 +1,320 @@
+#+TITLE: Chapter 21. Writing one from nothing
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Write a working easyconfig for software that has none, starting from
+   the five parameters that are actually required.
+2. Get checksums into it without typing one, and know what the injection
+   changes besides the checksums.
+3. Run the two checks that decide whether it is fit to send upstream.
+#+end_objectives
+
+Every chapter so far has read an easyconfig that existed. This one writes
+one.
+
+The order below is the order that wastes least time, and the first step
+is the one people skip.
+
+* Look for it first
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "Two searches before writing anything"
+$ eb --search '^QMCPACK'
+$ eb -S 'qmcpack.*foss-2025a'
+#+end_src
+
+=--search= takes a regular expression, matches case-insensitively, and
+looks through the robot search path.
+=-S= is the same search with shared path prefixes collapsed to
+=$CFGS1=, which is what you want when the answer is forty files.
+
+If something comes back, the cheapest correct move is almost always to
+copy it and change the version, which is
+[[file:03-a-pin-is-for-one-generation.org][chapter 3]]'s subject and not
+this chapter's. What follows is for when nothing comes back.
+
+* The five parameters
+
+=eb -a= lists every easyconfig parameter, in eight categories, and in
+EasyBuild 5.3.1 there are 110 of them. The first category is called
+MANDATORY and it holds eight.
+
+Only five are enforced:
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "What is required, as opposed to what is filed under MANDATORY"
+$ python3 -c 'from easybuild.framework.easyconfig.easyconfig \
+>   import MANDATORY_PARAMS; print(MANDATORY_PARAMS)'
+['name', 'version', 'homepage', 'description', 'toolchain']
+#+end_src
+
+=docurls=, =software_license= and =software_license_urls= are listed in
+that category and are not checked. Fill them in anyway for anything you
+intend to share: a licence nobody recorded is a licence somebody will
+have to research later, under time pressure, when a user asks whether
+they may run the software.
+
+So the smallest thing that runs:
+
+#+begin_src easyconfig :widget parse
+easyblock = 'ConfigureMake'
+
+name = 'example'
+version = '1.0'
+
+homepage = 'https://example.org/example'
+description = "One sentence that reads as a sentence."
+
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+source_urls = ['https://example.org/releases']
+sources = [SOURCE_TAR_GZ]
+
+sanity_check_paths = {
+    'files': ['bin/example'],
+    'dirs': [],
+}
+
+moduleclass = 'tools'
+#+end_src
+
+Four decisions are hiding in that, and each one has a chapter behind it.
+
+*Which easyblock.* Start with a generic one, and start with
+=ConfigureMake= unless you know the build system is something else.
+[[file:22-writing-an-easyblock.org][Chapter 22]] is about when a generic
+easyblock stops being enough, and the answer is "later than you think".
+
+*Which toolchain.* The one your site already has, at the newest
+generation you can use, for
+[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s reasons.
+Introducing a toolchain to install one package is a decision about the
+whole stack.
+
+*What the sanity check should say.* Not "something got installed" but the
+specific file a user will run.
+[[file:06-what-installed-means.org][Chapter 6]] is the argument; the
+practical form is that =sanity_check_paths= needs both keys, =files= and
+=dirs=, and at least one non-empty, and the easyconfigs test suite
+enforces exactly that.
+
+*The filename.* =<name>-<version>[-<toolchain>][<versionsuffix>].eb=,
+with the toolchain omitted for the system toolchain. It matters for
+dependency resolution: the robot from
+[[file:04-the-robot.org][chapter 4]] finds dependencies by constructing
+that filename and looking for it.
+
+* Getting the checksums right without typing them
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "Injection, and its refusal to overwrite"
+$ eb wobble-1.0.eb --inject-checksums
+== injecting sha256 checksums in .../wobble-1.0.eb
+== fetching sources & patches for wobble-1.0.eb...
+  >> sources:
+  >> .../wobble-1.0.tar.gz
+ERROR: Found existing checksums, use --force to overwrite them
+#+end_src
+
+That refusal is deliberate. =--inject-checksums= will not
+silently replace a checksum, because a checksum is a claim somebody
+made and overwriting it without a word is how an unnoticed source change
+becomes a verified one. With =--force= it does overwrite, and it does
+*not* verify the old ones first, "since that would kind of defeat the
+purpose".
+
+Four more things it does, before you run it on a file you care about:
+
+It runs the fetch step first, so it downloads anything not already
+present. It defaults to SHA256, and takes an optional argument naming a
+different algorithm, which means =eb --inject-checksums foo.eb= parses
+=foo.eb= as an algorithm name and fails: put the filename first.
+
+It backs the file up, with a =.bak_<timestamp>= suffix.
+
+It reorders parameters, putting =source_urls=, =sources= and =patches= in
+that order and =checksums= after them. That is a deliberate move towards
+one house style across thousands of files, and it means the diff after an
+injection is larger than the checksums you asked for.
+
+And it covers extensions: every source and patch of every =exts_list=
+entry, which for a bundle is where most of the checksums are.
+
+#+ATTR_EB: :id checksum-grammar :title What a checksums entry may contain :kind reference
+#+begin_detail
+The forms, and what each one means. From EasyBuild's own documentation of
+=sources= and =checksums=:
+
+| Written as | Means |
+|---+---|
+| a 32-character string | an MD5 checksum |
+| a 64-character string | a SHA256 checksum |
+| any other length | an error, rather than a guess |
+| =('sha512', '...')= | that algorithm, explicitly |
+| a *tuple* of checksums | logical OR: any one matching is enough |
+| a *list* of checksums | logical AND: all must match |
+| a dict of filename to checksum | per-file, and what injection writes for two or more sources |
+
+The tuple form exists for a real situation: an upstream that re-cut a
+release with changes that do not affect behaviour. It is also the form to
+be suspicious of, because "either of these two archives is fine" is a
+claim somebody has to have actually checked.
+
+A =None= entry skips verification for that file, and
+=--enforce-checksums= turns that skip back into an error, which is what a
+site building a shared stack wants set.
+#+end_detail
+
+The grammar (see [[dive:checksum-grammar]]) matters most when you are
+reading somebody else's easyconfig and cannot tell whether two checksums
+mean "either" or "both".
+
+* The two checks before it leaves your machine
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1 with pycodestyle, local workstation, 2026-09-10; paths elided" :caption "The style check, on a file with two faults planted in it"
+$ eb --check-style ugly-1.0.eb
+WARNING: Use of 1 unknown easyconfig parameters detected in ugly-1.0.eb:
+unused_local
+If these are just local variables please rename them to start with
+'local_', or try using --fix-deprecated-easyconfigs to do this
+automatically.
+
+Running style check on 1 easyconfig(s)...
+
+ugly-1.0.eb:3:5: E221 multiple spaces before operator
+ugly-1.0.eb:23:17: W299 trailing whitespace
+
+ERROR: One or more style checks FAILED!
+
+[FAIL] ugly-1.0.eb
+#+end_src
+
+Two things in that output are specific to EasyBuild rather than to
+pycodestyle.
+
+=W299= is EasyBuild's own trailing-whitespace check, standing in for
+pycodestyle's =W291=, and the difference is that it exempts comments and
+the =description=, =examples= and =citing= parameters. Prose is allowed
+to end a line with a space; code is not.
+
+The warning above the check is a different mechanism. An easyconfig is Python, so you can assign any name you like,
+and EasyBuild reads every top-level assignment as a parameter. A name it
+does not recognise is reported, with the fix: *local variables must be
+named =local_*=*. =--fix-deprecated-easyconfigs= renames them for you.
+This is [[file:01-an-easyconfig-is-python.org][chapter 1]]'s "it is
+Python" with the bill attached: the file has no separate namespace for
+your own scratch values.
+
+=--check-style= runs pycodestyle with EasyBuild's own settings. The line
+limit is 120 rather than 79.
+=E741= is ignored, because =l= is a fine name when it means =lib=. And
+=W291=, trailing whitespace, is replaced by a custom check that exempts
+comments and the =description=, =examples= and =citing= parameters, since
+those are prose and prose sometimes ends a line with a space.
+
+=--check-contrib= runs that style check and then checks that SHA256
+checksums are present for every source and patch. Those two together are
+what the easyconfigs test suite runs on every file in the repository, so
+a file that fails either will fail upstream CI without a human looking at
+it.
+
+Neither check knows whether the software works. That is a separate
+question, and it is [[file:23-testing.org][chapter 23]]'s.
+
+* Sending it upstream
+
+The mechanism is =eb --new-pr <file>=, and it does more than a
+=git push=: it makes a working copy of the
+easyconfigs repository, branches from an up-to-date =develop=, *renames*
+your file to match its own =name=, =version=, =toolchain= and
+=versionsuffix=, *moves* it to the right letter directory, commits,
+pushes to your fork, and opens the pull request. Your own working copy is
+not touched.
+
+Two defaults to know. The target branch is =develop=, and a pull request
+against =master= or =main= will be closed. The PR title is generated as
+={<moduleclass>}[<toolchain>] <name> v<version>=, which is why
+=moduleclass= is worth setting correctly even though nothing enforces it.
+
+=--update-pr <number> <file>= updates an existing one, and requires
+=--pr-commit-msg=, as does any =--new-pr= that modifies, deletes or adds
+patches to existing files.
+
+And the requirement that surprises people: *a successful test report has
+to be submitted for an easyconfig pull request*, and *the author may not
+merge their own*. Upstream CI parses and style-checks every easyconfig;
+it does not build any of them. The build evidence is a human's, which is
+what =--upload-test-report= is for and what chapter 23 covers.
+
+#+ATTR_EB: :id try-options :title The --try family, and where it stops :kind reference
+#+begin_detail
+For moving an existing easyconfig rather than writing one:
+
+| Option | Changes |
+|---+---|
+| =--try-toolchain=<name>,<version>= | both halves of the toolchain |
+| =--try-toolchain-name= | the name only |
+| =--try-toolchain-version= | the version only |
+| =--try-software-version= | the software version |
+| =--try-amend=<param>=<value>= | one parameter, strings and lists of strings only |
+
+Two documented limits, and both are the kind that produce a
+half-converted stack if you do not know them. A =--try-toolchain= change
+"only trickles down until the toolchain level (not deeper)". A software
+version change does not trickle down at all, even with =--robot=.
+
+The tweaked files are written under =/tmp/eb-*/tweaked_easyconfigs/=, and
+=--copy-ec <dir>= is how you get them somewhere you can read them. The
+partly-automated form for a whole toolchain bump is:
+
+#+begin_example
+eb old.eb --try-toolchain-version=2025a --try-update-deps \
+   --experimental --copy-ec ./out
+#+end_example
+
+with the upstream warning attached: it "can lead to unwanted changes to
+formatting as well as the replacement local variables or templates (such
+as =name=, =version= or =%(version)s=) by their *value*". Read every
+generated file before it becomes a commit.
+#+end_detail
+
+#+ATTR_EB: :id EB-Write-1 :title From a tarball and a README
+#+begin_exercise
+A user hands you =https://example.org/thing-2.4.tar.gz= and a README
+saying =./configure --prefix=$HOME/thing && make && make install=, and
+that it needs HDF5 and a C++17 compiler.
+
+1. Write the easyconfig. Name every parameter you would set and say why,
+   including the filename you would save it under.
+2. You have not computed a checksum. What is the exact command, and what
+   will it change in the file besides adding one?
+3. The build works. Name the two checks you run before opening a pull
+   request, and one thing neither of them can tell you.
+
+#+begin_solution
+1. =easyblock = 'ConfigureMake'=, because the README is describing
+   exactly what that easyblock does. =name='thing'=, =version='2.4'=,
+   =homepage=, =description=, and a toolchain your site has, say
+   =foss/2025a=, whose compiler is new enough for C++17. =source_urls=
+   and =sources = [SOURCE_TAR_GZ]=. =dependencies = [('HDF5',
+   '1.14.6')]=, which the robot will resolve against the toolchain from
+   chapter 2. A =sanity_check_paths= naming the binary the user will run,
+   with both keys present. =moduleclass=, because =--new-pr= puts it in
+   the title. Saved as =thing-2.4-foss-2025a.eb=, because the robot finds
+   dependencies by constructing that filename.
+
+   Not =configopts = '--prefix=...'=. EasyBuild passes the prefix itself,
+   and hardcoding one is how an install lands outside the tree the site
+   manages.
+
+2. =eb thing-2.4-foss-2025a.eb --inject-checksums=, with the filename
+   first because the algorithm argument is optional. It downloads the
+   source if it is not already there, writes a =.bak_<timestamp>= copy,
+   adds a SHA256, and reorders =source_urls=, =sources= and =patches=
+   before inserting =checksums= after them. So expect a diff that touches
+   lines you did not write.
+
+3. =eb --check-style= and =eb --check-contrib=. Neither runs the
+   software. They cannot tell you that =bin/thing= actually works, which
+   is why upstream requires a test report from a human who built it, and
+   why the author of a pull request is not allowed to merge it.
+#+end_solution
+#+end_exercise

@@ -9,8 +9,6 @@
    it.
 #+end_objectives
 
-This is the chapter I would keep if I had to throw the rest away.
-
 Here is a dependency list:
 
 #+begin_src easyconfig :widget parse :hydrate load

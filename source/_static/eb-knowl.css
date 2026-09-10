@@ -201,3 +201,38 @@ article.yue .eb-detail__body > * + * {
     display: none;
   }
 }
+
+/* A discrepancy is the one kind that should catch the eye in a page of
+ * prose: it is a claim that upstream documentation is wrong, and a reader
+ * deserves to see which parts of the book carry one. */
+article.yue .eb-detail--discrepancy {
+  border-left-color: #d1242f;
+}
+
+article.yue .eb-detail--discrepancy .eb-detail__kind {
+  border-color: #d1242f;
+  color: #d1242f;
+}
+
+:root:not([data-theme="light"]) article.yue .eb-detail--discrepancy,
+:root[data-theme="dark"] article.yue .eb-detail--discrepancy {
+  border-left-color: #ff7b72;
+}
+
+:root:not([data-theme="light"]) article.yue .eb-detail--discrepancy .eb-detail__kind,
+:root[data-theme="dark"] article.yue .eb-detail--discrepancy .eb-detail__kind {
+  border-color: #ff7b72;
+  color: #ff7b72;
+}
+
+/* Sources are a list of links and nothing else, set quieter than the prose
+ * around them. */
+article.yue .eb-detail--sources {
+  border-left-color: var(--eb-fg-muted);
+  font-size: 0.92em;
+}
+
+article.yue .eb-detail--sources a {
+  color: var(--eb-accent);
+  word-break: break-word;
+}

@@ -172,7 +172,7 @@ says where, and the node to verify on is the one that failed.
 
 * And how you check matters as much as where
 
-A related trap, worth knowing because the tool invites it.
+A related trap, which the tool invites.
 
 =patchelf --set-rpath= writes =DT_RUNPATH=, not =DT_RPATH=. The
 dynamic linker consults those at different points: =DT_RPATH= before

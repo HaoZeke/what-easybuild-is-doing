@@ -1,0 +1,495 @@
+#+TITLE: Chapter 25. Reading a stack off the wire: CernVM-FS
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Verify the content-addressing and signing chain of a real repository
+   with =curl=, =python3= and =sqlite3=, from a machine with nothing
+   mounted.
+2. Open a live file catalog and say what each column and flag means.
+3. Say what a cache miss does, in order, and which step each failure
+   mode belongs to.
+#+end_objectives
+
+[[file:11-eessi-somebody-elses-stack.org][Chapter 11]] used a software
+stack from =/cvmfs= without saying what =/cvmfs= is.
+
+CernVM-FS is a read-only filesystem delivered over plain HTTP, which
+means the whole thing can be read with a shell. Every command in this
+chapter runs on an ordinary machine with no CernVM-FS client, no mount,
+no privileges and no account: the public EESSI repository answers plain
+GET requests. So this chapter verifies rather than describes, and every
+number in it came back from the network on 2026-09-10.
+
+Set this once and the rest follows:
+
+#+begin_example
+base=http://s1eessieu1-cvmfs.openhtc.io/cvmfs/software.eessi.io
+#+end_example
+
+* The manifest is the entry point
+
+#+begin_src ebtranscript :source "curl against the EESSI Stratum 1 CDN endpoint, local workstation, 2026-09-10; the signature block after the -- separator is binary and elided" :caption "The whole of .cvmfspublished for software.eessi.io"
+$ curl -sS $base/.cvmfspublished
+C7ca4fb6b5db9c1432243b47e306e46327cdeda19
+B26624
+Rd41d8cd98f00b204e9800998ecf8427e
+D240
+S23927
+Gyes
+Ano
+Nsoftware.eessi.io
+Xd61b84cdd59ae8a88814558553af1c33f7da6c75
+H0db1e2ec784d23942d4678696dd94af71b5e5218
+T1788943292
+M536bcbab2288d369f4fe5af85e785d9520442a11
+Yfe0b764e723f0fdba0522e72b59f86f66f5234d7
+--
+5647f8f42af43e4fb10ec4c3586fa5fbd823982d
+<256 bytes of RSA signature>
+#+end_src
+
+Thirteen fields, one letter each, then a separator, a 40-character
+certificate fingerprint and 256 bytes of signature: 603 bytes in total
+for a repository holding three generations of a software stack. Four
+fields are the ones you will use.
+
+=C= is the content hash of the root file catalog. =B= is that catalog's
+size, 26624 bytes. =S= is the revision, 23927, which is how many times
+this repository has been published. =D= is the time to live of the root
+catalog in seconds: 240, four minutes, which is the interval after which
+a client will look for a newer revision.
+
+=R= is =d41d8cd98f00b204e9800998ecf8427e=, which is the MD5 of the empty
+string, because it is the MD5 of the repository's root path and the root
+path is empty. =T= is a Unix timestamp, here 2026-09-09 08:41:32 UTC.
+=X= is the hash of the certificate that signed this, and =H=, =M= and =Y=
+are hashes of the tag history, the repository metadata and the reflog
+checksum.
+
+The same request against a different Stratum 1 comes back byte for byte
+identical:
+
+#+begin_src ebtranscript :source "curl against two EESSI Stratum 1 endpoints, 2026-09-10" :caption "Two replicas, one answer"
+$ curl -sS http://aws-eu-central-s1.eessi.science/cvmfs/software.eessi.io/.cvmfspublished \
+>   | head -2
+C7ca4fb6b5db9c1432243b47e306e46327cdeda19
+B26624
+#+end_src
+
+Which is what replication means here: a Stratum 1 is a mirror of
+immutable objects plus a copy of the signed manifest, not an independent
+service with its own state.
+
+* Content addressing, checked rather than believed
+
+The manifest says the root catalog is =7ca4fb...=. Objects live under
+=data/=, split into 256 directories by the first two hex digits of their
+own hash:
+
+#+begin_src ebtranscript :source "curl and python3 against the EESSI Stratum 1, local workstation, 2026-09-10" :caption "Fetch by hash, then check the hash"
+$ h=7ca4fb6b5db9c1432243b47e306e46327cdeda19
+$ curl -sS -o cat.obj $base/data/${h:0:2}/${h:2}C
+$ ls -l cat.obj
+-rw-r--r-- 1 rgoswami rgoswami 5511 Sep 10 07:28 cat.obj
+
+$ sha1sum cat.obj
+7ca4fb6b5db9c1432243b47e306e46327cdeda19  cat.obj
+
+$ python3 -c "import zlib; d=open('cat.obj','rb').read();
+> u=zlib.decompress(d); open('cat.db','wb').write(u);
+> print(len(u), 'bytes uncompressed')"
+26624 bytes uncompressed
+
+$ file cat.db
+cat.db: SQLite 3.x database, page size 1024, ... database pages 26, ...
+#+end_src
+
+Four facts fall out of those five commands, and each of them is a claim
+the documentation makes and this checks.
+
+*The name is the hash.* =sha1sum= of the bytes that came back equals the
+name they were requested under. Nothing in the transport had to be
+trusted for that to be checkable.
+
+*The hash covers the compressed form.* The documentation says "The
+cryptographic content hash refers to the zlib-compressed version of the
+file", and the numbers agree: 5511 bytes stored, hashing to the object
+name; 26624 bytes after decompression.
+
+*=B= in the manifest is the uncompressed size.* 26624, exactly what
+=zlib.decompress= produced.
+
+*A catalog is a SQLite database.* Not a format to reverse-engineer; a
+file you can open.
+
+#+ATTR_EB: :id cvmfs-object-suffix :title The trailing C, and where it is not written down :kind discrepancy
+#+begin_detail
+The object was fetched from =data/7c/a4fb...cdeda19C=, with a =C=
+appended. Without it:
+
+#+begin_example
+$ curl -sS -o obj.bin -w 'HTTP %{http_code}\n' $base/data/7c/a4fb...cdeda19
+HTTP 404
+
+$ curl -sS -o obj.bin -w 'HTTP %{http_code}\n' $base/data/7c/a4fb...cdeda19C
+HTTP 200
+#+end_example
+
+CernVM-FS's server infrastructure appendix documents the =00..ff= split
+and the content-addressed naming, and does not document this suffix. It
+was established here by trying both, against the live repository: 404 and
+200. Treat the suffix as a fact about the deployed format rather than a
+documented interface, and expect regular file objects to have no suffix,
+which is what the =.cvmfsdirtab= fetch later in this chapter relies on.
+#+end_detail
+
+* Inside the catalog
+
+#+begin_src ebtranscript :source "sqlite3 on the decompressed root catalog of software.eessi.io, revision 23927, 2026-09-10" :caption "What a file catalog actually holds"
+$ sqlite3 cat.db '.tables'
+bind_mountpoints  catalog  chunks  nested_catalogs  properties  statistics
+
+$ sqlite3 cat.db 'pragma table_info(catalog)' | cut -d'|' -f2 | tr '\n' ' '
+md5path_1 md5path_2 parent_1 parent_2 hardlinks hash size mode mtime
+flags name symlink uid gid xattr mtimens
+
+$ sqlite3 cat.db 'select key, value from properties order by key'
+TTL|240
+last_modified|1788943289
+previous_revision|fb61f4ecc41ee66b7db06be75cfe0e538fedb220
+revision|23927
+schema|2.5
+schema_revision|8
+#+end_src
+
+=md5path_1= and =md5path_2= are the two halves of an MD5: paths are not
+stored, their hashes are. "In order to save space we do not store
+absolute paths. Instead, we store MD5 hash values of the absolute path
+names." A lookup is therefore a hash and an index probe, at any depth,
+and the price is that a catalog cannot be listed by prefix.
+
+=previous_revision= is a hash, which makes the repository a chain: every
+published revision names the one before it.
+
+The =flags= column encodes what an entry is, and the live histogram is
+small enough to read whole:
+
+#+begin_src ebtranscript :source "sqlite3 on the same root catalog, 2026-09-10" :caption "Every entry in the root catalog, by kind"
+$ sqlite3 cat.db 'select flags, count(*) from catalog group by flags order by 2 desc'
+12|33
+1|16
+4|3
+3|3
+#+end_src
+
+Sixteen directories (flag 1), three regular files (flag 4), thirty-three
+symlinks (12, which is 4 for a file and 8 for a symlink), and three
+entries with flag 3.
+
+Three, not two. The documentation says a nested-catalog transition
+directory "appears as empty directory in the parent catalog with flags set
+to 2", and in the live catalog those entries carry 3, because bit 1,
+directory, is also set. They are exactly the three the =nested_catalogs=
+table names:
+
+#+begin_src ebtranscript :source "sqlite3 on the same root catalog, 2026-09-10" :caption "Where the repository is cut"
+$ sqlite3 cat.db 'select path, sha1, size from nested_catalogs order by path'
+/versions/2023.06|e466e9788ded...|91136
+/versions/2025.06|36562d2b1128...|247808
+/versions/2026.06|dc9037b9aa27...|174080
+
+$ sqlite3 cat.db "select name from catalog where flags=3"
+2023.06
+2025.06
+2026.06
+#+end_src
+
+So the root catalog of the entire EESSI software stack is 26 kilobytes
+and knows almost nothing. It knows the top-level layout, and for each
+EESSI version it holds a hash and a promise. Ask for anything under
+=/versions/2025.06= and the client fetches that catalog first, verifies
+it the same way, and continues. There is no limit on the nesting, and a
+client that never enters a subtree never downloads its metadata.
+
+Which is also why signing the manifest is enough: the root catalog's hash
+is in the signed manifest, each nested catalog's hash is in its parent,
+and each file's hash is in the catalog that lists it. A Merkle tree, with
+one signature at the top.
+
+* The cut points are declared, and you can read the declaration
+
+Where a repository gets cut is a maintenance decision, and EESSI's is a
+file in the repository. Its hash is in the catalog, so it can be fetched
+the same way as anything else, and regular files carry no suffix:
+
+#+begin_src ebtranscript :source "curl and zlib against the EESSI Stratum 1, 2026-09-10; the file is 1283 bytes, abridged here" :caption "EESSI's own .cvmfsdirtab, fetched by content hash"
+$ sqlite3 cat.db "select name, hex(hash) from catalog where flags=4"
+README.eessi|A3494CC2E08BF1EA8AB6948019459E95A2AAC036
+.cvmfsdirtab|1AA5539113BC1FFC8EF599B00FE16ABAECAC6597
+.modulerc.lua|8E0885D42CDB423496AC22E6DCBE47EDA93C6BD3
+
+$ h=1aa5539113bc1ffc8ef599b00fe16abaecac6597
+$ curl -sS -o dirtab.z $base/data/${h:0:2}/${h:2}
+$ python3 -c "import zlib;print(zlib.decompress(open('dirtab.z','rb').read()).decode())"
+# Nested catalog for each EESSI version
+/versions/*
+
+# Compatibility layer paths:
+/versions/*/compat/*/*
+/versions/*/compat/*/*/var
+/versions/*/compat/*/*/var/db/repos
+
+# Software layer paths
+/versions/*/software/*/*/*/*/software
+/versions/*/software/*/*/*/*/software/*/*
+/versions/*/software/*/*/*/*/modules
+/versions/*/software/*/*/*/*/reprod
+# Accelerator targets: .../accel/<vendor>/<type>/software
+/versions/*/software/*/*/*/*/accel/*/*/software
+...
+#+end_src
+
+Read the fourth software-layer line: =.../software/*/*= cuts a catalog
+*per installed package version*. So opening one module's files pulls in
+metadata for that package and nothing else. And the line above it,
+=.../reprod=, is
+[[file:24-development-environments.org][chapter 24]]'s reproducibility
+directory: EESSI ships the easyconfig, the environment script and the
+easyblock source for everything in the stack, catalogued separately so
+they cost nothing until asked for.
+
+* Two keys
+
+The signature at the bottom of the manifest is made with the *repository*
+key, which lives on the publisher. The list of certificates allowed to
+sign is =.cvmfswhitelist=, and that is signed with a different key:
+
+#+begin_quote
+The whitelist is signed with a different RSA key, the *repository master
+key*. Only the public part of this master key needs to be distributed to
+clients.
+#+end_quote
+
+The master public key cannot arrive through the repository it
+authenticates: "The public key used to ultimately verify a repository's
+signature needs to be distributed to clients through a channel different
+from CernVM-FS content distribution." For EESSI that channel is a
+package, =cvmfs-config-eessi=, which installs
+=/etc/cvmfs/keys/eessi.io/eessi.io.pub=.
+
+Whitelists expire. "Signatures are only good for 30 days by default, so
+=cvmfs_server resign= must be run again before they expire", and seven
+days rather than thirty when the master key sits on a hardware token. A
+compromised repository key is handled with a blacklist that "has
+precedence over the white-list", and with one limit stated plainly
+upstream:
+
+#+begin_quote
+Blacklisted fingerprints prevent clients from loading future repository
+publications by a corresponding compromised repository key, but they do
+not prevent mounting a repository revision that had previously been
+mounted on a client, because the catalog for that revision is already in
+the cache.
+#+end_quote
+
+* One writer
+
+New content enters at exactly one place, the *Stratum 0*, on a machine
+called the release manager or publisher. The publisher mounts the
+repository read-only and puts a union filesystem over it, so a change
+lands in a scratch area rather than in the repository.
+=cvmfs_server transaction= opens that, =publish= converts what changed
+into the storage format above, =abort= discards it. Upstream's phrase for
+the property that matters is three words: "Publishing is an atomic
+operation."
+
+Everything a client sees, therefore, is a published revision: the =S=
+field, with a =previous_revision= hash behind it, and clients that refuse
+to go backwards. "Once a particular revision of a file system is stored
+in a client's local cache, the client will not apply an older revision
+anymore."
+
+* Getting it to a thousand machines
+
+A Stratum 1 is "a standard web server that uses the CernVM-FS server
+toolkit to create and maintain a mirror of a CernVM-FS repository served
+by a Stratum 0 server", registered with =cvmfs_server add-replica= and
+kept current by =cvmfs_server snapshot -a= from cron.
+
+Squid appears twice in a deployment, with different jobs: a reverse proxy
+in front of a Stratum 1, and a forward proxy in front of your clients.
+The recommended forward-proxy configuration carries one line that decides
+how a cluster behaves at the start of a job array:
+
+#+begin_example
+collapsed_forwarding on
+#+end_example
+
+which "combines multiple simultaneous requests for the same object into a
+single request to a Stratum 1 server". Eight hundred nodes starting the
+same job ask for the same library in the same second; that line makes it
+one request upstream.
+
+* On your machine
+
+The client is a FUSE filesystem mounted by =autofs= on first access, and
+unmounted again when nothing has used it for a while. It starts as root
+and "drops root privileges and changes the persona to the =cvmfs= user
+early in the file system initialization".
+
+#+ATTR_EB: :id cvmfs-caches :title The four caches, and their shipped defaults :kind reference
+#+begin_detail
+From =/etc/cvmfs/default.conf= as shipped
+([[https://github.com/cvmfs/cvmfs/blob/devel/mount/default.conf][cvmfs/cvmfs, devel branch]])
+and the client documentation:
+
+| Layer | Setting | Default |
+|---+---+---|
+| kernel attribute cache | (FUSE) | 1 minute |
+| in-memory metadata cache | =CVMFS_MEMCACHE_SIZE= | not stated in the documentation |
+| local disk cache | =CVMFS_CACHE_BASE= | =/var/lib/cvmfs= |
+| disk cache soft limit | =CVMFS_QUOTA_LIMIT= | =4000= megabytes |
+| shared between repositories | =CVMFS_SHARED_CACHE= | =yes= |
+| HTTP timeout, with a proxy | =CVMFS_TIMEOUT= | 5 seconds |
+| HTTP timeout, direct | =CVMFS_TIMEOUT_DIRECT= | 10 seconds |
+
+Replacement is least-recently-used, and the threshold is not the quota:
+"When exceeding the cache quota, files are deleted until the overall cache
+size is less than or equal to the cache threshold. The cache threshold is
+currently hard-wired to half of the cache quota."
+
+For a single machine the shipped configuration documents
+=CVMFS_CLIENT_PROFILE=single= for "laptops or fewer than 5 machines", and
+EESSI's own instructions raise the quota to
+=CVMFS_QUOTA_LIMIT=10000=.
+#+end_detail
+
+A cache miss is then a sequence, and every failure mode belongs to one of
+its steps:
+
+1. The path's MD5 is looked up in the catalog. If the path crosses a
+   transition point, *that nested catalog is fetched and verified first*.
+2. The entry gives a content hash. The object is requested by that hash
+   through the proxy chain to a Stratum 1. Concurrent requests for the
+   same URL "are collapsed into a single request".
+3. It arrives in a temporary file: "Only at the very latest point they
+   are renamed into their content-addressable names atomically by
+   =rename()=."
+4. It is verified against the catalog's hash, then decompressed.
+5. Inserting it may evict, down to half the quota.
+6. Afterwards =stat()= "can be entirely served from the in-kernel file
+   system buffers".
+
+With one bound on all of it, stated upstream: "Once downloaded and stored
+in a cache, the CernVM-FS client fully trusts the cache. Data in the
+cache can be checked for silent corruption but no integrity re-check
+takes place."
+
+* Why it is read-only
+
+Three independent reasons, each sufficient on its own.
+
+*Objects are named by their content.* Changing a file's bytes changes its
+name, so there is nowhere to write a modification of a file that is still
+that file.
+
+*The signature covers the whole tree.* The signed manifest fixes the root
+catalog hash, which fixes every nested catalog and every file hash below
+it. A local write breaks the chain that makes the repository verifiable
+at all.
+
+*There is no client write path.* Publishing is defined as a server-side
+atomic operation through a union filesystem on the release manager
+machine.
+
+So the site-specific escape hatch cannot be a write, and it is not. It is
+a symlink whose *stored target is a variable reference*, expanded by the
+client from its own configuration. Three of them are in the live catalog
+above:
+
+#+begin_src ebtranscript :source "sqlite3 on the root catalog of software.eessi.io, revision 23927, 2026-09-10" :caption "Variant symlinks, as stored"
+$ sqlite3 cat.db "select name, symlink from catalog where flags=12
+>   and symlink like '\$(%'"
+host_injections|$(EESSI_HOST_INJECTIONS:-/opt/eessi)
+nvidia|$(EESSI_NVIDIA_OVERRIDE_DEFAULT:-/dev/null)
+override|$(EESSI_LIB_OVERRIDE_DEFAULT:-/dev/null)
+#+end_src
+
+What is signed is that string. A site that points
+=EESSI_HOST_INJECTIONS= somewhere else changes what the symlink resolves
+to without invalidating a signature, because the repository still
+contains exactly the bytes it was signed with. That is the whole trick,
+and it is [[file:26-the-same-stack-somewhere-else.org][chapter 26]].
+
+#+ATTR_EB: :id sources-25 :title Where this chapter comes from :kind sources
+#+begin_detail
+Live evidence: every transcript in this chapter was produced on
+2026-09-10 against =http://s1eessieu1-cvmfs.openhtc.io/cvmfs/software.eessi.io=
+and =http://aws-eu-central-s1.eessi.science/cvmfs/software.eessi.io=, at
+repository revision 23927, with =curl=, =python3= and =sqlite3= and no
+CernVM-FS client installed.
+
+CernVM-FS documentation, fetched 2026-09-10. Note the URL form: the
+stable documentation uses directory URLs, so =.../cpt-repo/= resolves and
+=.../cpt-repo.html= returns 404.
+
+- [[https://cvmfs.readthedocs.io/en/stable/cpt-overview/][overview]]: what CernVM-FS is, the feature list, the figure captions on verification
+- [[https://cvmfs.readthedocs.io/en/stable/cpt-repo/][repository creation and publishing]]: transactions, atomicity, =.cvmfsdirtab=, variant symlinks, =resign= and the 30-day signature
+- [[https://cvmfs.readthedocs.io/en/stable/cpt-details/][implementation details]]: catalog columns and flags, MD5 paths, nesting, the Merkle-tree argument, the manifest field table, the compressed-form hash, cache management
+- [[https://cvmfs.readthedocs.io/en/stable/cpt-replica/][Stratum 1]]: replication and its reuse of the client's integrity checks
+- [[https://cvmfs.readthedocs.io/en/stable/cpt-squid/][Squid]]: =collapsed_forwarding= and the recommended configuration
+- [[https://cvmfs.readthedocs.io/en/stable/cpt-configure/][client configuration]] and [[https://cvmfs.readthedocs.io/en/stable/apx-parameters/][the parameter list]]
+- [[https://cvmfs.readthedocs.io/en/stable/apx-security/][security]]: the two keys, the whitelist, the blacklist limit, cache trust
+- [[https://cvmfs.readthedocs.io/en/stable/apx-serverinfra/][server infrastructure]]: the storage layout
+- [[https://github.com/cvmfs/cvmfs/blob/devel/mount/default.conf][mount/default.conf]] on the devel branch: the shipped defaults, which the documentation does not restate
+
+EESSI: [[https://www.eessi.io/docs/filesystem_layer/][the filesystem layer]] and
+[[https://www.eessi.io/docs/getting_access/native_installation/][native installation]] for the endpoints, keys and quota.
+#+end_detail
+
+#+ATTR_EB: :id EB-CVMFS-1 :title Six symptoms, six layers
+#+begin_exercise
+For each, name the layer and the check.
+
+1. A new module appeared on one node twenty minutes ago and is still
+   invisible on another.
+2. A job's first minute is slow every time, on every node, and fast
+   afterwards.
+3. =ls /cvmfs/software.eessi.io= works; a file under it gives an
+   input/output error.
+4. A site with 800 nodes saturates its uplink whenever a job array
+   starts.
+5. Your laptop's =/var= fills up.
+6. A colleague proposes editing a file under =/cvmfs= to test a fix.
+
+#+begin_solution
+1. The root catalog's time to live, =D= in the manifest, 240 seconds for
+   this repository, plus the kernel attribute cache. The second node has
+   not looked for a new revision yet. Check with
+   =cvmfs_config stat -v <repo>= and compare the revision each node has
+   against =curl $base/.cvmfspublished=.
+
+2. Cache misses, then hits. If it recurs on every node on every run, the
+   working set exceeds =CVMFS_QUOTA_LIMIT= and eviction is taking it to
+   half the quota between runs, or the cache directory is being cleared.
+
+3. Metadata resolved, content did not: the catalog is cached and an object
+   fetch or its verification failed. Check the proxy chain, then fetch the
+   object by hand the way this chapter does and compare =sha1sum= against
+   the name.
+
+4. Missing forward proxies, or proxies without =collapsed_forwarding on=.
+   The requests are identical and simultaneous, which is exactly the case
+   that line exists for.
+
+5. =CVMFS_CACHE_BASE= is =/var/lib/cvmfs= by default and the quota is
+   4000 MB. Move the cache or lower the quota, and set
+   =CVMFS_CLIENT_PROFILE=single= on a single machine.
+
+6. Not possible, and the reason is the format rather than the
+   permissions: content-addressed objects, a signed Merkle tree, and no
+   client write path. What they want is a variant symlink or a site tree
+   under =host_injections=.
+#+end_solution
+#+end_exercise

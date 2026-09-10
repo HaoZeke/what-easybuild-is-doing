@@ -150,7 +150,7 @@ an EESSI version whose layer carries the generation.
 
 * When the filesystem client is the problem
 
-This is worth knowing because the symptoms lie.
+The symptoms lie, in a specific way.
 
 A host's client can report healthy while being unusable. The probe says
 fine and the server answers a plain HTTP request in milliseconds. Every
@@ -226,7 +226,7 @@ is a different job, and the order matters:
 6. On green, the results are signed and published into the distributed
    repository.
 
-Two conditions worth knowing before you start.
+Two conditions before you start.
 
 The easyconfig comes first. A software-layer entry references an
 easyconfig rather than restating one. So deployment waits on the

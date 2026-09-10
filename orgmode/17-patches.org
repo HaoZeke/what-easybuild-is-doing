@@ -72,8 +72,7 @@ of leading components changes with it, silently, in the same way
 
 * Applying cleanly is not the same as applying correctly
 
-This is the part worth internalising, because =patch= is more helpful
-than you want it to be.
+=patch= is more helpful than you want it to be.
 
 =patch= matches on context, not on line numbers. It will apply a hunk
 that has moved, and report the offset. It will apply a hunk with fuzz,

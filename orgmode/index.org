@@ -4,8 +4,9 @@
 #+begin_export rst
 .. rst-class:: eb-subtitle
 
-An interactive book about the build system behind a supercomputer's
-software, and about the four things everyone gets wrong about it.
+An interactive book about EasyBuild: how it decides what to build, on a
+laptop or on a national machine, and about the four things everyone gets
+wrong about it.
 #+end_export
 
 EasyBuild's own documentation tells you what to type. It stays almost
@@ -43,6 +44,7 @@ After that, pick by what you are doing.
 | reading a failure whose cause is not in the file | [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] |
 | installing software with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
 | working on a machine with no stack of its own | [[file:11-eessi-somebody-elses-stack.org][chapter 11]] |
+| running any of this on your own machine | [[file:24-development-environments.org][chapter 24]] and [[file:26-the-same-stack-somewhere-else.org][chapter 26]] |
 | deciding whether to use EasyBuild at all | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
 
 Reading straight through works too. Chapters 1 to 4 are the mechanisms
@@ -50,7 +52,34 @@ everything else rests on. Chapters 5 to 9 are the parameters that cost
 the most time when misread, each built around a failure that actually
 happened. Chapters 10 to 12 are the ones where you do something.
 
-* What you need
+* Where this runs
+
+Not only on a supercomputer, and the book is careful about the
+difference.
+
+EasyBuild is a Python package. It installs with =pip= into a virtual
+environment, needs a modules tool and a compiler, and builds software on
+a laptop exactly as it does on a compute node. Several of the recordings
+in this book were made that way, and their provenance says so: the
+failing build in
+[[file:20-reading-a-failed-build.org][chapter 20]] and the checks in
+[[file:21-writing-one-from-nothing.org][chapter 21]] ran on a
+workstation, with no cluster involved.
+
+EESSI goes further. Its own installation instructions cover a laptop, and
+CernVM-FS ships a client profile for exactly that case, so a machine with
+no software stack of its own can mount one and load optimised modules in
+minutes. [[file:26-the-same-stack-somewhere-else.org][Chapter 26]] does
+it on four different kinds of machine.
+
+What changes on a large shared machine is the *consequences*, not the
+mechanism: many users, one tree, a scheduler, several
+microarchitectures, and a rebuild that costs somebody a night. Where a
+chapter is about those consequences it says so. Where it is about the
+mechanism, the mechanism is the same on your own machine, and you can run
+it there while reading.
+
+* What you need to read this
 
 Nothing, and that is the point.
 
@@ -115,6 +144,7 @@ reading the log rather than watching the progress bar.
 
 * Who wrote this
 
-Rohit Goswami, who maintains software stacks on a national
-supercomputer and wrote [[https://eb-stack.rgoswami.me][eb-stack]],
-the engine running the samples here.
+Rohit Goswami, who maintains software stacks on a national machine, runs
+the same tools on a laptop, and wrote
+[[https://eb-stack.rgoswami.me][eb-stack]], the engine running the
+samples here.

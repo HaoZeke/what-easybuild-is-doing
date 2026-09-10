@@ -33,7 +33,7 @@ vasp_std: error while loading shared libraries: libnvJitLink.so.13:
 cannot open shared object file: No such file or directory
 #+end_src
 
-Three things about this one are worth more than the fix.
+Three things about this one outlast the fix.
 
 *It was not a version-detection fault, and the obvious fix would have
 changed nothing.* =EBNVHPCCUDAVER= read =12.9= in the generated
@@ -60,8 +60,7 @@ sanity check, so the check that had been failing could pass honestly.
 
 * The login node that lied, twice
 
-This is the part that cost a day, and it is the most transferable thing
-in the chapter.
+This part cost a day.
 
 =/sw/arch= is a per-node-architecture symlink:
 
@@ -114,7 +113,7 @@ discovery from a build host to a user, which is
 [[file:06-what-installed-means.org][chapter 6]]'s whole argument.
 
 And the check was carrying information: *the toolchain module is broken*.
-That is worth knowing and worth escalating. A failing check on a package
+That is a thing to escalate. A failing check on a package
 you cannot fix is a report about something else, and deleting the report
 does not make the something else go away.
 

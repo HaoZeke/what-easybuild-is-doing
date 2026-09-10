@@ -1,0 +1,332 @@
+#+TITLE: Chapter 24. Standing where the build stood
+
+#+OPTIONS: toc:nil num:nil
+
+#+begin_objectives
+1. Find the four artifacts EasyBuild already left inside every
+   installation, and say what each one reproduces.
+2. Load a build's own environment from its devel module, and say what
+   that module contains beyond the environment.
+3. Choose between a devel module, a dumped script, a =BuildEnv= module
+   and a container, on stated grounds.
+#+end_objectives
+
+[[file:14-the-isolation-policy.org][Chapter 14]] measured the awkward
+fact: loading =foss/2025a= sets =EBROOTFOSS= and does not set =$CC=. The
+build environment gets constructed inside EasyBuild, during =prepare=,
+and evaporates when the run ends.
+
+Except that it does not evaporate, and this chapter is mostly about where
+it went.
+
+* Look inside the installation first
+
+Every successful install carries a subdirectory whose contents almost
+nobody opens.
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; a Tarball install of a one-file test package" :caption "What ends up in <installdir>/easybuild/"
+$ find ebtest/software/wobble/1.0 -type f | sed 's#.*/1.0/#1.0/#'
+1.0/wobble
+1.0/easybuild/easybuild-wobble-1.0-20260910.072006_test_report.md
+1.0/easybuild/wobble-1.0.eb
+1.0/easybuild/easybuild-wobble-1.0-20260910.072006.log
+1.0/easybuild/wobble-1.0-easybuild-devel
+1.0/easybuild/reprod/wobble-1.0.env
+1.0/easybuild/reprod/wobble-1.0.eb
+1.0/easybuild/reprod/easyblocks/tarball.py
+#+end_src
+
+One binary, and seven files about how it got there. Taking them in the
+order they become useful:
+
+=wobble-1.0.eb= is the easyconfig as used, archived beside the software.
+So the recipe for anything installed is on the machine, whatever
+happened to the repository it came from.
+
+=easybuild-...log= is the full build log, the one
+[[file:20-reading-a-failed-build.org][chapter 20]] teaches you to read,
+kept because the build succeeded.
+
+=..._test_report.md= is a test report, written *whether or not* you asked
+for one, which is [[file:23-testing.org][chapter 23]]'s claim confirmed
+on disk.
+
+=reprod/= is the interesting one, and it is three separate answers to
+"how would I do this again":
+
+- =reprod/wobble-1.0.eb=, the easyconfig, dumped from the parsed
+  configuration rather than copied;
+- =reprod/wobble-1.0.env=, a shell script that recreates the build
+  environment;
+- =reprod/easyblocks/tarball.py=, *the source of the easyblock that ran*.
+
+That last file is the one nothing else gives you. An easyconfig plus a
+toolchain does not determine a build, because the easyblock is code and
+code changes between EasyBuild versions. Archiving it turns the
+installation into a self-describing artifact: recipe, environment, and
+the program that interpreted them.
+
+The framework does this before the steps run, in =main.py=:
+=reproduce_build= creates the directory, =dump_env_easyblock= writes the
+environment script into it, and =copy_easyblocks_for_reprod= adds the
+easyblocks, including the ones used by components of a bundle and by
+extensions.
+
+#+ATTR_EB: :id reprod-dir :title What reprod/ contains, and what is missing from it :kind reference
+#+begin_detail
+| File | Reproduces |
+|---+---|
+| =<ec>.eb= | the recipe, as parsed |
+| =<ec>.env= | the module loads and the toolchain's environment variables |
+| =easyblocks/*.py= | the easyblock source, plus component and extension easyblocks |
+
+What is *not* in there, and matters when you use it a year later:
+
+- the EasyBuild framework version, which is in the log rather than here;
+- the source archives, which are in =sourcepath= or upstream;
+- the dependency *installations*, which are modules elsewhere in the
+  tree; the =.env= names them, and if they were removed it names things
+  that no longer exist;
+- the operating system and its libraries, which is what
+  [[file:11-eessi-somebody-elses-stack.org][chapter 11]]'s
+  compatibility layer exists to pin.
+
+=--minimal-build-env= and =--skip-sanity-check= change what gets
+written: a run with =--sanity-check-only= deliberately skips "build
+stats, easyconfigs archive, reprod files", so an installation checked
+that way carries less than one built normally.
+#+end_detail
+
+* The devel module
+
+The fourth artifact is a modulefile, and it is the direct answer to
+chapter 14's problem.
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; system toolchain, so the compiler variables are the host's" :caption "The generated devel module, first lines"
+$ head -3 ebtest/software/wobble/1.0/easybuild/wobble-1.0-easybuild-devel
+setenv("CC", "gcc")
+setenv("CXX", "g++")
+setenv("PATH", "/scratch/ebvenv/bin:$HOME/.local/bin:...<the whole of it>")
+#+end_src
+
+Its docstring in =easybuild/framework/easyblock.py= states both the use
+and the limit:
+
+#+begin_quote
+Create a develop module file which sets environment based on the build.
+Usage: module load name, which loads the module you want to use.
+$EBDEVELNAME should then be the full path to the devel module file. So now
+you can module load $EBDEVELNAME.
+
+WARNING: you cannot unload using $EBDEVELNAME (for now: use module unload
+`basename $EBDEVELNAME`)
+#+end_quote
+
+So the loop is two commands:
+
+#+begin_example
+module load QMCPACK/4.4.0-foss-2025a
+module load $EBDEVELQMCPACK
+#+end_example
+
+and after the second one your shell has the compilers, the flags and the
+=$LIB*= link lines that
+[[file:16-what-a-toolchain-injects.org][chapter 16]] tabulates, for that
+package's build, on this machine.
+
+Two things about it that the documentation does not say and the code
+does.
+
+*It records every environment change, not a curated set.* The
+implementation iterates =env.get_changes()= and emits a =setenv= for each
+non-empty value. On the run above that included =$PATH= in full and two
+variables named =_ModuleTable001_= and =_ModuleTable002_=, which are
+Lmod's own base64 bookkeeping. Nothing filters them. A devel module is
+therefore a faithful record and not a tidy one, and a =setenv= of
+=$PATH= is a thing to read before you load it into a shell you care
+about.
+
+*It loads the devel modules of its dependencies.* The load lines are
+built by scanning the environment for other =$EBDEVEL*= variables and
+emitting a load for each, so loading one devel module pulls in the build
+environments of the things it was built against.
+
+#+ATTR_EB: :id docs-vs-code-devel :title Documentation and code, on development environments :kind discrepancy
+#+begin_detail
+Three claims to check rather than inherit, all verified against
+EasyBuild 5.3.1 as installed from PyPI on 2026-09-10.
+
+*=--dump-env-script= has no prose documentation.* It appears in the
+generated option table at
+[[https://docs.easybuild.io/version-specific/eb-help/][docs.easybuild.io/version-specific/eb-help]]
+and in release notes, and nowhere else on the documentation site. Its
+behaviour here was read from =dump_env_script= and =dump_env_easyblock=
+in =easybuild/framework/easyconfig/tools.py= and confirmed by running
+it.
+
+*The devel module is generated by default and is not the same thing.*
+=--dump-env-script= writes the *toolchain's* environment for an
+easyconfig, ahead of a build, into your current directory. The devel
+module records the environment the build *actually had*, after the fact,
+inside the installation. Neither page describes the pair.
+
+*The same environment script is written twice, to different places, by
+different code paths.* =dump_env_easyblock= is called from
+=dump_env_script= for the file in your working directory, and again from
+=main.py= for =reprod/<ec>.env=. The second one is what survives.
+#+end_detail
+
+* When you want it before the build
+
+=eb --dump-env-script <easyconfig>= writes =<basename>.env= into the
+current directory: the =module load= lines for the toolchain and its
+dependencies, then the =export= lines for the build environment. It
+builds nothing, and it refuses to overwrite.
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "A dumped environment for a system-toolchain recipe, and the refusal to overwrite it"
+$ eb wobble-1.0.eb --dump-env-script
+Script to set up build environment for wobble-1.0.eb dumped to
+wobble-1.0.env
+
+$ cat wobble-1.0.env
+#!/bin/bash
+# script to set up build environment as defined by EasyBuild v5.3.1 for
+# wobble-1.0.eb
+# usage: source wobble-1.0.env
+
+# toolchain & dependency modules
+# (no modules loaded)
+
+# build environment
+# (no build environment defined)
+
+$ eb wobble-1.0.eb --dump-env-script
+ERROR: Script(s) already exists, not overwriting them (unless --force is
+used): wobble-1.0.env
+#+end_src
+
+Both sections are empty there, and that is the correct answer rather than
+a failure: =wobble= uses the system toolchain, which loads no modules and
+sets no compiler variables. Run it on a =foss= easyconfig and both
+sections fill up. The two comments are the tool declining to write an
+empty file and calling it an environment.
+
+* When somebody else needs it
+
+A dumped script is yours. For a team, the mechanism is a module, and
+EasyBuild ships a generic easyblock for exactly this: =BuildEnv=, whose
+docstring is "EasyBuild support for creating a module that loads the build
+environment flags for the current toolchain".
+
+#+begin_src easyconfig :widget parse
+easyblock = 'BuildEnv'
+
+name = 'buildenv'
+version = 'default'
+versionsuffix = '-foss-2025a'
+
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+moduleclass = 'devel'
+#+end_src
+
+That installs no software. What it produces is a modulefile that sets
+=$CC=, =$CXX=, =$FC=, =$CFLAGS= and the rest for the named toolchain, so
+a developer gets the compiler environment the way they get everything
+else. It also copies in the RPATH wrapper directory when the site builds
+with =--rpath=, so compiling by hand produces binaries linked the way the
+stack's are.
+
+And for a machine where you cannot install a modules tool at all,
+EasyBuild generates container recipes: =--container-*= options, an image
+built with =--container-build-image= if you have the privileges, both
+stored under =--containerpath=.
+
+#+ATTR_EB: :id env-three-ways :title Five ways to get a build environment :kind reference
+#+begin_detail
+| Mechanism | Produces | Where it lives | Reproduces |
+|---+---+---+---|
+| the devel module | a modulefile, generated by default | =<installdir>/easybuild/= | the environment a specific build had |
+| =reprod/<ec>.env= | a shell script, written by default | =<installdir>/easybuild/reprod/= | the same, as a script, beside the easyblock source |
+| =eb --dump-env-script= | =<ec>.env= to source | your working directory | the toolchain environment for a recipe, before building |
+| =BuildEnv= easyblock | a modulefile you install | the module tree | a toolchain's environment, for anyone, versioned |
+| =--container-*= | a recipe, and an image | =--containerpath= | the whole machine |
+
+Ordered by how much you have to do: the first two are already on disk for
+every install your site has made.
+#+end_detail
+
+* Doing this on top of EESSI
+
+If the stack came from =/cvmfs= rather than from your own build host, the
+same problem has an EESSI-specific answer, and it is a module:
+=EESSI-extend=. Load it with =EESSI_SITE_INSTALL= or
+=EESSI_USER_INSTALL= set and EasyBuild is configured to install *into*
+that location on top of the mounted stack, which is
+[[file:11-eessi-somebody-elses-stack.org][chapter 11]]'s subject.
+=EESSI_EASYBUILD_HOOKS_OVERRIDE= replaces the hooks it uses, which
+matters because those hooks are what make an EESSI build EESSI-shaped;
+overriding them is how you get a build that is not.
+
+#+ATTR_EB: :id sources-24 :title Where this chapter comes from :kind sources
+#+begin_detail
+Upstream documentation, all fetched 2026-09-10:
+
+- [[https://docs.easybuild.io/version-specific/eb-help/][the generated option table]], the only place =--dump-env-script=, =--last-log= and =--skip-test-step= appear
+- [[https://docs.easybuild.io/interactive-debugging-failing-shell-commands/][interactive debugging of failing shell commands]], for =cmd.sh= and =env.sh=
+- [[https://docs.easybuild.io/log-files/][log files]], for what is copied into the installation
+- [[https://docs.easybuild.io/version-specific/generic-easyblocks/][the generic easyblock list]], for =BuildEnv=
+- [[https://www.eessi.io/docs/using_eessi/setting_up_environment/][EESSI: setting up your environment]], for =EESSI-extend= and the override variables
+
+Code, from EasyBuild 5.3.1 as installed:
+
+- =easybuild/framework/easyblock.py=, =make_devel_module=, for the devel module's contents and its warning
+- =easybuild/framework/easyconfig/tools.py=, =dump_env_script= and =dump_env_easyblock=, for the script's two sections
+- =easybuild/main.py=, =reproduce_build= and =copy_easyblocks_for_reprod=, for =reprod/=
+- =easybuild/easyblocks/generic/buildenv.py=, for what a =buildenv= module carries
+
+Everything shown as a transcript was run on a workstation with no
+cluster, no scheduler and no site stack, on 2026-09-10.
+#+end_detail
+
+#+ATTR_EB: :id EB-DevEnv-1 :title Four people who need an environment
+#+begin_exercise
+Pick a mechanism from [[dive:env-three-ways]] for each, and say what
+makes the others worse.
+
+1. A user asks how a module on your site was built, three years after the
+   person who built it left.
+2. You are debugging why one package's =cmake= picks the wrong MPI, and
+   you want to run =cmake= by hand twenty times.
+3. A PhD student needs to compile their own code against the toolchain
+   the site's VASP was built with, for the next six months.
+4. Somebody wants to rebuild a 2023 installation exactly, on a new
+   machine, and has the module tree but not the repository.
+
+#+begin_solution
+1. Nothing new: =<installdir>/easybuild/= already has the easyconfig, the
+   log and =reprod/=. The log names the framework version, the easyconfig
+   names the toolchain and the dependencies, and =reprod/easyblocks/=
+   holds the code that ran. This is the answer to most software
+   archaeology on an EasyBuild site, and it needs no tooling.
+
+2. =eb --dump-env-script=, sourced once. The devel module would also
+   work if the package is installed, and is one module load rather than a
+   file. Either beats a =BuildEnv= module, which is more machinery than a
+   twenty-minute investigation needs.
+
+3. =BuildEnv=, named with the toolchain in the =versionsuffix=. Six
+   months and a second person means the environment should be
+   discoverable and maintained. A dumped script in your home directory is
+   neither, and a devel module is tied to one package's build rather than
+   to the toolchain.
+
+4. =reprod/=, and then a careful reading of what
+   [[dive:reprod-dir]] says is missing from it. You have the recipe, the
+   environment script and the easyblock source. You do not have the
+   framework version except in the log, the source archives except
+   upstream, or the operating system. On a new machine the last one is
+   the hard part, which is the argument for building on top of a
+   compatibility layer rather than on top of a distribution.
+#+end_solution
+#+end_exercise

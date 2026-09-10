@@ -52,7 +52,7 @@ architecture at all: full resolved filenames. The dictionary does not
 know about architectures. It knows about names, and the templating
 decides which name gets looked up.
 
-That has a consequence worth internalising. Add support for a third
+That has a consequence. Add support for a third
 architecture and the dictionary does not complain about the gap. The
 lookup simply fails to find a key, on that architecture only, on the
 machine that has it. A per-architecture dictionary is silent about the

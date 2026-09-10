@@ -15,7 +15,7 @@ directly. Then there is everything written in a language that arrived with its o
 package manager. A package manager is a second opinion about what should
 be installed.
 
-EasyBuild's answer is the same for every one of them, and worth stating
+EasyBuild's answer is the same for every one of them, and it comes
 before the details. *The language's tool is allowed to build, and not to
 resolve.*
 
@@ -51,7 +51,7 @@ download into a build failure rather than a quiet success.
 pip deciding that something already present is good enough, which would
 make the build depend on what happened to be there.
 
-=sanity_pip_check= runs =pip check= at the end, which is worth having. It
+=sanity_pip_check= runs =pip check= at the end. It
 asks pip whether the environment it now sees is internally consistent. A
 declared version set that does not satisfy the packages' own metadata is
 caught here. It is
@@ -102,8 +102,8 @@ next year.
 
 * The ecosystem with no easyblock
 
-There are 363 generic easyblocks in EasyBuild 5.3. None of them is for
-npm.
+EasyBuild 5.3.1 ships 82 generic easyblock classes, in 47 modules, and
+282 software-specific ones. None of them is for npm.
 
 That absence is informative rather than an oversight. npm's model is a
 resolver that runs at install time against a live registry, producing a
@@ -111,8 +111,8 @@ tree that depends on when you ran it. Nothing in that is compatible with
 enumerate-and-vendor. A generic easyblock would have to either forbid
 what npm is for, or accept a build nobody can reproduce.
 
-So Node packages on a cluster get handled one of three ways, and it is
-worth knowing which you are looking at.
+So Node packages get handled one of three ways, and which one you are
+looking at changes what you can promise about it.
 
 *Vendored by hand.* The easyconfig carries a =package-lock.json= as a
 source or a patch, and the build runs =npm ci --offline= against a
