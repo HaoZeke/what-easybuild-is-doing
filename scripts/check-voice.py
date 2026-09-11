@@ -31,7 +31,8 @@ EX_END = re.compile(r"^#\+end_(exercise|solution)\b", re.I)
 # Authorial first person, not a lone capital i in a path.
 I_RE = re.compile(r"(?<![A-Za-z/])\bI\b(?!/)")
 WE_RE = re.compile(r"\b[Ww]e\b")
-YOU_RE = re.compile(r"\b[Yy]ou\b")
+# yourself is the same second-person leftover as you (headings, tables).
+YOU_RE = re.compile(r"\b[Yy]ou(?:rself)?\b")
 ANTHRO_RE = re.compile(
     r"\b(wants?|refuses?|sits?|sitting|cheerfully)\b", re.I
 )
@@ -117,18 +118,19 @@ def main() -> int:
         tutorial = is_tutorial(path)
         text = path.read_text()
         for n, line, exercise, was_quote in prose_rows(text):
-            # Operator checklists keep I.
-            if line.lstrip().startswith("|"):
-                continue
+            # Operator checklist tables may keep I/we. Table cells are
+            # still exposition, so you there is a hit.
+            is_table = line.lstrip().startswith("|")
             quotes, _ = quoted_spans(line, was_quote)
-            for m in I_RE.finditer(line):
-                if in_spans(m.start(), quotes):
-                    continue
-                problems.append(f"{path.relative_to(ROOT)}:{n}: authorial I")
-            for m in WE_RE.finditer(line):
-                if in_spans(m.start(), quotes):
-                    continue
-                problems.append(f"{path.relative_to(ROOT)}:{n}: authorial we")
+            if not is_table:
+                for m in I_RE.finditer(line):
+                    if in_spans(m.start(), quotes):
+                        continue
+                    problems.append(f"{path.relative_to(ROOT)}:{n}: authorial I")
+                for m in WE_RE.finditer(line):
+                    if in_spans(m.start(), quotes):
+                        continue
+                    problems.append(f"{path.relative_to(ROOT)}:{n}: authorial we")
             link_spans = [m.span() for m in LINK_RE.finditer(line)]
             last = line.rfind("[[")
             if last != -1 and line[last:].count("]]") == 0:

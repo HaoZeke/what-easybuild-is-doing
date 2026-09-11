@@ -472,7 +472,7 @@ single request to a Stratum 1 server". Eight hundred nodes starting the
 same job ask for the same library in the same second; that line makes it
 one request upstream.
 
-* On your machine
+* The local client
 
 The client is a FUSE filesystem mounted by =autofs= on first access, and
 unmounted again when nothing has used it for a while. It starts as root

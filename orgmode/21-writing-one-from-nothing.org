@@ -162,11 +162,11 @@ A =None= entry skips verification for that file, and
 site building a shared stack needs set.
 #+end_detail
 
-The grammar (see [[dive:checksum-grammar]]) matters most when
-reading somebody else's easyconfig: two checksums then look the same
-whether they mean "either" or "both".
+The grammar (see [[dive:checksum-grammar]]) matters most when reading
+somebody else's easyconfig: the written form does not mark whether two
+checksums mean "either" or "both".
 
-* The two checks before it leaves your machine
+* The two checks before a recipe leaves the machine
 
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 with pycodestyle, local workstation, 2026-09-10; paths elided" :caption "The style check, on a file with two faults planted in it"
 $ eb --check-style ugly-1.0.eb
