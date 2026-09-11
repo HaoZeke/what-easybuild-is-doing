@@ -1,11 +1,12 @@
 // Island runtime: hydrate each widget on its own terms, and load the
 // engine once, lazily, for the whole page.
 //
-// The engine is eb-stack. The full one is the crate compiled to
-// WebAssembly and does not exist yet, because the crate does not build for
-// wasm32 until its IO-free core does. eb-widget-engine.js supplies a
-// partial engine in the meantime: the widgets it implements go live and
-// the rest settle inert saying which of the two things is missing.
+// The page engine applies tables exported from eb-stack (charmap,
+// templates, hierarchy, a canned universe). It is not eb-stack and not
+// EasyBuild. eb-stack is the updater/generator that emits .eb files;
+// EasyBuild builds them. The crate does not build for wasm32 yet
+// (ureq, fs2). eb-widget-engine.js is the stand-in: implemented
+// widgets go live, the rest settle inert.
 //
 // That partial state is deliberate rather than a placeholder. The book
 // publishes a chapter at a time, and a chapter whose prose only works once
@@ -427,6 +428,211 @@
       schedule(islands[i]);
     }
   }
+
+  // Escape opens a page-level playground, the same idea as janet.guide:
+  // the reader is not restricted to the samples the chapter thought of.
+  // Other panels on this page already own Escape when they are open, so
+  // this yields to an open knowl, Ask overlay, or annotation panel.
+  var REPL_WIDGETS = [
+    "parse",
+    "template",
+    "easyblock",
+    "hierarchy",
+    "modname",
+    "solve",
+    "lint",
+    "emit",
+  ];
+  var REPL_SEEDS = {
+    parse:
+      "name = 'code-server'\nversion = '4.130.0'\ntoolchain = SYSTEM\n" +
+      "sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']\n" +
+      "moduleclass = 'tools'\n",
+    template:
+      "name = 'code-server'\nversion = '4.130.0'\n" +
+      "sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']\n",
+    easyblock: "code-server\nc++\nC#\nnetCDF-Fortran\n",
+    hierarchy: "foss-2025a\n",
+    modname:
+      "name = 'GROMACS'\nversion = '2025.2'\n" +
+      "toolchain = {'name': 'foss', 'version': '2025a'}\n" +
+      "versionsuffix = '-CUDA-12.8.0'\n",
+    solve:
+      "name = 'GROMACS'\nversion = '2025.2'\n" +
+      "toolchain = {'name': 'foss', 'version': '2025a'}\n" +
+      "dependencies = [\n    ('Python', '3.13.1'),\n    ('FFTW', '3.3.10'),\n]\n" +
+      "builddependencies = [\n    ('CMake', '3.31.4'),\n]\n",
+    lint:
+      "name = 'code-server'\nversion = '4.130.0'\ntoolchain = SYSTEM\n" +
+      "sources = ['code-server-%(version)s-linux-amd64.tar.gz']\n",
+    emit:
+      "name = 'zlib'\nversion = '1.3.1'\n" +
+      "toolchain = {'name': 'GCCcore', 'version': '14.2.0'}\n" +
+      "sources = [SOURCELOWER_TAR_GZ]\n",
+  };
+
+  function otherPanelOwnsEscape() {
+    if (document.querySelector(".eb-knowl-box")) {
+      return true;
+    }
+    var ask = document.querySelector("[data-eb-ask-overlay], .eb-ask-overlay");
+    if (ask && !ask.hidden && ask.getAttribute("hidden") === null) {
+      var style = window.getComputedStyle ? window.getComputedStyle(ask) : null;
+      if (!style || style.display !== "none" && style.visibility !== "hidden") {
+        if (ask.offsetParent !== null || ask.getAttribute("aria-hidden") === "false") {
+          if (!ask.hidden) {
+            return ask.getAttribute("hidden") !== "true";
+          }
+        }
+      }
+    }
+    var annot = document.querySelector(".eb-annot-panel");
+    if (annot && annot.getAttribute("data-eb-open") === "1") {
+      return true;
+    }
+    return false;
+  }
+
+  function buildRepl() {
+    if (document.querySelector(".eb-repl")) {
+      return document.querySelector(".eb-repl");
+    }
+    var dock = document.createElement("div");
+    dock.className = "eb-repl";
+    dock.setAttribute("role", "dialog");
+    dock.setAttribute("aria-label", "EasyBuild playground");
+    dock.hidden = true;
+
+    var bar = document.createElement("div");
+    bar.className = "eb-repl-bar";
+
+    var title = document.createElement("span");
+    title.className = "eb-repl-title";
+    title.textContent = "Playground  ·  Esc to close";
+
+    var select = document.createElement("select");
+    select.className = "eb-repl-widget";
+    select.setAttribute("aria-label", "playground widget");
+    for (var i = 0; i < REPL_WIDGETS.length; i++) {
+      var opt = document.createElement("option");
+      opt.value = REPL_WIDGETS[i];
+      opt.textContent = REPL_WIDGETS[i];
+      select.appendChild(opt);
+    }
+
+    var close = document.createElement("button");
+    close.type = "button";
+    close.className = "eb-repl-close";
+    close.textContent = "Close";
+    close.setAttribute("aria-label", "Close playground");
+
+    bar.appendChild(title);
+    bar.appendChild(select);
+    bar.appendChild(close);
+
+    var editor = document.createElement("textarea");
+    editor.className = "eb-repl-editor";
+    editor.spellcheck = false;
+    editor.setAttribute("aria-label", "playground input");
+    editor.value = REPL_SEEDS.parse;
+
+    var output = document.createElement("pre");
+    output.className = "eb-repl-output";
+    output.setAttribute("aria-live", "polite");
+    output.setAttribute("role", "status");
+
+    dock.appendChild(bar);
+    dock.appendChild(editor);
+    dock.appendChild(output);
+    document.body.appendChild(dock);
+
+    var pending = null;
+    function run() {
+      var engine = window.EB_STACK_ENGINE;
+      var name = select.value;
+      if (!engine || typeof engine[name] !== "function") {
+        output.textContent =
+          "That widget is not loaded. Wait a moment, or reload.";
+        return;
+      }
+      try {
+        output.textContent = String(engine[name](editor.value, null));
+      } catch (err) {
+        output.textContent = String((err && err.message) || err);
+      }
+    }
+
+    function onInput() {
+      if (pending) {
+        clearTimeout(pending);
+      }
+      pending = setTimeout(function () {
+        pending = null;
+        run();
+      }, 320);
+    }
+
+    editor.addEventListener("input", onInput);
+    select.addEventListener("change", function () {
+      if (Object.prototype.hasOwnProperty.call(REPL_SEEDS, select.value)) {
+        if (!editor.value.trim() || editor.value === REPL_SEEDS[editor.getAttribute("data-eb-seed")]) {
+          editor.value = REPL_SEEDS[select.value];
+        }
+        editor.setAttribute("data-eb-seed", select.value);
+      }
+      run();
+    });
+    editor.setAttribute("data-eb-seed", "parse");
+    close.addEventListener("click", function () {
+      setReplOpen(false);
+    });
+
+    dock._ebRun = run;
+    dock._ebEditor = editor;
+    return dock;
+  }
+
+  function setReplOpen(open) {
+    var dock = buildRepl();
+    dock.hidden = !open;
+    document.body.classList.toggle("eb-repl-open", open);
+    if (open) {
+      if (window.EB_STACK_ENGINE) {
+        dock._ebRun();
+      } else {
+        loadEngine().then(
+          function () {
+            dock._ebRun();
+          },
+          function () {
+            dock.querySelector(".eb-repl-output").textContent =
+              "The engine did not load.";
+          }
+        );
+      }
+      dock._ebEditor.focus();
+    }
+  }
+
+  function toggleRepl() {
+    var dock = document.querySelector(".eb-repl");
+    var open = dock && !dock.hidden;
+    setReplOpen(!open);
+  }
+
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key !== "Escape") {
+      return;
+    }
+    if (ev.defaultPrevented) {
+      return;
+    }
+    if (otherPanelOwnsEscape()) {
+      return;
+    }
+    ev.preventDefault();
+    toggleRepl();
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", scheduleAll);

@@ -57,8 +57,8 @@ Then look at =exts_defaultclass=. That is the easyblock for the
 extensions, and it is a default: an entry in =exts_list= can override
 it with its own =easyblock= key.
 
-Chapter 1 also said EasyBuild refuses to guess, and that the two
-parameters which could soften the refusal both default to true. There
+Chapter 1 also said EasyBuild does not guess, and that the two
+parameters which could soften that rule both default to true. There
 was one exception, named and then set aside:
 
 #+begin_quote
@@ -109,7 +109,7 @@ A bundle is named =ExampleRSet=, version =1.0=, and its
 Its =exts_list= has an entry for =latex2exp= at =0.9.6=.
 
 1. What filename does that entry download?
-2. A colleague wants the bundle's own version in an extension's option
+2. A colleague asks for the bundle's own version in an extension's option
    and writes =%(version)s= there. What do they get?
 3. They then try =%(ext_version)s= for the extension's version in the
    bundle's own =versionsuffix=. Why is that a different kind of
@@ -166,7 +166,7 @@ hours. The useful mental model is "running two hundred small builds in
 one process" rather than "installing R packages".
 
 It fails in the middle. When extension 140 of 200 fails, the package
-you asked for did not fail. One extension did, and the error names
+that was asked for did not fail. One extension did, and the error names
 that one.
 
 Reading that failure is chapter 1's discipline unchanged. The error

@@ -1,6 +1,12 @@
 #+TITLE: Chapter 2. A toolchain is a hierarchy
 #+OPTIONS: toc:nil num:nil
 
+#+begin_questions
+- What does =foss-2025a= name, if it is not a label?
+- Which toolchains may a =foss= package depend on?
+- Is =system= in the default hierarchy walk?
+#+end_questions
+
 #+begin_objectives
 1. Say what a toolchain names, and why it is not a label.
 2. Given a package's toolchain, say which other toolchains its
@@ -9,7 +15,7 @@
    module rather than to your easyconfig.
 #+end_objectives
 
-The easyconfig in [[file:01-an-easyconfig-is-python.org][chapter 1]] had one line we did not touch:
+This line looks like a sticker. It is not.
 
 #+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'
@@ -17,23 +23,22 @@ version = '4.130.0'
 toolchain = SYSTEM
 #+end_src
 
-=SYSTEM= is the simplest possible value for that line, and almost
-nothing on a real cluster uses it. What you will see instead:
+=SYSTEM= is the simplest value that line accepts, and almost
+nothing on a real cluster uses it. What appears instead:
 
 #+begin_src easyconfig :widget hierarchy
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
 
 Read as a name, =foss-2025a= looks like a label for "the 2025a
-open-source compiler stack". That reading will cost you an afternoon.
-=foss-2025a= is not a name. It is the top of a structure, and that
-structure decides which versions of which libraries your package is
-allowed to see.
+open-source compiler stack". It is the top of a structure. That
+structure is which versions of which libraries a package on this
+toolchain is allowed to see.
 
-Run the sample. What that line names is not one toolchain. It is a
+Ask the sample. What that line names is not one toolchain. It is a
 list.
 
-* The list has an order, and the order is the point
+* The list has an order, and the order does work
 
 The function is =get_toolchain_hierarchy=, in
 =easybuild/framework/easyconfig/easyconfig.py=, and its docstring says
@@ -52,17 +57,16 @@ to depend on things built with any of them.
 
 The order matters and it is not a straight line. =GCCcore= comes before
 =GCC=, which comes before both =gompi= and =gfbf=, which both come
-before =foss=. Those middle two sit at the same level: =gompi= is =GCC=
+before =foss=. Those middle two are at the same level: =gompi= is =GCC=
 plus an MPI, =gfbf= is =GCC= plus the numerical libraries, and neither
 is built on the other. So a printed list has to put one of them first,
-and which one carries no meaning. Run the sample and it says so.
+and which one carries no meaning. Ask the sample and it says so.
 
-That mechanism sits behind a rule you may have absorbed without knowing
-why. A =foss= package can depend on a =GCCcore= build; a =GCCcore=
-package cannot depend on a =foss= build. Convention and courtesy have
-nothing to do with it. A =GCCcore= package's hierarchy does not contain
-=foss=, so a =foss= dependency is never a candidate. The robot then
-reports that it cannot find something sitting right there on disk.
+A =foss= package can depend on a =GCCcore= build. A =GCCcore=
+package cannot depend on a =foss= build. Courtesy has nothing to do
+with it. A =GCCcore= package's hierarchy does not contain =foss=, so
+a =foss= dependency is never a candidate. The robot then reports that
+it cannot find something present right there on disk.
 
 * The shape is a graph
 
@@ -84,7 +88,7 @@ harder one, and draws it:
              (system)
 #+end_example
 
-Two toolchains sit at the same level with a shared ancestor, so the
+Two toolchains are at the same level with a shared ancestor, so the
 walk cannot be "follow =SUBTOOLCHAIN= upward until it runs out". A
 comment in the implementation states it: the search is breadth-first,
 "required to take into account the potential for multiple
@@ -120,30 +124,27 @@ in the =GCCcore= one.
 
 Your colleague is reading =module avail=, which lists what is installed.
 The robot is asking a different question: what is installed *and in this
-package's hierarchy*. The module is there and it is not a candidate, so
-the error says it cannot be found. Nothing is lying, and the two
-questions are not the same one.
+package's hierarchy*. The module is there. It is not a candidate. The
+error says it cannot be found, because those are two different
+questions.
 #+end_solution
 #+end_exercise
 
 * The system toolchain is not always in it
 
-Here is the detail that catches people who have read this far and
-think they understand it. From the same docstring:
+The same docstring then qualifies the bottom of the list:
 
 #+begin_quote
 The system toolchain is considered the most minimal subtoolchain only
 if the =add_system_to_minimal_toolchains= build option is enabled.
 #+end_quote
 
-So a =SYSTEM= build is not automatically visible to a =foss= package.
-Whether the bottom of the ladder exists at all is a configuration
-choice, made by whoever set up the EasyBuild installation. It is off by
-default.
-
-If you have ever wondered why a perfectly good =SYSTEM= module refuses
-to satisfy a dependency, that is the answer. It is not in your
-easyconfig.
+That option only changes the walk when a dependency did *not* name a
+toolchain. =('CUDA', '12.9.1', '', SYSTEM)= still finds the SYSTEM
+module, flag or no flag. What the option does not do, off by default,
+is treat a bare =('zlib', '1.3.1')= as "also try SYSTEM". A foss
+package that forgot the fourth field is looking for
+=zlib/1.3.1-foss-…= or a subtoolchain of foss, not =zlib/1.3.1=.
 
 * What a toolchain module has to contain
 
@@ -157,9 +158,8 @@ List of toolchain dependency modules and toolchain definition do not match
 
 That comes from =_verify_toolchain= in
 =easybuild/tools/toolchain/toolchain.py=, and it fires in the *prepare*
-step, seconds in, before anything is unpacked. Three properties of the
-check are worth knowing because together they make it unfixable from
-your easyconfig:
+step, seconds in, before anything is unpacked. Three properties of that
+check, together, make it unfixable from your easyconfig:
 
 - It reads the *direct* dependencies of the toolchain module, and only
   those. The call is =dependencies_for(mod_name, ..., depth=0)=. A
@@ -171,10 +171,10 @@ your easyconfig:
   everything. So a subclass has to opt an element out; nothing opts out
   by accident.
 
-The consequence is a failure mode that looks like your package's fault
-and is not. A framework release that renames or splits a toolchain
-element breaks *every* package on that generation at once. No
-easyconfig parameter reaches the check.
+The failure looks like your package's fault and is not. A framework
+release that renames or splits a toolchain element breaks *every*
+package on that generation at once. No easyconfig parameter reaches the
+check.
 
 EasyBuild 5.2 did exactly this. In toolchains built on the NVIDIA HPC
 SDK (=NVHPC=), the compiler element became a module named
@@ -182,13 +182,12 @@ SDK (=NVHPC=), the compiler element became a module named
 expected the old name.
 
 The tell is that the two lists in the error differ by one element. Read
-the lists rather than the package. The difference names the element, and
+the lists, not the package. The difference names the element, and
 the fix is a toolchain module that carries it. In practice that means
 moving to a generation whose toolchain modules already do.
 
 * The same name can mean two toolchains
 
-One last piece of evidence that a toolchain is not a name.
 =get_toolchain_hierarchy= contains this, in full:
 
 #+begin_quote
@@ -202,19 +201,3 @@ Two different toolchain classes, one string. The framework disambiguates
 by version number, with a =TODO: delete with EasyBuild 6.0= beside it.
 
 If =foss-2025a= were a label, that code would be unnecessary.
-
-* A name, and what is under it
-
-=toolchain= names the top of a hierarchy, and the hierarchy decides
-which dependencies are candidates at all. It is computed rather than
-declared. A breadth-first walk over a graph produces it. Optional
-levels appear only when installed, and =system= sits at the bottom only
-when the installation put it there.
-
-The module has its own end to keep up. When its direct dependencies
-stop matching what its class expects, every package on that generation
-fails in the prepare step. The error is about the toolchain rather than
-about you.
-
-Next: the number beside a dependency, which looks like a minimum
-version and is not one.

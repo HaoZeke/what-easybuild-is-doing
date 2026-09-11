@@ -10,15 +10,15 @@
 #+end_objectives
 
 [[file:02-a-toolchain-is-a-hierarchy.org][Chapter 2]] was about which
-dependencies a toolchain lets you see. This chapter is the other half:
+dependencies a toolchain makes visible. This chapter is the other half:
 what it does to the compiler.
 
 * The variables, and where they are not
 
 [[file:14-the-isolation-policy.org][Chapter 14]] measured the surprising
 part, and it is worth restating because everything here follows from it.
-Loading a toolchain module gives you =EBROOTFOSS= and =EBVERSIONFOSS=.
-It does not give you =$CC=.
+Loading a toolchain module gives =EBROOTFOSS= and =EBVERSIONFOSS=.
+It does not give =$CC=.
 
 The compiler variables are set by EasyBuild's *toolchain object*, during
 =prepare=, inside the build. A =foss= build gets, among others:
@@ -37,8 +37,8 @@ An easyconfig that hardcodes =-lopenblas= is describing one toolchain and
 will be wrong on the next.
 
 The practical consequence is the one from chapter 14. To reproduce a
-build's environment you cannot load its toolchain; you need
-=eb --dump-env-script=, which is
+build's environment, loading its toolchain is not enough;
+=eb --dump-env-script= is needed, which is
 [[file:24-development-environments.org][chapter 24]].
 
 * toolchainopts is a dictionary of switches
@@ -51,7 +51,7 @@ toolchainopts = {'usempi': True, 'openmp': True, 'pic': True}
 #+end_src
 
 Each key changes what the toolchain object puts in those variables.
-=foss= in EasyBuild 5.3 accepts about thirty, and you can ask:
+=foss= in EasyBuild 5.3 accepts about thirty, and the list is:
 
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The options a foss build accepts, abridged"
 $ eb --avail-toolchain-opts=foss
@@ -75,7 +75,7 @@ Available options for foss toolchain:
     veryloose: Very loose precision (default: False)
 #+end_src
 
-Four of them account for most of what you will see in real easyconfigs.
+Four of them account for most of what appears in real easyconfigs.
 
 =usempi= makes =$CC= the MPI wrapper rather than the bare compiler. A
 package whose build system does not know about MPI wrappers, and just
@@ -87,11 +87,11 @@ and its configure script has no =--with-mpi=.
 more common than it should be.
 
 =pic= adds =-fPIC=. Needed when something links a static library into a
-shared one, and the error you get without it names a relocation rather
+shared one, and the error without it names a relocation rather
 than anything recognisable.
 
 The precision family, =strict= through =veryloose=, is the one to leave
-alone unless you have a reason. It changes floating-point semantics, which
+alone unless there is a reason. It changes floating-point semantics, which
 changes results. A physics code that specifies =strict= is making a
 claim about its own numerics, and changing it silently changes the
 science.

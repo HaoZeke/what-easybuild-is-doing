@@ -19,7 +19,7 @@ An easyconfig is upstream's. A site has policies that apply to every
 build it runs. Where installations go, how modules are named, which
 compiler flags everything needs, what the local machines require.
 
-None of that belongs in an easyconfig. Put it there and you have
+None of that belongs in an easyconfig. Put it there and the site has
 forked upstream's file. Every version bump then becomes a merge, and
 every policy change a sweep across thousands of files.
 
@@ -96,7 +96,7 @@ not run.
 
 This applies to every list- or dictionary-valued parameter a hook
 touches. =dependencies=, =configopts=, =modextravars=, =patches=:
-assignment discards, and nothing warns you.
+assignment discards, and nothing warns.
 
 * Which qualifies [[file:01-an-easyconfig-is-python.org][chapter 1]]
 
@@ -117,7 +117,7 @@ an easyconfig says what it appears to say.
 
 The practical form: find out what =--hooks= is set to, in the
 configuration or the wrapper script that invoked =eb=, and read that
-file once. Most are short, and the guards tell you immediately whether
+file once. Most are short, and the guards report immediately whether
 the hook can have applied to your build.
 
 #+ATTR_EB: :id EB-Hook-1 :title The commands that never ran
@@ -170,9 +170,9 @@ the right tool when the same change has to reach files the site does
 not own and would rather not adopt.
 
 Reaching for the wrong one has a characteristic outcome each way. An
-overlay used for policy gives you a fork to maintain, one copy per
+overlay used for policy gives a fork to maintain, one copy per
 package, each drifting from upstream at its own pace. A hook used to
-carry a package-specific change gives you a global mechanism whose
+carry a package-specific change gives a global mechanism whose
 behaviour depends on a guard. The next person reads the easyconfig and
 sees none of it.
 
@@ -180,7 +180,7 @@ sees none of it.
 
 Chapter 1 said that whatever expected a path is a value somebody
 assigned in the easyconfig. At a site that uses hooks, that is true
-only once you know no hook touched it. Finding out means reading one
+only once it is known that no hook touched it. Finding out means reading one
 short Python file and its guards.
 
 Two rules follow, and the second is the one that bites.
@@ -191,9 +191,9 @@ behaviour as its body.
 And assigning a list parameter replaces it. =ec['postinstallcmds'] =
 [...]= discards whatever the easyconfig declared, with no diagnostic,
 and stays invisible until somebody adds =postinstallcmds= to a package
-the hook fires on. Append. Replace only when replacing is what you
-mean.
+the hook fires on. Append. Replace only when replacing is what is
+meant.
 
-The next three chapters are the ones where you do something. Install
-into a prefix you own, do it on top of EESSI, then read how the engine
-behind these samples decides what it has established.
+The next three chapters are the ones where something is done. Install
+into a prefix the operator owns, do it on top of EESSI, then read how
+the engine behind these samples decides what it has established.

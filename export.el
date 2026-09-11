@@ -102,8 +102,8 @@
 ;; line has nowhere to put them.
 
 (defconst ebguide-lesson-blocks
-  '("objectives" "exercise" "solution" "keypoints" "prerequisites"
-    "predict" "reveal")
+  '("questions" "objectives" "exercise" "solution" "keypoints"
+    "prerequisites" "predict" "reveal")
   "Special-block types that become lesson directives.")
 
 ;; A dive-in detail is born in one place and transcluded from anywhere, so

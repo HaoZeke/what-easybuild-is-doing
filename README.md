@@ -23,17 +23,14 @@ ship as recordings of real runs.
 First draft: four chapters, front-loaded on purpose.
 
 The in-page engine is a table-backed stand-in, not eb-stack and not
-EasyBuild. `easyblock` is live, backed by the name-encoding table
-exported from eb-stack at build time. The other widgets settle
-read-only and say they are unimplemented rather than pretending the
-engine failed.
-
-The crate does not compile for `wasm32` yet (`ureq` and `fs2`); when
-it does, the page already has a drop-in contract.
+EasyBuild. `parse`, `template`, `easyblock`, `hierarchy`, `modname`,
+`solve`, `lint`, and `emit` are live. Press Escape on any page for a
+playground. The crate does not compile for `wasm32` yet (`ureq` and
+`fs2`); when it does, the page already has a drop-in contract.
 
 ## Build
 
-Nothing here compiles, but the build wants Emacs and Sphinx, so it runs
+Nothing here compiles, but the build requires Emacs and Sphinx, so it runs
 in a pixi environment rather than against whatever is on `PATH`.
 
 ```sh

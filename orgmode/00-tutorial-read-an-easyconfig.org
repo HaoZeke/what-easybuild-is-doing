@@ -1,21 +1,30 @@
 #+TITLE: Tutorial: read an easyconfig the way EasyBuild does
 #+OPTIONS: toc:nil num:nil
 
-Work down the page, edit every sample, and check that you see what it
-says you will see. That is the whole method here. It takes about twenty
-minutes, it needs nothing installed, and there is nothing to put back
-afterwards.
+The model this page is teaching, in order: evaluate the file, format
+the templates, pick the easyblock, walk the toolchain, ask the robot.
+Commands are props. The model is the sequence.
+
+Work down the page. Every live sample is type-along: edit the island.
+Recordings later in the book are labelled as recordings; do not type
+those. Check that the island matches the expected output under it.
+Twenty minutes, nothing to install, nothing to put back.
 
 *Who this is for.* You can read code. You have met an easyconfig, or
 you are about to. You do not need EasyBuild, a cluster, an account, or
 Python, and you will not need them here.
+
+#+begin_questions
+- Why does =SYSTEM= have no quotes?
+- What does =%(version)s= become, and when?
+- How does EasyBuild pick an easyblock when the file never names one?
+#+end_questions
 
 #+begin_objectives
 1. Say what an easyconfig means, as against what it says.
 2. Predict which file EasyBuild will download from a version number.
 3. Name the easyblock EasyBuild will look for, for any software name.
 4. Say which dependencies a toolchain lets a package see.
-5. Recognise the four mistakes that cost the most time.
 #+end_objectives
 
 * Before you start
@@ -50,33 +59,32 @@ sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
 moduleclass = 'tools'
 #+end_src
 
-*You should see* an evaluated model, and three things in it that are not
+*Expected output.* an evaluated model, and three things in it that are not
 in the file above.
 
-=toolchain= reads =({name: system, version: (none)})= rather than the
-word =SYSTEM=. The file spells it without quotes because EasyBuild put
-that name in scope before evaluating the file. It is a variable, and
-=moduleclass= beside it is a string.
+=toolchain= reads =({name: system, version: system})= rather than the
+word =SYSTEM=. EasyBuild puts that name in scope before evaluating the
+file, as the constant ={'name': 'system', 'version': 'system'}=. It is
+a variable, and =moduleclass= beside it is a string.
 
-=source_urls= comes back with =4.130.0= in it. =%(version)s= is Python's
-own string formatting, over a dictionary EasyBuild builds from the file.
+=source_urls= comes back with =4.130.0= in it. After the file runs,
+EasyBuild takes a second pass and formats those =%(version)s= strings.
+The file itself stored the literal. Order in the file does not matter:
+=sources= may appear above =version=.
 
 And the last line reports an easyblock, which the file never mentions.
-
-Nothing here is EasyBuild being clever. The file is a Python file, and
-what you are reading is what is left after it runs.
 
 * Step 2: change the version, and watch what follows
 
 In the sample above, change =4.130.0= to =4.131.0=.
 
-*You should see* both the URL and the source filename follow, without
+*Expected output.* both the URL and the source filename follow, without
 your touching either. That is what the templating is for: one number,
 stated once.
 
 Now change =name= from =code-server= to =codeserver=.
 
-*You should see* the derived easyblock change too, from
+*Expected output.* the derived easyblock change too, from
 =EB_code_minus_server= to =EB_codeserver=. It is computed from the name
 you typed, which is the subject of step 4.
 
@@ -86,12 +94,12 @@ Put both back before moving on, or do not; nothing here is saved.
 
 Delete the whole =version= line.
 
-*You should see* the reader refuse, and say what it needs. It does not
+*Expected output.* the model names the missing field and stops. It does not
 guess, and it does not carry on with a blank.
 
 Now put =version= back and delete the =sources= line instead.
 
-*You should see* the model come back without =sources=, and no complaint.
+*Expected output.* the model come back without =sources=, and no complaint.
 That difference is the lesson: a missing =version= stops everything,
 because everything is derived from it. A missing =sources= is a file that
 downloads nothing, which is a legal easyconfig and a useless one.
@@ -102,7 +110,7 @@ One more. Add this line at the bottom:
 checksums = [
 #+end_example
 
-*You should see* =checksums= reported as *not modelled*. The reader in
+*Expected output.* =checksums= reported as *not modelled*. The reader in
 this page follows single-line assignments only, and it names what it
 skipped rather than pretending. A multi-line structure needs the real
 parser, and the real parser is a Python parser. That is why the full
@@ -124,7 +132,7 @@ Python-bundle-PyPI
 GROMACS
 #+end_src
 
-*You should see* punctuation spelled out as words: the hyphen in
+*Expected output.* punctuation spelled out as words: the hyphen in
 =code-server= becomes =minus=, and =c++= becomes =EB_c_plus__plus_=.
 
 Look at the doubled separator in the middle. The substitution runs per
@@ -133,7 +141,7 @@ reversible.
 
 Now type a name with an underscore in it, say =my_tool=.
 
-*You should see* =_underscore_=. That character is encoded too, and it
+*Expected output.* =_underscore_=. That character is encoded too, and it
 has to be. Left alone, =_minus_= could mean either an encoded hyphen or
 a name that really contained the letters =minus=.
 
@@ -150,7 +158,7 @@ package's hierarchy. Ask what a hierarchy contains:
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
 
-*You should see* a chain from =system= up to =foss-2025a=, most minimal
+*Expected output.* a chain from =system= up to =foss-2025a=, most minimal
 first, and a note about two of the members.
 
 A package on =foss-2025a= can depend on anything built with any member of
@@ -161,7 +169,7 @@ something you can see on disk.
 
 Now change =2025a= to =2024a=, then to =1999z=.
 
-*You should see* a different chain, then a refusal that tells you which
+*Expected output.* a different chain, then a refusal that tells you which
 generations the page knows. A hierarchy is a property of what is
 installed, not of the string, so your site's answer can differ from any
 of these.

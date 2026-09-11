@@ -25,7 +25,7 @@ $ eb -S 'qmcpack.*foss-2025a'
 =--search= takes a regular expression, matches case-insensitively, and
 looks through the robot search path.
 =-S= is the same search with shared path prefixes collapsed to
-=$CFGS1=, which is what you want when the answer is forty files.
+=$CFGS1=, which is the right search when the answer is forty files.
 
 If something comes back, the cheapest correct move is almost always to
 copy it and change the version, which is
@@ -47,7 +47,7 @@ $ python3 -c 'from easybuild.framework.easyconfig.easyconfig \
 #+end_src
 
 =docurls=, =software_license= and =software_license_urls= are listed in
-that category and are not checked. Fill them in anyway for anything you
+that category and are not checked. Fill them in anyway for anything the
 intend to share: a licence nobody recorded is a licence somebody will
 have to research later, under time pressure, when a user asks whether
 they may run the software.
@@ -79,12 +79,12 @@ moduleclass = 'tools'
 Four decisions are hiding in that, and each one has a chapter behind it.
 
 *Which easyblock.* Start with a generic one, and start with
-=ConfigureMake= unless you know the build system is something else.
+=ConfigureMake= unless the build system is known to be something else.
 [[file:22-writing-an-easyblock.org][Chapter 22]] is about when a generic
 easyblock stops being enough, and the answer is "later than you think".
 
 *Which toolchain.* The one your site already has, at the newest
-generation you can use, for
+generation that applies, for
 [[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s reasons.
 Introducing a toolchain to install one package is a decision about the
 whole stack.
@@ -120,7 +120,7 @@ becomes a verified one. With =--force= it does overwrite, and it does
 *not* verify the old ones first, "since that would kind of defeat the
 purpose".
 
-Four more things it does, before you run it on a file you care about:
+Four more things it does, before it runs on a file that matters:
 
 It runs the fetch step first, so it downloads anything not already
 present. It defaults to SHA256, and takes an optional argument naming a
@@ -132,7 +132,7 @@ It backs the file up, with a =.bak_<timestamp>= suffix.
 It reorders parameters, putting =source_urls=, =sources= and =patches= in
 that order and =checksums= after them. That is a deliberate move towards
 one house style across thousands of files, and it means the diff after an
-injection is larger than the checksums you asked for.
+injection is larger than the checksums requested.
 
 And it covers extensions: every source and patch of every =exts_list=
 entry, which for a bundle is where most of the checksums are.
@@ -159,10 +159,10 @@ claim somebody has to have actually checked.
 
 A =None= entry skips verification for that file, and
 =--enforce-checksums= turns that skip back into an error, which is what a
-site building a shared stack wants set.
+site building a shared stack needs set.
 #+end_detail
 
-The grammar (see [[dive:checksum-grammar]]) matters most when you are
+The grammar (see [[dive:checksum-grammar]]) matters most when the
 reading somebody else's easyconfig and cannot tell whether two checksums
 mean "either" or "both".
 
@@ -194,10 +194,10 @@ pycodestyle's =W291=, and the difference is that it exempts comments and
 the =description=, =examples= and =citing= parameters. Prose is allowed
 to end a line with a space; code is not.
 
-The warning above the check is a different mechanism. An easyconfig is Python, so you can assign any name you like,
+The warning above the check is a different mechanism. An easyconfig is Python, so any name can be assigned,
 and EasyBuild reads every top-level assignment as a parameter. A name it
 does not recognise is reported, with the fix: *local variables must be
-named =local_*=*. =--fix-deprecated-easyconfigs= renames them for you.
+named =local_*=*. =--fix-deprecated-easyconfigs= renames them.
 This is [[file:01-an-easyconfig-is-python.org][chapter 1]]'s "it is
 Python" with the bill attached: the file has no separate namespace for
 your own scratch values.
@@ -295,12 +295,12 @@ For moving an existing easyconfig rather than writing one:
 | =--try-amend=<param>=<value>= | one parameter, strings and lists of strings only |
 
 Two documented limits, and both are the kind that produce a
-half-converted stack if you do not know them. A =--try-toolchain= change
+half-converted stack if they are unknown. A =--try-toolchain= change
 "only trickles down until the toolchain level (not deeper)". A software
 version change does not trickle down at all, even with =--robot=.
 
 The tweaked files are written under =/tmp/eb-*/tweaked_easyconfigs/=, and
-=--copy-ec <dir>= is how you get them somewhere you can read them. The
+=--copy-ec <dir>= is how they land somewhere readable. The
 partly-automated form for a whole toolchain bump is:
 
 #+begin_example
@@ -382,7 +382,7 @@ Code: =check_easyconfigs_style= in
 - Search before writing; a copy of an existing easyconfig with a new
   version is almost always the cheaper correct answer.
 - =--inject-checksums= downloads, backs the file up, reorders parameters and
-  refuses to overwrite an existing checksum without =--force=.
+  does not overwrite an existing checksum without =--force=.
 - A local variable in an easyconfig has to be named =local_*=.
 - =--check-style= and =--check-contrib= are what upstream CI runs; neither
   runs the software, which is why a test report from a human is required.

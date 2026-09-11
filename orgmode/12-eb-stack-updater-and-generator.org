@@ -27,8 +27,8 @@ and annual bumps use the same artifacts.
 The samples on these pages are not that pipeline. They borrow three
 tables the generator already has to export: the easyblock encoding,
 the template constants, and the foss hierarchies. Press Escape and
-you are playing with those tables. You are not running eb-stack, and
-you are not running EasyBuild.
+those tables are what the page is playing with. That is not
+eb-stack, and it is not EasyBuild.
 
 #+begin_src easyconfig :widget easyblock
 code-server
@@ -38,7 +38,7 @@ C#
 
 * Two commands, one emitted file
 
-When a recipe already exists, you bump it.
+When a recipe already exists, bump it.
 
 #+begin_example
 eb-stack package bump \
@@ -58,7 +58,7 @@ minimum, so a pin carried across generations states a requirement
 the package never made. The bump drops those floors when the
 toolchain moves. That is [[file:03-a-pin-is-for-one-generation.org][chapter 3]], automated.
 
-When the software has no EasyBuild recipe yet, you plan it, from a
+When the software has no EasyBuild recipe yet, plan it, from a
 conda-forge =recipe.yaml= or a Spack =package.py= or a PyPI name:
 
 #+begin_example
@@ -94,7 +94,7 @@ eb-stack campaign run \
 =lint= and =check= look at the file. =campaign run= calls =eb=.
 Nothing in eb-stack compiles GROMACS.
 
-* Why a solver sits in a generator
+* Why a generator contains a solver
 
 Chapter 4's robot is a loop: take whatever is fully resolved, treat
 it as available, search for the rest, repeat. That matches how a
@@ -102,7 +102,7 @@ site builds, one package at a time onto what is already there.
 
 A bump is a different question. Given a recipe written for one
 generation, what should it say on another? The old versions are
-floors you must not carry, the target generation's modules are
+floors that must not be carried, the target generation's modules are
 candidates, and something has to choose a consistent set. That is a
 solver's job. An easyconfig has no place to put a constraint.
 
@@ -180,7 +180,7 @@ from one.
 * What it does not do
 
 It does not build software. The afterword's list of what EasyBuild
-is for still applies. eb-stack sits before =eb=.
+is for still applies. eb-stack runs before =eb=.
 
 A solve covers only the universe it is given. A lock against one
 robot tree says nothing about a machine with a different module

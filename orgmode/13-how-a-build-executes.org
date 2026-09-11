@@ -2,6 +2,12 @@
 
 #+OPTIONS: toc:nil num:nil
 
+#+begin_questions
+- In what order do the steps run?
+- Which step does a given easyconfig parameter reach?
+- What does =--stop= actually stop, and what does =--skip= skip?
+#+end_questions
+
 #+begin_objectives
 1. Name the steps a build runs through, and say which ones an easyconfig
    can influence.
@@ -9,12 +15,8 @@
 3. Stop a build part way, or resume it, on purpose.
 #+end_objectives
 
-Everything so far has been about what an easyconfig means. This chapter
-is about what happens after EasyBuild has finished reading one.
-
-A build is a fixed sequence of named steps. Not a script, not a
-dependency graph: a list, run in order, the same list for every package.
-EasyBuild 5.3 has eighteen of them, and you can ask it:
+The framework prints the list. It does not change between releases of
+the same major version:
 
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The whole sequence, from the framework itself"
 $ python3 -c 'from easybuild.framework.easyblock import EasyBlock
@@ -39,9 +41,34 @@ package
 testcases
 #+end_src
 
-Learning that list is worth more than learning any single parameter.
-Every parameter belongs to one of these steps, and most errors name
-one.
+Eighteen named steps. Not a script, not a dependency graph: a list, run
+in order, the same list for every package. Every parameter belongs to
+one of them, and most errors name one.
+
+Short-term memory holds about seven items (Miller; Carpentries
+instructor training). The eighteen names are three groups of six, not
+one list to memorise.
+
+#+ATTR_EB: :id EB-Steps-parsons-1 :title Put the first six in order
+#+begin_exercise
+These six steps run first. Restore the order. No extras.
+
+: extract
+: fetch
+: patch
+: prepare
+: ready
+: configure
+
+#+begin_solution
+=fetch=, =ready=, =extract=, =patch=, =prepare=, =configure=.
+=fetch= before =extract= (nothing to unpack yet). =ready= before
+=extract= (build directory). =patch= after =extract=. =prepare=
+after the tree exists and before =configure=. =_verify_toolchain=
+is inside =prepare=, so a toolchain-module mismatch appears here,
+not under =ready=.
+#+end_solution
+#+end_exercise
 
 * What each step is for
 
@@ -49,19 +76,17 @@ Read them in three groups.
 
 *Getting the source in place.* =fetch= downloads and verifies, which is
 [[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]]'s subject.
-=ready= checks the toolchain module and the dependencies, which is where
-[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s
-=_verify_toolchain= failure comes from. =extract= unpacks, =patch=
-applies patches, =prepare= loads the toolchain and the dependency modules
-and sets up the build environment.
+=ready= is readiness and the build directory. =extract= unpacks,
+=patch= applies patches. =prepare= loads the toolchain and the
+dependency modules. =_verify_toolchain= runs in =prepare=, not in
+=ready=.
 
 By the end of =prepare=, nothing has been compiled and everything has
-been decided. Most of what this book has covered is settled here. That is
-why so many failures land in the first twenty seconds of a build that was
-going to take four hours.
+been decided. That is why so many failures land in the first twenty
+seconds of a build that was going to take four hours.
 
 *Building.* =configure=, =build=, =test=, =install=. The four steps that
-correspond to what you would type by hand, and the four an easyconfig
+correspond to what would be typed by hand, and the four an easyconfig
 most often has something to say about.
 
 *Deciding it worked, and publishing it.* =extensions= installs the
@@ -70,7 +95,7 @@ most often has something to say about.
 =postinstallcmds=. =sanitycheck= is
 [[file:06-what-installed-means.org][chapter 6]]. =cleanup= removes the
 build directory. =module= writes the modulefile. =permissions= fixes the
-mode bits so other people can read what you installed. =package= and
+mode bits so other people can read what was installed. =package= and
 =testcases= are optional and most sites never use them.
 
 =postiter= is the odd one out. Some easyblocks run the build steps more
@@ -79,7 +104,7 @@ iterations.
 
 * The parameters are named after their steps
 
-Once you know the sequence, the parameter names stop looking arbitrary:
+Once the sequence is known, the parameter names stop looking arbitrary:
 
 #+begin_src easyconfig :widget parse
 name = 'example'
@@ -96,24 +121,22 @@ installopts = 'PREFIX=%(installdir)s'
 
 Three prefixes, and they mean exactly what they look like. =pre*opts= is
 text prepended to the command. That is why nearly every one of them ends
-in =&&= or a space: you are gluing something onto the front of a shell
-command. =*opts= is appended as arguments. Each of the four building steps has a
-matching pair.
+in =&&= or a space: the text is glued onto the front of a shell
+command. =*opts= is appended as arguments. Each of the four building
+steps has a matching pair.
 
-That is the whole convention, and it says where to look when a build
-fails. The step named in the error is the step whose =pre= and plain
-options you read.
+The step named in the error is the step whose =pre= and plain options
+are the ones to read.
 
 =$EBROOTHDF5= in that sample is worth noticing. It comes from the HDF5
 module, loaded during =prepare=. Pointing a configure script at a
 dependency that way, rather than at a hardcoded path, is the convention.
-Chapter 19 is about where those
-variables come from.
+Those variables come from the modulefile. Chapter 19 is the
+modulefile.
 
 * Where the work happens
 
-Three directories, and confusing them is a common way to lose an
-afternoon.
+Three directories get confused with each other.
 
 The *build directory* is scratch. =buildpath= from
 [[file:10-build-your-own-without-asking.org][chapter 10]], with the
@@ -139,7 +162,7 @@ appears in a recipe, and why to leave it alone when it does.
 Four ways, and they are not interchangeable.
 
 =--stop= runs up to a named step and stops. =eb foo.eb --stop=configure=
-leaves you with an unpacked, patched, configured tree and no compiler
+leaves an unpacked, patched, configured tree and no compiler
 time spent. That is the fastest way to answer "does the configure line
 work" without waiting for a build.
 

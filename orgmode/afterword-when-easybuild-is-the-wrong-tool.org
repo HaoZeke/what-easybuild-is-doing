@@ -7,14 +7,14 @@ say where its subject stops is advertising.
 
 * What EasyBuild is built to be good at
 
-Gather the earlier chapters into one sentence and you have the design.
+Gather the earlier chapters into one sentence and the design is this.
 
 EasyBuild builds software from source, reproducibly, into a curated
 generation of exact versions. It produces modulefiles for a shared
 system whose users outnumber its maintainers by three or four orders
 of magnitude.
 
-Every part of that carries a cost you have already met. Exact pins
+Every part of that carries a cost already met in earlier chapters. Exact pins
 mean a package cannot follow upstream on its own schedule, which is
 [[file:03-a-pin-is-for-one-generation.org][chapter 3]]. A generation means the whole stack moves at once, once a
 year. From-source means a build takes hours, which [[file:08-one-easyconfig-many-installs.org][chapter 8]] puts at a
@@ -68,7 +68,7 @@ EasyBuild and mounted rather than installed.
 
 Reach for it when the goal is having the software. Reach for EasyBuild
 when the goal is deciding what the software is. That means a version
-nobody else needs, a patch you carry, a toolchain your users depend
+nobody else needs, a patch the site carries, a toolchain the users depend
 on.
 
 * When another packaging system fits the problem better
@@ -94,18 +94,18 @@ In exchange, those binaries are built for portability rather than for
 one machine's instruction set. Exploiting that instruction set is what
 an HPC stack is for.
 
-So the question is not which is best. It is which cost you would
-rather pay:
+So the question is not which is best. It is which cost to
+accept:
 
 - EasyBuild: exact versions, one stack per generation, tuned builds,
   hours per package, one generation a year, and a maintainer in the
   loop.
 - Spack: real version ranges, per-install resolution, tuned builds,
-  hours per package, and a resolved graph you must capture to
+  hours per package, and a resolved graph that must be captured to
   reproduce.
 - conda-forge: minutes per environment, identical on a laptop and a
   cluster, and built for portability rather than for the instruction
-  set you paid for.
+  set already paid for.
 
 A site running a large machine typically uses more than one of these,
 for different populations of users. That is a sound arrangement rather
@@ -113,17 +113,17 @@ than an admission of defeat.
 
 * The part that transfers
 
-If you take one thing from this book to a different packaging system,
+If one thing from this book is taken to a different packaging system,
 take the questions rather than the parameters.
 
 Chapter 1's question is "what does this name imply that the file does
 not say". Every packaging system has an answer, and in most of them
-the answer is longer than you expect.
+the answer is longer than a first guess.
 
 Chapter 2's is "what is this dependency allowed to see". Chapter 4's
 is "where is the tool looking, and in what order". Chapter 7's is
 "what exactly does this checksum claim". Chapter 9's is "is the file
-in front of me the whole input".
+on disk the whole input".
 
 None of those are EasyBuild questions. EasyBuild has particularly
 crisp answers to them, which is why it makes a good subject for
@@ -137,7 +137,7 @@ outnumber its maintainers. Every one of those is a trade.
 
 A requirement that changes weekly does not belong in an annual
 generation. Software with no source is a runtime to wrap rather than a
-build to fake. And a stack you need only to *have* already exists.
+build to fake. And a stack needed only to *have* already exists.
 
 What survives all of that is a habit of asking what a thing actually
 says.
@@ -147,14 +147,14 @@ easyblock the file never mentions. A toolchain is not a label but the
 top of a computed hierarchy, and it decides what your dependencies are
 even allowed to see. A version beside a dependency is an exact pin for
 one generation and not a minimum. A filename is a query, and the answer
-depends on three lists you set in three different places. A checksum is
+depends on three lists set in three different places. A checksum is
 about bytes and nothing else. A green build describes one tree on one
 machine.
 
 None of those are EasyBuild questions. EasyBuild is a good place to
 learn them because its answers are unusually crisp, and because it
 says when it does not know. No default easyblock, no version ranges,
-no guessing. A tool that refuses to guess is showing you where the
-uncertainty actually sits.
+no guessing. A tool that does not guess is showing where the
+uncertainty actually is.
 
 Take that, and the rest is documentation.

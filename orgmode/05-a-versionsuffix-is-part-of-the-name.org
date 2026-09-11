@@ -4,7 +4,7 @@
 #+begin_objectives
 1. Say what a =versionsuffix= does, and what it does not.
 2. Tell a derived suffix from a hand-written one, and say why the format
-   cannot tell you which is which.
+   cannot report which is which.
 3. Say what a module named for a version does and does not guarantee
    about the tree under it.
 #+end_objectives
@@ -14,6 +14,16 @@ Here is a module name from a real cluster:
 #+begin_example
 NVHPC/25.11-CUDA-12.9.1
 #+end_example
+
+Type the recipe and the default naming scheme builds that string. Edit
+=versionsuffix= and the name moves; the dependency list does not.
+
+#+begin_src easyconfig :widget modname :hydrate load
+name = 'NVHPC'
+version = '25.11'
+versionsuffix = '-CUDA-12.9.1'
+toolchain = SYSTEM
+#+end_src
 
 Version 25.11 of the NVIDIA HPC SDK (=NVHPC=), and then something
 about CUDA 12.9.1. That second half is a =versionsuffix=. It is the
@@ -35,7 +45,7 @@ dependencies = [
 ]
 #+end_src
 
-Read those two statements as one and you will be wrong about what each
+Read those two statements as one and the reading will be wrong about what each
 does. The dependency binds: [[file:03-a-pin-is-for-one-generation.org][chapter 3]]'s exact pin, one module, no
 range. The =versionsuffix= reports, and it reports into the module's
 own name.
@@ -47,9 +57,10 @@ at parse time, and writes the result into a filename. Nothing checks
 afterwards that the name still describes the tree.
 
 Note the third line as well. =nvidia-compilers= takes =versionsuffix=
-as its *own* fourth positional attribute, which is chapter 3's
+as its *own* third positional attribute, which is chapter 3's
 =('name', 'version', 'versionsuffix', 'toolchain')= tuple. A suffix
 travels as data, from one easyconfig into another's dependency list.
+Put it in the fourth slot and EasyBuild will treat it as a toolchain.
 
 * From below, a suffix is not a suffix
 
@@ -124,7 +135,7 @@ and the OpenACC label becomes a dependency on a package. Read the
 second onto the first and =-CUDA-12.9.1= becomes decoration.
 
 The convention is that a derived suffix names the thing it was derived
-from. The convention is also all you have.
+from. The convention is also all there is.
 
 * What happens when the name stops being true
 
@@ -149,7 +160,7 @@ tarball, on 2026-01-27, covered four architectures:
 | AMD-ZEN4-H100 | *13.0* |
 | INTEL-AVX512 | *13.0* |
 
-Two of four, and not along any line you would guess: INTEL-AVX512 has no
+Two of four, and not along any line a guess would pick: INTEL-AVX512 has no
 GPU in it. =EBNVHPCCUDAVER= read 12.9 on all four, so the easyblock had
 resolved the version correctly and the installer had ignored it, on two
 architectures out of four, in one batch.
@@ -194,7 +205,7 @@ once, at parse time, and nothing checks it again.
 
 So the test, when a module named for a version behaves as though it
 carried another. Stop reading the name and look at the tree. The sanity
-check is what looks for you, and that is the argument for leaving it on
+check is what looks, and that is the argument for leaving it on
 even when it reports somebody else's problem.
 
 Next: what "installed" means, and the two things that decide it.

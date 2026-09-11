@@ -6,7 +6,7 @@ Every chapter's keypoints, in reading order, generated from the chapters
 rather than maintained here.
 
 The Carpentries call this a digest, and it has two uses. Before a chapter,
-it says whether you already know what the chapter is for. After the book,
+it says whether the chapter's purpose is already known. After the book,
 it is the page to reread rather than the book.
 
 #+begin_export rst

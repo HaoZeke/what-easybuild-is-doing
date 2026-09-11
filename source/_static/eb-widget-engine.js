@@ -1,10 +1,9 @@
 // A partial engine: three widgets, backed by data exported from eb-stack.
 //
-// The full engine is eb-stack compiled to WebAssembly, and it cannot be built
-// yet: the crate does not compile for wasm32 until its IO-free core exists
-// (ureq and fs2 are the blockers). So rather than ship nothing, this
-// implements the widgets whose behaviour is a table plus a few lines of
-// mechanical application.
+// Tables come from the eb-stack generator at book-build time. This file
+// is not eb-stack and not EasyBuild. The crate does not compile for
+// wasm32 yet (ureq, fs2). Rather than ship nothing, this implements the
+// widgets whose behaviour is a table plus a few lines of application.
 //
 //   easyblock   EB_ plus a per-character substitution
 //   template    the framework's TEMPLATE_CONSTANTS, plus derived-key rules
@@ -95,48 +94,177 @@
 
   // --- template -------------------------------------------------------------
 
-  // A very small reader for the assignment lines the samples use. It is not a
-  // Python parser and does not pretend to be one: it reads `key = 'value'` and
-  // `key = ['a', 'b']` and the two-key toolchain dict, which is what a
-  // template sample needs, and ignores anything else rather than guessing.
+  // A small reader for the assignment subset the samples use. It is not a
+  // Python parser. It now follows a multi-line list or dict by counting
+  // brackets, and it names anything it still will not follow, so a widget
+  // that cannot model `checksums` says so rather than dropping the key.
+  function bracketDepth(text) {
+    var depth = 0;
+    var quote = null;
+    var triple = null;
+    for (var i = 0; i < text.length; i++) {
+      var c = text.charAt(i);
+      var next2 = text.slice(i, i + 3);
+      if (triple) {
+        if (next2 === triple) {
+          i += 2;
+          triple = null;
+        }
+        continue;
+      }
+      if (quote) {
+        if (c === "\\") {
+          i += 1;
+          continue;
+        }
+        if (c === quote) {
+          quote = null;
+        }
+        continue;
+      }
+      if (next2 === "'''" || next2 === '"""') {
+        triple = next2;
+        i += 2;
+        continue;
+      }
+      if (c === "'" || c === '"') {
+        quote = c;
+        continue;
+      }
+      if (c === "#" && depth === 0) {
+        break;
+      }
+      if (c === "[" || c === "{" || c === "(") {
+        depth += 1;
+      } else if (c === "]" || c === "}" || c === ")") {
+        depth -= 1;
+      }
+    }
+    return depth;
+  }
+
+  function joinLogicalLines(source) {
+    var lines = source.split("\n");
+    var out = [];
+    var buf = "";
+    for (var i = 0; i < lines.length; i++) {
+      var raw = lines[i];
+      if (!buf && /^\s*#/.test(raw)) {
+        continue;
+      }
+      buf = buf ? buf + "\n" + raw : raw;
+      if (bracketDepth(buf) <= 0) {
+        var trimmed = buf.trim();
+        if (trimmed) {
+          out.push(trimmed);
+        }
+        buf = "";
+      }
+    }
+    if (buf.trim()) {
+      out.push(buf.trim());
+    }
+    return out;
+  }
+
+  function parseDepTuples(value) {
+    var deps = [];
+    var re = /\(\s*['"]([^'"]+)['"]\s*,\s*(?:['"]([^'"]*)['"]|([A-Za-z_][A-Za-z0-9_]*))/g;
+    var m;
+    while ((m = re.exec(value)) !== null) {
+      deps.push({
+        name: m[1],
+        version: m[2] || ("<" + m[3] + ">"),
+      });
+    }
+    return deps;
+  }
+
+  function parseChecksumItems(value) {
+    var items = [];
+    var dictRe = /['"]([^'"]+)['"]\s*:\s*['"]([0-9a-fA-F]+)['"]/g;
+    var m;
+    var sawDict = false;
+    while ((m = dictRe.exec(value)) !== null) {
+      sawDict = true;
+      items.push({ file: m[1], hash: m[2] });
+    }
+    if (sawDict) {
+      return items;
+    }
+    var strRe = /['"]([0-9a-fA-F]{16,})['"]/g;
+    while ((m = strRe.exec(value)) !== null) {
+      items.push({ file: null, hash: m[1] });
+    }
+    return items;
+  }
+
+  function formatDep(dep) {
+    return dep.version ? dep.name + " " + dep.version : dep.name;
+  }
+
   function readAssignments(source) {
     var fields = {};
     var lists = {};
     var skipped = [];
-    var lines = source.split("\n");
-    for (var i = 0; i < lines.length; i++) {
-      var line = lines[i];
+    var deps = [];
+    var builddeps = [];
+    var checksums = [];
+    var logical = joinLogicalLines(source);
+    for (var i = 0; i < logical.length; i++) {
+      var line = logical[i];
       var eq = line.indexOf("=");
-      if (eq < 0 || /^\s/.test(line)) {
+      if (eq < 0) {
         continue;
       }
       var key = line.slice(0, eq).trim();
-      var value = line.slice(eq + 1).trim();
+      var value = line.slice(eq + 1).trim().replace(/,\s*$/, "");
       if (!/^[a-z_][a-z0-9_]*$/.test(key)) {
         continue;
       }
-      // A value that opens a bracket and does not close on this line is a
-      // multi-line structure this reader does not follow. Record the name so
-      // the parse widget can say so rather than reporting a wrong value.
-      var opens = (value.match(/[[{(]/g) || []).length;
-      var closes = (value.match(/[\]})]/g) || []).length;
-      if (opens > closes) {
+      if (bracketDepth(value) > 0) {
         skipped.push(key);
         continue;
       }
-      // Triple quotes first: a description uses them, and the single-quote
-      // pattern would otherwise keep the two inner quotes as content.
-      var triple = value.match(/^('{3}|"{3})([\s\S]*?)\1\s*,?$/);
+      var triple = value.match(/^('{3}|"{3})([\s\S]*?)\1\s*$/);
       if (triple) {
         fields[key] = triple[2];
         continue;
       }
-      var scalar = value.match(/^(['"])(.*)\1\s*,?$/);
+      var scalar = value.match(/^(['"])(.*)\1\s*$/);
       if (scalar) {
         fields[key] = scalar[2];
         continue;
       }
+      if (value === "True" || value === "False" || value === "None") {
+        fields[key] = value;
+        continue;
+      }
       if (value.charAt(0) === "[") {
+        if (key === "dependencies" || key === "builddependencies") {
+          var parsed = parseDepTuples(value);
+          if (parsed.length) {
+            if (key === "dependencies") {
+              deps = parsed;
+            } else {
+              builddeps = parsed;
+            }
+            lists[key] = parsed.map(formatDep);
+            continue;
+          }
+        }
+        if (key === "checksums") {
+          checksums = parseChecksumItems(value);
+          if (checksums.length) {
+            lists[key] = checksums.map(function (c) {
+              if (c.file) {
+                return c.file + " -> " + c.hash.slice(0, 12) + "...";
+              }
+              return c.hash.slice(0, 12) + "... (" + c.hash.length + " hex)";
+            });
+            continue;
+          }
+        }
         var items = [];
         var re = /['"]([^'"]*)['"]/g;
         var m;
@@ -152,11 +280,45 @@
         fields[key + "_name"] = tcName[1];
         fields[key + "_version"] = tcVer ? tcVer[1] : "";
       } else if (value === "SYSTEM") {
+        // easybuild.framework.easyconfig.constants: SYSTEM = {name: system, version: system}
         fields[key + "_name"] = "system";
-        fields[key + "_version"] = "";
+        fields[key + "_version"] = "system";
+      } else if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(value)) {
+        fields[key] = value;
+      } else {
+        skipped.push(key);
       }
     }
-    return { fields: fields, lists: lists, skipped: skipped };
+    return {
+      fields: fields,
+      lists: lists,
+      skipped: skipped,
+      deps: deps,
+      builddeps: builddeps,
+      checksums: checksums,
+    };
+  }
+
+  function moduleIdentity(read) {
+    var fields = read.fields;
+    var name = fields.name || "";
+    var version = fields.version || "";
+    var suffix = fields.versionsuffix || "";
+    var tcName = fields.toolchain_name || "";
+    var tcVer = fields.toolchain_version || "";
+    var module;
+    var filename;
+    if (!name || !version) {
+      return null;
+    }
+    if (!tcName || tcName === "system") {
+      module = name + "/" + version + suffix;
+      filename = name + "-" + version + suffix + ".eb";
+    } else {
+      module = name + "/" + version + "-" + tcName + "-" + tcVer + suffix;
+      filename = name + "-" + version + "-" + tcName + "-" + tcVer + suffix + ".eb";
+    }
+    return { module: module, filename: filename, suffix: suffix };
   }
 
   // Apply one exported rule. The vocabulary is closed and validated at export
@@ -376,7 +538,7 @@
         // and what survives evaluation is a structure.
         var tn = fields.toolchain_name;
         var tv = fields.toolchain_version;
-        row("toolchain", "{name: " + tn + ", version: " + (tv || "(none)") + "}");
+        row("toolchain", "{name: " + tn + ", version: " + (tv || "system") + "}");
       }
 
       var listKeys = Object.keys(read.lists);
@@ -542,12 +704,358 @@
     };
   }
 
+  // --- modname --------------------------------------------------------------
+
+  function buildModname() {
+    return function (source) {
+      var read = readAssignments(source);
+      var id = moduleIdentity(read);
+      if (!id) {
+        return (
+          "Set `name` and `version`. The default module naming scheme\n" +
+          "(EasyBuildMNS) builds the module name and the .eb filename from\n" +
+          "those, the toolchain, and versionsuffix."
+        );
+      }
+      var out = [
+        "EasyBuildMNS (the default scheme):",
+        "  module    " + id.module,
+        "  filename  " + id.filename,
+      ];
+      if (id.suffix) {
+        out.push("");
+        out.push(
+          "versionsuffix is glued on as text. It is not a constraint and"
+        );
+        out.push(
+          "it is not checked against the tree. Change it and the name changes."
+        );
+      }
+      if (read.fields.toolchain_name === "system") {
+        out.push("");
+        out.push("SYSTEM drops the toolchain from the name, so two SYSTEM");
+        out.push("packages with the same name and version collide.");
+      }
+      return out.join("\n");
+    };
+  }
+
+  // --- emit -----------------------------------------------------------------
+
+  function buildEmit(spec, charmap) {
+    var parse = buildParse(spec, charmap);
+    return function (source) {
+      var read = readAssignments(source);
+      if (!read.fields.name || !read.fields.version) {
+        return "Set at least `name` and `version`. Emit reprints the model as a recipe.";
+      }
+      var f = read.fields;
+      var lines = [];
+      function assign(key, value) {
+        if (value === undefined || value === null || value === "") {
+          return;
+        }
+        lines.push(key + " = " + value);
+      }
+      assign("name", "'" + f.name + "'");
+      assign("version", "'" + f.version + "'");
+      if (f.versionsuffix) {
+        assign("versionsuffix", "'" + f.versionsuffix + "'");
+      }
+      if (f.easyblock) {
+        assign("easyblock", "'" + f.easyblock + "'");
+      }
+      if (f.homepage) {
+        assign("homepage", "'" + f.homepage + "'");
+      }
+      if (f.description) {
+        assign("description", '"""' + f.description + '"""');
+      }
+      if (f.toolchain_name === "system") {
+        lines.push("toolchain = SYSTEM");
+      } else if (f.toolchain_name) {
+        lines.push(
+          "toolchain = {'name': '" +
+            f.toolchain_name +
+            "', 'version': '" +
+            (f.toolchain_version || "") +
+            "'}"
+        );
+      }
+      ["source_urls", "sources"].forEach(function (key) {
+        if (read.lists[key] && read.lists[key].length) {
+          lines.push(
+            key +
+              " = [" +
+              read.lists[key]
+                .map(function (item) {
+                  return "'" + item + "'";
+                })
+                .join(", ") +
+              "]"
+          );
+        }
+      });
+      if (read.checksums.length) {
+        lines.push("checksums = [");
+        read.checksums.forEach(function (c) {
+          if (c.file) {
+            lines.push("    {'" + c.file + "': '" + c.hash + "'},");
+          } else {
+            lines.push("    '" + c.hash + "',");
+          }
+        });
+        lines.push("]");
+      }
+      function emitDeps(key, items) {
+        if (!items.length) {
+          return;
+        }
+        lines.push(key + " = [");
+        items.forEach(function (d) {
+          lines.push("    ('" + d.name + "', '" + d.version + "'),");
+        });
+        lines.push("]");
+      }
+      emitDeps("dependencies", read.deps);
+      emitDeps("builddependencies", read.builddeps);
+      if (f.moduleclass) {
+        assign("moduleclass", "'" + f.moduleclass + "'");
+      }
+      if (read.skipped.length) {
+        lines.push("");
+        lines.push(
+          "# not emitted (this reader skipped): " + read.skipped.join(", ")
+        );
+      }
+      var preview = parse(source);
+      return lines.join("\n") + "\n\n# --- evaluated model ---\n" + preview;
+    };
+  }
+
+  // --- lint -----------------------------------------------------------------
+
+  function buildLint() {
+    return function (source) {
+      var read = readAssignments(source);
+      var f = read.fields;
+      var findings = [];
+      if (!f.name) {
+        findings.push("error  name is missing");
+      }
+      if (!f.version) {
+        findings.push("error  version is missing");
+      }
+      if (f.name && /\s/.test(f.name)) {
+        findings.push("error  name contains whitespace; EasyBuild will not load it");
+      }
+      if (!f.toolchain_name) {
+        findings.push(
+          "error  toolchain is missing. SYSTEM is a value, not the default."
+        );
+      }
+      var sources = read.lists.sources || [];
+      if (sources.length && !read.checksums.length) {
+        findings.push(
+          "error  sources are listed and checksums are not. EasyBuild will refuse the download."
+        );
+      }
+      if (
+        sources.length &&
+        read.checksums.length &&
+        read.checksums.length !== sources.length &&
+        !read.checksums.some(function (c) {
+          return c.file;
+        })
+      ) {
+        findings.push(
+          "error  " +
+            sources.length +
+            " sources and " +
+            read.checksums.length +
+            " positional checksums. The list is positional."
+        );
+      }
+      if (f.versionsuffix && f.versionsuffix.charAt(0) !== "-") {
+        findings.push(
+          "warn   versionsuffix does not start with '-'; the module name will glue oddly"
+        );
+      }
+      if (f.toolchain_name === "system" && read.deps.length) {
+        findings.push(
+          "warn   SYSTEM with dependencies: those deps must also be SYSTEM, or the robot will not see them"
+        );
+      }
+      if (f.versionsuffix && read.deps.length === 0 && /CUDA|cuda/.test(f.versionsuffix)) {
+        findings.push(
+          "warn   versionsuffix mentions CUDA but there is no CUDA dependency. The suffix is a label, not a pin."
+        );
+      }
+      if (!sources.length && f.name) {
+        findings.push("note   no sources. A binary or a bundle might mean that; a tarball recipe does not.");
+      }
+      if (read.skipped.length) {
+        findings.push(
+          "note   skipped (unparsed): " +
+            read.skipped.join(", ") +
+            ". The real linter would still see these."
+        );
+      }
+      if (!findings.length) {
+        findings.push("ok     nothing this reader objects to. It is not easyconfig-style.");
+      }
+      var id = moduleIdentity(read);
+      var header = ["lint (in-page subset, not easyconfig-style):"];
+      if (id) {
+        header.push("would install as  " + id.module);
+      }
+      header.push("");
+      return header.concat(findings).join("\n");
+    };
+  }
+
+  // --- solve ----------------------------------------------------------------
+
+  function pkgKey(pkg) {
+    return (
+      pkg.name +
+      "/" +
+      pkg.version +
+      (pkg.toolchain && pkg.toolchain.name && pkg.toolchain.name !== "system"
+        ? "-" + pkg.toolchain.name + "-" + pkg.toolchain.version
+        : "") +
+      (pkg.versionsuffix || "")
+    );
+  }
+
+  function buildSolve(universe) {
+    var byName = Object.create(null);
+    var packages = (universe && universe.packages) || [];
+    for (var i = 0; i < packages.length; i++) {
+      var pkg = packages[i];
+      if (!byName[pkg.name]) {
+        byName[pkg.name] = [];
+      }
+      byName[pkg.name].push(pkg);
+    }
+
+    function lookup(name, version) {
+      var cands = byName[name] || [];
+      if (!cands.length) {
+        return null;
+      }
+      if (version) {
+        for (var i = 0; i < cands.length; i++) {
+          if (cands[i].version === version) {
+            return cands[i];
+          }
+        }
+      }
+      return cands[0];
+    }
+
+    return function (source, universeName) {
+      var read = readAssignments(source);
+      if (!read.fields.name) {
+        return (
+          "Give an easyconfig, or at least `name` and its dependencies.\n" +
+          "This walk uses the canned universe shipped with the page, not\n" +
+          "your site's robot path. Change a pin and watch who disappears."
+        );
+      }
+      var seen = Object.create(null);
+      var order = [];
+      var missing = [];
+      var note = universeName
+        ? "universe label: " + universeName + " (canned, not your site)"
+        : "canned universe shipped with the page, not your site's robot path";
+
+      function walk(dep, via) {
+        var found = lookup(dep.name, dep.version);
+        if (!found) {
+          missing.push(
+            dep.name +
+              (dep.version ? " " + dep.version : "") +
+              (via ? "  (needed by " + via + ")" : "")
+          );
+          return;
+        }
+        var key = pkgKey(found);
+        if (seen[key]) {
+          return;
+        }
+        seen[key] = true;
+        var kids = (found.dependencies || []).concat(
+          found.builddependencies || []
+        );
+        for (var i = 0; i < kids.length; i++) {
+          walk(kids[i], found.name);
+        }
+        order.push(found);
+      }
+
+      var rootDeps = read.deps.concat(read.builddeps);
+      if (!rootDeps.length) {
+        var guessed = lookup(read.fields.name, read.fields.version);
+        if (guessed) {
+          walk(
+            { name: guessed.name, version: guessed.version },
+            null
+          );
+        }
+      } else {
+        for (var d = 0; d < rootDeps.length; d++) {
+          walk(rootDeps[d], read.fields.name);
+        }
+      }
+
+      var out = ["robot walk (" + note + "):", ""];
+      if (!order.length && !missing.length) {
+        out.push("Nothing to resolve. Add a dependencies list, or name a");
+        out.push("package that is in the canned universe (try GROMACS,");
+        out.push("Python, or zlib).");
+        return out.join("\n");
+      }
+      for (var o = 0; o < order.length; o++) {
+        out.push("  " + (o + 1) + ".  " + pkgKey(order[o]));
+      }
+      if (read.fields.name) {
+        var rootId = moduleIdentity(read);
+        out.push(
+          "  " +
+            (order.length + 1) +
+            ".  " +
+            (rootId ? rootId.module : read.fields.name) +
+            "   <- you asked for this"
+        );
+      }
+      if (missing.length) {
+        out.push("");
+        out.push("not in this universe:");
+        for (var m = 0; m < missing.length; m++) {
+          out.push("  - " + missing[m]);
+        }
+        out.push("On a real site the robot would search --robot-paths for these.");
+      }
+      out.push("");
+      out.push(
+        packages.length +
+          " packages in the canned universe. Edit a version pin above"
+      );
+      out.push("and the walk either still finds it, or it does not.");
+      return out.join("\n");
+    };
+  }
+
   // --- wire up --------------------------------------------------------------
 
   Promise.all([
     fetchJson("eb-charmap.json"),
     fetchJson("eb-templates.json"),
     fetchJson("eb-hierarchy.json"),
+    fetchJson("eb-universe.json").catch(function () {
+      return { packages: [] };
+    }),
   ])
     .then(function (tables) {
       var engine = window.EB_STACK_ENGINE || {};
@@ -555,6 +1063,10 @@
       engine.template = buildTemplate(tables[1]);
       engine.hierarchy = buildHierarchy(tables[2]);
       engine.parse = buildParse(tables[1], tables[0]);
+      engine.modname = buildModname();
+      engine.emit = buildEmit(tables[1], tables[0]);
+      engine.lint = buildLint();
+      engine.solve = buildSolve(tables[3]);
       window.EB_STACK_ENGINE = engine;
 
       // The runtime may already have settled its islands as inert; this is

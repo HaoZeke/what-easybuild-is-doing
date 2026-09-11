@@ -61,7 +61,7 @@ setTimeout(() => {
 
   // Step 1: three things in the model that are not in the file.
   const step1 = e.parse(base);
-  promise("step 1 toolchain is a structure", step1, "{name: system, version: (none)}");
+  promise("step 1 toolchain is a structure", step1, "{name: system, version: system}");
   promise("step 1 template resolved", step1, "/v4.130.0/");
   promise("step 1 easyblock derived", step1, "EB_code_minus_server");
 

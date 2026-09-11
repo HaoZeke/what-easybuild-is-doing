@@ -179,14 +179,23 @@ EOF
     fi
 
     echo "=== islands: a chapter without widgets loads nothing ==="
-    # Chapter 4 is prose only. Under the islands model it must ship no widget
-    # JavaScript and no widget CSS at all; that is the property Sphinx does
-    # not give you and the extension has to take away per page.
-    if grep -qE 'eb-widget\.(js|css)' build/html/04-the-robot.html; then
-        echo "FAIL: ch4 has no widgets but still links the runtime"
+    # The afterword is prose only. Under the islands model it must ship no
+    # widget JavaScript and no widget CSS at all; that is the property
+    # Sphinx does not give a page and the extension has to take away.
+    if grep -qE 'eb-widget\.(js|css)' \
+        build/html/afterword-when-easybuild-is-the-wrong-tool.html; then
+        echo "FAIL: afterword has no widgets but still links the runtime"
     else
-        echo "ok: ch4 (no widgets) links neither js nor css"
+        echo "ok: afterword (no widgets) links neither js nor css"
     fi
+
+    echo "=== voice: impersonal monograph, not memoir I ==="
+    python3 scripts/check-voice.py \
+        || echo "FAIL: book voice is not impersonal"
+
+    echo "=== lesson: every chapter has the devices it claims ==="
+    python3 scripts/check-lesson.py \
+        || echo "FAIL: a lesson device is missing or malformed"
 
     echo "=== islands: hydration strategy reaches the markup ==="
     grep -o 'data-eb-hydrate="[a-z]*"' build/html/01-an-easyconfig-is-python.html \

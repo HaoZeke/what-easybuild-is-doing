@@ -1,0 +1,102 @@
+#+TITLE: Playground
+#+OPTIONS: toc:nil num:nil
+
+Press Escape on any page and this engine opens in a dock at the
+bottom. This page is the same thing, laid out, so every
+widget in one place. Nothing here compiles. Change a number and watch
+the answer move.
+
+The engine is a table plus a few lines of JavaScript, not EasyBuild
+itself. It will parse an easyconfig, resolve templates, name the
+easyblock, walk a toolchain, invent a module name, lint the obvious
+mistakes, reprint the recipe, and walk a canned robot universe. It
+will not configure, compile, or talk to your site.
+
+* Parse
+
+#+begin_src easyconfig :widget parse :hydrate load
+name = 'code-server'
+version = '4.130.0'
+homepage = 'https://github.com/coder/code-server'
+toolchain = SYSTEM
+source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
+sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
+checksums = ['3de23052e34fa705b3817efa66201cbc8d8ba6615b4cd03120c39bfc0ae1b7ab']
+moduleclass = 'tools'
+#+end_src
+
+* Templates
+
+#+begin_src easyconfig :widget template
+name = 'zlib'
+version = '1.3.1'
+sources = ['zlib-%(version)s.tar.gz']
+source_urls = ['https://github.com/%(github_account)s/%(namelower)s/releases/download/v%(version)s']
+#+end_src
+
+* Easyblock name
+
+Type software names, one per line.
+
+#+begin_src easyconfig :widget easyblock
+code-server
+c++
+C#
+netCDF-Fortran
+Python-bundle-PyPI
+#+end_src
+
+* Toolchain hierarchy
+
+#+begin_src easyconfig :widget hierarchy
+foss-2025a
+#+end_src
+
+* Module name
+
+#+begin_src easyconfig :widget modname
+name = 'GROMACS'
+version = '2025.2'
+toolchain = {'name': 'foss', 'version': '2025a'}
+versionsuffix = '-CUDA-12.8.0'
+#+end_src
+
+* Robot walk
+
+A canned universe, not your site. Change Python to =3.11.3= and a
+dependency disappears.
+
+#+begin_src easyconfig :widget solve :universe canned-foss-2025a
+name = 'GROMACS'
+version = '2025.2'
+toolchain = {'name': 'foss', 'version': '2025a'}
+dependencies = [
+    ('Python', '3.13.1'),
+    ('FFTW', '3.3.10'),
+]
+builddependencies = [
+    ('CMake', '3.31.4'),
+]
+#+end_src
+
+* Lint
+
+This one is missing checksums on purpose.
+
+#+begin_src easyconfig :widget lint :fails "no checksums; EasyBuild will refuse the download"
+name = 'code-server'
+version = '4.130.0'
+toolchain = SYSTEM
+sources = ['code-server-%(version)s-linux-amd64.tar.gz']
+#+end_src
+
+* Emit
+
+#+begin_src easyconfig :widget emit
+name = 'zlib'
+version = '1.3.1'
+toolchain = {'name': 'GCCcore', 'version': '14.2.0'}
+sources = ['zlib-%(version)s.tar.gz']
+checksums = ['9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23']
+moduleclass = 'lib'
+#+end_src

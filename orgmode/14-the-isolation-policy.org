@@ -11,7 +11,7 @@
    reproducibility.
 #+end_objectives
 
-A build that works for you and fails for the desk is the most common
+A build that works at one desk and fails at another is the most common
 support case in this subject. Nearly every instance is one question. What
 could your shell see that the build could not, or the reverse.
 
@@ -39,15 +39,15 @@ $ echo "EBROOTFOSS=[$EBROOTFOSS]"
 EBROOTFOSS=[/sw/arch/RHEL9/EB_production/2025/software/foss/2025a]
 #+end_src
 
-Loading a toolchain gives you =EBROOT= and =EBVERSION= and nothing else.
-It does *not* give you =$CC=, =$CXX=, =$CFLAGS=, =$LIBBLAS= or
+Loading a toolchain gives =EBROOT= and =EBVERSION= and nothing else.
+It does *not* give =$CC=, =$CXX=, =$CFLAGS=, =$LIBBLAS= or
 =$LIBSCALAPACK=.
 
 Those exist only inside a build, where EasyBuild's toolchain object sets
 them from the toolchain class and from =toolchainopts=. That is
 [[file:16-what-a-toolchain-injects.org][chapter 16]]'s subject, and the
-consequence for this chapter is the important half: *you cannot reproduce
-a build's environment by loading its toolchain*. Anyone who has tried to debug a compile by loading =foss= and running
+consequence for this chapter is the important half: *loading a toolchain
+does not reproduce a build's environment*. Anyone who has tried to debug a compile by loading =foss= and running
 the failing command by hand has met this. Few of them found out why the
 command behaved differently.
 
@@ -58,11 +58,13 @@ environment for real.
 
 Two mechanisms.
 
-=module purge= at the start means an inherited module set does not leak
-in. A build that used a module you happened to have loaded, without
-saying so, is a build nobody else can reproduce. The failure surfaces
-months later, on a machine where that module is absent. EasyBuild refuses
-the whole class of problem by starting from nothing.
+The default is not =module purge=. =detect_loaded_modules= defaults
+to =warn=, and =ModulesTool.load= is called with =purge= False.
+Actually running =module purge= is documented as futile and broken on
+some systems (Cray). A loaded module that was not declared still
+produces a warning, because a build that used it is a build nobody
+else can reproduce. The failure surfaces months later, on a machine
+where that module is absent.
 
 =--filter-env-vars= removes named variables from the build environment. A
 site sets it for the variables that break builds when inherited.
@@ -101,8 +103,8 @@ precise about.
 
 *The kernel and the C library.* A build links against the system glibc.
 Two machines with different glibc versions can produce binaries that are
-not interchangeable, and nothing in an easyconfig records which one you
-had.
+not interchangeable, and nothing in an easyconfig records which one
+was present.
 
 *The driver.* A GPU build links against a library belonging to the
 driver rather than to the toolchain. That is why =libcuda.so.1= is exempt

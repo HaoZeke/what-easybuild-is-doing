@@ -3,7 +3,7 @@
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
-1. Get an optimised software stack onto a machine you do not administer,
+1. Get an optimised software stack onto a machine the operator does not administer,
    by three different routes, and say which route fits which machine.
 2. Say how EESSI decides which build to give the host it lands on, and
    override that decision.
@@ -13,7 +13,7 @@
 #+begin_prerequisites
 - [[file:25-cvmfs-and-the-stratum.org][Chapter 25]]: this chapter uses the
   format that one takes apart.
-- A machine you can install a package on, or a container runtime, or
+- A machine that can install a package, or a container runtime, or
   neither and read it as reference.
 #+end_prerequisites
 
@@ -27,7 +27,7 @@ couple of things, like drivers for network and GPU, support for shared
 filesystems like GPFS and Lustre, a resource manager like Slurm, and so
 on." Everything above that arrives over HTTP.
 
-* Three layers, and what each one refuses to do
+* Three layers, and what each one does not do
 
 EESSI is three layers, and the division is the interesting part because
 each layer exists to stop the layer above it caring about something.
@@ -78,12 +78,16 @@ module use /cvmfs/software.eessi.io/init/modules
 module load EESSI/2023.06
 #+end_example
 
-or, if Lmod is older than 8.6 or you would rather not touch
-=MODULEPATH=:
+or, if Lmod is older than 8.6: unset =MODULEPATH= first, then
+source the Lmod init, not the bash-only one.
 
 #+begin_example
-source /cvmfs/software.eessi.io/versions/2023.06/init/bash
+unset MODULEPATH
+source /cvmfs/software.eessi.io/versions/2023.06/init/lmod/bash
 #+end_example
+
+=init/bash= is the irreversible bash-only path. Do not use it as the
+alternative that leaves =MODULEPATH= untouched.
 
 * Route two: no root
 
@@ -91,7 +95,7 @@ Two mechanisms, for two different reasons.
 
 =cvmfsexec= mounts a repository *without* privileges, using user
 namespaces, and CernVM-FS documents it as the supported way to do that.
-It is the route for a shared machine where you are not an administrator
+It is the route for a shared machine where the account is not an administrator
 and cannot become one.
 
 A container is the other, and EESSI publishes the script:
@@ -107,13 +111,21 @@ Continuous integration is the case where "install a software stack" and
 because nothing is installed: the runner mounts, resolves the modules it
 needs, and downloads only the files those modules touch.
 
-The mechanics are the same as route one or two depending on whether the
-runner has privileges. What changes is the cache: a fresh runner has an
-empty one, so the first job pays for every object it touches. A shared
-cache directory, or a site proxy, is what makes the second job fast, and
-without one every job is a first job.
+On GitHub Actions the documented route is not a hand-rolled mount.
+It is the published action:
 
-* How it chooses what to give you
+#+begin_example
+- uses: eessi/github-action-eessi@v3
+  with:
+    eessi_stack_version: '2025.06'
+#+end_example
+
+That action is built on =cvmfs-contrib/github-action-cvmfs=. A runner
+the operator owns can still use route one or two, and then the cache is what
+is made of it: a fresh runner has an empty one, so the first job
+pays for every object it touches.
+
+* How it chooses what to serve
 
 This is the part that decides whether the stack is fast or merely
 present. The initialisation script asks a detector for an *ordered* list
@@ -168,14 +180,14 @@ All of these must be set *before* initialisation, from
 | =EESSI_OVERRIDE_GPU_CHECK= | =1= to load accelerator modules with no driver present |
 
 The documentation notes there is no validation of the values. An
-override naming a target that does not exist gives you a =MODULEPATH=
+override naming a target that does not exist gives a =MODULEPATH=
 pointing at nothing, and the failure appears later as an empty
 =module avail=.
 
 Which makes =EESSI_SOFTWARE_SUBDIR_OVERRIDE= the tool for the
 measurement in [[file:27-four-things-that-actually-happened.org][chapter
 27]]: to see what a different architecture's stack contains, name it,
-rather than reasoning about it from the architecture you are standing on.
+rather than reasoning about it from the architecture underfoot.
 #+end_detail
 
 #+ATTR_EB: :id eessi-archdetect-docs :title Two selectors, and the page that names the wrong one :kind discrepancy

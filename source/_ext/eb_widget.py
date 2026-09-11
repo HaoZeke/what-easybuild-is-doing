@@ -17,10 +17,10 @@ contains an island.
 widget below the fold that the reader never reaches should cost nothing,
 and in a book most of them are.
 
-*A shared, lazily loaded engine.* Hydration is what triggers the WASM
-engine to load, once, shared across every island on the page. A reader
-who never scrolls to a widget never downloads it. That is the whole
-point of the model, and the part a bundle-everything build cannot do.
+*A shared, lazily loaded engine.* Hydration loads the table-backed
+page engine once, shared across every island. A reader who never
+scrolls to a widget never downloads it. The page applies exported
+tables. It is not eb-stack and not EasyBuild.
 
 One directive, three renderings, and the differences are the point.
 ``html`` and ``singlehtml`` emit the island with its source inside it as
@@ -46,9 +46,10 @@ KNOWN_WIDGETS = frozenset(
         "template",  # resolve %(version)s and friends
         "easyblock",  # name -> the easyblock class EasyBuild picks
         "hierarchy",  # toolchain -> its hierarchy members
-        "solve",  # dependency closure over a chapter universe
+        "solve",  # dependency closure over a canned universe
         "emit",  # model -> canonical recipe text
-        "lint",  # style findings
+        "lint",  # style findings a reviewer would write down
+        "modname",  # EasyBuildMNS module name and .eb filename
     }
 )
 
@@ -204,16 +205,13 @@ def _strip_assets_from_islandless_pages(
     the whole build and taken away again here.
 
     ``doctree`` is ``None`` for generated pages such as search and
-    genindex, which by definition contain no islands, so the same branch
-    covers them.
+    genindex. Those still get the assets: Escape opens the page-level
+    playground on every page, including ones that hold no inline island.
     """
     if doctree is not None and doctree.next_node(eb_widget) is not None:
         return
-    for key in ("script_files", "css_files"):
-        entries = context.get(key)
-        if not entries:
-            continue
-        context[key] = [e for e in entries if not _asset_is_ours(e)]
+    # Keep the engine and mount script. The playground is an island that
+    # exists on every page, even when the chapter has no sample of its own.
 
 
 def setup(app):

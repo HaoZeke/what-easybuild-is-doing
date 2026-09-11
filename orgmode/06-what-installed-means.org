@@ -88,7 +88,7 @@ means.
 
 * Where the check ran is part of what it proved
 
-The failure mode that cost me the most involves no parameter at all.
+The failure mode that costs the most time involves no parameter at all.
 
 A sanity check runs on the machine that did the build. On a cluster
 with more than one processor architecture the whole install tree is
@@ -121,14 +121,14 @@ shows =/sw/arch= resolving to a directory named =AMD-ZEN2=.
 So the module's text is architecture-neutral and what it points at is
 not. Load the same module on a node of another architecture and the
 same string resolves to a different tree, holding a differently
-compiled binary. Nothing in the module records which tree you got.
+compiled binary. Nothing in the module records which tree was loaded.
 
-That is what makes the next mistake available. I once declared a
-problem fixed after testing on an interactive node. The binary
-started, resolved its libraries, ran. The report was wrong twice over.
-The interactive nodes are the architecture above and the user's node
-was not, so I had verified a different tree. And the tree I had
-verified was the one that was already correct.
+That is what makes the next mistake available. A problem was declared
+fixed after testing on an interactive node. The binary started,
+resolved its libraries, ran. The report was wrong twice over. The
+interactive nodes are the architecture above and the user's node was
+not, so the check had verified a different tree. That tree was the
+one that was already correct.
 
 The lesson generalises past architectures. "It works" is incomplete
 until it says where, and on a heterogeneous cluster the where is not a
@@ -170,7 +170,7 @@ says where, and the node to verify on is the one that failed.
 #+end_solution
 #+end_exercise
 
-* And how you check matters as much as where
+* And how the check is done matters as much as where
 
 A related trap, which the tool invites.
 
@@ -179,14 +179,14 @@ dynamic linker consults those at different points: =DT_RPATH= before
 =LD_LIBRARY_PATH=, and =DT_RUNPATH= after it. Patch a binary that way
 and test it in a shell that already has the library on
 =LD_LIBRARY_PATH=, and the resolution goes through the environment. It
-tells you nothing about the patch.
+reports nothing about the patch.
 
-I did exactly that and watched it work, having proved only that my own
-shell was set up. The fix was to test in a way the environment cannot
-answer for. =LD_PRELOAD= handles a single library; otherwise read the
-resolution rather than the exit code.
+That test can pass while proving only that the shell already had the
+library. Test in a way the environment cannot answer for. =LD_PRELOAD=
+handles a single library; otherwise read the resolution rather than
+the exit code.
 
-A test that can pass for a reason other than the one you are testing
+A test that can pass for a reason other than the one being tested
 is not a test. That is the same shape as [[file:05-a-versionsuffix-is-part-of-the-name.org][chapter 5]]'s stale name: an
 accurate observation carrying a wrong inference.
 

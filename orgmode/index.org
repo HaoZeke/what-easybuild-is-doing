@@ -4,41 +4,34 @@
 #+begin_export rst
 .. rst-class:: eb-subtitle
 
-An interactive book about EasyBuild: how it decides what to build, on a
-laptop or on a national machine, and about the four things everyone gets
-wrong about it.
+An interactive book about EasyBuild: how a recipe is evaluated, how a
+toolchain is a hierarchy, and why the version next to a dependency is
+not a minimum.
 #+end_export
 
-EasyBuild's own documentation tells you what to type. It stays almost
-silent on what happens when you do.
+EasyBuild's documentation is good at what to type. It does not say why
+=SYSTEM= has no quotes, why a toolchain is a hierarchy rather than a
+name, or why a module visible in =module avail= can be invisible to
+the robot. Those three are usually learned by breaking a production
+stack.
 
-That silence is expensive. Reference documentation covers every
-parameter, and a workshop series covers the exercises. Between them
-they will get you to a working install.
-
-Neither explains why an easyconfig is a Python file. Neither explains
-why a toolchain is a hierarchy rather than a name, or why the version
-number next to a dependency is not a minimum.
-
-People learn those three by breaking a production software stack, which
-is a slow and public way to learn anything.
-
-So this is the other book.
+This book is the explanation. The samples run in the page. After
+reading it, EasyBuild is one tool among others, not a default.
 
 * Start here
 
 [[file:00-tutorial-read-an-easyconfig.org][Read an easyconfig the way
 EasyBuild does]]. Twenty minutes, and nothing to install.
 
-At the end you can predict what EasyBuild will download, name the
+At the end a reader can predict what EasyBuild will download, name the
 easyblock it will look for, and say which dependencies a toolchain
 permits.
 
 After that, either follow [[file:learning-path.org][the path]], which is
 six levels of about an hour each with the prerequisites named, or pick by
-what you are doing.
+the task at hand.
 
-| What you are doing | Read |
+| Task | Read |
 |---+---|
 | working out why a build failed | [[file:01-an-easyconfig-is-python.org][chapter 1]], then chapters 5 to 9 |
 | moving a recipe to a newer stack | [[file:03-a-pin-is-for-one-generation.org][chapter 3]] |
@@ -56,7 +49,7 @@ what you are doing.
 Reading straight through works too. Chapters 1 to 4 are the mechanisms
 everything else rests on. Chapters 5 to 9 are the parameters that cost
 the most time when misread, each built around a failure that actually
-happened. Chapters 10 to 12 are the ones where you do something.
+happened. Chapters 10 to 12 are the ones where something is done.
 Chapters 13 to 19 are the machinery: the steps a build runs, what it is
 allowed to see, and what comes out. Chapters 20 to 24 are the working
 chapters, from reading a failure to writing a recipe, an easyblock and a
@@ -87,20 +80,21 @@ What changes on a large shared machine is the *consequences*, not the
 mechanism: many users, one tree, a scheduler, several
 microarchitectures, and a rebuild that costs somebody a night. Where a
 chapter is about those consequences it says so. Where it is about the
-mechanism, the mechanism is the same on your own machine, and you can run
-it there while reading.
+mechanism, the mechanism is the same on a local machine, and the same
+commands run there while reading.
 
-* What you need to read this
+* What this book requires
 
-Nothing, and that is the point.
+A browser.
 
 EasyBuild's own tutorial opens by asking for Linux, Python, an
 environment modules tool and a working EasyBuild install. That is a
-reasonable ask of someone who has already decided to use EasyBuild, and
-an unreasonable one of someone still deciding whether to.
+reasonable ask of someone who has already decided to use EasyBuild,
+and an unreasonable one of someone still deciding whether to.
 
-Every sample here runs on your machine, in the page. Edit one and the
-answer changes as you type.
+Every sample here runs in the page. Edit one and the answer changes
+as the sample is typed. Press Escape anywhere and a playground opens:
+the same engine, not limited to the samples printed in the chapter.
 
 Three of the four kinds work off tables exported from eb-stack at build
 time rather than retyped. So a page cannot drift from the framework's
@@ -115,13 +109,13 @@ reduced reader rather than the real parser. It follows single-line
 assignments and *names what it skipped*. Where the real parser is
 needed it says so instead of guessing.
 
-That gets you a lot, and not everything. Nothing in a browser can
+That covers a lot, and not everything. Nothing in a browser can
 configure, compile or link, and nothing here pretends to.
 
-Where a step needs a real toolchain you get a recording of a real run
-instead, with where and when it ran printed beside it. That turns out
-to be the right way to teach those steps. The operational skill is
-reading the log rather than watching the progress bar.
+Where a step needs a real toolchain the page shows a recording of a
+real run instead, with where and when it ran printed beside it. That
+turns out to be the right way to teach those steps. The operational
+skill is reading the log rather than watching the progress bar.
 
 * The chapters
 
@@ -130,6 +124,7 @@ reading the log rather than watching the progress bar.
    :maxdepth: 1
 
    00-tutorial-read-an-easyconfig
+   playground
    01-an-easyconfig-is-python
    02-a-toolchain-is-a-hierarchy
    03-a-pin-is-for-one-generation

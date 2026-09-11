@@ -44,10 +44,10 @@ So the recipe for anything installed is on the machine, whatever
 happened to the repository it came from.
 
 =easybuild-...log= is the full build log, the one
-[[file:20-reading-a-failed-build.org][chapter 20]] teaches you to read,
+[[file:20-reading-a-failed-build.org][chapter 20]] teaches to read,
 kept because the build succeeded.
 
-=..._test_report.md= is a test report, written *whether or not* you asked
+=..._test_report.md= is a test report, written *whether or not* one was asked
 for one, which is [[file:23-testing.org][chapter 23]]'s claim confirmed
 on disk.
 
@@ -60,7 +60,7 @@ on disk.
   environment;
 - =reprod/easyblocks/tarball.py=, *the source of the easyblock that ran*.
 
-That last file is the one nothing else gives you. An easyconfig plus a
+That last file is the one nothing else gives. An easyconfig plus a
 toolchain does not determine a build, because the easyblock is code and
 code changes between EasyBuild versions. Archiving it turns the
 installation into a self-describing artifact: recipe, environment, and
@@ -80,7 +80,7 @@ extensions.
 | =<ec>.env= | the module loads and the toolchain's environment variables |
 | =easyblocks/*.py= | the easyblock source, plus component and extension easyblocks |
 
-What is *not* in there, and matters when you use it a year later:
+What is *not* in there, and matters when the file is used a year later:
 
 - the EasyBuild framework version, which is in the log rather than here;
 - the source archives, which are in =sourcepath= or upstream;
@@ -103,7 +103,7 @@ that way carries less than one built normally.
 #+begin_predict
 Every install carries a devel module whose purpose is to reproduce the
 build's environment. Before reading the next block: name three variables
-you expect to find in it, and one you would be unhappy to find.
+expected in it, and one that would be a problem to find.
 
 #+begin_reveal
 =$CC=, =$CXX= and the toolchain's flags are there, which is the point.
@@ -115,7 +115,7 @@ variables named =_ModuleTable001_= and =_ModuleTable002_=, which are Lmod's
 own base64 bookkeeping.
 
 So a devel module is a faithful record rather than a curated one, and
-loading it into a shell you care about is a decision rather than a habit.
+loading it into a working shell is a decision rather than a habit.
 #+end_reveal
 #+end_predict
 
@@ -164,7 +164,7 @@ non-empty value. On the run above that included =$PATH= in full and two
 variables named =_ModuleTable001_= and =_ModuleTable002_=, which are
 Lmod's own base64 bookkeeping. Nothing filters them. A devel module is
 therefore a faithful record and not a tidy one, and a =setenv= of
-=$PATH= is a thing to read before you load it into a shell you care
+=$PATH= is a thing to read before loading it into a working
 about.
 
 *It loads the devel modules of its dependencies.* The load lines are
@@ -197,12 +197,12 @@ different code paths.* =dump_env_easyblock= is called from
 =main.py= for =reprod/<ec>.env=. The second one is what survives.
 #+end_detail
 
-* When you want it before the build
+* When it is needed before the build
 
 =eb --dump-env-script <easyconfig>= writes =<basename>.env= into the
 current directory: the =module load= lines for the toolchain and its
 dependencies, then the =export= lines for the build environment. It
-builds nothing, and it refuses to overwrite.
+builds nothing, and it does not overwrite.
 
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "A dumped environment for a system-toolchain recipe, and the refusal to overwrite it"
 $ eb wobble-1.0.eb --dump-env-script
@@ -295,9 +295,9 @@ else. It also copies in the RPATH wrapper directory when the site builds
 with =--rpath=, so compiling by hand produces binaries linked the way the
 stack's are.
 
-And for a machine where you cannot install a modules tool at all,
+And for a machine where a modules tool cannot be installed at all,
 EasyBuild generates container recipes: =--container-*= options, an image
-built with =--container-build-image= if you have the privileges, both
+built with =--container-build-image= if the privileges exist, both
 stored under =--containerpath=.
 
 #+ATTR_EB: :id env-three-ways :title Five ways to get a build environment :kind reference
@@ -310,7 +310,7 @@ stored under =--containerpath=.
 | =BuildEnv= easyblock | a modulefile you install | the module tree | a toolchain's environment, for anyone, versioned |
 | =--container-*= | a recipe, and an image | =--containerpath= | the whole machine |
 
-Ordered by how much you have to do: the first two are already on disk for
+Ordered by how much work they take: the first two are already on disk for
 every install your site has made.
 #+end_detail
 
@@ -324,7 +324,7 @@ that location on top of the mounted stack, which is
 [[file:11-eessi-somebody-elses-stack.org][chapter 11]]'s subject.
 =EESSI_EASYBUILD_HOOKS_OVERRIDE= replaces the hooks it uses, which
 replaces the hooks that make an EESSI build EESSI-shaped;
-overriding them is how you get a build that is not.
+overriding them is how a build that is not is obtained.
 
 #+ATTR_EB: :id sources-24 :title Where this chapter comes from :kind sources
 #+begin_detail
@@ -358,7 +358,7 @@ makes the others worse.
    you want to run =cmake= by hand twenty times.
 3. A PhD student needs to compile their own code against the toolchain
    the site's VASP was built with, for the next six months.
-4. Somebody wants to rebuild a 2023 installation exactly, on a new
+4. Somebody needs to rebuild a 2023 installation exactly, on a new
    machine, and has the module tree but not the repository.
 
 #+begin_solution
@@ -395,7 +395,7 @@ makes the others worse.
 - =module load $EBDEVEL<NAME>= reproduces the environment that build had,
   including =$PATH= and the modules tool's own bookkeeping.
 - =eb --dump-env-script= writes the toolchain's environment for a recipe
-  before any build, and refuses to overwrite.
+  before any build, and does not overwrite.
 - =BuildEnv= turns a toolchain's environment into a module other people can
   load, and copies in the RPATH wrappers.
 - What =reprod/= does not carry: the framework version, the sources, the

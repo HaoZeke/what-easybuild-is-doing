@@ -2,27 +2,15 @@
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
-1. Install software into a directory you own, on a machine where you are
+1. Install software into a directory the operator owns, on a machine where that operator is
    not an administrator.
 2. Read =--show-config= and say where each value came from.
 3. Name the three lists involved, and say which one your prefix does not
    touch.
 #+end_objectives
 
-Every chapter so far read easyconfigs somebody else installed. This one
-installs one, into a directory you own, on a machine where you are not
-an administrator.
-
-That is worth doing for its own sake. It is also the fastest way to put
-the previous nine chapters on a disk you can inspect, and nothing here
-needs a ticket.
-
-* One variable moves everything
-
-EasyBuild writes to five directories. Where it builds, where it
-downloads to, where the software goes, where the modulefiles go, and a
-copy of the easyconfig it used. Set them one at a time and you will
-miss one. Set the prefix instead:
+EasyBuild does not need administrator rights. Point it at a directory
+the current user owns:
 
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-09, EasyBuild 5.3.1" :caption "One environment variable, eight paths"
 $ export EASYBUILD_PREFIX=$HOME/eb-demo
@@ -58,13 +46,13 @@ Eight settings say =(E)= from one variable.
 =robot-paths= says =(D)=. Still the default, still pointing at the
 easyconfigs that came with the site's EasyBuild.
 
-That is the important line on the page. Your prefix decided where output
-goes. It did not touch where EasyBuild *looks*, and [[file:04-the-robot.org][chapter 4]] is why:
-those are two different lists.
+Your prefix decided where output goes. It did not touch where EasyBuild
+*looks*, and [[file:04-the-robot.org][chapter 4]] is why: those are two
+different lists.
 
-Which is exactly what you want. The site's easyconfigs stay available,
-so you can build any of the thousands they cover without copying
-anything. Add your own in front when you have one:
+The site's easyconfigs stay available. Any of the thousands they
+cover can be built without copying them. A local directory goes in
+front when a site recipe is not enough:
 
 #+begin_example
 export EASYBUILD_ROBOT_PATHS=$HOME/my-easyconfigs:
@@ -72,7 +60,7 @@ export EASYBUILD_ROBOT_PATHS=$HOME/my-easyconfigs:
 
 The trailing colon is chapter 4's empty element, and here it earns its
 keep: your directory first, the site's defaults still behind it. Leave
-the colon off and you have thrown away the defaults.
+the colon off and the defaults are gone.
 
 * The third list, which is the one people forget
 
@@ -81,13 +69,12 @@ print, because it does not belong to EasyBuild: =MODULEPATH=.
 
 Chapter 4 showed the robot asking the module system what is installed,
 through =modtool.available()=. So =MODULEPATH= decides what counts as
-already built, and that has two consequences here, pulling in opposite
-directions.
+already built. Keep the site's modules on it, or drop them, and the
+build goes two different ways.
 
 Keep the site's modules on =MODULEPATH=, which they are by default, and
-every dependency the site already installed is satisfied. You build your
-one package and nothing else. That is the difference between twenty
-minutes and two days.
+every dependency the site already installed is satisfied. The remaining
+one package and nothing else. Twenty minutes, not two days.
 
 Your own modules, though, are not on it. They are in your prefix, and
 nothing put them there. So after the build:
@@ -98,16 +85,15 @@ module use $EASYBUILD_PREFIX/modules/all
 
 Miss that and the symptom is confusing out of proportion to its cause.
 The build succeeded, the tree is on disk, and =module avail= does not
-list it. Nothing is broken. You have not told the module system to
-look.
+list it. The module system has not been told to look.
 
 =modules= is the default =subdir-modules=, and =all= is where the
-default naming scheme files them. Do not take that from me: build one
+default naming scheme files them. Confirm it: build one
 thing and read the path EasyBuild prints, or check =--show-config=.
 
 * The whole path, once
 
-Putting it together, on a cluster whose EasyBuild you load as a module:
+Putting it together, on a cluster whose EasyBuild is loaded as a module:
 
 #+begin_example
 module load EasyBuild
@@ -125,7 +111,7 @@ module avail GROMACS
 
 The =-D= line is not optional politeness. Chapter 4's plan is a
 function of what is installed on *this* machine. So it is the only
-thing that tells you whether you asked for one build or ninety. Read
+thing that reports whether the plan is one build or ninety. Read
 it, then decide.
 
 If the site has no EasyBuild module, install one into a virtual
@@ -169,21 +155,15 @@ a home directory with a quota. Point =sourcepath= at a shared download
 cache if the site has one, and clean the build directory.
 
 Time. From-source is [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]]'s trade, and it does not get cheaper
-because you are the one waiting.
+because the operator is the one waiting.
 
-Duplication, if you get =MODULEPATH= wrong. Drop the site's modules and
+Duplication, if =MODULEPATH= is wrong. Drop the site's modules and
 every dependency becomes yours to build, which is how a twenty-minute
 job becomes an overnight one.
 
 And support. A module in your prefix is yours. When it breaks after a
 system change, nobody else is going to notice.
 
-* Where this leads
-
-Two directions, and they are the next two chapters.
-
-The first is doing this on top of somebody else's stack rather than your
-site's, which is EESSI.
-
-The second starts from what this chapter actually asked of you: line up
-three lists by hand. A tool could compute that instead.
+The same prefix works against the site's EasyBuild and, once it is
+mounted, against EESSI. When the robot has no recipe, generate or
+bump a =.eb= and still run =eb=.

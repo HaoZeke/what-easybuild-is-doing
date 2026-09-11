@@ -6,7 +6,7 @@
 1. Take a "bump this package" ticket from the request to a built module,
    in the order that finds the problems early.
 2. Say what your site's pipeline adds on top of =eb=, and find those parts
-   in a repository you have never seen.
+   in a repository not seen before.
 3. Diagnose a failure that a build host reports as green.
 #+end_objectives
 
@@ -22,11 +22,11 @@
 Everything so far has been a mechanism. This chapter is the job.
 
 Three tasks, all real, all of the kind handed to somebody in their first
-month. Each is written as a sequence you can follow, with the point where
+month. Each is written as a sequence that can be followed, with the point where
 a first-timer goes wrong marked, because the interesting part of each one
 is not the fix.
 
-* What sits between you and eb
+* What stands between the operator and eb
 
 Nothing in this chapter is about EasyBuild's defaults, because no site
 runs them. Before the first task, find these five things in your site's
@@ -50,7 +50,7 @@ transcripts starts there.
 *The hooks.* [[file:09-a-hook-changes-a-file-you-are-not-reading.org][Chapter
 9]]'s subject, and the reason a recipe can say one thing and the build do
 another. Find the directory, and find which hook applies to the package
-you are about to touch.
+about to be touched.
 
 *The templates.* Starter easyconfigs, one per easyblock shape. Copy the
 site's template rather than upstream's example, and your first
@@ -58,7 +58,7 @@ contribution comes out looking like everybody else's.
 
 #+ATTR_EB: :id site-questions :title Five questions to answer before your first build :kind reference
 #+begin_detail
-Write the answers down; you will need them all week.
+Write the answers down; they are needed all week.
 
 | Question | Where to look |
 |---+---|
@@ -68,7 +68,7 @@ Write the answers down; you will need them all week.
 | How do I schedule one package rather than the whole list? | the pipeline's test or single-entry mode |
 | Where do the logs of a failed build end up, and for how long? | the pipeline's output directory, and its retention |
 
-The last one decides whether you can diagnose a failure tomorrow. On a
+The last one decides whether a failure tomorrow can be diagnosed. On a
 site that discards build directories nightly,
 [[file:20-reading-a-failed-build.org][chapter 20]]'s advice about
 =config.log= has a deadline.
@@ -99,7 +99,7 @@ Specified start dir /scratch/build/.../qmcpack-4.4.0/qmcpack does not exist
 
 *Where it went wrong: =start_dir= was carried across.* It had been correct
 for as long as the recipe built from a git commit, because EasyBuild
-archives a clone under the repository's name, so the sources did sit in
+archives a clone under the repository's name, so the sources were in
 =qmcpack/=. The release tarball extracts to =qmcpack-4.4.0/= with
 =CMakeLists.txt= at the top, and
 [[file:20-reading-a-failed-build.org][chapter 20]]'s descent rule then
@@ -118,11 +118,11 @@ directory name.
 
 #+ATTR_EB: :title Before you look it up
 #+begin_predict
-You have bumped the version, injected a checksum, and the build fails in
-the =configure= step with a path that does not exist. You have not yet
+The version has been bumped, a checksum injected, and the build fails in
+the =configure= step with a path that does not exist. Nothing has yet
 opened the log.
 
-Which two commands do you run first, and which one of them a dry run
+Which two commands run first, and which one of them a dry run
 could have replaced?
 
 #+begin_reveal
@@ -133,7 +133,7 @@ extracts anything, so a parameter that names a directory the archive does
 not contain looks fine under it. The archive listing is the only thing
 that settles it.
 
-If you reached for =--force= or a rebuild first, that is the reflex worth
+If =--force= or a rebuild was the first move, that is the reflex worth
 losing: nothing about this failure is stale state.
 #+end_reveal
 #+end_predict
@@ -191,8 +191,8 @@ recipes get written.
 binary's own [[dive:term-rpath]] carries that prefix. So =ldd= on the GPU
 binary, run from a login node, reports zero missing libraries. Pointing at
 the other architecture's tree by its full path does not rescue the test
-either: the RPATH inside the binary still resolves against the node you
-are on.
+either: the RPATH inside the binary still resolves against the node
+the command runs on.
 
 *Where a first-timer goes wrong: they publish step 6.* A clean check is
 persuasive, it is cheap, and on a heterogeneous machine it is evidence
@@ -250,7 +250,7 @@ Write the commit message. Specifically decide:
 #+end_solution
 #+end_exercise
 
-* Task three: a user says a module is broken and you cannot reproduce it
+* Task three: a user says a module is broken and the report cannot be reproduced
 
 The request: *"this module works for me and fails for them"*, which is the
 commonest ticket in this job and the one with the most wrong answers.
@@ -259,7 +259,7 @@ The sequence is a bisection over the four things that differ:
 
 1. *Which architecture.* Resolve the per-node path on their node and on
    yours. Different trees mean different installs, and the module name
-   tells you nothing.
+   reports nothing.
 2. *Which module.* Have them send =module list= rather than the name they
    think they loaded. A different generation on =MODULEPATH= is the second
    most common answer.
@@ -292,7 +292,7 @@ which puts the failure before the easyconfig was processed at all, in the
 fetch phase.
 
 And a field like =Last successful build:= reporting *never* carries no
-signal for a line you have just added, because it is a search of previous
+signal for a line just added, because it is a search of previous
 runs for that filename and your filename has never appeared.
 
 Read your pipeline's summariser once, and find out which of its fields
@@ -300,16 +300,16 @@ can be empty for a reason other than absence.
 
 #+ATTR_EB: :id first-week-habits :title Four habits that shorten the week :kind reference
 #+begin_detail
-1. *State where a result came from.* Every claim you make about a build
+1. *State where a result came from.* Every claim about a build
    carries a machine and an architecture, in the ticket and in the commit
    message. This book's transcripts do it for the same reason.
 2. *Read the archive, not the diff.* A version bump is a change of source.
 3. *Do not switch a check off to make a build pass.* A failing check on a
-   package you cannot fix is a report about something else.
+   package that cannot be fixed is a report about something else.
    [[file:23-testing.org][Chapter 23]].
 4. *Write the diagnosis down where the next person will look.* The
    install already carries the easyconfig, the log and =reprod/=; what it
-   does not carry is why you chose what you chose.
+   does not carry is why that choice was made.
 #+end_detail
 
 #+ATTR_EB: :id EB-Week-1 :title Your actual first ticket
@@ -324,7 +324,7 @@ Write the plan before you type anything. Specifically:
    two it also contains.
 3. The two failures you expect, and the check that would catch each one
    before a user does.
-4. What you will put in the reply, and what you will refuse to say until
+4. What the reply will carry, and what it will omit until
    you have measured it.
 
 #+begin_solution
@@ -358,7 +358,7 @@ Write the plan before you type anything. Specifically:
   describes the shape of the archive.
 - A dry run cannot see a fault that depends on the contents of an archive.
 - On a heterogeneous system, measure library resolution on the
-  architecture that will run the binary, not on the one you are on.
+  architecture that will run the binary, not on the one underfoot.
 - Every claim about a build carries the machine and the architecture it
   was measured on, or it is not a claim.
 #+end_keypoints

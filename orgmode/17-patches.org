@@ -34,19 +34,22 @@ inside the unpacked source tree.
 The second form is a tuple, and it does something different: it *copies*
 a file into the source tree at the given path. No =patch=, no diff, just
 a file placed where the build expects one. That is how a recipe supplies a whole makefile fragment rather than a
-diff against one. Some packages expect you to write their build
-configuration as a file, and this is how you hand it over.
+diff against one. Some packages expect their build
+configuration as a file, and this is how it is handed over.
 
-Two things follow that catch people. A tuple whose second element is a
-directory is a copy. A tuple whose second element is a *number* is a diff
-with a strip level, which is the next section. Either way the file needs
-a checksum, because
+The second element is not "directory means copy". An integer is a
+strip level. A string plus a name ending in =.patch= is a
+=sourcepath=: apply the diff *in* that subdirectory. A string plus a
+name that is *not* =.patch= is a copy. =('extra-makefile.include',
+'.')= is a copy because of the name, not because of the directory.
+=('foo.patch', 'src')= is not a copy. Either way the file needs a
+checksum, because
 [[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]] applies to
 patches exactly as it does to sources.
 
 * The strip level
 
-A diff carries paths, and those paths have a prefix nobody wants:
+A diff carries paths, and those paths have a prefix that is not useful:
 
 #+begin_example
 --- vasp.6.5.1/src/main.F	2025-03-01 10:00:00
@@ -54,16 +57,17 @@ A diff carries paths, and those paths have a prefix nobody wants:
 #+end_example
 
 =patch -p1= drops one leading component, so it looks for =src/main.F=.
-=patch -p0= would look for =vasp.6.5.1/src/main.F=. EasyBuild defaults to
-=-p1=, which is what =git diff= produces, and you override it with a
-number:
+=patch -p0= would look for =vasp.6.5.1/src/main.F=. EasyBuild does not
+default to =-p1=. If no integer is given, =apply_patch=
+guesses the level from the =+++= paths against the unpacked tree.
+=git diff= output is usually applied with =-p1=, and an integer forces the level:
 
 #+begin_example
 patches = [('odd-layout.patch', 2)]
 #+end_example
 
-Which brings us back to
-[[file:01-an-easyconfig-is-python.org][chapter 1]]'s failure. A strip
+That is
+[[file:01-an-easyconfig-is-python.org][chapter 1]]'s failure again. A strip
 level is *relative to the unpacked source tree*. It is exactly the class
 of parameter that describes the shape of the source rather than the
 software. Change from a git checkout to a release tarball and the number
@@ -72,7 +76,7 @@ of leading components changes with it, silently, in the same way
 
 * Applying cleanly is not the same as applying correctly
 
-=patch= is more helpful than you want it to be.
+=patch= is more helpful than is useful.
 
 =patch= matches on context, not on line numbers. It will apply a hunk
 that has moved, and report the offset. It will apply a hunk with fuzz,
@@ -90,10 +94,10 @@ The check is to read the patched file, not the patch output.
 
 * When it should not be a patch
 
-A patch is a fork you are maintaining. Three questions before writing
+A patch is a fork being maintained. Three questions before writing
 one.
 
-*Is it a bug?* Then it belongs upstream, and the patch is what you carry
+*Is it a bug?* Then it belongs upstream, and the patch is what is carried
 while the pull request is open. Say so in the patch's own header, with a
 link, so the next person knows whether to drop it.
 
@@ -102,7 +106,7 @@ link, so the next person knows whether to drop it.
 changes a path is a patch that will conflict on every version bump for no
 reason.
 
-*Is it a configuration file the package expects you to write?* Then it is
+*Is it a configuration file the package expects to be written?* Then it is
 the copy form above, and not really a patch.
 
 The one case where a long-lived patch is right is a package whose

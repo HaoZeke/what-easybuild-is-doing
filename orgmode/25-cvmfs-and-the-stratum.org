@@ -52,7 +52,7 @@ Yfe0b764e723f0fdba0522e72b59f86f66f5234d7
 Thirteen fields, one letter each, then a separator, a 40-character
 certificate fingerprint and 256 bytes of signature: 603 bytes in total
 for a repository holding three generations of a software stack. Four
-fields are the ones you will use.
+fields are the ones that get used.
 
 =C= is the content hash of the root file catalog. =B= is that catalog's
 size, 26624 bytes. =S= is the revision, 23927, which is how many times
@@ -86,7 +86,7 @@ service with its own state.
 #+ATTR_EB: :title Two numbers, before you look
 #+begin_predict
 The manifest above says the root catalog hashes to =7ca4fb...= and
-=B26624=. You are about to fetch that object over HTTP and hash it.
+=B26624=. The next step is to fetch that object over HTTP and hash it.
 
 Predict two things: what =sha1sum= of the downloaded bytes will be, and
 how many bytes the download will be.
@@ -141,7 +141,7 @@ name; 26624 bytes after decompression.
 =zlib.decompress= produced.
 
 *A catalog is a SQLite database.* Not a format to reverse-engineer; a
-file you can open.
+file that can be opened.
 
 #+ATTR_EB: :id cvmfs-object-suffix :title The trailing C, and where it is not written down :kind discrepancy
 #+begin_detail
@@ -284,7 +284,7 @@ modules is cheap and opening one package's files is cheap, which is the
 pair of properties a software stack needs.
 #+end_detail
 
-* The cut points are declared, and you can read the declaration
+* The cut points are declared, and the declaration is readable
 
 Where a repository gets cut is a maintenance decision, and EESSI's is a
 file in the repository. Its hash is in the catalog, so it can be fetched
@@ -421,7 +421,7 @@ package, =cvmfs-config-eessi=, which installs
 
 Whitelists expire. "Signatures are only good for 30 days by default, so
 =cvmfs_server resign= must be run again before they expire", and seven
-days rather than thirty when the master key sits on a hardware token. A
+days rather than thirty when the master key is on a hardware token. A
 compromised repository key is handled with a blacklist that "has
 precedence over the white-list", and with one limit stated plainly
 upstream:
@@ -446,7 +446,7 @@ the property that matters is three words: "Publishing is an atomic
 operation."
 
 Everything a client sees, therefore, is a published revision: the =S=
-field, with a =previous_revision= hash behind it, and clients that refuse
+field, with a =previous_revision= hash behind it, and clients that reject
 to go backwards. "Once a particular revision of a file system is stored
 in a client's local cache, the client will not apply an older revision
 anymore."
@@ -630,7 +630,7 @@ For each, name the layer and the check.
 
 6. Not possible, and the reason is the format rather than the
    permissions: content-addressed objects, a signed Merkle tree, and no
-   client write path. What they want is a variant symlink or a site tree
+   client write path. What they need is a variant symlink or a site tree
    under =host_injections=.
 #+end_solution
 #+end_exercise

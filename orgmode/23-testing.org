@@ -13,7 +13,7 @@
 #+begin_prerequisites
 - [[file:06-what-installed-means.org][Chapter 6]], for the sanity check.
 - [[file:13-how-a-build-executes.org][Chapter 13]], for where the =test= and
-  =testcases= steps sit.
+  =testcases= steps run.
 #+end_prerequisites
 
 "Did you test it" is four different questions, and answering the wrong
@@ -22,7 +22,7 @@ one is how a broken module ships. In order of when they happen:
 1. The package's own test suite, during the build. The =test= step.
 2. EasyBuild's sanity check, after the install. Chapter 6.
 3. A test report, uploaded, saying a build worked on a real machine.
-4. A portable benchmark or correctness run, later, on hardware you care
+4. A portable benchmark or correctness run, later, on hardware that matters
    about.
 
 None of them subsumes another. A green test suite says the code computes
@@ -61,14 +61,14 @@ case is a =skipsteps= that was defensible and still wrong: the check was
 reporting a real defect somewhere else, and switching it off moved the
 discovery to a user.
 
-So: *a test you skip needs a comment saying why, and
-a test you ignore needs somebody to have read the failure.* Both are
+So: *a skipped test needs a comment saying why, and
+an ignored test needs somebody to have read the failure.* Both are
 legitimate. Neither is free.
 
 * The sanity check is a test
 
 It is worth restating here because it is the test that runs on every
-build whether you write one or not.
+build whether one is written or not.
 =sanity_check_paths= asserts files and directories exist;
 =sanity_check_commands= runs commands, which means the check *executes
 the software*. That is [[file:06-what-installed-means.org][chapter 6]],
@@ -100,10 +100,10 @@ installation process of particular supported software packages", and for
 easyconfig contributions CI "does **not** include actually building and
 installing software". Upstream CI parses every easyconfig, style-checks
 it, verifies checksums are present, checks that an easyconfig exists for
-every dependency and that no dependency graph has a version conflict, and
-then installs exactly one package, =M4=, as a smoke test.
+every dependency, and checks that no dependency graph has a version
+conflict. It does not build the contributed package.
 
-So the evidence that a build works is a human's, and this is how you
+So the evidence that a build works is a human's, and this is how that
 produce it:
 
 #+begin_example
@@ -140,8 +140,8 @@ excluded. The documented value to start from is
 export EASYBUILD_TEST_REPORT_ENV_FILTER='^SSH|USER|HOSTNAME|UID|.*COOKIE.*'
 #+end_example
 
-A report is written whether or not you asked for one, next to the
-installation log as =<log basename>_test_report.md=. Read one before you
+A report is written whether or not one was requested, next to the
+installation log as =<log basename>_test_report.md=. Read one before
 upload your first, because "the full environment of the session" means
 what it says.
 #+end_detail
@@ -151,15 +151,15 @@ test report is good evidence: it says which machine, which
 configuration, and which modules, so a reviewer can tell whether your
 success is relevant to their question.
 
-* Testing on hardware you do not have
+* Testing on hardware the site does not have
 
-The fourth kind. A build that works on the machine you built it on tells
-you nothing about the machine your users are on, which is
+The fourth kind. A build that works on the machine that built it tells
+nothing about the machine the users are on, which is
 [[file:27-four-things-that-actually-happened.org][chapter 27]]'s
 login-node lesson in general form.
 
 EESSI's answer is a portable test suite, =EESSI/test-suite=, written with
-ReFrame, and its structure is the part worth borrowing whether or not you
+ReFrame, and its structure is the part worth borrowing whether or not the
 use EESSI: tests are mapped to software in
 =tests/eessi_test_mapping/software_to_tests.yml=, so adding software
 declares which tests should now run rather than leaving somebody to
@@ -237,7 +237,7 @@ file it keys tests to software with.
 
 #+begin_keypoints
 - Four different things are called testing: the package's own suite, the
-  sanity check, a test report, and a portable run on hardware you care
+  sanity check, a test report, and a portable run on hardware that matters
   about. None of them subsumes another.
 - =runtest= is a whole command on the base class and an argument to =make=
   under =ConfigureMake=.

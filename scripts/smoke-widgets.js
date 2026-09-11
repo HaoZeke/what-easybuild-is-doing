@@ -60,9 +60,48 @@ setTimeout(() => {
   if (!engine) {
     process.exit(1);
   }
-  for (const kind of ["easyblock", "template", "hierarchy"]) {
+  for (const kind of [
+    "easyblock",
+    "template",
+    "hierarchy",
+    "parse",
+    "modname",
+    "solve",
+    "lint",
+    "emit",
+  ]) {
     check(kind + " implemented", typeof engine[kind] === "function");
   }
+
+  const parsed = engine.parse(
+    "name = 'code-server'\nversion = '4.130.0'\ntoolchain = SYSTEM\n"
+  );
+  check("parse SYSTEM version is system", parsed.includes("version: system"), parsed);
+  check("parse SYSTEM version is not none", !parsed.includes("(none)"), parsed);
+
+  const named = engine.modname(
+    "name = 'GROMACS'\nversion = '2025.2'\n" +
+      "toolchain = {'name': 'foss', 'version': '2025a'}\n" +
+      "versionsuffix = '-CUDA-12.8.0'\n"
+  );
+  check(
+    "modname folds suffix after toolchain",
+    named.includes("GROMACS/2025.2-foss-2025a-CUDA-12.8.0"),
+    named
+  );
+
+  const linted = engine.lint(
+    "name = 'code-server'\nversion = '4.130.0'\ntoolchain = SYSTEM\n" +
+      "sources = ['code-server-4.130.0-linux-amd64.tar.gz']\n"
+  );
+  check("lint flags missing checksums", /checksums/.test(linted), linted);
+
+  const walked = engine.solve(
+    "name = 'GROMACS'\nversion = '2025.2'\n" +
+      "toolchain = {'name': 'foss', 'version': '2025a'}\n" +
+      "dependencies = [('Python', '3.13.1'), ('FFTW', '3.3.10')]\n"
+  );
+  check("solve finds Python in the canned universe", walked.includes("Python/"), walked);
 
   // easyblock: the chapter's own sample must produce the class the chapter
   // names in its prose.
@@ -77,11 +116,19 @@ setTimeout(() => {
   for (const s of tmpl) {
     const out = engine.template(s.body);
     check("template " + s.file + " resolved version", out.includes("%(version)s  ->"), out);
-    check(
-      "template " + s.file + " expanded the sources line",
-      /sources:.*code-server-4\.130\.0-linux/.test(out),
-      out
-    );
+    if (s.body.indexOf("code-server") >= 0) {
+      check(
+        "template " + s.file + " expanded the sources line",
+        /sources:.*code-server-4\.130\.0-linux/.test(out),
+        out
+      );
+    } else {
+      check(
+        "template " + s.file + " resolved version into a value",
+        /sources:.*1\.3\.1|sources:.*zlib-1\.3\.1/.test(out),
+        out
+      );
+    }
   }
 
   // A reader editing the version is the whole point, so check the edit moves.

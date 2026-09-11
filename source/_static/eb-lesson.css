@@ -7,6 +7,7 @@
  * do not fill the box.
  */
 
+article.yue .eb-questions,
 article.yue .eb-objectives,
 article.yue .eb-exercise {
   border-left: 3px solid var(--eb-rule);
@@ -15,6 +16,7 @@ article.yue .eb-exercise {
   margin-bottom: var(--eb-space-block);
 }
 
+article.yue .eb-questions-label,
 article.yue .eb-objectives-label,
 article.yue .eb-exercise-label {
   font-family: var(--eb-sans);
@@ -38,11 +40,14 @@ article.yue .eb-exercise > *:last-child {
 }
 
 /* Objectives are a short list and read better tight than spaced. */
+article.yue .eb-questions ol,
+article.yue .eb-questions ul,
 article.yue .eb-objectives ol,
 article.yue .eb-objectives ul {
   margin-top: 0;
 }
 
+article.yue .eb-questions li + li,
 article.yue .eb-objectives li + li {
   margin-top: 0.25rem;
 }

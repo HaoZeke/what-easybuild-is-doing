@@ -3,9 +3,9 @@
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
-1. Recognise each of these four failure shapes when it happens to you.
+1. Recognise each of these four failure shapes when it happens.
 2. Say, for each, which check would have caught it and why it did not.
-3. Say what a login node can and cannot tell you about a cluster.
+3. Say what a login node can and cannot report about a cluster.
 #+end_objectives
 
 Every case in this book is real, and they have been told one at a time,
@@ -48,7 +48,7 @@ that was already correct.
 =16:14=, =16:18=, =16:25= and =17:59= on 2026-01-27. Same day, same
 easyconfig, same run. Two of them came out one way and two the other.
 
-*And the split is not the one you would guess.* AMD-ZEN2 and AMD-ZEN4
+*And the split is not the one a first guess would pick.* AMD-ZEN2 and AMD-ZEN4
 were correct; AMD-ZEN4-H100 and INTEL-AVX512 were not. INTEL-AVX512 has
 no GPU in it. Any theory of the form "the GPU builds got the newer CUDA"
 is contradicted by the data, which is why
@@ -72,13 +72,13 @@ $ readlink -f /sw/arch
 The login nodes are AMD-ZEN2, one of the two architectures that came out
 correct. So every check from a login node reported a working module,
 while the reporter on a GPU node had a broken one, from the same module
-name. I declared the problem fixed on that basis. It was not.
+name. The problem was declared fixed on that basis. It was not.
 
 Then the second mistake, which is subtler and worth spelling out.
 Pointing directly at the H100 tree with an absolute
 =/gpfs/.../AMD-ZEN4-H100/...= path does not rescue the test, because the
 RPATH baked into that binary contains =/sw/arch/...= entries, and those
-resolve against *the node you are standing on*. So =ldd= on the H100
+resolve against *the node underfoot*. So =ldd= on the H100
 binary, run from a login node, resolves cuSPARSE out of the ZEN2 tree
 and reports zero missing libraries.
 
@@ -114,7 +114,7 @@ discovery from a build host to a user, which is
 
 And the check was carrying information: *the toolchain module is broken*.
 That is a thing to escalate. A failing check on a package
-you cannot fix is a report about something else, and deleting the report
+that cannot be fixed is a report about something else, and deleting the report
 does not make the something else go away.
 
 There was also a misconception in the way, and it is common enough to
@@ -128,12 +128,12 @@ else it reports is a real finding.
 
 =start_dir = 'qmcpack'= had been correct for as long as the recipe built
 from a pinned development commit: EasyBuild archives a git checkout under
-the repository's name, so the sources really did sit one level down.
+the repository's name, so the sources really were one level down.
 
 The bump to the 4.4.0 release changed the source from a checkout to a
 tarball, which unpacks to =qmcpack-4.4.0/= with the sources at the top.
 The checksum changed with it and got attention, because a checksum
-mismatch stops the build and hands you the value it computed.
+mismatch stops the build and returns the value it computed.
 =start_dir= did not change, and nothing asked it to.
 
 The result is [[file:01-an-easyconfig-is-python.org][chapter 1]]'s
@@ -147,12 +147,12 @@ Two things this one taught that the others did not.
 A dry run cannot catch it. =eb -x= never extracts anything, so a
 =start_dir= that names a directory the archive does not contain looks
 fine right up to the point where a build extracts the archive. The
-verification I ran before pushing was structurally incapable of finding
+verification run before pushing was structurally incapable of finding
 the fault.
 
 And "the flags are identical" was the wrong comparison. It was true, and
 the source block was what had changed, and =start_dir= is a function of
-the source block. Comparing the parts that stayed the same is how you
+the source block. Comparing the parts that stayed the same is how to
 miss a parameter whose meaning depends on a part that did not.
 
 * What the four have in common
@@ -202,9 +202,9 @@ exactly the inference that cost a day the first time.
 #+begin_keypoints
 - Every one of the four was green somewhere, so the question is never "did
   it pass" but what it passed and where.
-- A symlink such as =/sw/arch= resolves against the node you are standing
+- A symlink such as =/sw/arch= resolves against the node underfoot
   on, which makes an =ldd= on a login node evidence about the login node.
-- A failing check on a package you cannot fix is a report about something
+- A failing check on a package that cannot be fixed is a report about something
   else; deleting the report does not fix the something else.
 - A parameter whose meaning depends on the shape of the source has to be
   re-read whenever the source changes.

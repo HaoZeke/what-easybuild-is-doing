@@ -5,6 +5,13 @@ researched answer to this problem, reached through ``sphinx-lesson``'s
 Sphinx spelling of it. Three of them, and no more, because every block a
 book defines is a block a reader has to learn to read.
 
+``questions``
+    What the chapter is going to answer, as questions, before the
+    objectives. The Carpentries Workbench episode header carries both:
+    questions name the confusion, objectives name the observable act.
+    A self-study book needs the questions more than a workshop does,
+    because there is no instructor to pose them.
+
 ``objectives``
     What a reader will be able to do at the end. Two to four of them; a
     fifth means the chapter is doing two jobs and should be split. It goes
@@ -66,6 +73,10 @@ from sphinx.util.docutils import SphinxDirective
 __version__ = "0.1.0"
 
 
+class questions_node(nodes.General, nodes.Element):
+    """What the chapter is going to answer."""
+
+
 class objectives_node(nodes.General, nodes.Element):
     """What the reader will be able to do."""
 
@@ -80,6 +91,22 @@ class solution_node(nodes.General, nodes.Element):
 
 class exerciselist_node(nodes.General, nodes.Element):
     """Placeholder, filled once every document has been read."""
+
+
+class Questions(SphinxDirective):
+    """The questions this chapter answers, before the objectives."""
+
+    has_content = True
+    required_arguments = 0
+    optional_arguments = 0
+
+    def run(self):
+        node = questions_node()
+        node["title"] = "Questions"
+        self.state.nested_parse(self.content, self.content_offset, node)
+        if not node.children:
+            raise self.error("questions: the block is empty")
+        return [node]
 
 
 class Objectives(SphinxDirective):
@@ -417,6 +444,10 @@ def _open_block(self, node, css_class, label):
     )
 
 
+def visit_questions_html(self, node):
+    _open_block(self, node, "eb-questions", node["title"])
+
+
 def visit_objectives_html(self, node):
     _open_block(self, node, "eb-objectives", node["title"])
 
@@ -493,6 +524,13 @@ def skip_node(self, node):
 
 def setup(app):
     app.add_node(
+        questions_node,
+        html=(visit_questions_html, depart_block_html),
+        latex=(visit_block_text, depart_block_text),
+        text=(visit_block_text, depart_block_text),
+        man=(visit_block_text, depart_block_text),
+    )
+    app.add_node(
         objectives_node,
         html=(visit_objectives_html, depart_block_html),
         latex=(visit_block_text, depart_block_text),
@@ -535,6 +573,7 @@ def setup(app):
         man=(visit_block_text, depart_block_text),
     )
 
+    app.add_directive("questions", Questions)
     app.add_directive("objectives", Objectives)
     app.add_directive("exercise", Exercise)
     app.add_directive("solution", Solution)

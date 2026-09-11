@@ -11,7 +11,7 @@
 #+end_objectives
 
 Everything before this chapter was about what EasyBuild does when it
-works. This is the one you will actually use, and it is a reading skill
+works. This is the one that gets used, and it is a reading skill
 rather than a repertoire of fixes.
 
 The material here is a real failure, produced on purpose, small enough to
@@ -46,7 +46,7 @@ during it, so configure, build and install all succeeded. 127 because it
 is the shell's code for a command that is not there: the file being run
 does not exist at the path the easyconfig named.
 
-If you predicted a licence error from =--check-licence=, that is the
+If the prediction was a licence error from =--check-licence=, that is the
 reading the flag invites and the exit code rules out.
 #+end_reveal
 #+end_predict
@@ -143,7 +143,7 @@ drwxr-xr-x 3 rgoswami rgoswami 60 Sep 10 07:06 ..
 Exit 127 was telling the truth.
 
 Two ways to fix it, and they are not equivalent. =start_dir = ''= stops
-the descent, so =bin/wobble= sits where the recipe expects; or the
+the descent, so =bin/wobble= is where the recipe expects; or the
 =postinstallcmds= line is corrected to the path that exists. The first
 changes the layout the module exports, which is what a user meets, so it
 is usually the right one.
@@ -195,10 +195,10 @@ Then, 900 lines earlier:
 
 * The log, and how to search it
 
-The error message carries only the first 300 characters of a failing
-command's output. For anything longer, the log is the artifact.
+The error block names the command, the exit code, the cwd, and a
+path to =out.txt=. The output is not inlined. Open that file.
 
-There are two of them, and knowing which you are looking at saves
+There are two of them, and knowing which one is on the page saves
 confusion.
 
 A *temporary* log per =eb= invocation, announced as =Temporary log file in
@@ -225,7 +225,7 @@ Then the reading order, which is the part people get wrong.
 =Running method configure_step part of step configure= divide the log
 into the eighteen sections from
 [[file:13-how-a-build-executes.org][chapter 13]], and knowing which one
-you are in narrows everything.
+the environment is in narrows everything.
 
 *Search for a command, not a complaint.* =running shell command= (or
 =INFO running cmd= in older logs) finds every command with its working
@@ -283,16 +283,16 @@ else
 fi
 #+end_src
 
-Running it drops you into a shell whose environment came from the
+Running it opens a shell whose environment came from the
 sibling =env.sh=, with the failing command as the previous history entry.
 So the loop is: press up, edit, run, repeat, in the environment the build
 had rather than in an approximation of it.
 
 That is [[file:14-the-isolation-policy.org][chapter 14]] again: your login shell is not
 the build's environment, and a command that works in one and fails in the
-other tells you nothing until you know which environment you were in.
+other reports nothing until the environment is known.
 
-For a failure you want to poke at *before* it happens, rather than after,
+For a failure to inspect *before* it happens, rather than after,
 =eb --dump-env-script <easyconfig>= writes =<name>.env= in the current
 directory: the =module load= lines for the toolchain and its
 dependencies, and the build environment the toolchain object sets. Source
@@ -306,20 +306,20 @@ does not, and that is deliberate: the wreckage is the evidence.
 
 The mechanism is the step list. =cleanup= is the fourteenth of the
 eighteen steps, so a build that fails in =configure= never reaches it,
-whatever =--cleanup-builddir= says. What you get to keep, for an
+whatever =--cleanup-builddir= says. What remains, for an
 autotools build, is =config.log= in the build directory, which contains
 the actual compiler invocations configure tried and their actual output.
 For CMake it is =CMakeFiles/CMakeOutput.log= and
 =CMakeFiles/CMakeError.log=. Both say things the EasyBuild log does not,
 because they are the build system's own record.
 
-The cost is that nobody cleans up after you. A build path filling with
+The cost is that nobody cleans the tree afterwards. A build path filling with
 failed attempts is a normal way for a shared build host to run out of
 disk.
 
 Three options change where a failure happens:
 
-=--stop=<step>= ends the run cleanly after a named step, so you can stop
+=--stop=<step>= ends the run cleanly after a named step, so the run can stop
 at =configure= and go look at what it produced.
 
 =-x=, the extended dry run, walks the whole procedure without doing any

@@ -1,6 +1,12 @@
 #+TITLE: Chapter 1. An easyconfig is Python
 #+OPTIONS: toc:nil num:nil
 
+#+begin_questions
+- Why is one name quoted and the other not?
+- When is =%(version)s= substituted: while the file runs, or after?
+- What is an easyconfig without an =easyblock= line claiming?
+#+end_questions
+
 #+begin_objectives
 1. Say why =SYSTEM= carries no quotes and ='tools'= does.
 2. Predict the easyblock class EasyBuild will look for, from a software
@@ -10,8 +16,8 @@
    state it reports.
 #+end_objectives
 
-Here is a complete, real easyconfig. It installs a browser-based VS
-Code onto a supercomputer, and it is twenty lines long.
+This file installs VS Code in a browser on a supercomputer. Twenty
+lines. Recipes of this shape are merged every week.
 
 #+begin_src easyconfig :widget parse
 name = 'code-server'
@@ -36,28 +42,32 @@ checksums = [
 moduleclass = 'tools'
 #+end_src
 
-It reads like configuration. Keys on the left, values on the right, no
-control flow, no functions. It could pass for YAML with odd spelling.
+The file reads as YAML would: names on the left, values on the right,
+no functions, no =if=. Line seven breaks that reading. =SYSTEM= has
+no quotes. =moduleclass= does. That is not a house style. EasyBuild
+executed this file as Python, and =SYSTEM= was already a variable in
+the evaluation namespace.
 
-It is not configuration. It is a Python file, and EasyBuild runs it.
+Once that is visible, a lot of the rest of EasyBuild stops being folklore.
+The templating is Python's own =%=. The missing =easyblock= line is a
+claim that a class exists. The quoting is not inconsistent. One of
+those names was supplied. The other was typed.
 
 * Why that distinction earns its place in chapter one
-
-Because everything surprising about easyconfigs follows from it.
 
 EasyBuild executes an easyconfig in a namespace it has prepared, which
 carries the set of names the file is allowed to use. =SYSTEM= on line
 seven is not a keyword and not a string. It is a value EasyBuild put in
-the namespace before evaluating the file. That is why it has no quotes
-around it while =moduleclass= does. The quoting rule that looks
-arbitrary is just Python: one is a variable, the other is a literal.
+the namespace before evaluating the file: ={'name': 'system',
+'version': 'system'}=. That is why it has no quotes around it while
+=moduleclass= does. One is a variable, the other is a literal.
 
 Run the sample at the top and read the model it gives back. =toolchain=
 comes out as a structure with a name and a version. The text =SYSTEM=
 is gone by then, because the assignment happened before anything read
 the value.
 
-While you are there, look at the last two lines of that output. The
+Look at the last two lines of that output. The
 file names no easyblock, and the model reports the one EasyBuild will
 derive from the name anyway. That is the rest of this chapter.
 
@@ -79,11 +89,12 @@ sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
 source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
 #+end_src
 
-=%(version)s= is old-style Python string formatting, which means the
-templating is not a feature EasyBuild added. It is the language's own
-=%= operator, applied to a dictionary EasyBuild assembles from the
-easyconfig itself. =%(version)s= works because =version= is set above
-it.
+=%(version)s= is old-style Python string formatting, applied *after*
+the file has run, to a dictionary EasyBuild assembles from the
+easyconfig. The file stored the literal. =%(version)s= works even if
+=version= is set below =sources=. What EasyBuild added is that second
+pass, plus names such as =SOURCE_TAR_GZ= that *are* in the eval
+namespace.
 
 Run the sample and watch =%(version)s= resolve. Then change the version
 and watch it move. Every value derived from it moves with it, and that
@@ -123,9 +134,9 @@ That is not a joke at EasyBuild's expense. It answers a real problem.
 Class names have to be valid Python identifiers and package names are
 not, so something has to bridge the two. The bridge also has to be
 *reversible*: without that, two differently-named packages could collide
-on one class. Spelling the punctuation out gives you both.
+on one class. Spelling the punctuation out gives both.
 
-The framework's own justification names =c++= and =C#=, and both sit in
+The framework's own justification names =c++= and =C#=, and both appear in
 the sample above. Run it and watch =c++= become =EB_c_plus__plus_=. The
 doubled separator is the tell: the substitution runs per character and
 collapses nothing.
@@ -136,12 +147,12 @@ with =_= in it. The character is *itself* encoded, to =_underscore_=.
 
 That is what keeps the mapping reversible. Left alone, =_minus_= would
 be ambiguous: an encoded hyphen, or a name that really did spell out
-=minus= between two of them. It costs you a class name longer and
-stranger than you expect. That is the moment people decide the lookup
+=minus= between two of them. The cost is a class name longer and
+stranger than expected. That is the moment people decide the lookup
 is broken rather than mechanical.
 
 Surprising exactly once, and then it explains a whole category of "why is
-my easyblock not being found".
+the easyblock not being found".
 
 #+ATTR_EB: :id EB-Python-1 :title Read a class name backwards
 #+begin_exercise
@@ -205,8 +216,8 @@ falling through to a generic extension handler is the right behaviour.
 Read that in reverse and it becomes a tool. A missing =easyblock= line
 is not a shrug. It claims, positively, that a software-specific
 easyblock exists. So in the sample at the top of this
-chapter, the missing line tells you =code_server.py= is out there
-before you have gone looking for it. And an easyconfig that *does* say
+chapter, the missing line reports that =code_server.py= is out there
+before anyone has gone looking for it. And an easyconfig that *does* say
 =easyblock = 'ConfigureMake'= is not being verbose: naming a generic
 easyblock is the only way to get one.
 
@@ -219,7 +230,7 @@ easyblock=. That second message says the easyblock is present and its
 own dependencies are the problem, and editing your easyconfig will not
 help.
 
-* An aside on reading the error, because you will read a lot of them
+* An aside on reading the error, because a lot of them will be read
 
 Everything in this chapter has been about what EasyBuild infers. Here is
 what that looks like when an inference is wrong, from a real run on a
@@ -274,6 +285,31 @@ sat one level down inside =qmcpack/=. A release tarball unpacks to
 right about the old source and wrong about the new one. The change from
 one to the other says nothing about =start_dir= at all.
 
+A complete recipe with one hole. The lint sample names the hole; it
+does not fill it.
+
+#+ATTR_EB: :id EB-Python-fade-1 :title Fill the hole the linter names
+#+begin_exercise
+This recipe is otherwise complete. The lint widget reports a missing
+checksums list. What is the smallest addition that makes the linter
+quiet, and what does that addition still not prove?
+
+#+begin_src easyconfig :widget lint
+name = 'code-server'
+version = '4.130.0'
+toolchain = SYSTEM
+sources = ['code-server-%(version)s-linux-amd64.tar.gz']
+moduleclass = 'tools'
+#+end_src
+
+#+begin_solution
+A =checksums= list with one sha256, aligned with =sources=. The
+in-page linter then stops reporting the missing list. That does not
+prove the hash is the hash of the archive: verification is a later
+step, on a machine that can fetch the file.
+#+end_solution
+#+end_exercise
+
 #+ATTR_EB: :id EB-Python-2 :title The smallest change that fixes it
 #+begin_exercise
 The recipe above fails with:
@@ -306,13 +342,13 @@ Two things worth taking from that, and neither is about QMCPACK.
 First: *an EasyBuild error reports the state it found. The assumption
 behind that state appears nowhere in the message.* "Does not exist" is
 accurate and never the interesting fact. What expected the path to exist
-is interesting, and it sits in the easyconfig or in the easyblock the
+is interesting, and it is in the easyconfig or in the easyblock the
 easyconfig's name selected.
 
 Second: *the parameters that break on a version bump describe the shape
 of the source.* The software's own requirements do not move. The
-archive's layout does. A checksum change is loud and you cannot forget
-it. =start_dir=, patch strip levels, anything naming a subdirectory:
+archive's layout does. A checksum change is loud and cannot be forgotten.
+=start_dir=, patch strip levels, anything naming a subdirectory:
 those are quiet. They were right before, and a diff against the previous
 easyconfig reports them unchanged. Unchanged is the wrong question. The
 question is whether they still hold for the archive now being unpacked.
@@ -320,7 +356,7 @@ question is whether they still hold for the archive now being unpacked.
 * Three consequences
 
 An easyconfig is a Python file evaluated in a prepared namespace, and
-you will meet all three of these constantly.
+all three of these appear constantly.
 
 1. Unquoted names like =SYSTEM= are variables EasyBuild supplied. That
    is why the quoting looks inconsistent and is not.
@@ -332,5 +368,5 @@ you will meet all three of these constantly.
    makes a missing =easyblock= line a claim that one exists.
 
 The next chapter is about =toolchain=. It is the one line in the sample
-we have not touched, and it causes more confusion than the other
+still unread, and it causes more confusion than the other
 nineteen together.

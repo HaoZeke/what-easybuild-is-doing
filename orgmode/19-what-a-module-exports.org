@@ -2,6 +2,12 @@
 
 #+OPTIONS: toc:nil num:nil
 
+#+begin_questions
+- What does a generated modulefile actually export?
+- Which variables are always set, and how are they spelled?
+- What is the citable name of an installed package?
+#+end_questions
+
 #+begin_objectives
 1. Read a generated modulefile and say where each line came from.
 2. Name the variables EasyBuild always sets, and use one from an
@@ -9,6 +15,10 @@
 3. Say what a module naming scheme changes, and what a hierarchical one
    does to =MODULEPATH=.
 #+end_objectives
+
+The citable unit is name + version + toolchain + versionsuffix, not
+the easyconfig filename and not "EasyBuild". FORCE11 software citation
+asks for the specific version that ran.
 
 [[file:06-what-installed-means.org][Chapter 6]] said the modulefile is
 the only artifact a user meets, and then did not open one. Here is one.
@@ -65,7 +75,7 @@ letting a user discover it through a strange failure.
 [[file:15-build-dependencies-are-not-dependencies.org][chapter 15]],
 resolved to specific modules by the robot. Note it is =depends_on= and
 not =load=: Lmod counts references, so unloading QMCPACK unloads HDF5
-only if nothing else still wants it.
+only if nothing else still depends on it.
 
 The =prepend_path= lines are the standard set, added because those
 directories exist in the install. No parameter asked for them.
@@ -81,14 +91,22 @@ down, but always present:
 | =$EBVERSIONQMCPACK= | the version |
 | =$EBDEVELQMCPACK= | a path to the development-support file |
 
-The name is uppercased and stripped of anything that is not
-alphanumeric, which is the same problem
-[[file:01-an-easyconfig-is-python.org][chapter 1]]'s easyblock encoding
-solves and a different, lossier answer to it: =code-server= becomes
-=EBROOTCODEMINSERVER=. Two packages could in principle collide there, and
-in practice do not.
+=convert_name= uppercases, maps =-= to =min=, =+= to =plus=, and
+deletes dots. =code-server= becomes =EBROOTCODEMINSERVER=.
+=netcdf-c= becomes =EBROOTNETCDFMINC=, not =EBROOTNETCDFC=. Same
+=min= idea as the easyblock filename, not a strip of punctuation.
 
-=$EBROOT*= is the one you will use. It is how an easyconfig points at a
+The name the user types is built here. Change the toolchain or the
+suffix and watch the module name and the =.eb= filename move together.
+
+#+begin_src easyconfig :widget modname
+name = 'QMCPACK'
+version = '4.4.0'
+toolchain = {'name': 'foss', 'version': '2025a'}
+versionsuffix = '-HDF5-1.14.6'
+#+end_src
+
+=$EBROOT*= is the one a recipe uses. It is how an easyconfig points at a
 dependency without hardcoding a path, which is
 [[file:13-how-a-build-executes.org][chapter 13]]'s
 =--with-hdf5=$EBROOTHDF5=. The dependency's module was loaded during
@@ -97,7 +115,7 @@ where the site puts things.
 
 * Adding to the module
 
-Four parameters, in rough order of how often you need them.
+Four parameters, in rough order of how often they are needed.
 
 =modextravars= sets extra environment variables. A package whose runtime
 needs =FOO_DATA_DIR= pointing inside its own install gets it here.
@@ -134,12 +152,13 @@ visible in =module avail= at once. Simple, and long lists.
 uses above.
 
 *Hierarchical*, =HierarchicalMNS=: the toolchain moves out of the module
-name and into the path. You load a compiler, which changes =MODULEPATH=,
-and only then can you see the modules built with it.
+name and into the path. Loading a compiler changes =MODULEPATH=,
+and only then are the modules built with it visible.
 
-The hierarchical scheme is worth understanding even if your site does not
-use it, because it changes what =module avail= means. A module you cannot
-see is not absent; it is behind a toolchain you have not loaded. That is
+The hierarchical scheme is worth understanding even if a site does not
+use it, because it changes what =module avail= means. A module that
+cannot be seen is not absent; it is behind a toolchain that has not been
+loaded. That is
 [[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s hierarchy made
 into directories, with the advantage that the module system enforces it
 and the cost that discovery becomes a two-step process users find
@@ -180,7 +199,7 @@ modules.
 4 will set =$CC= for a user who loads the module, and will do nothing
 for a build. A build's environment is constructed in =prepare=, as
 [[file:14-the-isolation-policy.org][chapter 14]] describes, and its =$CC=
-comes from the toolchain object rather than from any module. They want
+comes from the toolchain object rather than from any module. Those builds need
 =toolchainopts = {'usempi': True}= in the consuming easyconfig, which is
 [[file:16-what-a-toolchain-injects.org][chapter 16]].
 #+end_solution

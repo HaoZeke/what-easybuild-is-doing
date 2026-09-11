@@ -120,3 +120,85 @@ article.yue .eb-widget-fails__tag {
   text-transform: uppercase;
   color: #bf3989;
 }
+
+/* Page-level playground. Docked, not modal: the chapter stays readable
+   while the reader tries a thing the sample did not think of. */
+.eb-repl {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  max-height: 46vh;
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid rgba(127, 127, 127, 0.45);
+  background: var(--eb-bg, Canvas);
+  color: inherit;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.eb-repl[hidden] {
+  display: none;
+}
+
+.eb-repl-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+}
+
+.eb-repl-title {
+  opacity: 0.7;
+  letter-spacing: 0.02em;
+}
+
+.eb-repl-widget {
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.eb-repl-close {
+  margin-left: auto;
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.eb-repl-editor,
+.eb-repl-output {
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.eb-repl-editor {
+  min-height: 7rem;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.eb-repl-editor:focus {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
+.eb-repl-output {
+  overflow: auto;
+  max-height: 18vh;
+  border-top: 1px dashed rgba(127, 127, 127, 0.3);
+  white-space: pre-wrap;
+}
+
+body.eb-repl-open {
+  padding-bottom: 46vh;
+}

@@ -33,7 +33,27 @@ dependencies = [
 Both lists are loaded during =prepare=, so both are on the path while the
 compiler runs. Reading the easyconfig, they look interchangeable.
 
-They are not, and the modulefile is where you can see it.
+The walk below treats both lists as things the robot must find. Swap a
+name from =dependencies= into =builddependencies= and the walk still
+lists it; the generated module is where they part, and that part is
+not something a browser can emit.
+
+#+begin_src easyconfig :widget solve :universe canned-foss-2025a
+name = 'GROMACS'
+version = '2025.2'
+toolchain = {'name': 'foss', 'version': '2025a'}
+
+builddependencies = [
+    ('CMake', '3.31.4'),
+]
+
+dependencies = [
+    ('Python', '3.13.1'),
+    ('FFTW', '3.3.10'),
+]
+#+end_src
+
+They are not, and the modulefile is where the difference is visible.
 
 * The module is the difference
 
@@ -55,7 +75,7 @@ not there, and they are not there on purpose.
 That is the whole rule: *=dependencies= go into the module, and
 =builddependencies= do not.*
 
-Which makes the question you have to ask about each entry a runtime
+Which makes the question to ask about each entry a runtime
 question rather than a build question. Not "does the build need it",
 because the build needs all seven. The question is: *when a user runs
 this software, does the software still need it?*
@@ -109,7 +129,7 @@ other direction is a runtime failure.
 *A code generator whose output is compiled in.* Build-time, always. The
 generated code is in your binary; the generator is not.
 
-When you cannot decide, the tie-break is =ldd= on the installed binaries
+When the list cannot be decided, the tie-break is =ldd= on the installed binaries
 and =grep= through the installed scripts. If nothing in the install
 mentions it, it is a build dependency.
 
@@ -128,7 +148,7 @@ dependency list is short and a modulefile is specific. Both lists resolve
 this way, so a build dependency answers to the same hierarchy rule and
 fails to resolve in the same circumstances.
 
-#+ATTR_EB: :id EB-Builddeps-1 :title Which list, and how would you check
+#+ATTR_EB: :id EB-Builddeps-1 :title Which list, and how to check
 #+begin_exercise
 You are writing an easyconfig for a C++ application. It needs:
 

@@ -67,7 +67,7 @@ exts_list = [
 #+end_src
 
 =alpha= gets the default =source_urls=. =beta= does not, and nothing warns
-you. =eb -x= shows the difference before a build does.
+the plan. =eb -x= shows the difference before a build does.
 
 The merge itself is one shallow =dict.update=. The per-extension dict wins
 outright on a collision, and a colliding *list* is replaced rather than
@@ -123,7 +123,7 @@ for key, value in self.options.items():
 
 An unknown key is dropped at =debug= level. No warning, no error, no
 mention in a normal run. Which means a misspelled per-extension option in
-a bundle of two hundred extensions is invisible unless you go looking, and
+a bundle of two hundred extensions is invisible unless someone goes looking, and
 that is the single most useful thing in this chapter.
 
 Alternative parameter names are honoured on the way in, so

@@ -1,38 +1,41 @@
 #+TITLE: Chapter 11. EESSI, somebody else's stack
 #+OPTIONS: toc:nil num:nil
 
+#+begin_questions
+- What is EESSI, if it is not an install of EasyBuild?
+- Which init script configures Lmod, and which one is irreversible?
+- When does a plan bootstrap GCC instead of using the stack?
+#+end_questions
+
 #+begin_objectives
-1. Initialise EESSI and install on top of it into a prefix you own.
+1. Initialise EESSI and install on top of it into an operator-owned prefix.
 2. Decide whether your toolchain generation is available before planning
    anything.
 3. Say what a green build on your own host establishes about the other
    CPU targets.
 #+end_objectives
 
-Chapter 10 installed software into a directory you own, on top of what
-your site already provides. This chapter does the same thing on top of a
-stack nobody at your site built.
-
-EESSI is the European Environment for Scientific Software Installations.
-It is a software stack built with EasyBuild, optimised per
-microarchitecture, and served over a distributed filesystem. You do not
-install it. You mount it, or somebody already has.
+There is a directory on a lot of clusters, and on a surprising number
+of laptops, that nobody at the site built.
 
 * The stack is a filesystem
-
-Everything follows from that:
 
 #+begin_example
 ls /cvmfs/software.eessi.io/versions/
 #+end_example
 
-Those are versions of the whole stack. Pick one and initialise it:
+Those are versions of a whole scientific software stack: compilers,
+MPI, the usual suspects, tuned per microarchitecture, delivered on a
+filesystem that arrived over HTTP. EESSI is not installed. It is
+mounted, or the session is on a machine where somebody already did.
+
+Pick one and initialise it:
 
 #+begin_example
 source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
 #+end_example
 
-That gives you a compatibility layer, a module tree, and a set of
+That yields a compatibility layer, a module tree, and a set of
 toolchains, without an install step and without a maintainer having
 approved anything.
 
@@ -53,30 +56,30 @@ readers pile up in uninterruptible state where a timeout cannot reach
 them. List first. Confirm. Then use.
 
 The second is the generation question, and it decides whether the rest
-of this chapter applies to you at all.
+of this chapter applies at all.
 
-* Check the generation before you plan anything
+* Check the generation before planning anything
 
 The compatibility layer lags the newest EasyBuild toolchain generation.
 So a version of EESSI carries some set of top-level toolchains, and your
-easyconfig wants one particular generation, and those two facts have to
+easyconfig names one particular generation, and those two facts have to
 agree.
 
-When they do not, EESSI tells you, and it offers an opt-in:
+When they do not, EESSI reports the mismatch, and an opt-in is available:
 
 #+begin_example
 export EESSI_SITE_TOP_LEVEL_TOOLCHAINS_2025_06='[{"name": "GCCcore", "version": "15.2.0"}]'
 #+end_example
 
 Setting that makes EasyBuild *plan* the build. Read what the plan says
-before you run it. When the generation is absent from the compatibility
+before the script runs. When the generation is absent from the compatibility
 layer, every dependency comes back skipped. The run then opens by
 bootstrapping the compiler itself, and downloads a couple of hundred
 megabytes of GCC to do it.
 
 Do not do that. Bootstrapping a whole generation into a user prefix
 duplicates what EESSI's own build bots do centrally. It is also a long
-way round to a stack you cannot share. A generation gap means "not yet
+way round to a stack that cannot be shared. A generation gap means "not yet
 on this EESSI version", which is a finding rather than a failure.
 
 * Installing on top, with EESSI-extend
@@ -115,24 +118,29 @@ result:
 | =EESSI_SITE_INSTALL= | site-wide, on top of EESSI |
 | =EESSI_CVMFS_INSTALL= | into the distributed repository itself |
 
-Set exactly one, and set it *before* loading the module. =EESSI-extend=
-reads the variable at load time, so setting it afterwards changes
-nothing and the failure looks like the module ignoring you.
+Set the prefix *before* loading the module. =EESSI-extend= reads
+these at load time; setting them afterwards changes nothing.
+
+=EESSI_CVMFS_INSTALL= and =EESSI_SITE_INSTALL= are exclusive of the
+others. =EESSI_USER_INSTALL= and =EESSI_PROJECT_INSTALL= may be set
+together: both prefixes appear on =MODULEPATH=, and new installs go
+to the user prefix.
 
 #+ATTR_EB: :id EB-EESSI-1 :title Every dependency says SKIPPED
 #+begin_exercise
-You have set one prefix variable, loaded =EESSI-extend=, and run a plan
-for an easyconfig on =foss-2025b=. Every dependency comes back
-=[SKIPPED]=, and the run opens by fetching a couple of hundred megabytes
-of GCC.
+You have set one prefix variable, loaded =EESSI-extend= on the
+=2025.06= tree, and run a plan for an easyconfig on =foss-2026.1=.
+Every dependency comes back =[SKIPPED]=, and the run opens by fetching
+a couple of hundred megabytes of GCC.
 
 1. What has happened?
 2. You could let it run. Give two reasons not to.
 3. What is the honest thing to report, and to whom?
 
 #+begin_solution
-The compatibility layer for that EESSI version does not carry your
-toolchain generation. Nothing above the compiler exists to be reused, so
+The compatibility layer for EESSI 2025.06 does not carry
+=foss-2026.1=. (It does carry =foss-2025b=; that pin would not have
+produced this plan.) Nothing above the compiler exists to be reused, so
 the plan is to build the generation itself, starting with the compiler.
 
 Two reasons not to. It duplicates work the EESSI build bots do centrally
@@ -140,7 +148,7 @@ for every supported CPU target, where yours would cover one. And what you
 end up with is a whole generation inside a user prefix that nobody else
 can use and that you now maintain.
 
-The honest report is a generation gap: this recipe needs =foss-2025b=,
+The honest report is a generation gap: this recipe needs =foss-2026.1=,
 this EESSI version's layer stops short of it, so the ceiling here is a
 build on an ordinary target rather than an EESSI-verified one. That goes
 to whoever asked for the software, and the software-layer entry waits for
@@ -159,12 +167,12 @@ the shell it ran in.
 
 Two ways out, in order of preference.
 
-If you have polkit rights on the host, which an ordinary user often
+If the account has polkit rights on the host, which an ordinary user often
 does, restarting the mount clears the stuck readers. Do it from a
 terminal that did *not* run the hanging command, because that shell is
 itself stuck behind its own filesystem operation.
 
-If you do not, use a container. It mounts the distributed filesystem
+If the account does not, use a container. It mounts the distributed filesystem
 itself, needs only unprivileged user namespaces, and does not care what
 state the host client is in:
 
@@ -182,7 +190,7 @@ Four details that each cost an attempt:
 - the script lives in =software-layer-scripts=. It moved, and
   =software-layer= no longer carries it.
 - =--mode run= warns and behaves as =exec=. Pass =exec=.
-- the script you run must sit inside a bound path. One that resolves
+- the script that is run must be inside a bound path. One that resolves
   outside the bind mount fails as though the file were absent.
 - set =APPTAINER_CACHEDIR=. With the older =SINGULARITY_= name also
   set, the older one wins and the newer is dropped with no message.
@@ -213,7 +221,7 @@ runtime path, then confirm nothing resolves outside the stack.
 
 * Contributing back
 
-An installation in your prefix helps you. Getting it into EESSI proper
+An installation in a local prefix helps that operator. Getting it into EESSI proper
 is a different job, and the order matters:
 
 1. Get the easyconfig into EasyBuild, or open a pull request for it.
@@ -226,7 +234,7 @@ is a different job, and the order matters:
 6. On green, the results are signed and published into the distributed
    repository.
 
-Two conditions before you start.
+Two conditions before the work starts.
 
 The easyconfig comes first. A software-layer entry references an
 easyconfig rather than restating one. So deployment waits on the
@@ -245,17 +253,17 @@ larger set of trees.
 Everything else in this chapter is procedure. These three cost real
 time, and in this order.
 
-*List before you descend.* A version directory can be an unpopulated
+*List before descending.* A version directory can be an unpopulated
 placeholder. One speculative listing into it wedges the filesystem
 client for every user on the host. Confirm an =init/= exists first.
 
-*Check the generation before you plan.* The compatibility layer lags
+*Check the generation before planning.* The compatibility layer lags
 the newest toolchain generation. A gap is a finding to report, not
 something to bootstrap a compiler around.
 
 *One prefix variable, set before the module load.* =EESSI-extend=
 reads it at load time. A second one, or a late one, produces a failure
-that looks like the module ignoring you.
+that looks like the module ignoring the request.
 
 After that, two things to keep in view. =installpath= comes back
 microarchitecture-qualified, which is chapter 6's per-architecture tree
@@ -263,4 +271,4 @@ with the architecture visible in the path. And the all-CPU-target claim
 belongs to the bot rather than to your host.
 
 Next: the engine these samples run on, and the one idea in it worth
-taking even if you never use it.
+taking even if it is never used.

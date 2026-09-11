@@ -4,7 +4,7 @@
 
 Every term here is born once, on this page, and any chapter can open it in
 place. So a reader who meets =versionsuffix= in chapter 8 does not have to
-come here, and a reader who wants the whole vocabulary at once has it.
+come here, and a reader who needs the whole vocabulary at once has it.
 
 Definitions are mechanical rather than descriptive: what the thing *is*
 in the code, and what changes if it changes.
@@ -138,7 +138,7 @@ belong to the driver.
 A Python function a site registers to run before or after any step:
 =pre_fetch_hook= through =post_testcases_hook=, plus parse and module
 hooks. Hooks change builds without changing easyconfigs, which is why a
-recipe can be correct and produce something you did not expect, and why
+recipe can be correct and produce something the file did not name, and why
 =eb --show-config= is the first thing to read on somebody else's
 machine.
 
@@ -163,7 +163,7 @@ A list of library search paths recorded inside a binary. EasyBuild's
 it links, so a module does not need =$LD_LIBRARY_PATH= to work.
 
 On a heterogeneous system an RPATH containing a per-node symlink such as
-=/sw/arch/...= resolves against *the node you are standing on*, which is
+=/sw/arch/...= resolves against *the node the command runs on*, which is
 why =ldd= on a login node can report zero missing libraries for a binary
 that is broken on a GPU node.
 

@@ -91,7 +91,7 @@ $ python3 -c 'from easybuild.easyblocks.generic.cargo import Cargo
   options = {}
 #+end_src
 
-=offline = True=, by default. And =crates=, which is a list you fill in
+=offline = True=, by default. And =crates=, which is a list filled in
 with every crate and version the build needs, the same job =exts_list=
 does for Python.
 
@@ -107,12 +107,12 @@ EasyBuild 5.3.1 ships 82 generic easyblock classes, in 47 modules, and
 
 That absence is informative rather than an oversight. npm's model is a
 resolver that runs at install time against a live registry, producing a
-tree that depends on when you ran it. Nothing in that is compatible with
+tree that depends on when the install ran. Nothing in that is compatible with
 enumerate-and-vendor. A generic easyblock would have to either forbid
 what npm is for, or accept a build nobody can reproduce.
 
-So Node packages get handled one of three ways, and which one you are
-looking at changes what you can promise about it.
+So Node packages get handled one of three ways, and which one is
+in view changes what can be promised about it.
 
 *Vendored by hand.* The easyconfig carries a =package-lock.json= as a
 source or a patch, and the build runs =npm ci --offline= against a

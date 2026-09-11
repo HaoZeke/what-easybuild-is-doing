@@ -35,7 +35,7 @@ NO_EXERCISE = {
 NO_OBJECTIVES = {"13-when-easybuild-is-the-wrong-tool"}
 
 BLOCK = re.compile(
-    r"^#\+begin_(objectives|exercise|solution|keypoints|prerequisites"
+    r"^#\+begin_(questions|objectives|exercise|solution|keypoints|prerequisites"
     r"|predict|reveal)\s*$(.*?)^#\+end_\1\s*$",
     re.S | re.M,
 )

@@ -1,0 +1,115 @@
+{
+  "note": "Canned teaching universe. Not a site robot path. Versions are public EasyBuild 5 / foss-2025a names used as examples.",
+  "packages": [
+    {
+      "name": "zlib",
+      "version": "1.3.1",
+      "toolchain": { "name": "GCCcore", "version": "14.2.0" },
+      "dependencies": [],
+      "builddependencies": []
+    },
+    {
+      "name": "binutils",
+      "version": "2.42",
+      "toolchain": { "name": "GCCcore", "version": "14.2.0" },
+      "dependencies": [{ "name": "zlib", "version": "1.3.1" }],
+      "builddependencies": []
+    },
+    {
+      "name": "GCCcore",
+      "version": "14.2.0",
+      "toolchain": { "name": "system", "version": "" },
+      "dependencies": [],
+      "builddependencies": []
+    },
+    {
+      "name": "GCC",
+      "version": "14.2.0",
+      "toolchain": { "name": "system", "version": "" },
+      "dependencies": [{ "name": "GCCcore", "version": "14.2.0" }, { "name": "binutils", "version": "2.42" }],
+      "builddependencies": []
+    },
+    {
+      "name": "OpenMPI",
+      "version": "5.0.7",
+      "toolchain": { "name": "GCC", "version": "14.2.0" },
+      "dependencies": [{ "name": "GCC", "version": "14.2.0" }],
+      "builddependencies": []
+    },
+    {
+      "name": "OpenBLAS",
+      "version": "0.3.29",
+      "toolchain": { "name": "GCC", "version": "14.2.0" },
+      "dependencies": [{ "name": "GCC", "version": "14.2.0" }],
+      "builddependencies": []
+    },
+    {
+      "name": "FFTW",
+      "version": "3.3.10",
+      "toolchain": { "name": "gompi", "version": "2025a" },
+      "dependencies": [{ "name": "OpenMPI", "version": "5.0.7" }],
+      "builddependencies": []
+    },
+    {
+      "name": "ScaLAPACK",
+      "version": "2.2.2",
+      "toolchain": { "name": "gompi", "version": "2025a" },
+      "dependencies": [
+        { "name": "OpenMPI", "version": "5.0.7" },
+        { "name": "OpenBLAS", "version": "0.3.29" }
+      ],
+      "builddependencies": []
+    },
+    {
+      "name": "foss",
+      "version": "2025a",
+      "toolchain": { "name": "system", "version": "" },
+      "dependencies": [
+        { "name": "GCC", "version": "14.2.0" },
+        { "name": "OpenMPI", "version": "5.0.7" },
+        { "name": "OpenBLAS", "version": "0.3.29" },
+        { "name": "FFTW", "version": "3.3.10" },
+        { "name": "ScaLAPACK", "version": "2.2.2" }
+      ],
+      "builddependencies": []
+    },
+    {
+      "name": "CMake",
+      "version": "3.31.4",
+      "toolchain": { "name": "GCCcore", "version": "14.2.0" },
+      "dependencies": [{ "name": "zlib", "version": "1.3.1" }],
+      "builddependencies": []
+    },
+    {
+      "name": "Python",
+      "version": "3.13.1",
+      "toolchain": { "name": "GCCcore", "version": "14.2.0" },
+      "dependencies": [{ "name": "zlib", "version": "1.3.1" }],
+      "builddependencies": []
+    },
+    {
+      "name": "Python",
+      "version": "3.11.3",
+      "toolchain": { "name": "GCCcore", "version": "12.3.0" },
+      "dependencies": [{ "name": "zlib", "version": "1.2.13" }],
+      "builddependencies": []
+    },
+    {
+      "name": "GROMACS",
+      "version": "2025.2",
+      "toolchain": { "name": "foss", "version": "2025a" },
+      "dependencies": [
+        { "name": "Python", "version": "3.13.1" },
+        { "name": "FFTW", "version": "3.3.10" }
+      ],
+      "builddependencies": [{ "name": "CMake", "version": "3.31.4" }]
+    },
+    {
+      "name": "code-server",
+      "version": "4.130.0",
+      "toolchain": { "name": "system", "version": "" },
+      "dependencies": [],
+      "builddependencies": []
+    }
+  ]
+}
