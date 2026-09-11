@@ -39,8 +39,7 @@ why the *module* tree has the same shape: a Core compiler extends
 the user types =WRF/3.5= rather than
 =WRF/3.5-GCC-4.8.2-OpenMPI-1.7.3=. Alvarez, O'Cais, Geimer and
 Hoste (2016) add the layer under the compilers, =GCCcore=, so
-CMake is not rebuilt once per toolchain. [[file:papers.org][The
-papers page]] has the counts.
+CMake is not rebuilt once per toolchain.
 
 Ask the sample. What that line names is not one toolchain. It is a
 list.

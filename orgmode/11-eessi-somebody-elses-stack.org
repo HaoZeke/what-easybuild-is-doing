@@ -27,9 +27,7 @@ and Taylor 2019). Dröge, Holanda Rusu, Hoste, van Leeuwen, O'Cais
 and Röblitz (2023) measure why a generic binary is not the stack:
 GROMACS 2020.4 on Cascade Lake is 1.18 ns/day compiled for SSE 4.1
 and 1.86 ns/day compiled for AVX-512, still unmodified source, a
-57 % gap. That paper is the pilot. The production tree, the bot,
-and 2025.06 are later. [[file:papers.org][The papers page]] lists
-what was opened and what stayed behind a wall.
+57 % gap. The production tree and the bot post-date that paper.
 
 * The stack is a filesystem
 

@@ -108,5 +108,5 @@ Not a level. Read these when the question comes up.
 | [[file:glossary.org][the glossary]] | a word in this book means something specific |
 | [[file:keypoints.org][the keypoints]] | a chapter was read last week |
 | [[file:exercises.org][the exercises]] | a session is being run, or a self-check is needed |
-| [[file:papers.org][the papers]] | the measurements the chapters rest on |
+| [[file:papers.org][references]] | the papers the chapters cite |
 | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] | deciding whether to use EasyBuild at all |

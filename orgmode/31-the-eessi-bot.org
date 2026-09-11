@@ -297,13 +297,12 @@ Opening the pull request does not start 1. A green local
 
 #+ATTR_EB: :id sources-31 :title Where this chapter comes from :kind sources
 #+begin_detail
-Paper: Dröge et al. (2023),
-[[https://doi.org/10.1002/spe.3075][10.1002/spe.3075]], is the
-pilot. The bot, =software.eessi.io=, and the 30k-install count
-are later than that paper. See [[file:papers.org][the papers
-page]].
+Dröge et al.,
+[[https://doi.org/10.1002/spe.3075][Software: Practice and Experience 53:176–210]]
+(2023): the three-layer design. The bot and the production
+repository post-date that paper.
 
-Talks, read 2026-09-11:
+Talks:
 
 - *Goals and Design Decisions Behind a Multi-Architecture Build
   Bot*, EESSI Happy Hour, 2025-12-01

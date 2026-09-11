@@ -1,139 +1,21 @@
-#+TITLE: Papers this book rests on
+#+TITLE: References
 #+OPTIONS: toc:nil num:nil
 
-The chapters were written from live files, talks, and these papers.
-A DOI that is listed was opened. The three IEEE EasyBuild papers
-are the author copies on =easybuild.io/files/=, not the IEEE
-Xplore PDFs. The Compute Canada PEARC paper is still abstract
-only: no author copy came back.
+Alvarez, Damian, Alan O'Cais, Markus Geimer, and Kenneth Hoste.
+2016. "Scientific software management in real life: deployment
+of EasyBuild on a large scale system." In /HUST 2016/, 31–40.
+IEEE. https://doi.org/10.1109/HUST.2016.009
 
-* What the papers actually claim
+Blomer, Jakob, Carlos Aguado-Sánchez, Predrag Buncic, and Artem
+Harutyunyan. 2011. "Distributing LHC application software and
+conditions databases using the CernVM file system." /Journal of
+Physics: Conference Series/ 331: 042003.
+https://doi.org/10.1088/1742-6596/331/4/042003
 
-*EESSI is three layers because generic binaries already lose tens
-of percent.* Dröge, Holanda Rusu, Hoste, van Leeuwen, O'Cais and
-Röblitz (first published 16 February 2022; journal issue 2023)
-measure GROMACS 2020.4 on a dual 18-core Cascade Lake node, PRACE
-UEABS Test Case B. A generic SSE 4.1 binary runs at 1.18 ns/day.
-AVX and AVX2 measure 1.62 and 1.63 ns/day, about 38 % faster. The
-AVX-512 binary, still unmodified GROMACS source, is 1.86 ns/day:
-57 % faster than generic, 13 % faster than AVX2. Fat binaries are
-dismissed in the same section: only the Intel compilers produce
-them, the extra paths are Intel-only, and they do not cross ISAs.
-That is why EESSI ships one tree per microarchitecture rather
-than one portable binary. The same paper names Compute Canada as
-the design parent, EasyBuild and Spack as tools that still require
-the operator to learn the tool, and EESSI as the *installations*
-those tools produce. Section 6 is a large-scale GROMACS run
-against a system stack; the PackagingCon 2023 talk that cites the
-paper puts the scale at 16,384 cores on JUSUF. The 2022 paper is
-a *pilot* repository. The production =software.eessi.io= tree,
-the bot, and 2025.06/2026.06 are later than it.
-
-*CernVM-FS is HTTP plus content-addressable storage, built for
-metadata-heavy software.* Blomer, Aguado-Sánchez, Buncic and
-Harutyunyan (2011) write the filesystem that chapter 25 takes
-apart. A typical LHC software release is several gigabytes and
-hundreds of thousands of files; the published history reaches
-order 10^7 objects. The hard problem is metadata, not bulk
-bytes. Transport is ordinary HTTP so any web cache or CDN works.
-Hashes cover authenticity over untrusted caches while leaving
-every object cacheable. Chapter 25's curl-the-stratum exercise
-is that paper's architecture, read with a shell.
-
-*A software citation has to name the variant that actually ran.*
-Smith, Katz, Niemeyer and the FORCE11 Software Citation Working
-Group (2016) list six principles. The one that changes a
-sentence in this book is *specificity*: identification "should
-be as specific as necessary, such as using version numbers,
-revision numbers, or variants such as platforms." Chapter 19's
-citable unit is name + version + toolchain + versionsuffix
-because that is the platform variant. Importance, credit, unique
-identification, persistence and accessibility are why a module
-name in a paper is not enough.
-
-*Working memory is a handful of facts.* Wilson, Aruliah, Brown,
-Chue Hong and colleagues (2014) put that number on the page
-(Box 1, 1a) and cite the cognitive literature behind it. The
-book's two-to-four objectives and the 7±2 bound in
-=scripts/check-lesson.py= are that sentence, enforced. The same
-paper reports that scientists spend 30 % or more of their time
-on software and that 90 % or more are primarily self-taught.
-Wilson's later Software Carpentry commentary (2016) is why a
-chapter is an hour and why a tutorial is live typing rather than
-a recording of someone else's session.
-
-*EasyBuild 1.0 already named the three files and the fifteen
-steps.* Hoste, Timmerman, Georges and De Weirdt (2012), author
-copy at =easybuild.io/files/easybuild-PyHPC-SC12_paper.pdf=, is
-the PyHPC paper at SC12. Public release April 2012 (GPLv2)
-after three years in-house; this paper is version 1.0 (November
-2012). The mandatory easyconfig parameters are already
-=name=, =version=, =toolchain=, =homepage=, =description= —
-chapter 21's five. =--robot= is not default. A dummy toolchain
-is how a compiler or a binary is installed. =goalf= is GCC +
-OpenMPI + ATLAS + BLACS + ScaLAPACK + FFTW. Figure 4 is the
-install procedure as fifteen Roman steps: read the easyconfig,
-fetch, check readiness, unpack, apply patches, prepare, configure,
-build, test, install, extensions, sanity check, cleanup, write
-the module, run user test cases. If no easyblock matches the
-name, the fallback is =ConfigureMake=. Easyblock classes are
-=EB_<Name>= so =python-meep= and =7zip= still map. Support
-stood at "over 250" packages. No admin rights.
-
-*HierarchicalMNS is a paper, not a site convention.* Geimer,
-Hoste and McLay (2014), author copy at
-=easybuild.io/files/hust14_paper.pdf=, is why a login sees
-=GCC= and not =WRF=. Core modules do not depend on a compiler
-the user chooses. Loading one extends =$MODULEPATH= into
-=Compiler/<name>/<ver>/=; loading an MPI extends it again.
-The module the user types is then =WRF/3.5=, not
-=WRF/3.5-GCC-4.8.2-OpenMPI-1.7.3=. Tcl/C modules can store
-files that way; they cannot swap a compiler and reload the
-dependents, and =module avail= will not search off the current
-path. Lmod's =module spider=, =family("compiler")=, and
-swap-reload are the missing pieces. EasyBuild 1.15.2, the
-version in that paper: about 19 000 lines of framework, 139
-software-specific easyblocks, 20 generic, 2 800 easyconfigs
-for 511 packages. The module name is *computed* from the
-easyconfig by the naming-scheme class; it is not a field in
-the file.
-
-*JURECA is where GCCcore, hidden modules, and minimal
-toolchains were forced into the tree.* Alvarez, O'Cais, Geimer
-and Hoste (2016), author copy at
-=easybuild.io/files/eb-jsc-hust16.pdf=: 1 800+ Haswell nodes,
-1.8 + 0.44 PF, 45 000+ cores, Top500 #57 in June 2016. Three
-compilers × three MPIs is nine builds before a hierarchy.
-Fifteen unique toolchains in the 2016a stage. GCCcore is a
-compiler-only layer so CMake and git are not rebuilt nine
-times, and so Intel/PGI share one GCC. Hidden modules
-(=--hidden=, the =hidden= easyconfig parameter,
-=EASYBUILD_HIDE_DEPS=, =EASYBUILD_HIDE_TOOLCHAINS=) take 372
-packages down to 172 visible. =--minimal-toolchains= walks
-the subtoolchain hierarchy instead of inheriting the parent's
-full toolchain; it was optional and "likely to become the
-default". About 800 installations, 300 of them at GCCcore,
-about 150 ever visible to an end user. Stages last six
-months; a golden repository plus a three-week notice; one or
-two people install production. 777 JSC easyconfigs versus 47
-taken unchanged from upstream. Spack is still quoted as
-alpha. RPATH is named as future work. The same layout
-recompiled onto JUROPA3 and JUAMS: fifteen ad-hoc packages,
-and OS leakage is what exposed missing dependencies in
-JURECA easyconfigs.
-
-*Compute Canada is the three-layer parent.* Boissonneault,
-Oldeman and Taylor (2019) describe a unified environment on
-twenty-plus heterogeneous clusters: CernVM-FS, a compatibility
-layer that started as Nix and moved to Gentoo Prefix, and
-EasyBuild for the scientific layer. More than 600 applications
-in more than 4,000 version/compiler/architecture combinations,
-for more than 10,000 researchers. The ACM PDF did not come
-back from an open URL. The numbers and the Nix-to-Gentoo move
-are from the abstract and from the LUMI EasyBuild tutorial that
-cites the paper.
-
-* Bibliography
+Boissonneault, Maxime, Bart E. Oldeman, and Ryan P. Taylor.
+2019. "Providing a unified software environment for Canada's
+national advanced computing centers." In /PEARC '19/, article
+51. ACM. https://doi.org/10.1145/3332186.3332210
 
 Dröge, Bob, Victor Holanda Rusu, Kenneth Hoste, Caspar van
 Leeuwen, Alan O'Cais, and Thomas Röblitz. 2023. "EESSI: A
@@ -141,11 +23,14 @@ cross-platform ready-to-use optimised scientific software
 stack." /Software: Practice and Experience/ 53 (1): 176–210.
 https://doi.org/10.1002/spe.3075
 
-Blomer, Jakob, Carlos Aguado-Sánchez, Predrag Buncic, and Artem
-Harutyunyan. 2011. "Distributing LHC application software and
-conditions databases using the CernVM file system." /Journal of
-Physics: Conference Series/ 331: 042003.
-https://doi.org/10.1088/1742-6596/331/4/042003
+Geimer, Markus, Kenneth Hoste, and Robert McLay. 2014. "Modern
+scientific software management using EasyBuild and Lmod." In
+/HUST 2014/, 41–51. IEEE. https://doi.org/10.1109/HUST.2014.8
+
+Hoste, Kenneth, Jens Timmerman, Andy Georges, and Stijn De
+Weirdt. 2012. "EasyBuild: Building software with ease." In /2012
+SC Companion/, 572–582. IEEE.
+https://doi.org/10.1109/SC.Companion.2012.81
 
 Smith, Arfon M., Daniel S. Katz, Kyle E. Niemeyer, and FORCE11
 Software Citation Working Group. 2016. "Software citation
@@ -162,29 +47,3 @@ https://doi.org/10.1371/journal.pbio.1001745
 Wilson, Greg. 2016. "Software Carpentry: lessons learned."
 /F1000Research/ 3: 62.
 https://doi.org/10.12688/f1000research.3-62.v2
-
-Hoste, Kenneth, Jens Timmerman, Andy Georges, and Stijn De
-Weirdt. 2012. "EasyBuild: Building software with ease." In /2012
-SC Companion/, 572–582. IEEE.
-https://doi.org/10.1109/SC.Companion.2012.81
-Author copy: https://easybuild.io/files/easybuild-PyHPC-SC12_paper.pdf
-
-Geimer, Markus, Kenneth Hoste, and Robert McLay. 2014. "Modern
-scientific software management using EasyBuild and Lmod." In
-/HUST 2014/, 41–51. IEEE.
-https://doi.org/10.1109/HUST.2014.8
-Author copy: https://easybuild.io/files/hust14_paper.pdf
-
-Alvarez, Damian, Alan O'Cais, Markus Geimer, and Kenneth Hoste.
-2016. "Scientific software management in real life: deployment
-of EasyBuild on a large scale system." In /HUST 2016/, 31–40.
-IEEE.
-https://doi.org/10.1109/HUST.2016.009
-Author copy: https://easybuild.io/files/eb-jsc-hust16.pdf
-
-Boissonneault, Maxime, Bart E. Oldeman, and Ryan P. Taylor.
-2019. "Providing a unified software environment for Canada's
-national advanced computing centers." In /PEARC '19/, article
-51. ACM.
-https://doi.org/10.1145/3332186.3332210
-(abstract only)
