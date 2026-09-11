@@ -33,12 +33,15 @@ need an account on every CPU target. A pull request to
 =EESSI/software-layer= plus a comment is the whole interface.
 
 The procedure is *semi-automatic*. That word is load-bearing. The 1
-December 2025 design session listed ten goals; number four on the
-second slide is "as much as possible automatic but human involvement
-required to trigger certain actions (build, transfer, ingest)". A
-comment starts a build. A label starts a deploy. A merge on a
-private staging repository starts an ingest. Nothing in that chain
-fires because a pull request was opened.
+December 2025 design session listed ten goals on slides 3 and 4;
+goal 4 is "Avoid wasting scarce build resources". The quoted
+human-trigger sentence is the *Build/Deploy/Ingest Strategy*
+decision (PDF page 12), not a numbered goal: "as much as possible
+automatic but human involvement required to trigger certain actions
+(build, transfer, ingest)". A comment starts a build. A label
+starts a deploy. A merge on a private staging repository starts an
+ingest. Nothing in that chain fires because a pull request was
+opened.
 
 MultiXscale, the EuroHPC Centre of Excellence that funds most of the
 EESSI workforce, is why the Happy Hours and the webinars exist.
@@ -305,9 +308,11 @@ Talks, read 2026-09-11:
 - *Goals and Design Decisions Behind a Multi-Architecture Build
   Bot*, EESSI Happy Hour, 2025-12-01
   (=EESSI-happyhour-2025-016-EESSI-Bot-Goals-Design.pdf=): the ten
-  goals; GitHub App; HPC backend; =for:= / =on:=; repo-owned
-  =bot/build.sh=; containers; split components; human triggers for
-  build, transfer, ingest.
+  goals on slides 3--4 (goal 4 is scarce build resources);
+  GitHub App; HPC backend; =for:= / =on:=; repo-owned
+  =bot/build.sh=; containers; split components; *Build/Deploy/Ingest
+  Strategy* (PDF page 12) for human triggers of build, transfer,
+  ingest.
 - *Revisit the EESSI bot*, EESSI Happy Hour, 2026-06-22
   (=EESSI-happyhour-2026-017-EESSI-bot.pdf=): three processes
   (smee, event handler, job manager); ~30k installations; current
