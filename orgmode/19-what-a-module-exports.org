@@ -71,6 +71,11 @@ properly: it is what a user sees from =module whatis=.
 software cannot be loaded at once, and the module says so rather than
 letting a user discover it through a strange failure.
 
+Smith, Katz and Niemeyer (2016) require a citation to name the
+/specific/ version and the platform variant. The module's full
+name is that variant: software, version, toolchain, versionsuffix.
+A paper that writes "GROMACS" has not cited a module.
+
 =depends_on= is the =dependencies= list from
 [[file:15-build-dependencies-are-not-dependencies.org][chapter 15]],
 resolved to specific modules by the robot. Note it is =depends_on= and

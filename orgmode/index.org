@@ -173,6 +173,7 @@ skill is reading the log rather than watching the progress bar.
    glossary
    keypoints
    exercises
+   papers
    afterword-when-easybuild-is-the-wrong-tool
 #+end_export
 

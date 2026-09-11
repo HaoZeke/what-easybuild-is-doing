@@ -15,7 +15,13 @@
 stack from =/cvmfs= without saying what =/cvmfs= is.
 
 CernVM-FS is a read-only filesystem delivered over plain HTTP, which
-means the whole thing can be read with a shell. Every command in this
+means the whole thing can be read with a shell. Blomer,
+Aguado-Sánchez, Buncic and Harutyunyan (2011) designed it for LHC
+software: several gigabytes per release, hundreds of thousands of
+files, an object count of order 10^7 across history. The hard
+problem is metadata, not bulk bytes. Transport is HTTP so any web
+cache works; hashes cover authenticity over untrusted caches
+without making the objects uncacheable. Every command in this
 chapter runs on an ordinary machine with no CernVM-FS client, no mount,
 no privileges and no account: the public EESSI repository answers plain
 GET requests. So this chapter verifies rather than describes, and every
