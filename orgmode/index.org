@@ -43,6 +43,10 @@ the task at hand.
 | wondering how a stack gets onto a thousand machines | [[file:25-cvmfs-and-the-stratum.org][chapter 25]] |
 | installing software with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
 | working on a machine with no stack of its own | [[file:11-eessi-somebody-elses-stack.org][chapter 11]] |
+| adding a package to EESSI | [[file:30-easystack-files.org][chapter 30]] then [[file:31-the-eessi-bot.org][chapter 31]] |
+| putting a site stack next to EESSI | [[file:32-host-injections.org][chapter 32]] |
+| planning a package with eb-stack | [[file:12-eb-stack-updater-and-generator.org][chapter 12]] then [[file:33-inspect-residuals-and-the-plan.org][chapters 33 to 36]] |
+| a site wrap or an EasyBuild 5 lock | [[file:37-wrapping-and-modulerc.org][chapter 37]] and [[file:38-locks-bwrap-python-datasets.org][chapter 38]] |
 | running any of this on your own machine | [[file:24-development-environments.org][chapter 24]] and [[file:26-the-same-stack-somewhere-else.org][chapter 26]] |
 | deciding whether to use EasyBuild at all | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
 
@@ -54,7 +58,9 @@ Chapters 13 to 19 are the machinery: the steps a build runs, what it is
 allowed to see, and what comes out. Chapters 20 to 24 are the working
 chapters, from reading a failure to writing a recipe, an easyblock and a
 development environment. Chapters 25 and 26 are how a stack reaches a
-machine that never built it, and chapter 27 is four failures in full.
+machine that never built it. Chapters 30 to 32 are how a package
+enters EESSI and how a site stack is placed next to it. Chapter 27 is
+four failures in full.
 
 * Where this runs
 
@@ -154,6 +160,15 @@ skill is reading the log rather than watching the progress bar.
    27-four-things-that-actually-happened
    28-your-first-week
    29-extensions
+   30-easystack-files
+   31-the-eessi-bot
+   32-host-injections
+   33-inspect-residuals-and-the-plan
+   34-recipe-format-lint-check
+   35-stack-solve-and-the-diff
+   36-campaign-findings
+   37-wrapping-and-modulerc
+   38-locks-bwrap-python-datasets
    learning-path
    glossary
    keypoints

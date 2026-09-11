@@ -1,0 +1,347 @@
+#+TITLE: Chapter 31. The bot is three processes and a comment
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What does a =bot: build= comment start, and what does it not start?
+- Why is =software-layer='s =bot/build.sh= thirty-three lines?
+- Where does a successful tarball go, and what still has to happen
+  before a module appears on a login node?
+#+end_questions
+
+#+begin_objectives
+1. Name the three processes a bot instance runs, and say which GitHub
+   event each one reacts to.
+2. Read a =bot: build= comment and say which node is allocated and
+   which prefix is written.
+3. Trace one artefact from the job directory to a module on
+   =MODULEPATH=, including the human steps.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:30-easystack-files.org][Chapter 30]]: the YAML the bot feeds
+  to =eb=.
+- [[file:11-eessi-somebody-elses-stack.org][Chapter 11]]: a green
+  local build is not the all-architecture claim.
+- [[file:25-cvmfs-and-the-stratum.org][Chapter 25]]: ingestion is a
+  Stratum-0 transaction, not a =cp= into =/cvmfs=.
+#+end_prerequisites
+
+Every installation in =software.eessi.io= was built by the EESSI
+build-and-deploy bot. The 22 June 2026 Happy Hour puts the count at
+about 30,000 installations, from autumn 2023. Contributors do not
+need an account on every CPU target. A pull request to
+=EESSI/software-layer= plus a comment is the whole interface.
+
+The procedure is *semi-automatic*. That word is load-bearing. The 1
+December 2025 design session listed ten goals; number four on the
+second slide is "as much as possible automatic but human involvement
+required to trigger certain actions (build, transfer, ingest)". A
+comment starts a build. A label starts a deploy. A merge on a
+private staging repository starts an ingest. Nothing in that chain
+fires because a pull request was opened.
+
+MultiXscale, the EuroHPC Centre of Excellence that funds most of the
+EESSI workforce, is why the Happy Hours and the webinars exist.
+CASTIEL2 is the tutorial portal, not the build farm.
+
+* Three processes, one GitHub App
+
+A bot instance is a GitHub App, written in Python and bash, configured
+from an =.ini= file. It is installed on (at least)
+=software-layer=, =software-layer-scripts=, and
+=compatibility-layer=. Caspar van Leeuwen's 1 June 2026 webinar
+starts one the way a site starts one, and the three processes are
+the same ones EESSI itself runs.
+
+*Smee* is the webhook relay. GitHub cannot reach a login node. A
+=smee.io= (or site-hosted smee) channel is the webhook URL on the
+GitHub App; a smee client on the login node forwards events to
+=127.0.0.1:3000=.
+
+#+begin_example
+singularity run smee-client_latest.sif --url http://smee.example/CHANNEL
+# Forwarding ... to http://127.0.0.1:3000/
+#+end_example
+
+The *event handler* is the process listening on that port.
+=./event_handler.sh= prints "app is listening on port 3000". Most
+GitHub events are ignored. A comment whose line matches
+=^bot:[ ]?(.*)$= is not. Neither is the addition of a =bot:deploy=
+label.
+
+The *job manager* is a cron-style loop, started with
+=./job_manager.sh=. It releases held Slurm jobs, watches them, and
+writes =SUCCESS= or =FAILURE= back on the pull request from
+=bot/check-result.sh=.
+
+The 22 June 2026 revisit names those three as a shortcoming of the
+current bot (along with =.ini= config, Slurm-only, GitHub-only, a
+fixed build-check-test-check pipeline, and no status page). They are
+also the architecture that is running today. The rewrite ("CPU") is
+not what builds =software.eessi.io=.
+
+The design session's other decisions that still hold:
+
+- Interaction is a GitHub App that reads structured commands in
+  comments and labels, not a CI workflow file and not an external
+  CLI.
+- The execution backend is an HPC cluster, one bot instance per
+  site. GitHub-hosted runners are not the builders.
+- =for:= and =on:= are separate (see below).
+- The bot defines an interface. The *target repository* owns
+  =bot/build.sh= and =bot/test.sh=.
+- Builds run in a container so =/cvmfs= is writable, the view
+  inside is controlled, and a machine that does not mount EESSI
+  natively can still build.
+
+* The comment language
+
+Instructions start with =bot:=. =bot: help= and =bot: show_config=
+are the two that do not start work. The one that does, from bot
+0.9.0:
+
+#+begin_example
+bot: build for:arch=x86_64/amd/zen4
+#+end_example
+
+That allocates a zen4 node *and* writes into
+=/cvmfs/software.eessi.io/versions/<ver>/software/linux/x86_64/amd/zen4=.
+Omitting =on:= makes =on:= equal =for:=. That is a native build.
+
+=on:= and =for:= exist so a GPU build can run on a CPU-only node:
+
+#+begin_example
+bot: build on:arch=x86_64/amd/zen2 for:arch=x86_64/amd/zen2,accel=nvidia/cc80
+#+end_example
+
+Cross-compilation *between CPU targets* is not supported. The bot
+writes =for:= into =cfg/job.cfg=. The build scripts use that value
+as the installation path. They do *not* set EasyBuild's =optarch=
+from it. =optarch= stays native to the allocated node. A
+=for:arch=x86_64/amd/zen4= job that actually ran on zen2 would write
+zen4-labelled binaries compiled for zen2. The filter is there to
+stop that, not to implement a cross compiler.
+
+Filters, space-separated, no space after the colon. Partial matching
+applies to =on:= (against the instance's configured node types) and
+does *not* apply to =for:=:
+
+| Filter | Shorthand | Meaning |
+|---+---|---|
+| =instance:...= | =inst:= | which bot instance (e.g. =aws=) |
+| =repository:...= | =repo:= | which EESSI version/repo |
+| =on:architecture=...,accelerator=...= | =on:arch=...,accel=...= | where the job runs |
+| =for:architecture=...,accelerator=...= | =for:arch=...,accel=...= | which prefix is written |
+
+A node type that the instance config declares as having a GPU is
+allocated only when =accel== is also passed. Otherwise
+=on:arch=x86_64/amd/zen4= would land on a GPU zen4 node when a
+CPU-only zen4 node was the intent.
+
+Several instructions may share one comment, one per line. A first
+build is usually one architecture, not the whole matrix. The
+building-software page says so. Permission to comment =bot: build=
+is a configured allow-list; so is permission to deploy.
+
+#+ATTR_EB: :id EB-Bot-1 :title What this comment starts
+#+begin_exercise
+A maintainer posts this on a software-layer pull request:
+
+#+begin_example
+bot: build repo:eessi.io-2025.06-software on:arch=zen4 for:arch=x86_64/amd/zen4,accel=nvidia/cc90 inst:aws
+#+end_example
+
+1. Which instance acts, and what happens to every other instance?
+2. Which node type is allocated, and which prefix is written?
+3. Why is =on:arch=zen4= legal when =for:arch=zen4= would not be?
+4. The same comment without =accel== on a site whose zen4 node type
+   is GPU-only: does a job start?
+
+#+begin_solution
+1. Only the instance whose configured name starts with =aws=. The
+   others filter the instruction out. That is the whole point of
+   =inst:=.
+
+2. A zen4 node, because =on:= is how the instance matches its node
+   types. The prefix is the zen4 *plus* NVIDIA cc90 accelerator
+   subdirectory, because =for:= carries =accel=nvidia/cc90=. The
+   job is a GPU build that may run on a CPU-only zen4 node if the
+   instance has one that matches =on:=.
+
+3. =on:= is matched against the instance's configured node types, so
+   a suffix is enough. =for:= has no such reference list; the
+   documentation requires the full =x86_64/amd/zen4= path.
+
+4. No. A node type that the config marks as having an accelerator
+   is allocated only when the corresponding =accel== is passed.
+   Without it the instance has nothing it is allowed to allocate.
+#+end_solution
+#+end_exercise
+
+* The 33-line script is a pin
+
+=software-layer/bot/build.sh= is not the build. It is a pin of the
+scripts repository, so a software-layer pull request cannot silently
+drift from the scripts that EESSI is currently running:
+
+#+begin_example
+commit_sha=$(cat ${TOPDIR}/software_layer_scripts_commit)
+git clone --depth 1 --filter=blob:none --no-checkout \
+  https://github.com/EESSI/software-layer-scripts
+cd software-layer-scripts
+git fetch --depth=1 origin ${commit_sha}
+git checkout --detach ${commit_sha}
+# symlink everything except bot/build.sh, then:
+software-layer-scripts/bot/build.sh
+#+end_example
+
+The live pin at the time of writing is
+=5ade683520c3655ebb57e4295f494214b92baad1=. That is the design
+session's "build logic ownership" decision in one file: the bot
+submits a job that runs =bot/build.sh= from the *target* repository;
+the target repository immediately hands off to a detached scripts
+commit.
+
+The real =software-layer-scripts/bot/build.sh= then:
+
+1. Reads =cfg/job.cfg= (written by the event handler from the
+   comment's =for:= / =on:= / repo).
+2. Sets =EESSI_SOFTWARE_SUBDIR_OVERRIDE= from
+   =.architecture.software_subdir=, falling back to =$CPU_TARGET=.
+3. If the target is not =software.eessi.io=, sets
+   =EESSI_SITE_INSTALL_FORCE=1= and
+   =EESSI_SITE_SOFTWARE_PREFIX=, and still mounts
+   =software.eessi.io= read-only as the compatibility layer. That
+   is how Caspar's =software.caspar.nl= demo builds *on top of*
+   EESSI.
+4. Starts =eessi_container.sh --access rw --mode exec= with
+   =--save= so the tmpdir can be resumed.
+5. Inside the container, runs =install_software_layer.sh=, which is
+   a one-liner into =EESSI-install-software.sh=.
+6. After the build, resumes the same tmpdir and runs
+   =create_tarball.sh= to produce
+   =eessi-<ver>-software-<os>-<arch-with-hyphens>[-<accels>]-<timestamp>.tar.zst=.
+
+=EESSI-install-software.sh= needs a =[0-9]*.diff= in the working
+directory. That is the pull request patch. Without it the script
+cannot decide which easystack files changed. Reproducing a failure
+locally is the same chain: container, prefix, =configure_easybuild=,
+the =.diff=, then either the full script or
+=eb --easystack <file> --robot=. Chapter 20's log-reading applies
+once that job has failed; the debugging-failed-builds page is the
+operator's version of the same walk.
+
+* From artefact to module
+
+A green job is not a module. The job manager's comment shows the
+tarball contents. A human with deploy permission then adds the
+=bot:deploy= label.
+
+On =software-layer= the event handler runs
+=eessi-upload-to-staging=, which puts the tarball and a metadata
+file in an S3 bucket. A cron on the CernVM-FS Stratum-0 opens a
+pull request on the private =EESSI/staging_bundles= repository.
+Merging that pull request is the ingest. A tarball that should not
+go in is not deleted: its =TaskState= is edited from =APPROVED= to
+=REJECTED=.
+
+The software-layer pull request's own CI starts red, because the
+easystack now lists installations that are not yet on the
+repository. After ingest, re-running that workflow is what turns it
+green, and that is when the pull request is merged.
+
+A site following Caspar's webinar skips =staging_bundles=. A script
+on the site Stratum-0 lists the bucket, downloads, optionally
+checks a signature, calls
+=filesystem-layer/scripts/ingest-tarball.sh=, updates Lmod caches,
+and moves the tarball so it is ingested once. The demo ends with
+=module load Biopython/1.86-gfbf-2025b= resolving under
+=/cvmfs/software.caspar.nl/versions/2025.06/...= while =python=
+itself still comes from =software.eessi.io=. That is the claim
+Approach 2 is for: EESSI's dependencies, the site's CVMFS
+repository, the same bot, the same scripts.
+
+#+ATTR_EB: :id EB-Bot-2 :title Order the pipeline
+#+begin_exercise
+These events all happened for one software-layer pull request. Put
+them in the order they *must* occur. Mark the ones that require a
+human with a configured permission.
+
+: 1.  event handler writes cfg/job.cfg and submits a held Slurm job
+: 2.  software-layer CI goes green
+: 3.  bot:deploy label added
+: 4.  bot: build for:arch=x86_64/amd/zen3 posted
+: 5.  staging_bundles pull request merged
+: 6.  job manager reports SUCCESS and the tarball listing
+: 7.  eessi-upload-to-staging writes the artefact to S3
+: 8.  EESSI-install-software.sh greps the pull request .diff
+: 9.  software-layer pull request opened, adding one easystack line
+
+#+begin_solution
+9, 4, 1, 8, 6, 3, 7, 5, 2.
+
+9 is the contribution. 4 is the first human permission (build
+allow-list). 1 is the event handler; 8 is the job, which cannot run
+before the job exists. 6 is the job manager. 3 is the second human
+permission (deploy allow-list). 7 is the upload that 3 triggers. 5
+is the third human step (ingest). 2 is CI after the bytes are on
+the Stratum-0; it cannot go green before 5.
+
+Opening the pull request does not start 1. A green local
+=EESSI-extend= build does not replace 6. 6 does not replace 5.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-31 :title Where this chapter comes from :kind sources
+#+begin_detail
+Talks, read 2026-09-11:
+
+- *Goals and Design Decisions Behind a Multi-Architecture Build
+  Bot*, EESSI Happy Hour, 2025-12-01
+  (=EESSI-happyhour-2025-016-EESSI-Bot-Goals-Design.pdf=): the ten
+  goals; GitHub App; HPC backend; =for:= / =on:=; repo-owned
+  =bot/build.sh=; containers; split components; human triggers for
+  build, transfer, ingest.
+- *Revisit the EESSI bot*, EESSI Happy Hour, 2026-06-22
+  (=EESSI-happyhour-2026-017-EESSI-bot.pdf=): three processes
+  (smee, event handler, job manager); ~30k installations; current
+  shortcomings; the rewrite is not what is running.
+- Caspar van Leeuwen, Bob Dröge and Pedro Santos Neves, *Using
+  EESSI as a base for a central software stack*, MultiXscale
+  webinar, 2026-06-01: smee URL, GitHub App registration,
+  =app.cfg=, the three start scripts, =bot: show_config=, a
+  =for:arch= build of Biopython into =software.caspar.nl=,
+  =ingest_tarballs.sh= on the Stratum-0.
+- Lara Peeters and Kenneth Hoste, *Building software on top of
+  EESSI + contributing*, 2026-05-04: the workflow diagram this
+  chapter's pipeline is.
+
+Code, read 2026-09-11:
+=EESSI/software-layer/bot/build.sh= and
+=bot/software_layer_scripts_commit=;
+=EESSI/software-layer-scripts/bot/build.sh=;
+=EESSI/eessi-bot-software-layer/tools/commands.py=
+(=^bot:[ ]?(.*)$=);
+=tools/build_params.py=;
+=tasks/deploy.py=.
+
+Docs: [[https://www.eessi.io/docs/bot/][bot.md]] (filters, artefacts,
+=TaskState: REJECTED=),
+[[https://www.eessi.io/docs/adding_software/debugging_failed_builds/][debugging
+failed builds]].
+#+end_detail
+
+#+begin_keypoints
+- A bot instance is smee plus an event handler plus a job manager.
+  A comment matching =^bot:= is what the handler acts on. Opening a
+  pull request is not.
+- =for:= is the installation prefix. =on:= is the allocated node.
+  =optarch= stays native. CPU-to-CPU cross-compilation is not
+  implemented.
+- =software-layer/bot/build.sh= pins a
+  =software-layer-scripts= commit and execs *that* =bot/build.sh=.
+  The job's =.diff= is what selects the easystack files.
+- A green job produces a signed tarball. =bot:deploy= uploads it.
+  A Stratum-0 ingest is what makes a module. Three human
+  permissions stand on that path.
+#+end_keypoints

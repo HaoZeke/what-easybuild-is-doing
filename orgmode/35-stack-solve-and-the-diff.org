@@ -1,0 +1,172 @@
+#+TITLE: Chapter 35. A stack lock is not a package lock
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What does =stack solve= take that =package plan= does not?
+- Which file is safe to paste into a pull request, and which one is
+  the install order?
+- Why can =stack sbom --lock= not reconstruct dependency edges?
+#+end_questions
+
+#+begin_objectives
+1. Write a whole-stack policy JSON and run =stack solve= against a
+   fixture tree, naming every artifact the flags emit.
+2. Tell a package-profile stack-policy TOML from a whole-stack
+   policy JSON.
+3. Read a =stack.diff.md= and say which packages moved, and which
+   file a sequential =eb= loop should consume instead.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:12-eb-stack-updater-and-generator.org][Chapter 12]]:
+  Resolvo as the bump solver.
+- [[file:04-the-robot.org][Chapter 4]]: the robot is a loop. This
+  chapter is the other question.
+#+end_prerequisites
+
+=package plan= solves *one package's* profiles against a robot
+tree. The annual bump of a site stack is the other question: given
+many roots and one target generation, which jointly consistent set
+gets built, in what order, and what changed since last year.
+
+That command is =stack solve=.
+
+* A policy for many roots
+
+The fixture policy in
+=fixtures/gromacs_2025_to_next/policies/prefer_newer.json= is the
+smallest interesting one:
+
+#+begin_example
+{
+  "toolchain": {"name": "foss", "version": "2025b"},
+  "roots": ["GROMACS"],
+  "root_priority": ["GROMACS"],
+  "pins": [],
+  "forbid": [],
+  "objective": "prefer_newer",
+  "require_upgrade": {"name": "GROMACS", "relative_to_baseline": true}
+}
+#+end_example
+
+Roots and every declared runtime and build requirement are
+co-selected. =root_priority= makes a multi-root solve stable under
+list order. Pins use EasyBuild-shaped requirements (= ==0.3.24=,
+= >=1.14=). =forbid= takes a package name or a full easyconfig
+path. =require_upgrade= with =relative_to_baseline= fails if the
+baseline package is absent or no newer jointly feasible candidate
+exists.
+
+This JSON is not the TOML =--stack-policy= of chapter 33. Package
+commands take TOML preferences for one product. Whole-stack solve
+takes this JSON schema. Mixing the files is a parse error, not a
+clever override.
+
+* Four artifacts from one solve
+
+#+begin_example
+eb-stack stack solve \
+  --easyconfigs fixtures/gromacs_2025_to_next/easyconfigs \
+  --policy fixtures/gromacs_2025_to_next/policies/prefer_newer.json \
+  --baseline-easyconfigs fixtures/gromacs_2025_to_next/easyconfigs \
+  --lock-out stack.lock.json \
+  --sbom-out stack.cdx.json \
+  --build-list-out build.list \
+  --stack-diff-out stack.diff.md
+#+end_example
+
+=--easyconfigs= is repeatable. Later paths override earlier ones
+for the same name, version, toolchain, and versionsuffix. A
+site-only package is added to the universe that way.
+
+=--stack-diff-out= requires =--baseline-easyconfigs=. Omitting the
+baseline is an error, not a silent skip.
+
+=stack.lock.json= is schema 1. =toolchain= is the policy's target.
+=packages= is the co-selected set, sorted by name, each with its
+own toolchain, optional versionsuffix, and =easyconfig_path=.
+=solver.engine= is always =resolvo_cdcl_sat=.
+
+=build.list= is one easyconfig path per line, topological over the
+co-selected stack, ties broken by package name. An empty lock
+produces an empty file. A sequential =eb= loop, a Jenkins step, or
+=xargs -n1= consumes this file. It is not markdown and it is not
+the SBOM.
+
+=stack.diff.md= is the pull-request body. Every co-selected
+package is =unchanged=, =added=, =removed=, or =version-bumped=
+against the baseline:
+
+#+begin_example
+# Stack diff
+
+Baseline (`foss-2025a`) -> solved (`foss-2025b`).
+
+## Summary
+
+- **unchanged**: 1
+- **added**: 0
+- **removed**: 0
+- **version-bumped**: 3
+#+end_example
+
+Each section names real versions and real easyconfig paths.
+
+=stack.cdx.json= written *during* solve still has the candidate
+graph, so dependency edges are present. The other SBOM command
+does not:
+
+#+begin_example
+eb-stack stack sbom --lock stack.lock.json --out stack.cdx.json
+#+end_example
+
+A lock-only SBOM cannot reconstruct edges and does not invent
+them. Use =--sbom-out= on =stack solve= when the graph is still in
+memory.
+
+#+ATTR_EB: :id EB-Stack-1 :title Which file answers
+#+begin_exercise
+A site ran the fixture solve above. Four questions arrive the next
+morning. Name the file that answers each one, or say the solve was
+missing a flag.
+
+1. "In which order do we =eb= these?"
+2. "What do we tell the pull request?"
+3. "Which OpenMPI did Resolvo actually pick?"
+4. "Give us a CycloneDX with dependency edges, from the lock we
+   already committed, without re-solving."
+
+#+begin_solution
+1. =build.list=. Topological, one path per line.
+
+2. =stack.diff.md=. That is why it is markdown.
+
+3. =stack.lock.json=, the =packages= entry whose =name= is
+   =OpenMPI=.
+
+4. That file cannot be produced from the lock alone.
+   =stack sbom --lock= will write a document without edges. The
+   solve needed =--sbom-out= while the graph was available.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-35 :title Where this chapter comes from :kind sources
+#+begin_detail
+eb-stack, HaoZeke/eb-stack, read 2026-09-11:
+
+- =docs/orgmode/howto/solve-lock.org=
+- =docs/orgmode/howto/emit-reports.org=
+- =docs/orgmode/reference/formats.org=
+- =fixtures/gromacs_2025_to_next/=
+- =src/main.rs= =StackCommand::Solve= / =Sbom=
+#+end_detail
+
+#+begin_keypoints
+- =stack solve= is the multi-root annual-bump solver. Its policy
+  is JSON. The package command's =--stack-policy= is TOML. They
+  are not interchangeable.
+- =build.list= is the install order. =stack.diff.md= is the pull
+  request. =stack.lock.json= is the Resolvo assignment.
+- A lock-only SBOM has no dependency edges. Edges are written
+  only when =--sbom-out= is passed to =stack solve=.
+#+end_keypoints

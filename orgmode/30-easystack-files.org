@@ -1,0 +1,375 @@
+#+TITLE: Chapter 30. An easystack is the list the bot will build
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What is an easystack file, if it is not a second recipe format?
+- Which YAML key is stable in EasyBuild 5, and which top-level key is not
+  implemented yet?
+- How does EESSI decide which EasyBuild version to load for a given file?
+#+end_questions
+
+#+begin_objectives
+1. Read an easystack YAML file and say which =eb= commands it is
+   equivalent to, including per-item options.
+2. Name the EESSI path and filename a new package belongs in, and say
+   why the EasyBuild version is in the name.
+3. Tell a =from-commit= entry from a rebuild, and say what each one
+   causes the bot to pass to =eb=.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:01-an-easyconfig-is-python.org][Chapter 1]]: an easystack names
+  easyconfigs; it does not replace them.
+- [[file:04-the-robot.org][Chapter 4]]: =--robot= is what the bot adds
+  around a new-install easystack.
+- [[file:11-eessi-somebody-elses-stack.org][Chapter 11]]: the six-step
+  postcard this chapter fills in.
+#+end_prerequisites
+
+An easyconfig is one package. A site, and EESSI, need a list of
+packages for one toolchain generation, one EasyBuild version, and one
+repository version. That list is an *easystack file*: YAML that
+EasyBuild reads with =--easystack=. EasyBuild 5 marked the format
+stable. It no longer needs =--experimental=.
+
+The file does not invent a second recipe language. Each item is a
+filename the robot already knows how to resolve. Extra keys under
+=options:= become extra =eb= flags for that one item.
+
+* A list of filenames, plus flags without dashes
+
+The official shape, from EasyBuild's own page, is this:
+
+#+begin_example
+easyconfigs:
+  - PyTorch-1.12.0-foss-2022a-CUDA-11.7.0.eb:
+      options:
+        from-pr: 15924
+        debug: True
+  - Hypre-2.25.0-foss-2022a.eb
+  - GROMACS-2025.4-foss-2025b.eb:
+      options:
+        installpath: /my/custom/installpath
+        parallel: "1"
+#+end_example
+
+That is equivalent to three =eb= invocations:
+
+#+begin_example
+eb PyTorch-1.12.0-foss-2022a-CUDA-11.7.0.eb --from-pr 15924 --debug
+eb Hypre-2.25.0-foss-2022a.eb
+eb GROMACS-2025.4-foss-2025b.eb --installpath /my/custom/installpath --parallel 1
+#+end_example
+
+Three rules that are easy to miss and expensive to learn from a
+failed bot job.
+
+The list marker is required. YAML without the leading =- = is not an
+easystack.
+
+The dashes that make a flag on the command line are *omitted* in the
+file. =from-pr: 15924= is =--from-pr 15924=. Short options such as
+=D: True= are legal and not recommended, because a human reading the
+file then has to remember that =D= is =--dry-run=.
+
+Some values have to be quoted. YAML will turn an unquoted =1= into
+the boolean =True=. =parallel= is an integer option, so the file
+writes =parallel: "1"=. =debug: True= is the other way round: the
+automatic conversion is what the option requires.
+
+* Command-line options come first, and last wins
+
+=eb --easystack my.yaml --dry-run= applies =--dry-run= to every
+item. EasyBuild puts the command-line flags *before* the per-item
+options from the file, and "always respect[s] the argument that was
+put last". So a file that sets =debug: True= on one item still
+enables debug for that item even if the command line said
+=--disable-debug=.
+
+The opposite is not true. A flag that exists only on the command line
+applies to every item, because there is nothing later to override it.
+
+A top-level =options:= block that would apply to the whole file is
+documented as "to be developed" (EasyBuild issues #4105, #4106,
+#4104, #3512): global options, an intended EasyBuild version, dropping
+=--easystack= in favour of auto-detection, and labels such as =gpu=.
+None of those are in 5.4.0. A file that puts =robot: True= at the top
+level is not doing what the comment above it hopes.
+
+EESSI does not wait for that work. The bot adds =--robot= (or
+=--rebuild=) on the command line, once, around the whole file. That
+is the next section.
+
+* EESSI puts the EasyBuild version in the filename
+
+On 2025-06-11 the =EESSI/software-layer= repository was split. The
+scripts that actually build live in
+=EESSI/software-layer-scripts=. What remains in =software-layer= is
+almost only easystack files, plus a 33-line =bot/build.sh= that pins
+the scripts commit. Installations to a particular EESSI version are
+no longer tracked by a git branch. They are tracked by the directory:
+
+#+begin_example
+easystacks/software.eessi.io/<eessi_version>/eessi-<eessi_version>-eb-<eb_version>-<toolchain>.yml
+#+end_example
+
+A new line for GROMACS on the 2025.06 tree, built with EasyBuild
+5.3.0 and the 2025b generation, belongs in
+
+#+begin_example
+easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml
+#+end_example
+
+The filename is how =EESSI-install-software.sh= decides which
+EasyBuild module to load:
+
+#+begin_example
+eb_version=$(echo ${easystack_file} | sed 's/.*eb-\([0-9.]*\).*.yml/\1/g')
+source ${TOPDIR}/load_easybuild_module.sh ${eb_version}
+#+end_example
+
+A line added to the 5.3.0 file is built with EasyBuild 5.3.0, even if
+5.4.0 is already on the tree. That is why a new package goes in the
+file for the *current* EasyBuild release on that EESSI version, not
+in an older one that happens to list similar software.
+
+The =001-system= files run first. The 2023.06 README in
+=software-layer= is explicit: "Software installed with system
+toolchain should be installed first, this includes EasyBuild
+itself." CUDA easystacks come before anything that depends on CUDA.
+Filename order is the order of processing.
+
+The pull request targets =main=. The old version branches
+(=2023.06-software.eessi.io= and the rest) are gone.
+
+* from-commit is how an unmerged easyconfig gets built
+
+Lara Peeters and Kenneth Hoste's 4 May 2026 webinar walks the two
+cases that actually occur.
+
+When the easyconfig is already in the EasyBuild release that the
+easystack filename names, the entry is a bare filename. Their
+scikit-bio 0.7.1 example:
+
+#+begin_example
+  - scikit-bio-0.7.1.post1-foss-2025a.eb
+#+end_example
+
+When the easyconfig is still only in an EasyBuild pull request, the
+entry carries =from-commit= (or the older =from-pr=). The live
+2025.06 / EasyBuild 5.3.0 / 2025b file on =software-layer= does this
+for GROMACS 2025.4:
+
+#+begin_example
+  - GROMACS-2025.4-foss-2025b.eb:
+      options:
+          # see https://github.com/easybuilders/easybuild-easyconfigs/pull/24956
+          from-commit: a3bb54895c3de5600fdfd2893a818378daebc7ee
+#+end_example
+
+GROMACS 2026.2 on the same file also pulls an easyblock from a
+commit, because the easyconfig is not enough:
+
+#+begin_example
+  - GROMACS-2026.2-foss-2025b.eb:
+      options:
+        # see https://github.com/easybuilders/easybuild-easyconfigs/pull/25879
+        from-commit: 9320dfe8ae6f45d37edd0ef52be37e7d3668d298
+        # see https://github.com/easybuilders/easybuild-easyblocks/pull/3531
+        include-easyblocks-from-commit: cfb6f93bfae8bef5d8996ae6696defcafbf0d4ad
+#+end_example
+
+The webinar is explicit about the merge order. The software-layer
+pull request may be opened while the easyconfig pull request is still
+open. Deployment into the CernVM-FS repository waits until the
+EasyBuild pull request has been merged. A =from-commit= pin is a
+temporary bridge, not a permanent source of truth.
+
+The 2026.06 tree is the same shape with a newer generation. The live
+=eessi-2026.06-eb-5.4.0-2026.1.yml= opens with OpenMPI and
+=foss-2026.1.eb= itself, which is how a new EESSI version's first
+toolchain generation is declared.
+
+#+ATTR_EB: :id EB-Easystack-1 :title Which file, and which options
+#+begin_exercise
+A colleague has a working local install of =Octave-11.1.0-foss-2025b.eb=
+on EESSI 2025.06, built with EasyBuild 5.3.0. The easyconfig is
+already in that EasyBuild release. A second package,
+=scikit-bio-0.7.2-foss-2025b.eb=, exists only as EasyBuild
+easyconfigs pull request 25908, commit
+=d04690454404aee9d12fc57858c79382adf64d8b=.
+
+1. Which easystack file receives each line?
+2. Write the two YAML items.
+3. The software-layer pull request is opened today. When can the
+   installations be deployed into =software.eessi.io=?
+
+#+begin_solution
+1. Both lines go in
+   =easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml=.
+   The EasyBuild version in the filename is the one the bot will
+   load. Octave is already on that tree as a bare name; scikit-bio
+   is the =from-commit= case from the same file.
+
+2. The live file already contains both, and they look like this:
+
+   #+begin_example
+     - Octave-11.1.0-foss-2025b.eb
+     - scikit-bio-0.7.2-foss-2025b.eb:
+         options:
+             # see https://github.com/easybuilders/easybuild-easyconfigs/pull/25908
+             from-commit: d04690454404aee9d12fc57858c79382adf64d8b
+   #+end_example
+
+3. Octave can be deployed as soon as the bot has green artefacts on
+   every supported CPU target. scikit-bio waits on pull request
+   25908 being merged, even if the bot has already built it from
+   that commit. That is the webinar's rule, not a courtesy.
+#+end_solution
+#+end_exercise
+
+* Rebuilds are a different directory, and a different flag
+
+EESSI does not rebuild by default. A rebuild changes the bytes
+behind a module name that people are already loading. When a rebuild
+is unavoidable, the entry does *not* go in the ordinary easystack.
+It goes in =rebuilds/=, with a date in the name:
+
+#+begin_example
+easystacks/software.eessi.io/<ver>/rebuilds/YYYYMMDD-eb-<eb_version>-<name>-<short-reason>.yml
+#+end_example
+
+A live example from 2025.06, 21 June 2026, rebuilding Rust to pick
+up an RPATH fix that landed in EasyBuild 5.3.1:
+
+#+begin_example
+# rebuild Rust/1.91.1-GCCcore-14.3.0, to fix RPATH linking
+# see https://github.com/easybuilders/easybuild-easyconfigs/issues/26232
+# fixed in EasyBuild v5.3.1, see https://github.com/easybuilders/easybuild-easyblocks/pull/4156
+easyconfigs:
+  - Rust-1.91.1-GCCcore-14.3.0.eb
+#+end_example
+
+=EESSI-install-software.sh= splits the pull request's changed YAML
+files into two lists, rebuilds first:
+
+#+begin_example
+if [[ ${easystack_file} == *"/rebuilds/"* ]]; then
+    ${EB} --easystack ${easystack_file} --rebuild
+else
+    ${EB} --easystack ${easystack_file} --robot
+fi
+#+end_example
+
+The directory is the flag. Putting a rebuild in the ordinary
+easystack file will not pass =--rebuild=, and EasyBuild will not
+overwrite an existing installation. Putting a new package in
+=rebuilds/= will pass =--rebuild= and skip the robot, which is the
+wrong command for a package that is not there yet.
+
+The comments at the top of a rebuild file are the bill of materials:
+what was rebuilt, why, and which issue or pull request made it
+necessary. The CUDA 12.1.1 rebuild from May 2024 is the documented
+template, including =accept-eula-for: CUDA= under =options:=.
+
+* How the bot finds the file at all
+
+The bot does not read a ticket or a commit message to decide what to
+build. =EESSI-install-software.sh= greps the pull request =.diff=
+for new or changed YAML under =easystacks/=, skips the CUDA helper
+easystacks under =scripts/gpu_support/=, and keeps only files whose
+path matches the repository and EESSI version this job is building
+for:
+
+#+begin_example
+changed_easystacks=$(cat ${pr_diff} | grep '^+++' | cut -f2 -d' ' \
+  | sed 's@^[a-z]/@@g' | grep 'easystacks/.*yml$' \
+  | egrep -v 'known-issues|missing' \
+  | (grep -v "scripts/gpu_support/" || true))
+#+end_example
+
+A pull request that edits a README and nothing under =easystacks/=
+prints "No missing installations, party time!" and exits green. That
+is why the contribution is the YAML line, not a comment on the pull
+request.
+
+#+ATTR_EB: :id EB-Easystack-2 :title What the bot will type
+#+begin_exercise
+A pull request against =EESSI/software-layer= =main= adds one file:
+
+: easystacks/software.eessi.io/2025.06/rebuilds/20260911-eb-5.3.1-OpenMPI-ofi-fix.yml
+
+The file contains a single item, =OpenMPI-5.0.8-GCC-14.3.0.eb=, with
+no =options:=. The job is building EESSI 2025.06 for
+=x86_64/amd/zen4=.
+
+1. Which EasyBuild version is loaded, and from where is that
+   decided?
+2. What is the =eb= command the install script will run?
+3. The same pull request also adds a line to
+   =eessi-2025.06-eb-5.3.1-2025b.yml=. In which order are the two
+   files processed, and why does the order matter?
+
+#+begin_solution
+1. EasyBuild 5.3.1. The sed in =EESSI-install-software.sh= pulls
+   the version out of =eb-5.3.1= in the filename. The EESSI version
+   in the path only decides whether this job *considers* the file.
+
+2. =eb --easystack <that rebuilds file> --rebuild=. The
+   =/rebuilds/= component is what selects =--rebuild= over
+   =--robot=.
+
+3. Rebuilds first, then new-install files. A rebuild that is meant
+   to replace an OpenMPI the new-install file then depends on has to
+   land before the dependent is planned. The script says so:
+   "first process rebuilds, if any, then easystack files for new
+   installations".
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-30 :title Where this chapter comes from :kind sources
+#+begin_detail
+EasyBuild, docs last update 2026-08-09:
+
+- [[https://docs.easybuild.io/easystack-files/][Easystack files]]:
+  the =easyconfigs:= key, per-item =options:=, quoting, last-wins,
+  and the four "to be developed" issues.
+
+EESSI talks, read 2026-09-11:
+
+- Lara Peeters and Kenneth Hoste, *Building software on top of
+  EESSI + contributing to EESSI*, MultiXscale webinar, 2026-05-04
+  (=EESSI-webinars-spring-2026-building-contributing-2026-05-04.pdf=):
+  the six contributing steps, =from-commit= while the EasyBuild
+  pull request is open, deployment waits on merge.
+- Caspar van Leeuwen, Bob Dröge and Pedro Santos Neves, *Using
+  EESSI as a base for a central software stack*, MultiXscale
+  webinar, 2026-06-01: a site repo uses the same easystack path
+  shape, =easystacks/<site_cvmfs_repo>/<EESSI_VERSION>/=.
+
+Code, =EESSI/software-layer= and =EESSI/software-layer-scripts=,
+=main=, read 2026-09-11:
+=easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml=,
+=easystacks/software.eessi.io/2026.06/eessi-2026.06-eb-5.4.0-2026.1.yml=,
+=easystacks/software.eessi.io/2025.06/rebuilds/20260621-eb-5.3.1-rebuild-Rust-1.91.yml=,
+=EESSI-install-software.sh= (the =.diff= grep and the
+=--rebuild= / =--robot= split).
+
+Docs: [[https://www.eessi.io/docs/adding_software/opening_pr/][opening
+a pull request]], including the 2025-06-11 split and the rebuild
+naming convention.
+#+end_detail
+
+#+begin_keypoints
+- An easystack is a YAML list of easyconfig filenames. Per-item
+  =options:= become =eb= flags with the dashes stripped, and
+  last-wins means those flags beat the command line.
+- EESSI's path is
+  =easystacks/software.eessi.io/<ver>/eessi-<ver>-eb-<ebver>-<tc>.yml=.
+  The EasyBuild version in the name is the module the bot loads.
+- =from-commit= (or =from-pr=) is how an unmerged easyconfig is
+  built. Deployment into the repository waits on the EasyBuild
+  merge.
+- A rebuild lives under =rebuilds/= and is the only case that
+  passes =--rebuild= instead of =--robot=.
+#+end_keypoints

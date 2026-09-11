@@ -206,11 +206,17 @@ And =--dry-run= on a well-stocked cluster is short for a reason. It is
 not reporting that the package has few dependencies. It is reporting
 that most of them are already there.
 
+EasyBuild 5 dropped the implication that =-D= includes =--robot=.
+=eb pkg.eb -D= dry-runs the named file only. The resolved plan is
+=eb pkg.eb -Dr=. [[file:37-wrapping-and-modulerc.org][Chapter 37]]
+is the page for that change. The recordings in this chapter already
+pass both letters.
+
 =-D= / =--dry-run= already retains every dependency and marks each
-one =[x]= or =[ ]=. There is no =eb --retain-all-deps=; that name is
-an internal argument used by =-D=, =--dep-graph=, and
-=--check-conflicts=. =-M= / =--missing-modules= prints only the
-absent set.
+one =[x]= or =[ ]=, *once* =-r= is also on the command line. There
+is no =eb --retain-all-deps=; that name is an internal argument
+used by =-D=, =--dep-graph=, and =--check-conflicts=. =-M= /
+=--missing-modules= prints only the absent set.
 
 ** What is being rebuilt does not satisfy anything
 

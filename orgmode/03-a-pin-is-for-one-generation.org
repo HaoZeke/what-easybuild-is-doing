@@ -35,7 +35,15 @@ and means "compatible with". Conda takes =>=1.14.6,<2=.
 
 EasyBuild has no such syntax: no operator, no range, no caret, no
 tilde. A dependency is a name and a version, and the version is the
-version. That exact module, or the build does not resolve.
+version. That exact module, or the build does not resolve. A site
+wrap or a =ModuleRC= =.modulerc= can answer an old name with a
+newer module; that is [[file:37-wrapping-and-modulerc.org][chapter 37]],
+and it is not a range in this file.
+
+The official common-toolchain table now lists =foss/2026.1= and
+skipped =2024b=. The 2026 maintainer summit voted one common
+generation per year. The pin law does not change: a version beside
+a dependency is still that module, on that generation.
 
 =_parse_dependency= in
 =easybuild/framework/easyconfig/easyconfig.py= says what a dependency is,

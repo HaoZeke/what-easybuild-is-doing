@@ -308,7 +308,7 @@ read 2026-09-10:
 |---+---|
 | 2023.06 (default) | =foss/2022b=, =foss/2023a=, =foss/2023b= |
 | 2025.06 | =foss/2024a=, =foss/2025a=, =foss/2025b= |
-| 2026.06 | under development |
+| 2026.06 | =foss/2026.1= (catalog still thin; default module hides it) |
 
 The live repository agrees, and says more than the table does. Its root
 catalog has exactly three nested catalogs, =/versions/2023.06=,
@@ -317,7 +317,9 @@ one of the 165 =modules= catalogs under =/versions/2025.06=, on
 2026-09-10: *1079 modules across 529 packages* on each x86_64 target, and
 1071 across 526 on each aarch64 target. The same count against 2023.06
 gives 1226 modules across 670 packages, and against 2026.06 gives 137
-across 132, which is what "under development" looks like from the
+across 132. The live easystack
+=eessi-2026.06-eb-5.4.0-2026.1.yml= already lists =foss-2026.1.eb=;
+the catalog is what a thin first generation looks like from the
 outside. The root catalog's =/init/modules/EESSI/.modulerc.lua= is
 consistent with it: it makes 2023.06 the default and *hides* 2026.06.
 
@@ -355,9 +357,11 @@ line.
 
 And the host still provides the driver, the network stack, the filesystem
 client and the scheduler. An MPI from the repository talking to a site
-fabric is exactly the case the site-specific configuration pages exist
-for, and it is the one place where "mount it and go" is not the whole
-story.
+fabric is exactly the case [[file:32-host-injections.org][chapter 32]]
+is for, and it is the one place where "mount it and go" is not the
+whole story. The 2025.06 tree also carries =lfoss/2025b= (the
+linear-algebra =foss=); the table above lists the documented common
+toolchains, not every top-level module.
 
 #+ATTR_EB: :id sources-26 :title Where this chapter comes from :kind sources
 #+begin_detail

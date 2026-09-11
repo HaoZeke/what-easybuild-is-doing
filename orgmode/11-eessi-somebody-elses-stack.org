@@ -18,6 +18,14 @@
 There is a directory on a lot of clusters, and on a surprising number
 of laptops, that nobody at the site built.
 
+EESSI's workforce is funded in large part by MultiXscale, a EuroHPC
+Centre of Excellence (CECAM × EESSI). CASTIEL 2 is the tutorial
+portal, not the build farm. The EFP Federated Software Catalogue
+(CSC.fi with Ghent) is a 2026 catalogue layer on top. Compute Canada
+is the design parent of the three-layer split. A first week on a
+EuroHPC box is often EESSI via that catalogue, not a local EasyBuild
+prefix.
+
 * The stack is a filesystem
 
 #+begin_example
@@ -222,17 +230,21 @@ runtime path, then confirm nothing resolves outside the stack.
 * Contributing back
 
 An installation in a local prefix helps that operator. Getting it into EESSI proper
-is a different job, and the order matters:
+is a different job, and the order matters. The six steps below are the
+postcard. [[file:30-easystack-files.org][Chapter 30]] is the YAML. [[file:31-the-eessi-bot.org][Chapter
+31]] is the comment that starts the build and the ingest that makes a
+module. [[file:32-host-injections.org][Chapter 32]] is the site tree that
+never goes into =software.eessi.io=.
 
 1. Get the easyconfig into EasyBuild, or open a pull request for it.
 2. Build it in the EESSI build environment with =EESSI-extend=.
 3. Add an entry to the easystack file for that EESSI version and
    toolchain generation.
-4. Open a pull request against the software layer.
-5. A builder triggers the bot, which builds on every supported CPU
+4. Open a pull request against the software layer, targeting =main=.
+5. A builder posts one =bot: build for:arch=...= per supported CPU
    target.
-6. On green, the results are signed and published into the distributed
-   repository.
+6. On green, =bot:deploy= uploads the tarballs; a Stratum-0 ingest
+   is what publishes them.
 
 Two conditions before the work starts.
 

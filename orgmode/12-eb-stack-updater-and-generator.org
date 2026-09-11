@@ -68,8 +68,16 @@ eb-stack package plan \
   --toolchain-name foss \
   --toolchain-version 2024a \
   --easyconfigs /path/to/easybuild-easyconfigs \
+  --stack-policy examples/stacks/eon-foss-2026.1.toml \
   --out-dir /tmp/new-package
 #+end_example
+
+=--stack-policy= is required. [[file:33-inspect-residuals-and-the-plan.org][Chapter 33]]
+is the inspect artifacts and the residual queue.
+[[file:34-recipe-format-lint-check.org][Chapter 34]] is =format=,
+=lint=, and =check=. [[file:35-stack-solve-and-the-diff.org][Chapter 35]]
+is the whole-stack lock. [[file:36-campaign-findings.org][Chapter 36]]
+is the campaign state.
 
 The same pipeline emits a new =.eb=. Parsers do not execute the
 foreign recipe. Unsupported expressions become residuals, not

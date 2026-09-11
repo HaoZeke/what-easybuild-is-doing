@@ -86,6 +86,9 @@ last rather than hard.
 | [[file:11-eessi-somebody-elses-stack.org][chapter 11]] | using a stack nobody at your site built |
 | [[file:25-cvmfs-and-the-stratum.org][chapter 25]] | how a stack reaches a machine, verified |
 | [[file:26-the-same-stack-somewhere-else.org][chapter 26]] | four machines, three routes |
+| [[file:30-easystack-files.org][chapter 30]] | the YAML list the bot builds |
+| [[file:31-the-eessi-bot.org][chapter 31]] | comment, artefact, ingest |
+| [[file:32-host-injections.org][chapter 32]] | a site stack next to EESSI |
 | [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] | why a site's builds differ from a reading of the file |
 
 * Whenever
@@ -95,6 +98,12 @@ Not a level. Read these when the question comes up.
 | Read | When |
 |---+---|
 | [[file:12-eb-stack-updater-and-generator.org][chapter 12]] | how sure any of this is |
+| [[file:33-inspect-residuals-and-the-plan.org][chapter 33]] | inspect artifacts and the residual queue |
+| [[file:34-recipe-format-lint-check.org][chapter 34]] | format, lint, and check |
+| [[file:35-stack-solve-and-the-diff.org][chapter 35]] | whole-stack lock, build list, diff |
+| [[file:36-campaign-findings.org][chapter 36]] | typed campaign findings |
+| [[file:37-wrapping-and-modulerc.org][chapter 37]] | ModuleRC, wrapping, and =-Dr= |
+| [[file:38-locks-bwrap-python-datasets.org][chapter 38]] | install locks, bwrap, datasets |
 | [[file:27-four-things-that-actually-happened.org][chapter 27]] | the failures in full, with the diagnosis |
 | [[file:glossary.org][the glossary]] | a word in this book means something specific |
 | [[file:keypoints.org][the keypoints]] | a chapter was read last week |

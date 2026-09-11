@@ -1,0 +1,180 @@
+#+TITLE: Chapter 37. A wrapper is the range EasyBuild will not write
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What does a =ModuleRC= easyconfig install, if it installs no
+  files?
+- When is a wrapping-dependency the honest answer, and when is it
+  a lie about a pin?
+- What does =-D= print in EasyBuild 5 if =-r= is not also passed?
+#+end_questions
+
+#+begin_objectives
+1. Read a =ModuleRC= easyconfig and say which module name a user
+   loads, and which module actually provides the files.
+2. Tell a wrapping-dependency from a version pin, and say which
+   one chapter 3 still forbids in a recipe.
+3. Predict what =eb pkg.eb -D= lists in EasyBuild 5, versus
+   =eb pkg.eb -Dr=.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:03-a-pin-is-for-one-generation.org][Chapter 3]]: a
+  dependency version is a pin. This chapter is the site-side
+  escape.
+- [[file:04-the-robot.org][Chapter 4]]: =-D= is how a plan is
+  read. EasyBuild 5 changed what that flag implies.
+#+end_prerequisites
+
+Chapter 3 is still true of an easyconfig. There is no =>=1.14.6=
+in a =dependencies= list. A site, though, already has HDF5 1.14.6
+installed and a hundred recipes that ask for 1.14.5. Rebuilding
+the hundred is the honest pin. Wrapping is the other move, and it
+lives *outside* the recipe that asked.
+
+* ModuleRC writes a .modulerc and nothing else
+
+The generic =ModuleRC= easyblock derives from =EasyBlock=.
+Configure, build, and install are empty. What it writes is a
+software-specific =.modulerc= so that
+
+#+begin_example
+module load HDF5/1.14.5-gompi-2025a
+#+end_example
+
+loads HDF5 1.14.6 instead, when the site has declared that the
+newer module is a compatible replacement. The extra parameter is
+=check_version=, default =True=: the requested version must be a
+*prefix* of the dependency version. 1.14.5 may wrap 1.14.5.1. It
+may not wrap 1.15.0 under the default check.
+
+That is not a range in the asking recipe. The asking recipe still
+names 1.14.5. The site's module tree answers with a different
+module. The robot, resolving a *build*, still looks for an
+easyconfig of the pinned version unless wrapping-dependencies is
+also configured for the build.
+
+* wrapping-dependencies is a configuration, not a syntax
+
+EasyBuild's =wrapping-dependencies= setting names which
+installations may satisfy a request for an older version at
+*runtime* (and, when so configured, at resolve time). It is how a
+site says "this HDF5 is close enough" without editing a hundred
+files. It is also how a site lies, if 1.15 is not close enough.
+
+The book keeps the two facts apart on purpose. An easyconfig
+author does not write a range. A site operator may wrap. Chapter
+3's "no operator, no caret, no tilde" is about the file. This
+chapter is about the tree the file is loaded from.
+
+A wrapping that makes a *build* resolve against a different
+HDF5 than the pin named is a finding, not a convenience. The
+binary was never tested against that module. Chapter 6's
+per-architecture claim applies one layer up: a wrap is a
+different install.
+
+#+ATTR_EB: :id EB-Wrap-1 :title Pin, wrap, or rebuild
+#+begin_exercise
+Three situations. Name the mechanism, and say what a user
+=module load= of the old name actually gets.
+
+1. A recipe lists =('HDF5', '1.14.5')=. The site has only 1.14.6.
+   A =ModuleRC= easyconfig is installed with =check_version =
+   True=.
+2. The same recipe, no =ModuleRC=, wrapping-dependencies off.
+3. The site wants every recipe that named 1.14.5 to *build*
+   against 1.14.6 from now on.
+
+#+begin_solution
+1. =ModuleRC=. =module load HDF5/1.14.5-...= resolves to the
+   1.14.6 module, because 1.14.5 is a prefix of 1.14.6. The
+   recipe file is unchanged.
+
+2. The robot does not resolve the build. There is no 1.14.5
+   module and no wrap. =module load= of the old name fails.
+
+3. That is a rebuild, or a wrapping-dependencies configuration
+   that the site accepts as a lie about the pin. It is not
+   something the recipe can spell. Changing the pin in the
+   easyconfig and rebuilding is the claim that will survive a
+   move to another site.
+#+end_solution
+#+end_exercise
+
+* EasyBuild 5: -D no longer implies -r
+
+Until EasyBuild 5.0, =--dry-run= / =-D= implied =--robot=. A
+reader who typed
+
+#+begin_example
+eb GROMACS-2025.2-foss-2025a.eb -D
+#+end_example
+
+got a full resolved plan. In 5.0 that implication was removed.
+The same command now dry-runs *the named file only*. Dependencies
+are not walked unless =-r= is also passed:
+
+#+begin_example
+eb GROMACS-2025.2-foss-2025a.eb -Dr
+#+end_example
+
+Chapter 4's recordings already use =-r -D=. The prose must say
+why both letters are there. A reader who drops the =-r= because
+"dry-run always planned the tree" gets a one-line overview and a
+false sense that the robot has nothing to do.
+
+=--extended-dry-run= / =-x= is the other dry-run. It prints the
+build procedure. It is not a substitute for =-Dr=, and the
+procedure it prints can differ from the real run wherever an
+easyblock branches on files that a dry-run never unpacks.
+
+#+ATTR_EB: :id EB-Dry-1 :title What -D prints
+#+begin_exercise
+EasyBuild 5.4.0, a robot tree that contains the full foss-2025a
+GROMACS closure. Two commands:
+
+: A.  eb GROMACS-2025.2-foss-2025a.eb -D
+: B.  eb GROMACS-2025.2-foss-2025a.eb -Dr
+
+1. What does each print?
+2. Which one is the plan chapter 4 told the reader to read
+   before a non-trivial build?
+3. A colleague says "=-D= already retains every dependency." In
+   which EasyBuild generation was that true?
+
+#+begin_solution
+1. A prints an overview of the named easyconfig. It does not
+   walk the robot. B prints the resolved closure, short paths,
+   because =-r= is present.
+
+2. B. That is the plan.
+
+3. EasyBuild 4. In 5.0 the implication was dropped. The
+   colleague is quoting a default that no longer holds.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-37 :title Where this chapter comes from :kind sources
+#+begin_detail
+EasyBuild docs, last update 2026-08-09:
+
+- [[https://docs.easybuild.io/version-specific/generic-easyblocks/][ModuleRC]]
+  generic easyblock (=check_version=, empty configure/build/install).
+- [[https://docs.easybuild.io/easybuild-v5/changes/][Changes in
+  default configuration in EasyBuild v5.0]]: =--dry-run= no
+  longer implies =--robot=; previous behaviour is =-Dr=.
+- [[https://docs.easybuild.io/extended-dry-run/][Extended dry
+  run]]: =-x= is a different command.
+
+Chapter 3 remains the law of the easyconfig file. This chapter is
+the site tree and the 5.0 dry-run change.
+#+end_detail
+
+#+begin_keypoints
+- An easyconfig still cannot write a range. A =ModuleRC=
+  =.modulerc= is how a site answers an old name with a newer
+  module.
+- =check_version= default =True= requires the requested version
+  to be a prefix of the wrapped one.
+- In EasyBuild 5, =-D= does not imply =-r=. The plan is =-Dr=.
+#+end_keypoints

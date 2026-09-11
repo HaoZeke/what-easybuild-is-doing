@@ -1,0 +1,217 @@
+#+TITLE: Chapter 36. A campaign finding is a typed failure, not a log
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What three booleans does =*.campaign.json= store, and which one can
+  stay false on a completed run?
+- Who may resolve a finding, and what happens if a second owner
+  tries?
+- When is a compile failure a =resource= finding rather than a
+  =compile= finding?
+#+end_questions
+
+#+begin_objectives
+1. Read a campaign state file and say which claim rungs it
+   currently holds.
+2. Classify an open finding by =class=, =disposition=, and =stage=,
+   and name the first repair surface.
+3. Claim, resolve, and retry a finding on the same state path
+   without losing the audit trail.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:12-eb-stack-updater-and-generator.org][Chapter 12]]:
+  =campaign run= is the command that calls =eb=.
+- [[file:33-inspect-residuals-and-the-plan.org][Chapter 33]]: a
+  bundle with a lock and a recipe.
+- [[file:20-reading-a-failed-build.org][Chapter 20]]: the EasyBuild
+  log the finding interned.
+#+end_prerequisites
+
+=campaign run= is synchronous. It stays in the foreground until
+every recipe and verification command finishes, or until a typed
+failure is recorded. The state file is the coordination surface.
+Hermes and OMP, in the campaign reference, are role names: one
+owner that classifies and retries, optional concurrent workers
+whose only shared lock is finding ownership. They are not required
+software.
+
+#+begin_example
+eb-stack campaign run \
+  --bundle "$BUNDLE" \
+  --config examples/targets/local-podman.toml \
+  --target local-rocky9 \
+  --state "$STATE"
+
+eb-stack campaign status --state "$STATE"
+#+end_example
+
+The state path is reused across retries. Package name and version
+must match. Each run increments =attempts=. Build and binary
+claims reset until the current attempt proves them. History and
+findings stay.
+
+One writer at a time. An OS advisory lock plus a visible =.lock=
+file records host, PID, and Linux process-start identity. The
+kernel releases the guard if the controller exits, so stale
+metadata cannot permanently block a retry. A remote Slurm job can
+outlive that controller; confirm it is gone before retrying.
+
+* The three booleans are independent
+
+=CAMPAIGN.json= is schema 1:
+
+#+begin_example
+{
+  "schema_version": 1,
+  "package": "QMCPACK",
+  "version": "4.3.0",
+  "bundle": "/work/qmcpack",
+  "target": "site-builder",
+  "status": "failed",
+  "attempts": 2,
+  "claims": {
+    "resolves": true,
+    "builds": false,
+    "binary_verified": false
+  },
+  "current_recipe": null,
+  "findings": [],
+  "history": []
+}
+#+end_example
+
+=status= is =planned=, =running=, =failed=, or =completed=.
+=current_recipe= is set before EasyBuild is launched, so another
+shell can watch a live run.
+
+=resolves= is true when every requested profile has a lock and a
+recipe. =builds= is true when every emitted recipe succeeds
+through EasyBuild on *this* target. =binary_verified= is true
+only when at least one verification command is declared *and*
+every declared command succeeds. A completed campaign with no
+verification commands has =builds: true= and
+=binary_verified: false=. The planned SBOM implies neither.
+
+That is chapter 12's ladder as a file. =eessi-verified= is still
+not a field. The EESSI bot owns that rung.
+
+* A finding is structured so a worker can pick it up
+
+A terminal failure appends a finding with a stable
+=attempt:N:finding:M= id, a =class=, a =disposition=, a =stage=
+(=preflight=, =stage=, =build=, =verify=), the exact routed
+command and exit status, and the tail of stdout/stderr. When
+EasyBuild reports a separate combined-output path, the campaign
+interns that nested log before classification, so the finding
+reflects the compiler line rather than the wrapper.
+
+| Class | Default disposition | First surface |
+|---+---|---|
+| =transport= | target-repair | SSH, rsync, staging path |
+| =executor= | target-repair | Slurm syntax, partition, account |
+| =runtime= | target-repair | image, mounts, ABI, environment |
+| =interrupted= | retryable | abandoned =running= after the lock is free |
+| =source= | requires-judgment | URL, mirror, cache |
+| =checksum= | mechanical | digest and positional checksum list |
+| =patch= | requires-judgment | patch source, order, applicability |
+| =dependency-missing= | requires-judgment | manifest, policy, or robot |
+| =configure= / =compile= / =link= / =test= / =install= / =sanity= | requires-judgment | the named step |
+| =resource= | retryable | CPU, memory, GPU, filesystem, scheduler |
+| =timeout= | retryable | routed or wall-time limit |
+| =unknown= | requires-judgment | unclassified; read the command |
+
+A SAT-compatible dependency that fails to compile remains
+=compile= until evidence supports a stack exclusion. A compiler
+killed with "virtual memory exhausted" is =resource=: keep the
+selected dependency and raise =EASYBUILD_PARALLEL= or the
+allocation. The class is the first surface, not the diagnosis.
+
+* Claim, then resolve, then retry
+
+#+begin_example
+eb-stack campaign finding claim \
+  --state "$STATE" \
+  --id attempt:2:finding:1 \
+  --owner omp-worker-1
+
+eb-stack campaign finding resolve \
+  --state "$STATE" \
+  --id attempt:2:finding:1 \
+  --owner omp-worker-1 \
+  --action "raised the Slurm memory request" \
+  --evidence "target doctor and the isolated command exit successfully" \
+  --change ~/.config/eb-stack/site.toml
+#+end_example
+
+Claims are exclusive. The same owner reclaiming is idempotent. A
+different owner gets an ownership error. After resolve, the same
+state path is passed to =campaign run= again. Matching open or
+in-progress findings become =superseded=. Resolved findings stay
+in the audit trail. =status= prints the complete record, including
+the exact command of a finding that has already been resolved.
+
+A compact view during a long build:
+
+#+begin_example
+eb-stack campaign status --state "$STATE" |
+  jq '{status, attempts, claims, current_recipe,
+       active_findings: [.findings[] |
+         select(.status == "open" or .status == "in-progress") |
+         {id, class, stage, recipe, summary, owner}]}'
+#+end_example
+
+Keep the unfiltered state. The compact view is for the operator,
+not for the handoff.
+
+#+ATTR_EB: :id EB-Campaign-1 :title Class this failure
+#+begin_exercise
+Four terminal failures. Name =class= and the first repair, and say
+whether a second worker may resolve the finding without claiming
+it.
+
+1. =eb= never started. =rsync= to the build host returned 255.
+2. =g++= died with "virtual memory exhausted" after 40 seconds.
+3. A checksum in the emitted =.eb= does not match the tarball the
+   campaign fetched.
+4. Configure cannot find FFTW, and the lock named a version the
+   robot overlay does not contain.
+
+#+begin_solution
+1. =transport=, target-repair. The host or the staging path. A
+   second worker may not resolve it. Claim first.
+
+2. =resource=, retryable. Raise memory or drop
+   =EASYBUILD_PARALLEL=. Not =compile=: there is no source-level
+   diagnostic. Still exclusive: claim, resolve, retry.
+
+3. =checksum=, mechanical. Fix the positional digest. Same
+   ownership rule.
+
+4. =dependency-missing=, requires-judgment. The overlay or the
+   stack policy, not a format pass. Same ownership rule.
+
+No finding is resolved by a worker that does not own it. The
+state file is the lock.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-36 :title Where this chapter comes from :kind sources
+#+begin_detail
+eb-stack, HaoZeke/eb-stack, read 2026-09-11:
+
+- =docs/orgmode/reference/campaigns.org=
+- =docs/orgmode/howto/repair-campaign.org=
+- =src/main.rs= =CampaignCommand::Run= / =Status= / =Finding=
+- =docs/campaign-boundary.md=
+#+end_detail
+
+#+begin_keypoints
+- =*.campaign.json= stores three independent claims. A completed
+  run with no verify command is =builds= and not
+  =binary_verified=.
+- A finding is a class, a disposition, a stage, and the exact
+  routed command. The class names the first repair surface.
+- Claim is exclusive. Resolve records the action. Retry uses the
+  same state path. The audit trail is not deleted.
+#+end_keypoints

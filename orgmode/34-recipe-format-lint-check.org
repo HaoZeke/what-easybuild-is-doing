@@ -1,0 +1,153 @@
+#+TITLE: Chapter 34. Format, lint, and check are three different questions
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What does =recipe format= change, and what does it leave untouched?
+- When does =recipe lint= fail, and when is a finding only a report?
+- What does =recipe check= look up in the robot that =lint= never
+  opens?
+#+end_questions
+
+#+begin_objectives
+1. Run the three recipe commands in the order the tutorial uses, and
+   say which one is allowed to rewrite the file.
+2. Given an E501 line-length finding, say whether =format= will close
+   it.
+3. Read a =recipe check= failure and say whether the next move is a
+   robot overlay or a metadata edit.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:33-inspect-residuals-and-the-plan.org][Chapter 33]]: a
+  planned bundle with an emitted =.eb=.
+- [[file:23-testing.org][Chapter 23]]: EasyBuild's own style check
+  is a different tool.
+#+end_prerequisites
+
+The tutorial's next commands after a successful plan are not
+=campaign run=. They are these three, in this order:
+
+#+begin_example
+RECIPE="$BUNDLE/easyconfigs/e/eOn/eOn-2.16.0-foss-2026.1.eb"
+
+eb-stack recipe format "$RECIPE"
+eb-stack recipe lint "$RECIPE"
+eb-stack recipe check \
+  --recipe "$RECIPE" \
+  --easyconfigs "$ROBOT" \
+  --easyconfigs /tmp/eb-stack/overlay \
+  --easyconfigs "$BUNDLE/easyconfigs"
+#+end_example
+
+Chapter 12 named =lint= and =check= and skipped =format=. The
+three are not aliases.
+
+* Format rewrites physical lines
+
+=recipe format= performs deterministic physical-line wrapping. That
+is the whole contract. Product configuration, source selection,
+checksums, patches, and sanity paths stay as authored.
+
+#+begin_example
+eb-stack recipe format RECIPE.eb
+eb-stack recipe format RECIPE.eb --dry-run
+eb-stack recipe format RECIPE.eb --out FORMATTED.eb
+#+end_example
+
+Without =--out= the file is rewritten in place. =--dry-run= prints
+the wrapping and leaves the file. E501 in EasyBuild style is the
+line-length finding this command exists to close. It is the
+=mechanical= residual of chapter 33, when the residual is "the
+emitter wrapped a list past the column".
+
+It is not =eb --check-style=. It is not an opinion about
+=configopts=. A format run that changes a checksum or a patch
+order is a bug in the formatter, not a feature.
+
+* Lint reports; it does not repair
+
+=recipe lint= walks the same E501 surface and prints findings. It
+does not write. Several files may be passed in one invocation. A
+clean lint is not a packaging gate. It is the report that says
+=format= has nothing left to do, or that it has.
+
+* Check is the robot question
+
+=recipe check= is the one that opens other files.
+
+#+begin_example
+eb-stack recipe check \
+  --recipe RECIPE.eb \
+  --easyconfigs UPSTREAM \
+  [--easyconfigs OVERLAY]... \
+  [--require-configopt FLAG]... \
+  [--metadata-only]
+#+end_example
+
+It fails when package metadata, checksum structure, required
+configuration flags, or robot dependencies are invalid. Missing
+dependencies stay missing. The command does not invent placeholder
+recipes. =--metadata-only= skips the robot walk when the question
+is the file itself.
+
+The structured result names each dependency and whether a matching
+easyconfig exists in the overlay order. Later =--easyconfigs=
+paths override earlier ones for the same name, version, toolchain,
+and versionsuffix, which is the same rule =stack solve= uses.
+
+A check failure that says a dependency is absent is not a format
+problem. It is either a missing overlay (the eOn core-guard
+recipes live in =fixtures/eon_core_rgpot/easyconfigs/= for this
+reason) or a stack-policy pin that selected a candidate the robot
+does not have. The next command is not =recipe format=.
+
+The maintainer fixtures under =fixtures/maintainer_*/= are the
+other half of check: fat vs thin, a cross-generation pin, a
+shell-monster, a patchelf RPATH. Those are =recipe check= plus
+the maintainer-acceptability gate, not lint.
+
+#+ATTR_EB: :id EB-Recipe-1 :title Which command
+#+begin_exercise
+Four observations. Name the command that addresses each one, and
+say whether it rewrites the =.eb=.
+
+1. A =dependencies= list wraps past column 120.
+2. The same list, after wrapping, still reports E501 in CI.
+3. =FFTW= is pinned to a version the upstream robot tree does not
+   carry for this generation.
+4. =configopts= is missing a flag the site requires on every MPI
+   package.
+
+#+begin_solution
+1. =recipe format=. It rewrites physical lines. That is the
+   mechanical close.
+
+2. =recipe lint=. It does not rewrite. If it still reports E501
+   after format, the line is not a wrapping problem (a long URL
+   with no break point, or a finding format does not own).
+
+3. =recipe check= against the robot. It does not rewrite. The
+   overlay or the stack policy is what changes, not the wrapping.
+
+4. =recipe check --require-configopt FLAG=. It does not rewrite.
+   The flag is a check, not an edit.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-34 :title Where this chapter comes from :kind sources
+#+begin_detail
+eb-stack, HaoZeke/eb-stack, read 2026-09-11:
+
+- =docs/orgmode/tutorial.org= (the three-command block).
+- =docs/orgmode/reference/cli.org= (*Recipe commands*).
+- =src/main.rs= =RecipeCommand::Check= / =Lint= / =Format=.
+- =fixtures/maintainer_fat_26480/=,
+  =fixtures/maintainer_reject_26435/=.
+#+end_detail
+
+#+begin_keypoints
+- =recipe format= rewrites physical lines and nothing else.
+- =recipe lint= reports the same surface and does not write.
+- =recipe check= is the robot and metadata gate. A missing
+  dependency stays a missing dependency.
+#+end_keypoints

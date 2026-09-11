@@ -30,7 +30,12 @@ looks through the robot search path.
 If something comes back, the cheapest correct move is almost always to
 copy it and change the version, which is
 [[file:03-a-pin-is-for-one-generation.org][chapter 3]]'s subject and not
-this chapter's. What follows is for when nothing comes back.
+this chapter's. If a conda-forge recipe or a Spack package exists,
+[[file:12-eb-stack-updater-and-generator.org][chapter 12]]'s
+=package plan= (and [[file:33-inspect-residuals-and-the-plan.org][chapter 33]])
+is the generator path; this chapter is the hand-written file for when
+neither a robot hit nor a foreign recipe is the starting point. What
+follows is for when nothing comes back.
 
 * The five parameters
 
