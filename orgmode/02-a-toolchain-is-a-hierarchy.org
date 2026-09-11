@@ -33,7 +33,14 @@ toolchain = {'name': 'foss', 'version': '2025a'}
 Read as a name, =foss-2025a= looks like a label for "the 2025a
 open-source compiler stack". It is the top of a structure. That
 structure is which versions of which libraries a package on this
-toolchain is allowed to see.
+toolchain is allowed to see. Geimer, Hoste and McLay (2014) is
+why the *module* tree has the same shape: a Core compiler extends
+=$MODULEPATH= into a Compiler layer, an MPI extends it again, and
+the user types =WRF/3.5= rather than
+=WRF/3.5-GCC-4.8.2-OpenMPI-1.7.3=. Alvarez, O'Cais, Geimer and
+Hoste (2016) add the layer under the compilers, =GCCcore=, so
+CMake is not rebuilt once per toolchain. [[file:papers.org][The
+papers page]] has the counts.
 
 Ask the sample. What that line names is not one toolchain. It is a
 list.

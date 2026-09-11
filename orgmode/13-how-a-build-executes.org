@@ -43,7 +43,12 @@ testcases
 
 Eighteen named steps. Not a script, not a dependency graph: a list, run
 in order, the same list for every package. Every parameter belongs to
-one of them, and most errors name one.
+one of them, and most errors name one. Hoste, Timmerman, Georges and
+De Weirdt (2012), Figure 4, already had this as fifteen Roman
+numerals (fetch through user test cases). =postiter=,
+=permissions= and =package= are what five major versions added.
+The fallback when no easyblock matches the name is still
+=ConfigureMake=.
 
 Short-term memory holds about seven items (Miller; Carpentries
 instructor training). The eighteen names are three groups of six, not

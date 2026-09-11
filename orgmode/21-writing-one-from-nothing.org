@@ -43,6 +43,9 @@ follows is for when nothing comes back.
 EasyBuild 5.3.1 there are 110 of them. The first category is called
 MANDATORY and has eight in it.
 
+Hoste, Timmerman, Georges and De Weirdt (2012) already listed
+these five as mandatory. The enforcement is the same list.
+
 Only five are enforced:
 
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "What is required, as opposed to what is filed under MANDATORY"

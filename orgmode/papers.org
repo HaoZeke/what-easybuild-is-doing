@@ -2,10 +2,10 @@
 #+OPTIONS: toc:nil num:nil
 
 The chapters were written from live files, talks, and these papers.
-A DOI that is listed was opened. A paper that stayed behind a
-publisher wall is marked as such; the sentence it would have
-supported is then taken from the abstract and from how later
-open papers cite it, and is not treated as a close reading.
+A DOI that is listed was opened. The three IEEE EasyBuild papers
+are the author copies on =easybuild.io/files/=, not the IEEE
+Xplore PDFs. The Compute Canada PEARC paper is still abstract
+only: no author copy came back.
 
 * What the papers actually claim
 
@@ -62,16 +62,65 @@ Wilson's later Software Carpentry commentary (2016) is why a
 chapter is an hour and why a tutorial is live typing rather than
 a recording of someone else's session.
 
-*EasyBuild's own papers are the origin of the three-file split
-and of HierarchicalMNS.* Hoste, Timmerman, Georges and De Weirdt
-(2012) introduce the framework, easyblocks and easyconfigs.
-Geimer, Hoste and McLay (2014) add the hierarchical module
-naming scheme and Lmod as the way a user is not shown every
-module at once. Alvarez, O'Cais, Geimer and Hoste (2016) report
-a deployment on JURECA (45,000+ cores). Those three PDFs did
-not come back from an open URL on 2026-09-11. The claims above
-are the abstracts plus the way Dröge et al. (2023) cite
-them. They are not a close reading of the IEEE PDFs.
+*EasyBuild 1.0 already named the three files and the fifteen
+steps.* Hoste, Timmerman, Georges and De Weirdt (2012), author
+copy at =easybuild.io/files/easybuild-PyHPC-SC12_paper.pdf=, is
+the PyHPC paper at SC12. Public release April 2012 (GPLv2)
+after three years in-house; this paper is version 1.0 (November
+2012). The mandatory easyconfig parameters are already
+=name=, =version=, =toolchain=, =homepage=, =description= —
+chapter 21's five. =--robot= is not default. A dummy toolchain
+is how a compiler or a binary is installed. =goalf= is GCC +
+OpenMPI + ATLAS + BLACS + ScaLAPACK + FFTW. Figure 4 is the
+install procedure as fifteen Roman steps: read the easyconfig,
+fetch, check readiness, unpack, apply patches, prepare, configure,
+build, test, install, extensions, sanity check, cleanup, write
+the module, run user test cases. If no easyblock matches the
+name, the fallback is =ConfigureMake=. Easyblock classes are
+=EB_<Name>= so =python-meep= and =7zip= still map. Support
+stood at "over 250" packages. No admin rights.
+
+*HierarchicalMNS is a paper, not a site convention.* Geimer,
+Hoste and McLay (2014), author copy at
+=easybuild.io/files/hust14_paper.pdf=, is why a login sees
+=GCC= and not =WRF=. Core modules do not depend on a compiler
+the user chooses. Loading one extends =$MODULEPATH= into
+=Compiler/<name>/<ver>/=; loading an MPI extends it again.
+The module the user types is then =WRF/3.5=, not
+=WRF/3.5-GCC-4.8.2-OpenMPI-1.7.3=. Tcl/C modules can store
+files that way; they cannot swap a compiler and reload the
+dependents, and =module avail= will not search off the current
+path. Lmod's =module spider=, =family("compiler")=, and
+swap-reload are the missing pieces. EasyBuild 1.15.2, the
+version in that paper: about 19 000 lines of framework, 139
+software-specific easyblocks, 20 generic, 2 800 easyconfigs
+for 511 packages. The module name is *computed* from the
+easyconfig by the naming-scheme class; it is not a field in
+the file.
+
+*JURECA is where GCCcore, hidden modules, and minimal
+toolchains were forced into the tree.* Alvarez, O'Cais, Geimer
+and Hoste (2016), author copy at
+=easybuild.io/files/eb-jsc-hust16.pdf=: 1 800+ Haswell nodes,
+1.8 + 0.44 PF, 45 000+ cores, Top500 #57 in June 2016. Three
+compilers × three MPIs is nine builds before a hierarchy.
+Fifteen unique toolchains in the 2016a stage. GCCcore is a
+compiler-only layer so CMake and git are not rebuilt nine
+times, and so Intel/PGI share one GCC. Hidden modules
+(=--hidden=, the =hidden= easyconfig parameter,
+=EASYBUILD_HIDE_DEPS=, =EASYBUILD_HIDE_TOOLCHAINS=) take 372
+packages down to 172 visible. =--minimal-toolchains= walks
+the subtoolchain hierarchy instead of inheriting the parent's
+full toolchain; it was optional and "likely to become the
+default". About 800 installations, 300 of them at GCCcore,
+about 150 ever visible to an end user. Stages last six
+months; a golden repository plus a three-week notice; one or
+two people install production. 777 JSC easyconfigs versus 47
+taken unchanged from upstream. Spack is still quoted as
+alpha. RPATH is named as future work. The same layout
+recompiled onto JUROPA3 and JUAMS: fifteen ad-hoc packages,
+and OS leakage is what exposed missing dependencies in
+JURECA easyconfigs.
 
 *Compute Canada is the three-layer parent.* Boissonneault,
 Oldeman and Taylor (2019) describe a unified environment on
@@ -118,20 +167,20 @@ Hoste, Kenneth, Jens Timmerman, Andy Georges, and Stijn De
 Weirdt. 2012. "EasyBuild: Building software with ease." In /2012
 SC Companion/, 572–582. IEEE.
 https://doi.org/10.1109/SC.Companion.2012.81
-(abstract only)
+Author copy: https://easybuild.io/files/easybuild-PyHPC-SC12_paper.pdf
 
 Geimer, Markus, Kenneth Hoste, and Robert McLay. 2014. "Modern
 scientific software management using EasyBuild and Lmod." In
 /HUST 2014/, 41–51. IEEE.
 https://doi.org/10.1109/HUST.2014.8
-(abstract only)
+Author copy: https://easybuild.io/files/hust14_paper.pdf
 
 Alvarez, Damian, Alan O'Cais, Markus Geimer, and Kenneth Hoste.
 2016. "Scientific software management in real life: deployment
 of EasyBuild on a large scale system." In /HUST 2016/, 31–40.
 IEEE.
 https://doi.org/10.1109/HUST.2016.009
-(abstract only)
+Author copy: https://easybuild.io/files/eb-jsc-hust16.pdf
 
 Boissonneault, Maxime, Bart E. Oldeman, and Ryan P. Taylor.
 2019. "Providing a unified software environment for Canada's
