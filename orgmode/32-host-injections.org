@@ -417,7 +417,7 @@ support]] (2025.06 =EESSI_NVIDIA_OVERRIDE_DEFAULT= vs 2023.06
 hooks]],
 [[https://www.eessi.io/docs/using_eessi/building_on_eessi/][building
 on EESSI]],
-[[https://www.eessi.io/docs/blog/posts/2025/09/eessi-cray-slingshot11/][Slingshot-11
+[[https://www.eessi.io/docs/blog/2025/11/14/EESSI-on-Cray-Slingshot/][Slingshot-11
 =rpath_overrides=]].
 #+end_detail
 
