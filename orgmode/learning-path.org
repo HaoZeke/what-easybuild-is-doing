@@ -63,7 +63,7 @@ Three hours. Needs B and C.
 | [[file:17-patches.org][chapter 17]] | strip levels, and applying cleanly against applying correctly |
 | [[file:19-what-a-module-exports.org][chapter 19]] | what a user actually meets |
 
-* Level E. Write it yourself
+* Level E. Write a recipe
 
 Three hours. Needs D.
 

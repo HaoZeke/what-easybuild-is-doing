@@ -113,7 +113,7 @@ result:
 
 | Variable | What it means |
 |---+---|
-| =EESSI_USER_INSTALL= | private to you |
+| =EESSI_USER_INSTALL= | private to the operator |
 | =EESSI_PROJECT_INSTALL= | shared with a group |
 | =EESSI_SITE_INSTALL= | site-wide, on top of EESSI |
 | =EESSI_CVMFS_INSTALL= | into the distributed repository itself |

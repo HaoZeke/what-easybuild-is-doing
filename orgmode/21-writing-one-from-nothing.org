@@ -162,9 +162,9 @@ A =None= entry skips verification for that file, and
 site building a shared stack needs set.
 #+end_detail
 
-The grammar (see [[dive:checksum-grammar]]) matters most when the
-reading somebody else's easyconfig and cannot tell whether two checksums
-mean "either" or "both".
+The grammar (see [[dive:checksum-grammar]]) matters most when
+reading somebody else's easyconfig: two checksums then look the same
+whether they mean "either" or "both".
 
 * The two checks before it leaves your machine
 
