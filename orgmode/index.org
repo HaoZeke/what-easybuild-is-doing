@@ -141,7 +141,7 @@ reading the log rather than watching the progress bar.
    09-a-hook-changes-a-file-you-are-not-reading
    10-build-your-own-without-asking
    11-eessi-somebody-elses-stack
-   12-eb-stack-a-second-implementation
+   12-eb-stack-updater-and-generator
    13-how-a-build-executes
    14-the-isolation-policy
    15-build-dependencies-are-not-dependencies
@@ -170,5 +170,7 @@ reading the log rather than watching the progress bar.
 
 Rohit Goswami, who maintains software stacks on a national machine, runs
 the same tools on a laptop, and wrote
-[[https://eb-stack.rgoswami.me][eb-stack]], the engine running the
-samples here.
+[[https://eb-stack.rgoswami.me][eb-stack]], the updater and generator
+that emits the =.eb= files EasyBuild then builds. The samples on these
+pages borrow tables from that generator. They are not the generator,
+and they are not EasyBuild.

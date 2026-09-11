@@ -9,27 +9,27 @@ explains why an easyconfig is a Python file, why a toolchain is a
 hierarchy rather than a name, or why the version beside a dependency is
 not a minimum. This is the book for those.
 
-The samples run in the browser. The engine is
-[eb-stack](https://eb-stack.rgoswami.me) compiled to WebAssembly, which
-can parse an easyconfig, resolve its templates, walk a toolchain
-hierarchy and solve a dependency closure without a server and without
-Python. Steps that genuinely need a compiler, a filesystem or a module
-system cannot run in a browser and are not faked; those ship as
-recordings of real runs.
+The samples run in the browser. They apply tables exported from
+[eb-stack](https://eb-stack.rgoswami.me) at book-build time: the
+easyblock encoding, the template constants, and the foss hierarchies.
+eb-stack itself is an updater and generator. It ingests foreign and
+EasyBuild recipes, Resolvo-solves a profile, emits a conventional
+`.eb`, and a campaign then runs that file through real EasyBuild.
+Nothing on these pages compiles software. Steps that need a compiler
+ship as recordings of real runs.
 
 ## Status
 
 First draft: four chapters, front-loaded on purpose.
 
-The engine is partial. `easyblock` is live, backed by the name-encoding
-table exported from eb-stack at build time so the browser applies the
-framework's own substitutions rather than a copy that can drift. The
-other widgets settle read-only and say they are unimplemented rather than
-pretending the engine failed.
+The in-page engine is a table-backed stand-in, not eb-stack and not
+EasyBuild. `easyblock` is live, backed by the name-encoding table
+exported from eb-stack at build time. The other widgets settle
+read-only and say they are unimplemented rather than pretending the
+engine failed.
 
-The full engine is eb-stack compiled to WebAssembly, which needs the
-crate's IO-free core first: `ureq` and `fs2` are what stop it building for
-`wasm32` today.
+The crate does not compile for `wasm32` yet (`ureq` and `fs2`); when
+it does, the page already has a drop-in contract.
 
 ## Build
 

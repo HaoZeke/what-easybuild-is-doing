@@ -89,7 +89,7 @@ The rule that came out of it: *anything about library resolution on a
 heterogeneous system has to be measured on the architecture it will run
 on.* A login node is not a stand-in.
 [[file:06-what-installed-means.org][Chapter 6]] states that as a
-caution; [[file:12-eb-stack-a-second-implementation.org][chapter 12]]'s
+caution; [[file:12-eb-stack-updater-and-generator.org][chapter 12]]'s
 claim ladder turns it into a refusal.
 
 * The check that was switched off because it was working
@@ -164,7 +164,7 @@ verified checksum.
 
 So the useful question is never "did it pass". It is *what did it pass,
 and where*. That is what
-[[file:12-eb-stack-a-second-implementation.org][chapter 12]]'s ladder is
+[[file:12-eb-stack-updater-and-generator.org][chapter 12]]'s ladder is
 bookkeeping for, and all four of these are why somebody bothered to write
 it down.
 

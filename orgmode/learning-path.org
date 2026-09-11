@@ -94,7 +94,7 @@ Not a level. Read these when the question comes up.
 
 | Read | When |
 |---+---|
-| [[file:12-eb-stack-a-second-implementation.org][chapter 12]] | you want to know how sure any of this is |
+| [[file:12-eb-stack-updater-and-generator.org][chapter 12]] | you want to know how sure any of this is |
 | [[file:27-four-things-that-actually-happened.org][chapter 27]] | you want the failures in full, with the diagnosis |
 | [[file:glossary.org][the glossary]] | a word in this book means something specific |
 | [[file:keypoints.org][the keypoints]] | you read a chapter last week |

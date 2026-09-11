@@ -1,0 +1,214 @@
+#+TITLE: Chapter 12. eb-stack, the updater and generator
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What does =eb-stack package bump= write, and what does it not run?
+- Which claim does a Resolvo lock establish?
+- Are the in-page samples the generator?
+#+end_questions
+
+#+begin_objectives
+1. Say what eb-stack emits, and what still has to run =eb=.
+2. Tell a bump of an existing recipe from a plan of a new one.
+3. Given a piece of evidence, say which claim it establishes and which
+   it does not.
+#+end_objectives
+
+eb-stack does not rewrite EasyBuild. The tool generates EasyBuild
+recipes, updates existing ones, and hands them to =eb=.
+
+[[https://eb-stack.rgoswami.me][eb-stack]] parses conda-forge,
+Spack, PyPI, CRAN, Cargo, LuaRocks, Raku, and EasyBuild recipes
+into one plan. It solves each product profile with Resolvo. It
+writes one conventional =.eb= file per variant. Then a campaign
+runs those files through EasyBuild on a real target. New packages
+and annual bumps use the same artifacts.
+
+The samples on these pages are not that pipeline. They borrow three
+tables the generator already has to export: the easyblock encoding,
+the template constants, and the foss hierarchies. Press Escape and
+you are playing with those tables. You are not running eb-stack, and
+you are not running EasyBuild.
+
+#+begin_src easyconfig :widget easyblock
+code-server
+c++
+C#
+#+end_src
+
+* Two commands, one emitted file
+
+When a recipe already exists, you bump it.
+
+#+begin_example
+eb-stack package bump \
+  --source GROMACS-2024.4-foss-2023b.eb \
+  --toolchain-name foss \
+  --toolchain-version 2024a \
+  --easyconfigs /path/to/easybuild-easyconfigs \
+  --out-dir /tmp/gromacs-2024a
+#+end_example
+
+The source recipe is the floor. The target robot tree is the
+candidate set. Resolvo picks one hierarchy-compatible closure. The
+output is
+=/tmp/gromacs-2024a/easyconfigs/g/GROMACS/GROMACS-2024.4-foss-2024a.eb=,
+plus a plan, an SBOM, and a lock. EasyBuild has no notion of a
+minimum, so a pin carried across generations states a requirement
+the package never made. The bump drops those floors when the
+toolchain moves. That is [[file:03-a-pin-is-for-one-generation.org][chapter 3]], automated.
+
+When the software has no EasyBuild recipe yet, you plan it, from a
+conda-forge =recipe.yaml= or a Spack =package.py= or a PyPI name:
+
+#+begin_example
+eb-stack package plan \
+  --source recipe.yaml \
+  --format conda-forge \
+  --toolchain-name foss \
+  --toolchain-version 2024a \
+  --easyconfigs /path/to/easybuild-easyconfigs \
+  --out-dir /tmp/new-package
+#+end_example
+
+The same pipeline emits a new =.eb=. Parsers do not execute the
+foreign recipe. Unsupported expressions become residuals, not
+guessed dependencies. =package inspect= is that ingest without the
+solve or the file; it establishes nothing on the ladder.
+
+Either way the next commands are the same:
+
+#+begin_example
+eb-stack recipe lint /tmp/gromacs-2024a/easyconfigs/g/GROMACS/*.eb
+eb-stack recipe check \
+  --recipe /tmp/gromacs-2024a/easyconfigs/g/GROMACS/GROMACS-2024.4-foss-2024a.eb \
+  --easyconfigs /path/to/robot
+eb-stack campaign run \
+  --bundle /tmp/gromacs-2024a \
+  --config targets/base.toml \
+  --config targets/site.toml \
+  --target site-builder \
+  --state /tmp/gromacs-2024a.campaign.json
+#+end_example
+
+=lint= and =check= look at the file. =campaign run= calls =eb=.
+Nothing in eb-stack compiles GROMACS.
+
+* Why a solver sits in a generator
+
+Chapter 4's robot is a loop: take whatever is fully resolved, treat
+it as available, search for the rest, repeat. That matches how a
+site builds, one package at a time onto what is already there.
+
+A bump is a different question. Given a recipe written for one
+generation, what should it say on another? The old versions are
+floors you must not carry, the target generation's modules are
+candidates, and something has to choose a consistent set. That is a
+solver's job. An easyconfig has no place to put a constraint.
+
+eb-stack states the retarget as constraints and hands them to
+Resolvo. The toolchain hierarchy from
+[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]] is a hard
+constraint. Feasible is not unique, so the first satisfying
+assignment is an arbitrary stack. The generator constrains and
+re-solves for the newest jointly consistent set.
+
+A loop names the one dependency it failed to find. A solver can say
+that no consistent assignment exists at all. Those are different
+questions. The solver is not EasyBuild.
+
+* The claim ladder
+
+Four rungs, and each one names the evidence that establishes it:
+
+| Claim | Established by |
+|---+---|
+| resolves | a Resolvo lock and an emitted recipe |
+| builds | EasyBuild running that recipe to completion on one named target |
+| binary-verified | the installed tree passing declared verification on that target |
+| eessi-verified | the same, on top of the EESSI compatibility layer |
+
+=package inspect= establishes none of them. =package plan= and
+=package bump= can establish only =resolves=. =campaign run= owns
+=builds= and =binary-verified=, because those need =eb=. It does
+not own =eessi-verified=: that is the EESSI bot, on the EESSI
+sysroot.
+
+Planning may never establish =builds=, however clean the plan
+looks. A build on one target does not establish another, which is
+[[file:06-what-installed-means.org][chapter 6]] turned into a
+refusal. The EESSI rung exists for the same reason: chapter 11's
+stack is a different sysroot, so a green build on an ordinary
+machine is not evidence about it.
+
+#+ATTR_EB: :id EB-Ladder-1 :title Which rung does this reach
+#+begin_exercise
+Four things happened, in order. For each, say the highest rung it
+establishes, and for which target.
+
+1. =eb-stack package bump= writes a lock and a =.eb= in which every
+   declared constraint is satisfied.
+2. =eb= runs that file to completion on an x86-64 build host and
+   writes a module.
+3. The installed tree passes its declared verification on that host.
+4. The same easyconfig is built by the EESSI bot on fourteen CPU
+   targets and deployed.
+
+Then: which of the four lets you tell a user on an aarch64 login
+node that the software works there?
+
+#+begin_solution
+1 reaches =resolves=, and no further. A lock says the versions are
+mutually consistent against the constraints you declared. It says
+nothing about whether they link. The generator did its job. EasyBuild
+has not started.
+
+2 reaches =builds=, for that target only.
+
+3 reaches =binary-verified=, for that target only.
+
+4 reaches =eessi-verified=, and it is the only one of the four
+covering targets you did not run on yourself, because the bot ran
+on each of them.
+
+None of 1, 2 or 3 lets you tell the aarch64 user anything. 4 does,
+because the evidence is fourteen builds rather than an inference
+from one.
+#+end_solution
+#+end_exercise
+
+* What it does not do
+
+It does not build software. The afterword's list of what EasyBuild
+is for still applies. eb-stack sits before =eb=.
+
+A solve covers only the universe it is given. A lock against one
+robot tree says nothing about a machine with a different module
+set.
+
+A solver lock is not a compatibility guarantee. Versions that
+satisfy every declared constraint can still fail to link. The
+ladder exists so that gap stays visible.
+
+It is not a second EasyBuild. The browser samples are not a
+reimplementation of the framework in Rust. eb-stack is an updater
+and a generator. The generator exported three tables so the book
+can show a name being encoded.
+
+* The tables this book borrowed
+
+Three of the sample kinds answer in your browser: template
+resolution, the easyblock name, and the toolchain hierarchy. None
+of them needed Resolvo. Each reduces to a table exported from
+eb-stack at book-build time, plus a few lines that apply it. A
+cross-check compares the browser's answers against the binary's.
+
+The parse widget is a reduced reader, not the crate's
+rustpython-parser. Multi-line structures it cannot follow, it
+names. The crate still reaches for the network and the filesystem,
+so it does not compile to WebAssembly yet. When it does, the
+drop-in contract is already in the page.
+
+Chapter 6 is the ladder as an incident. The next chapters are the
+machinery a generated recipe still has to survive: the steps =eb=
+runs, what a build is allowed to see, and what comes out.
