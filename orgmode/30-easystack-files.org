@@ -101,9 +101,9 @@ EESSI does not wait for that work.
 The bot adds =--robot= (or =--rebuild=) on the command line once around the whole file.
 That is the next section.
 * EESSI puts the EasyBuild version in the filename
-The =EESSI/software-layer= repository was split on 2025-06-11.
-The build scripts reside in =EESSI/software-layer-scripts=.
-Remaining content in =software-layer= consists mainly of easystack files and a 33-line =bot/build.sh= that pins the scripts commit.
+The [[https://github.com/EESSI/software-layer][EESSI/software-layer]] repository was split on 2025-06-11.
+The build scripts reside in [[https://github.com/EESSI/software-layer-scripts][EESSI/software-layer-scripts]].
+Remaining content in =software-layer= consists mainly of easystack files and a 33-line [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]] that pins the scripts commit.
 Installations for a specific EESSI version are no longer tracked by a git branch.
 Tracking now uses the directory:
 #+begin_example
@@ -113,7 +113,7 @@ A new entry for GROMACS on the 2025.06 tree, compiled with EasyBuild 5.3.0 and t
 #+begin_example
 easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml
 #+end_example
-The filename determines the EasyBuild module =EESSI-install-software.sh= that is loaded.
+The filename determines the EasyBuild module [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] that is loaded.
 #+begin_example
 eb_version=$(echo ${easystack_file} | sed 's/.*eb-\([0-9.]*\).*.yml/\1/g')
 source ${TOPDIR}/load_easybuild_module.sh ${eb_version}
@@ -158,10 +158,10 @@ The 2026.06 tree maintains the same shape and reflects a newer generation.
 The live =eessi-2026.06-eb-5.4.0-2026.1.yml= opens with OpenMPI and =foss-2026.1.eb=, which declares the first toolchain generation of a new EESSI version.
 #+ATTR_EB: :id EB-Easystack-1 :title Which file, and which options
 #+begin_exercise
-A colleague has a working local install of =Octave-11.1.0-foss-2025b.eb=
+A colleague has a working local install of [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/o/Octave/Octave-11.1.0-foss-2025b.eb][Octave-11.1.0-foss-2025b.eb]]
 on EESSI 2025.06, built with EasyBuild 5.3.0. The easyconfig is
 already in that EasyBuild release. A second package,
-=scikit-bio-0.7.2-foss-2025b.eb=, exists only as EasyBuild
+[[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/scikit/scikit-bio-0.7.2-foss-2025b.eb][scikit-bio-0.7.2-foss-2025b.eb]], exists only as EasyBuild
 easyconfigs pull request 25908, commit
 =d04690454404aee9d12fc57858c79382adf64d8b=.
 
@@ -172,7 +172,7 @@ easyconfigs pull request 25908, commit
 
 #+begin_solution
 1. Both lines go in
- =easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml=.
+ [[https://github.com/EESSI/software-layer/blob/main/easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml][easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml]].
  The EasyBuild version in the filename is the one the bot will
  load. Octave is already on that tree as a bare name; scikit-bio
  is the =from-commit= case from the same file.
@@ -209,8 +209,8 @@ A live example from 2025.06.
 easyconfigs:
  - Rust-1.91.1-GCCcore-14.3.0.eb
 #+end_example
-The =EESSI-install-software.sh= script splits changed YAML files of the pull request into two lists.
-The =EESSI-install-software.sh= script rebuilds the first list.
+The [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] script splits changed YAML files of the pull request into two lists.
+The [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] script rebuilds the first list.
 #+begin_example
 if [[ ${easystack_file} == *"/rebuilds/"* ]]; then
  ${EB} --easystack ${easystack_file} --rebuild
@@ -225,7 +225,7 @@ The comments at the top of a rebuild file constitute the bill of materials: what
 The CUDA 12.1.1 rebuild from May 2024 is the documented template, including =accept-eula-for: CUDA= under =options:=.
 * How the bot finds the file at all
 The bot ignores tickets and commit messages when deciding what to build.
-=EESSI-install-software.sh= scans the pull request =.diff= for new or modified YAML files in =easystacks/=.
+[[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] scans the pull request =.diff= for new or modified YAML files in [[https://github.com/EESSI/software-layer/tree/main/easystacks][easystacks/]].
 The script excludes the CUDA helper easystacks in =scripts/gpu_support/=.
 Only files whose paths match the repository and the EESSI version for which the job builds are retained.
 #+begin_example
@@ -236,7 +236,7 @@ changed_easystacks=$(cat ${pr_diff} | grep '^+++' | cut -f2 -d' ' \
 #+end_example
 #+ATTR_EB: :id EB-Easystack-2 :title What the bot will type
 #+begin_exercise
-A pull request against =EESSI/software-layer= =main= adds one file:
+A pull request against [[https://github.com/EESSI/software-layer][EESSI/software-layer]] =main= adds one file:
 
 : easystacks/software.eessi.io/2025.06/rebuilds/20260911-eb-5.3.1-OpenMPI-ofi-fix.yml
 
@@ -252,7 +252,7 @@ no =options:=. The job is building EESSI 2025.06 for
  files processed, and why does the order matter?
 
 #+begin_solution
-1. EasyBuild 5.3.1. The sed in =EESSI-install-software.sh= pulls
+1. EasyBuild 5.3.1. The sed in [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] pulls
  the version out of =eb-5.3.1= in the filename. The EESSI version
  in the path only decides whether this job *considers* the file.
 
@@ -268,7 +268,7 @@ no =options:=. The job is building EESSI 2025.06 for
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-30 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-30 :title Where this page comes from :kind sources
 #+begin_detail
 EasyBuild, docs last update 2026-08-09:
 
@@ -280,7 +280,7 @@ EESSI talks, read 2026-09-11:
 
 - Lara Peeters and Kenneth Hoste, *Building software on top of
  EESSI + contributing to EESSI*, MultiXscale webinar, 2026-05-04
- (=EESSI-webinars-spring-2026-building-contributing-2026-05-04.pdf=):
+ ([[https://www.eessi.io/docs/training-events/2026/EESSI-webinars-spring-2026-building-contributing-2026-05-04.pdf][EESSI-webinars-spring-2026-building-contributing-2026-05-04.pdf]]):
  the six contributing steps, =from-commit= while the EasyBuild
  pull request is open, deployment waits on merge.
 - Caspar van Leeuwen, Bob Dröge and Pedro Santos Neves, *Using
@@ -288,12 +288,12 @@ EESSI talks, read 2026-09-11:
  webinar, 2026-06-01: a site repo uses the same easystack path
  shape, =easystacks/<site_cvmfs_repo>/<EESSI_VERSION>/=.
 
-Code, =EESSI/software-layer= and =EESSI/software-layer-scripts=,
+Code, [[https://github.com/EESSI/software-layer][EESSI/software-layer]] and [[https://github.com/EESSI/software-layer-scripts][EESSI/software-layer-scripts]],
 =main=, read 2026-09-11:
-=easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml=,
-=easystacks/software.eessi.io/2026.06/eessi-2026.06-eb-5.4.0-2026.1.yml=,
-=easystacks/software.eessi.io/2025.06/rebuilds/20260621-eb-5.3.1-rebuild-Rust-1.91.yml=,
-=EESSI-install-software.sh= (the =.diff= grep and the
+[[https://github.com/EESSI/software-layer/blob/main/easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml][easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml]],
+[[https://github.com/EESSI/software-layer/blob/main/easystacks/software.eessi.io/2026.06/eessi-2026.06-eb-5.4.0-2026.1.yml][easystacks/software.eessi.io/2026.06/eessi-2026.06-eb-5.4.0-2026.1.yml]],
+[[https://github.com/EESSI/software-layer/blob/main/easystacks/software.eessi.io/2025.06/rebuilds/20260621-eb-5.3.1-rebuild-Rust-1.91.yml][easystacks/software.eessi.io/2025.06/rebuilds/20260621-eb-5.3.1-rebuild-Rust-1.91.yml]],
+[[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] (the =.diff= grep and the
 =--rebuild= / =--robot= split).
 
 Docs: [[https://www.eessi.io/docs/adding_software/opening_pr/][opening

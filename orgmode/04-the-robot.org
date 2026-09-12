@@ -69,7 +69,7 @@ builddependencies = [
 
 * A filename is a query
 Begin with a smaller appearance.
-The command passed =GROMACS-2025.2-foss-2025a.eb= contained no path, and the working directory did not contain it.
+The command passed [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/g/GROMACS/GROMACS-2025.2-foss-2025a.eb][GROMACS-2025.2-foss-2025a.eb]] contained no path, and the working directory did not contain it.
 That works.
 EasyBuild resolves it against an ordered list of directories, the *robot path*, and resolves every discovered dependency in the same manner.
 No distinction in kind separates "find the requested easyconfig" from "find a dependency of the requested easyconfig".
@@ -93,7 +93,7 @@ With colon, EasyBuild searches that directory first.
 EasyBuild retains default paths thereafter.
 Mechanism is neither a special case nor a parsing quirk.
 Option is declared with action named =add_flex=.
-Documentation in =easybuild/base/generaloption.py= explains behavior:
+Documentation in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/base/generaloption.py][easybuild/base/generaloption.py]] explains behavior:
 #+begin_quote
 similar to add / add_first, but replaces the first "empty" element with
 the default
@@ -162,7 +162,7 @@ The robot returns an executable order given the path.
 No component is built before its dependencies.
 The order is not computed from a completed graph.
 The graph is discovered during the process.
-=resolve_dependencies= in =easybuild/tools/robot.py= runs a loop.
+=resolve_dependencies= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/tools/robot.py][easybuild/tools/robot.py]] runs a loop.
 The loop's shape explains most of the output of =--dry-run=.
 One pass asks which easyconfigs are *fully resolved*.
 A *fully resolved* easyconfig has every declared dependency already available.

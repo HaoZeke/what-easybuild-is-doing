@@ -132,14 +132,14 @@ both pass.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-42 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-42 :title Where this page comes from :kind sources
 #+begin_detail
-ReFrame 4.10 tutorial, "Writing a Performance Test" and the
+[[https://reframe-hpc.readthedocs.io/en/stable/tutorial.html][ReFrame 4.10 tutorial]], "Writing a Performance Test" and the
 STREAM example; the reference-tuple change in 3.0 (unit required)
 and the 4.9 change (no tuple printed when no reference is set).
 Perflog location and =--performance-report= from the same page.
 
-EESSI writing-tests page: the =CI= tag, the five-minute
+[[https://www.eessi.io/docs/test-suite/writing-portable-tests/][EESSI writing-tests page]]: the =CI= tag, the five-minute
 lightweight case, and the memory bound.
 #+end_detail
 

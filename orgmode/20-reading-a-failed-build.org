@@ -109,7 +109,7 @@ It looks for the real top of the source tree.
 The rule is worth knowing [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]'s failure.
 #+ATTR_EB: :id start-dir-descent :title How the start directory is guessed :kind reference
 #+begin_detail
-=find_base_dir= in =easybuild/tools/filetools.py=, verified against
+=find_base_dir= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/tools/filetools.py][easybuild/tools/filetools.py]], verified against
 EasyBuild 5.3.1:
 
 #+begin_example
@@ -414,7 +414,7 @@ For each, say what you read first and what you would rule out with it.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-20 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-20 :title Where this page comes from :kind sources
 #+begin_detail
 The failing build, the error block, the log paths, =out.txt= and =cmd.sh=
 were produced on a workstation on 2026-09-10 with EasyBuild 5.3.1
@@ -431,8 +431,8 @@ Upstream documentation, fetched 2026-09-10:
 - [[https://docs.easybuild.io/version-specific/eb-help/][the generated option table]]: =--last-log=, =--stop=, =--cleanup-builddir=
 
 Code, from EasyBuild 5.3.1 as installed: =find_base_dir= in
-=easybuild/tools/filetools.py= for the single-child descent, and
-=find_last_log= in =easybuild/tools/config.py= for what =--last-log=
+[[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/tools/filetools.py][easybuild/tools/filetools.py]] for the single-child descent, and
+=find_last_log= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/tools/config.py][easybuild/tools/config.py]] for what =--last-log=
 actually returns.
 #+end_detail
 

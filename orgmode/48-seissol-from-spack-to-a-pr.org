@@ -48,7 +48,7 @@
 - [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]]: the hash names one archive.
 #+end_prerequisites
 SeisSol 1.3.2 is the current tagged release.
-The EasyBuild robot on =develop= had =SeisSol-1.1.4-foss-2023a.eb=.
+The EasyBuild robot on =develop= had [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]].
 Spack had a =package.py= whose newest tagged version was 1.3.1.
 The subsequent work is a single case: a port of constraints, a bump of an existing recipe, a generation chosen from a site tree, a site install through the documented wrapper, and an upstream PR.
 Nothing in that sentence compiled the package.
@@ -62,7 +62,7 @@ The residuals are tight pins that the Spack file states and that SeisSol 1.3.2 C
 The 1.1.4 easyconfig already used netCDF 4.9.2, above that Spack upper bound.
 CMake for 1.3.2 asks for Eigen 3.4 or newer and handles yaml-cpp 0.8.
 The inspect residuals are Spack conservatism, not SeisSol bounds.
-=package bump= on =SeisSol-1.1.4-foss-2023a.eb= rewrites the file EasyBuild already has.
+=package bump= on [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]] rewrites the file EasyBuild already has.
 The companions that exist only on 2023a, =ASAGI-1.0= and =easi-1.3.0=, take the same command.
 PSpaMM has no easyconfig.
 That one is a port: a Python package with a GitHub tag and an entry point =pspamm-generator=.
@@ -72,8 +72,8 @@ For each starting point, name the eb-stack command, or say the
 work is not eb-stack's.
 
 1. =spack/packages/seissol/package.py=, and
- =SeisSol-1.1.4-foss-2023a.eb= already in the robot.
-2. =easi-1.3.0-foss-2023a.eb=, latest tag =v1.7.0=, ImpalaJIT gone
+ [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]] already in the robot.
+2. [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/e/easi/easi-1.3.0-foss-2023a.eb][easi-1.3.0-foss-2023a.eb]], latest tag =v1.7.0=, ImpalaJIT gone
  from CMake.
 3. =PSpaMM= 0.3.1 on GitHub, no easyconfig in the robot.
 4. The four =.eb= files, nobody has run =eb= yet.
@@ -101,7 +101,7 @@ The site document is snelnext.
 Production is =module load 2025=.
 =foss/2025a= is the generation the 2025 stack is built from.
 The SURF 2025 buildlist in =easyconfigs-surf= lists that generation dozens of times.
-=eb -S SeisSol= on a 2025 login node returns only =SeisSol-1.1.4-foss-2023a.eb=.
+=eb -S SeisSol= on a 2025 login node returns only [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]].
 A =foss/2026.1= recipe on that machine asks the robot for a generation the site has not built.
 =--robot= will try to compile GCC 15 and the rest of 2026.1 beside the production 2025 tree.
 That does not consume site resources.
@@ -111,8 +111,8 @@ Which of these four files can =eblocalinstall= resolve against
 the modules already on the node?
 
 1. =SeisSol-1.3.2-foss-2026.1.eb=
-2. =SeisSol-1.3.2-foss-2025a.eb=
-3. =SeisSol-1.3.2-foss-2025b.eb=
+2. [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.3.2-foss-2025a.eb][SeisSol-1.3.2-foss-2025a.eb]]
+3. [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.3.2-foss-2025b.eb][SeisSol-1.3.2-foss-2025b.eb]]
 4. =SeisSol-1.3.2-intel-2025a.eb=
 #+end_predict
 #+begin_reveal
@@ -205,14 +205,14 @@ It is not a TPV run.
 =eb --from-pr 26851 --robot --force= rebuilt the same four files on a Rome node in 14 minutes 49 seconds.
 All results were SUCCESS.
 That is the report referenced in the PR comment.
-#+ATTR_EB: :id sources-48 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-48 :title Where this page comes from :kind sources
 #+begin_detail
 Public artifacts, read 2026-09-12.
 
-- Spack =seissol= on =spack/spack-packages= develop, newest tag
+- Spack =seissol= on [[https://github.com/spack/spack-packages][spack/spack-packages]] develop, newest tag
  1.3.1; SeisSol release =v1.3.2=.
-- Robot =develop=: =SeisSol-1.1.4-foss-2023a.eb=,
- =easi-1.3.0-foss-2023a.eb=, =ASAGI-1.0-foss-2023a.eb=.
+- Robot =develop=: [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]],
+ [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/e/easi/easi-1.3.0-foss-2023a.eb][easi-1.3.0-foss-2023a.eb]], [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/a/ASAGI/ASAGI-1.0-foss-2023a.eb][ASAGI-1.0-foss-2023a.eb]].
 - SURF snelnext EasyBuild tutorial: =eb/<latest>= and
  =eblocalinstall=. Production stack =2025=.
 - =easyconfigs-surf= 2025 buildlist, =foss-2025a=.

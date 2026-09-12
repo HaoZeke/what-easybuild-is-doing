@@ -251,9 +251,9 @@ It does not represent the claim =builds=.
 Four starting points. For each, name the eb-stack command, or
 say the work is not eb-stack's.
 
-1. =fixtures/foreign_ingest/spack_qmcpack/package.py=, no
+1. [[https://github.com/HaoZeke/eb-stack/blob/main/fixtures/foreign_ingest/spack_qmcpack/package.py][fixtures/foreign_ingest/spack_qmcpack/package.py]], no
  QMCPACK easyconfig in the robot.
-2. =GROMACS-2024.4-foss-2023b.eb=, site moving to =foss/2024a=.
+2. [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/g/GROMACS/GROMACS-2024.4-foss-2023b.eb][GROMACS-2024.4-foss-2023b.eb]], site moving to =foss/2024a=.
 3. The =.eb= from (1), in a bundle, nobody has run =eb=
  yet.
 4. A tarball and a README, no conda-forge recipe, no Spack
@@ -275,16 +275,16 @@ say the work is not eb-stack's.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-12 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-12 :title Where this page comes from :kind sources
 #+begin_detail
 eb-stack 0.2.0 and the HaoZeke/eb-stack fixtures, read
 2026-09-11.
 
-- conda-forge eOn: =fixtures/foreign_ingest/conda_eon/recipe.yaml=
-- Spack eOn: =fixtures/foreign_ingest/spack_eon/package.py=
+- conda-forge eOn: [[https://github.com/HaoZeke/eb-stack/blob/main/fixtures/foreign_ingest/conda_eon/recipe.yaml][fixtures/foreign_ingest/conda_eon/recipe.yaml]]
+- Spack eOn: [[https://github.com/HaoZeke/eb-stack/blob/main/fixtures/foreign_ingest/spack_eon/package.py][fixtures/foreign_ingest/spack_eon/package.py]]
 - emitted full product:
- =fixtures/eon_packaging/easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb=
-- GROMACS bump: =tests/repro_fixtures/gromacs/= against
+ [[https://github.com/HaoZeke/eb-stack/blob/main/fixtures/eon_packaging/easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb][fixtures/eon_packaging/easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb]]
+- GROMACS bump: [[https://github.com/HaoZeke/eb-stack/tree/main/tests/repro_fixtures/gromacs][tests/repro_fixtures/gromacs/]] against
  =universe_foss_2024a=. The transcript is a real =bump= on that
  pair; the pins in the table are the ones the solver wrote.
 

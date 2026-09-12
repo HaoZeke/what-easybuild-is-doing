@@ -47,7 +47,7 @@ The origins of those parameters are not documented in a single location.
 The origins of those parameters are not inferable.
 * Three forms, and the one that gets nothing
 An entry may be a plain string, a =(name, version)= tuple, or a =(name, version, {options})= tuple.
-Within the framework, the definition is in =easybuild/framework/easyblock.py=.
+Within the framework, the definition is in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyblock.py][easybuild/framework/easyblock.py]].
 #+begin_example
 if len(ext) == 1:
  exts_sources.append({'name': ext_name})
@@ -93,8 +93,8 @@ Identifying the groups clarifies most surprises.
 #+ATTR_EB: :id ext-option-keys :title The options read straight out of an extension's dict :kind reference
 #+begin_detail
 Verified against EasyBuild 5.3.1 as installed, in
-=easybuild/framework/easyblock.py= and
-=easybuild/framework/extension.py=.
+[[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyblock.py][easybuild/framework/easyblock.py]] and
+[[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/extension.py][easybuild/framework/extension.py]].
 
 | Key | Default | Note |
 |---+---+---|
@@ -132,7 +132,7 @@ Alternative parameter names are honoured on input.
 The =install_opts= name works where =installopts= is intended, and real easyconfigs in the upstream repository use it.
 * What an extension does not inherit
 The configuration of an extension initially inherits from its parent, which is convenient, but it is wrong for parameters that describe *the parent's* sources.
-Eight parameters are reset to their defaults first, in =easybuild/framework/extension.py=.
+Eight parameters are reset to their defaults first, in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/extension.py][easybuild/framework/extension.py]].
 #+begin_example
 restore_options = (
  'checksums',
@@ -205,21 +205,21 @@ default rather than extending it, so an extension that adds one URL loses
 the others.
 #+end_detail
 
-#+ATTR_EB: :id sources-29 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-29 :title Where this page comes from :kind sources
 #+begin_detail
 Every claim here was read out of EasyBuild 5.3.1 as installed from PyPI
 and checked on 2026-09-10:
 
-- =easybuild/framework/easyblock.py=: the =exts_list= branch and the
+- [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyblock.py][easybuild/framework/easyblock.py]]: the =exts_list= branch and the
  =exts_default_options= merge; =skip_extensions= and its sequential and
  parallel forms; the per-extension keys read from the options dict
-- =easybuild/framework/extension.py=: =construct_exts_filter_cmds= and
+- [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/extension.py][easybuild/framework/extension.py]]: =construct_exts_filter_cmds= and
  its template values; =get_modulenames= and the =False= case;
  =Extension.sanity_check_step=; the reset list and the =start_dir=
  comment; the known-versus-unknown parameter loop
-- =easybuild/framework/extensioneasyblock.py=: how an easyblock supplies
+- [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/extensioneasyblock.py][easybuild/framework/extensioneasyblock.py]]: how an easyblock supplies
  a default =exts_filter=
-- =easybuild/easyblocks/generic/pythonpackage.py=: the extra options
+- [[https://github.com/easybuilders/easybuild-easyblocks/blob/develop/easybuild/easyblocks/generic/pythonpackage.py][easybuild/easyblocks/generic/pythonpackage.py]]: the extra options
  =PythonPackage= contributes, including =use_pip=, =sanity_pip_check=
  and =download_dep_fail=
 

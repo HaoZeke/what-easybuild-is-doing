@@ -54,7 +54,7 @@ The writing-tests page lists three reasons the suite exists.
 One reason is a contribution.
 New software is being added to EESSI.
 The mapping says which tests now apply.
-The bot runs them on the architecture the build targeted, through =bot/test.sh=.
+The bot runs them on the architecture the build targeted, through [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/test.sh][bot/test.sh]].
 Another reason is a nightly.
 The same tests run on a set of clusters, looking for a performance regression.
 A third reason is an end user.
@@ -64,7 +64,7 @@ The =CI= tag from Parameters multiplies the suite, acting as the contribution fi
 The nightly drops the tag and keeps the HECBioSim ladder.
 The end user passes =--name GROMACS= or does not.
 The mapping lives next to the tests.
-Testing and the four things it can mean already named it: =software_to_tests.yml=.
+Testing and the four things it can mean already named it: [[https://github.com/EESSI/software-layer-scripts/blob/main/tests/eessi_test_mapping/software_to_tests.yml][software_to_tests.yml]].
 Adding GROMACS to the stack without a line in that file causes a green build to ship a module that the suite will not touch.
 The generalisable rule is that a test has a location, and a result without its location is not a result.
 The mapping is that location, written down.
@@ -91,7 +91,7 @@ reframe -C cscs-reframe-tests/config/cscs.py \
 =-c= denotes the check path.
 =-R= causes recursion.
 =-l= causes listing.
-The daily run uses the command with =-r= instead of =-l= from =ci/=.
+The daily run uses the command with =-r= instead of =-l= from [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]].
 A site copying this layout does not need EESSI.
 The site must have a configuration file describing its partitions, a directory of tests that do not name those partitions, and a nightly job that runs the listing.
 =portable_tests.md= in that tree defines the written rule for what a check may assume.
@@ -132,13 +132,13 @@ the mapping file has to contain the software yet.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-46 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-46 :title Where this page comes from :kind sources
 #+begin_detail
-EESSI test-suite documentation: three uses, available
-tests, =bot/test.sh=, the mapping file named in Testing, and the four things it can mean.
+[[https://www.eessi.io/docs/test-suite/][EESSI test-suite documentation]]: three uses, available
+tests, [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/test.sh][bot/test.sh]], the mapping file named in Testing, and the four things it can mean.
 [[https://github.com/eth-cscs/cscs-reframe-tests][eth-cscs/cscs-reframe-tests]]
-README: =config/=, =checks/=, =ci/=, the listing command.
-CSC Computing Environment self-learning: ten topics, no
+README: [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/config][config/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][checks/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]], the listing command.
+[[https://csc.fi/en/training-calendar/csc-computing-environment-self-learning/][CSC Computing Environment self-learning]]: ten topics, no
 ReFrame. CSCS 2022 ReFrame webinar: the separate course.
 #+end_detail
 
@@ -147,7 +147,7 @@ ReFrame. CSCS 2022 ReFrame webinar: the separate course.
  missing line is a silent skip the next morning.
 - EESSI's suite is one tree with three filters:
  contribution (=CI=), nightly, end user.
-- CSCS lays out =config/=, =checks/=, =ci/=. The machine,
+- CSCS lays out [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/config][config/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][checks/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]]. The machine,
  the tests, and the invocation stay apart.
 - CSC's computing-environment course is not this course.
  ReFrame is taught as its own unit, which is why it is

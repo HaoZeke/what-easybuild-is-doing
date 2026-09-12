@@ -138,9 +138,9 @@ A reviewer can tell whether the success applies.
 The fourth kind.
 A build that works on the machine that built it tells nothing about the machine the users are on, which is [[file:27-four-things-that-actually-happened.org][Four things that actually happened]]'s login-node lesson in general form.
 EESSI's answer is a portable test suite, =EESSI/test-suite=, written with ReFrame.
-Tests are mapped to software in =tests/eessi_test_mapping/software_to_tests.yml=.
+Tests are mapped to software in [[https://github.com/EESSI/software-layer-scripts/blob/main/tests/eessi_test_mapping/software_to_tests.yml][tests/eessi_test_mapping/software_to_tests.yml]].
 Adding software declares which tests should now run rather than leaving somebody to remember.
-The build bot runs them through =bot/test.sh= on the architecture the build targeted.
+The build bot runs them through [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/test.sh][bot/test.sh]] on the architecture the build targeted.
 The rule is small: *a test has a location, and a result without its location is not a result.* A green test on a login node and a green test on the GPU node a user submitted to are two different facts, and only one of them answers the ticket.
 [[file:part-a-test.org][ReframeReader]] is that kind in full: [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] through [[file:47-reading-a-failed-reframe-run.org][Reading a failed ReFrame run]].
 A test class, the six-stage pipeline, the configuration file, a performance number, then the portable suite and a failed run.
@@ -188,7 +188,7 @@ do?
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-23 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-23 :title Where this page comes from :kind sources
 #+begin_detail
 Upstream documentation, fetched 2026-09-10:
 
@@ -199,14 +199,14 @@ Upstream documentation, fetched 2026-09-10:
 - [[https://docs.easybuild.io/version-specific/eb-help/][the option table]]: =--ignore-test-failure=, =--skip-test-step=, =--keep-going=
 
 Code, from EasyBuild 5.3.1: =EasyBlock._test_step= and
-=report_test_failure= in =easybuild/framework/easyblock.py= for how a
+=report_test_failure= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyblock.py][easybuild/framework/easyblock.py]] for how a
 failure is routed; =ConfigureMake.test_step= for how =runtest= composes
 with =make=; and the RPATH check's default exemptions for the driver
 libraries.
 
 The portable-test material is EESSI's:
-[[https://github.com/EESSI/test-suite][EESSI/test-suite]] and the mapping
-file it keys tests to software with.
+[[https://github.com/EESSI/test-suite][EESSI/test-suite]] and
+[[https://github.com/EESSI/software-layer-scripts/blob/main/tests/eessi_test_mapping/software_to_tests.yml][tests/eessi_test_mapping/software_to_tests.yml]].
 #+end_detail
 
 #+begin_keypoints

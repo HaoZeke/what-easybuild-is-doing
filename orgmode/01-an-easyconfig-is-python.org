@@ -210,7 +210,7 @@ If no =easyblock= is given and no software-specific class can be imported, the b
 #+begin_example
 No software-specific easyblock 'EB_example' found for example
 #+end_example
-The function =get_easyblock_class= in =easybuild/framework/easyconfig/easyconfig.py= raises the exit code =MISSING_EASYBLOCK=.
+The function =get_easyblock_class= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyconfig/easyconfig.py][easybuild/framework/easyconfig/easyconfig.py]] raises the exit code =MISSING_EASYBLOCK=.
 The parameters =error_on_missing_easyblock= and =error_on_failed_import= default to true.
 The parameters =error_on_missing_easyblock= and =error_on_failed_import= are not overridden by the build path.
 The only caller that passes false is the *extensions* machinery.

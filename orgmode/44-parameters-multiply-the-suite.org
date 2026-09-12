@@ -137,12 +137,12 @@ workload in all twelve; the listing still has twelve names.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-44 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-44 :title Where this page comes from :kind sources
 #+begin_detail
-EESSI writing-tests tutorial, the mpi4py example: =parameter=
+[[https://www.eessi.io/docs/test-suite/writing-portable-tests/][EESSI writing-tests tutorial]], the mpi4py example: =parameter=
 against =variable=, the cartesian warning, and hooks after
-=init=. ReFrame builtins documentation for the same two
-decorators. EESSI available-tests page: GROMACS HECBioSim
+=init=. [[https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html][ReFrame builtins documentation]] for the same two
+decorators. [[https://www.eessi.io/docs/test-suite/available-tests/][EESSI available-tests page]]: GROMACS HECBioSim
 systems and the =CI= tag on Crambin.
 #+end_detail
 

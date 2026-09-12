@@ -291,7 +291,7 @@ Each generated file must be reviewed before it becomes a commit.
 
 #+ATTR_EB: :id EB-Write-1 :title From a tarball and a README
 #+begin_exercise
-A user hands you =https://example.org/thing-2.4.tar.gz= and a README
+A user hands you [[https://example.org/thing-2.4.tar.gz][https://example.org/thing-2.4.tar.gz]] and a README
 saying =./configure --prefix=$HOME/thing && make && make install=, and
 that it needs HDF5 and a C++17 compiler.
 
@@ -311,7 +311,7 @@ that it needs HDF5 and a C++17 compiler.
  '1.14.6')]=, which the robot will resolve against the toolchain from
  A toolchain is a hierarchy. A =sanity_check_paths= naming the binary the user will run,
  with both keys present. =moduleclass=
- the title. Saved as =thing-2.4-foss-2025a.eb=
+ the title. Saved as [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/t/thing/thing-2.4-foss-2025a.eb][thing-2.4-foss-2025a.eb]]
  dependencies by constructing that filename.
 
  Not =configopts = '--prefix=...'=. EasyBuild passes the prefix itself,
@@ -332,7 +332,7 @@ that it needs HDF5 and a C++17 compiler.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-21 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-21 :title Where this page comes from :kind sources
 #+begin_detail
 The searches, the injection refusal and the style check were run on a
 workstation on 2026-09-10 against EasyBuild 5.3.1 with pycodestyle
@@ -347,7 +347,7 @@ Upstream documentation, fetched 2026-09-10:
 - [[https://docs.easybuild.io/integration-with-github/][GitHub integration]]: what =--new-pr= and =--update-pr= do, and their defaults
 
 Code: =check_easyconfigs_style= in
-=easybuild/framework/easyconfig/style.py= for the 120-character limit, the
+[[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyconfig/style.py][easybuild/framework/easyconfig/style.py]] for the 120-character limit, the
 =W299= substitution and the =E741= exemption.
 #+end_detail
 

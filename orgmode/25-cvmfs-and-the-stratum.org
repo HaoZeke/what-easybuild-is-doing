@@ -518,11 +518,11 @@ A site that points =EESSI_HOST_INJECTIONS= somewhere else changes what the symli
 It contains exactly the bytes it was signed with.
 That is the whole trick.
 It is [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
-#+ATTR_EB: :id sources-25 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-25 :title Where this page comes from :kind sources
 #+begin_detail
 Live evidence: every transcript in This page was produced on
-2026-09-10 against =http://s1eessieu1-cvmfs.openhtc.io/cvmfs/software.eessi.io=
-and =http://aws-eu-central-s1.eessi.science/cvmfs/software.eessi.io=, at
+2026-09-10 against [[http://s1eessieu1-cvmfs.openhtc.io/cvmfs/software.eessi.io][http://s1eessieu1-cvmfs.openhtc.io/cvmfs/software.eessi.io]]
+and [[http://aws-eu-central-s1.eessi.science/cvmfs/software.eessi.io][http://aws-eu-central-s1.eessi.science/cvmfs/software.eessi.io]], at
 repository revision 23927, with =curl=, =python3= and =sqlite3= and no
 CernVM-FS client installed.
 

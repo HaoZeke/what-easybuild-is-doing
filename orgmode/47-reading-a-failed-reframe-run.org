@@ -154,13 +154,12 @@ to open, and what a pass of the next run would require.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-47 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-47 :title Where this page comes from :kind sources
 #+begin_detail
-ReFrame 4.10 tutorial: the induced STREAM sanity failure,
+[[https://reframe-hpc.readthedocs.io/en/stable/tutorial.html][ReFrame 4.10 tutorial]]: the induced STREAM sanity failure,
 the three artifacts, =--restore-session --failed=,
-=--keep-stage-files=, and the =Rerun with= hash. Pipeline
-page: =run_complete=, cleanup deferred for dependents.
-EESSI usage page: =$RFM_PREFIX= layout for logs, stage,
+=--keep-stage-files=, and the =Rerun with= hash. [[https://reframe-hpc.readthedocs.io/en/stable/pipeline.html][Pipeline page]]: =run_complete=, cleanup deferred for dependents.
+[[https://www.eessi.io/docs/test-suite/usage/][EESSI usage page]]: =$RFM_PREFIX= layout for logs, stage,
 output, perflogs.
 #+end_detail
 

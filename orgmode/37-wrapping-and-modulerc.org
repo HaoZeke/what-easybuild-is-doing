@@ -157,7 +157,7 @@ GROMACS closure. Two commands:
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-37 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-37 :title Where this page comes from :kind sources
 #+begin_detail
 EasyBuild docs, last update 2026-08-09:
 

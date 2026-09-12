@@ -239,17 +239,17 @@ After a successful plan, both the =build_dir= and the =install_dir= paths must e
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-33 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-33 :title Where this page comes from :kind sources
 #+begin_detail
 eb-stack source and docs, HaoZeke/eb-stack, read 2026-09-11:
 
-- =docs/orgmode/tutorial.org= (inspect then plan, Eigen preferred
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/tutorial.org][docs/orgmode/tutorial.org]] (inspect then plan, Eigen preferred
  pin, =--stack-policy=).
-- =docs/orgmode/reference/cli.org= and
- =docs/orgmode/reference/package-bundles.org= (bundle layout,
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/reference/cli.org][docs/orgmode/reference/cli.org]] and
+ [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/reference/package-bundles.org][docs/orgmode/reference/package-bundles.org]] (bundle layout,
  residual severity, planned SBOM, closed catalog bundles).
-- =src/main.rs= =PackageCommand::Inspect= / =Plan= / =Bump=.
-- =fixtures/foreign_ingest/README.md=.
+- [[https://github.com/HaoZeke/eb-stack/blob/main/src/main.rs][src/main.rs]] =PackageCommand::Inspect= / =Plan= / =Bump=.
+- [[https://github.com/HaoZeke/eb-stack/blob/main/fixtures/foreign_ingest/README.md][fixtures/foreign_ingest/README.md]].
 #+end_detail
 
 #+begin_keypoints

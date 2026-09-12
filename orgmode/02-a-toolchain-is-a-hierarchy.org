@@ -61,7 +61,7 @@ Query the sample.
 The line does not name a single toolchain.
 The line names a list.
 * The list has an order, and the order does work
-The function =get_toolchain_hierarchy= is defined in =easybuild/framework/easyconfig/easyconfig.py=.
+The function =get_toolchain_hierarchy= is defined in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyconfig/easyconfig.py][easybuild/framework/easyconfig/easyconfig.py]].
 The docstring describes its output.
 #+begin_quote
 Determine list of subtoolchains for specified parent toolchain. Result
@@ -159,7 +159,7 @@ EasyBuild performs checks:
 List of toolchain dependency modules and toolchain definition do not match
 (found [...] vs expected {...})
 #+end_example
-The function =_verify_toolchain= in =easybuild/tools/toolchain/toolchain.py= fires in the *prepare* step, seconds after start, before any unpacking.
+The function =_verify_toolchain= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/tools/toolchain/toolchain.py][easybuild/tools/toolchain/toolchain.py]] fires in the *prepare* step, seconds after start, before any unpacking.
 Three properties of that check together make it unfixable from an easyconfig.
 It reads only the *direct* dependencies of the toolchain module.
 The call used is =dependencies_for(mod_name,..., depth=0)=.

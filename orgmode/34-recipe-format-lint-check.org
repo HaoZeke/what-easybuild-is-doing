@@ -93,9 +93,9 @@ The command does not create placeholder recipes.
 The structured result lists each dependency and indicates whether a matching easyconfig exists in the overlay order.
 Later =--easyconfigs= paths override earlier ones for the same name, version, toolchain, and versionsuffix, following the same rule used by =stack solve=.
 A check failure reporting an absent dependency is not a format problem.
-It indicates either a missing overlay (the eOn core-guard recipes reside in =fixtures/eon_core_rgpot/easyconfigs/= for this reason) or a stack-policy pin that selected a candidate the robot does not possess.
+It indicates either a missing overlay (the eOn core-guard recipes reside in [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/eon_core_rgpot/easyconfigs][fixtures/eon_core_rgpot/easyconfigs/]] for this reason) or a stack-policy pin that selected a candidate the robot does not possess.
 The subsequent command is not =recipe format=.
-The maintainer fixtures under =fixtures/maintainer_*/= constitute the other half of the check: fat vs thin, a cross-generation pin, a shell-monster, a patchelf RPATH.
+The maintainer fixtures under [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/maintainer_*][fixtures/maintainer_*/]] constitute the other half of the check: fat vs thin, a cross-generation pin, a shell-monster, a patchelf RPATH.
 Those represent =recipe check= plus the maintainer-acceptability gate, not lint.
 #+ATTR_EB: :id EB-Recipe-1 :title Which command
 #+begin_exercise
@@ -125,15 +125,15 @@ say whether it rewrites the =.eb=.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-34 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-34 :title Where this page comes from :kind sources
 #+begin_detail
 eb-stack, HaoZeke/eb-stack, read 2026-09-11:
 
-- =docs/orgmode/tutorial.org= (the three-command block).
-- =docs/orgmode/reference/cli.org= (*Recipe commands*).
-- =src/main.rs= =RecipeCommand::Check= / =Lint= / =Format=.
-- =fixtures/maintainer_fat_26480/=,
- =fixtures/maintainer_reject_26435/=.
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/tutorial.org][docs/orgmode/tutorial.org]] (the three-command block).
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/reference/cli.org][docs/orgmode/reference/cli.org]] (*Recipe commands*).
+- [[https://github.com/HaoZeke/eb-stack/blob/main/src/main.rs][src/main.rs]] =RecipeCommand::Check= / =Lint= / =Format=.
+- [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/maintainer_fat_26480][fixtures/maintainer_fat_26480/]],
+ [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/maintainer_reject_26435][fixtures/maintainer_reject_26435/]].
 #+end_detail
 
 #+begin_keypoints

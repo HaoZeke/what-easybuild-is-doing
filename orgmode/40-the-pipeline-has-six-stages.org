@@ -152,7 +152,7 @@ Four reports. For each, name the stage, and say whether the job ran.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-40 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-40 :title Where this page comes from :kind sources
 #+begin_detail
 [[https://reframe-hpc.readthedocs.io/en/stable/pipeline.html][How
 ReFrame Executes Tests]], ReFrame 4.10.3, fetched 2026-09-11: the

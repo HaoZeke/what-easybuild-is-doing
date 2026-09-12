@@ -51,7 +51,7 @@ The system asks which jointly consistent set is built.
 The system also asks for the build order of the set and the changes since the previous year.
 The command is =stack solve=.
 * A policy for many roots
-The fixture policy at =fixtures/gromacs_2025_to_next/policies/prefer_newer.json= represents
+The fixture policy at [[https://github.com/HaoZeke/eb-stack/blob/main/fixtures/gromacs_2025_to_next/policies/prefer_newer.json][fixtures/gromacs_2025_to_next/policies/prefer_newer.json]] represents
 #+begin_example
 {
  "toolchain": {"name": "foss", "version": "2025b"},
@@ -145,15 +145,15 @@ missing a flag.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-35 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-35 :title Where this page comes from :kind sources
 #+begin_detail
 eb-stack, HaoZeke/eb-stack, read 2026-09-11:
 
-- =docs/orgmode/howto/solve-lock.org=
-- =docs/orgmode/howto/emit-reports.org=
-- =docs/orgmode/reference/formats.org=
-- =fixtures/gromacs_2025_to_next/=
-- =src/main.rs= =StackCommand::Solve= / =Sbom=
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/howto/solve-lock.org][docs/orgmode/howto/solve-lock.org]]
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/howto/emit-reports.org][docs/orgmode/howto/emit-reports.org]]
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/reference/formats.org][docs/orgmode/reference/formats.org]]
+- [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/gromacs_2025_to_next][fixtures/gromacs_2025_to_next/]]
+- [[https://github.com/HaoZeke/eb-stack/blob/main/src/main.rs][src/main.rs]] =StackCommand::Solve= / =Sbom=
 #+end_detail
 
 #+begin_keypoints

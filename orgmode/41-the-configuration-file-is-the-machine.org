@@ -47,7 +47,7 @@ Combining a test and a configuration forms the portability problem that the conf
 The page contains the file that separates them.
 The official tutorial shows the division using STREAM on a single-node container and on a compose-built Slurm cluster, while the test class remains unchanged.
 EESSI's documentation uses the same approach: define the system configuration and then direct ReFrame to the suite.
-CSCS provides =config/cscs.py= alongside =checks/=, not within it.
+CSCS provides [[https://github.com/eth-cscs/cscs-reframe-tests/blob/master/config/cscs.py][config/cscs.py]] alongside [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][checks/]], not within it.
 * Three lists
 A configuration is a Python file that assigns =site_configuration=, a dictionary.
 Three keys do most of the work.
@@ -166,19 +166,19 @@ schedules it.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-41 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-41 :title Where this page comes from :kind sources
 #+begin_detail
-ReFrame 4.10 tutorial, the configuration section, and the
+[[https://reframe-hpc.readthedocs.io/en/stable/tutorial.html][ReFrame 4.10 tutorial]], the configuration section, and the
 [[https://reframe-hpc.readthedocs.io/en/stable/config_reference.html][configuration
 reference]]: systems, partitions, environments, features, extras,
 =max_jobs=. The builtin configuration is always loaded.
 
-EESSI test-suite documentation, fetched 2026-09-11:
+[[https://www.eessi.io/docs/test-suite/][EESSI test-suite documentation]], fetched 2026-09-11:
 [[https://www.eessi.io/docs/test-suite/installation-configuration/][installation
 and configuration]],
 [[https://www.eessi.io/docs/test-suite/ReFrame-configuration-file/][the
 configuration file]], and the =RFM_*= variables. CSCS's layout
-is =config/cscs.py= plus =checks/= in
+is [[https://github.com/eth-cscs/cscs-reframe-tests/blob/master/config/cscs.py][config/cscs.py]] plus [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][checks/]] in
 [[https://github.com/eth-cscs/cscs-reframe-tests][eth-cscs/cscs-reframe-tests]].
 #+end_detail
 

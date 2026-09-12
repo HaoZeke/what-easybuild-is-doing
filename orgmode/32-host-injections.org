@@ -326,14 +326,14 @@ Determine the location where the difference is expressed.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-32 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-32 :title Where this page comes from :kind sources
 #+begin_detail
 Talks, read 2026-09-11:
 
 - Caspar van Leeuwen, Bob Dröge and Pedro Santos Neves, *Using
  EESSI as a base for a central software stack*, MultiXscale
  webinar, 2026-06-01
- (=EESSI-webinars-spring-2026-EESSI-as-a-base-stack-2026-06-01.pdf=):
+ ([[https://www.eessi.io/docs/training-events/2026/EESSI-webinars-spring-2026-EESSI-as-a-base-stack-2026-06-01.pdf][EESSI-webinars-spring-2026-EESSI-as-a-base-stack-2026-06-01.pdf]]):
  motivation; Approach 1 Hábrók demo (=EESSI_SITE_INSTALL=,
  =EESSI_SITE_SOFTWARE_PREFIX=/software=, cowsay/attr);
  Approach 2 =software.caspar.nl= (Stratum-0, smee, bot,

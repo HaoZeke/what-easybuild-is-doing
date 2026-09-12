@@ -193,14 +193,14 @@ state file is the lock.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-36 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-36 :title Where this page comes from :kind sources
 #+begin_detail
 eb-stack, HaoZeke/eb-stack, read 2026-09-11:
 
-- =docs/orgmode/reference/campaigns.org=
-- =docs/orgmode/howto/repair-campaign.org=
-- =src/main.rs= =CampaignCommand::Run= / =Status= / =Finding=
-- =docs/campaign-boundary.md=
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/reference/campaigns.org][docs/orgmode/reference/campaigns.org]]
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/orgmode/howto/repair-campaign.org][docs/orgmode/howto/repair-campaign.org]]
+- [[https://github.com/HaoZeke/eb-stack/blob/main/src/main.rs][src/main.rs]] =CampaignCommand::Run= / =Status= / =Finding=
+- [[https://github.com/HaoZeke/eb-stack/blob/main/docs/campaign-boundary.md][docs/campaign-boundary.md]]
 #+end_detail
 
 #+begin_keypoints

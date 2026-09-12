@@ -324,7 +324,7 @@ An MPI from the repository communicating with a site fabric matches the case [[f
 It is the sole location where "mount it and go" does not cover the entire scenario.
 The 2025.06 tree also carries =lfoss/2025b= (the linear-algebra =foss=).
 The table above lists the documented common toolchains, not every top-level module.
-#+ATTR_EB: :id sources-26 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-26 :title Where this page comes from :kind sources
 #+begin_detail
 EESSI documentation, fetched 2026-09-10:
 
@@ -339,8 +339,8 @@ EESSI documentation, fetched 2026-09-10:
 - [[https://www.eessi.io/docs/site_specific_config/host_injections/][host injections]] and [[https://www.eessi.io/docs/site_specific_config/gpu/][GPU support]]: the variant symlink, and the two scripts
 
 Code, from [[https://github.com/EESSI/software-layer-scripts][EESSI/software-layer-scripts]], =main= branch, read 2026-09-10:
-=init/eessi_defaults=, =init/minimal_eessi_env=,
-=init/eessi_environment_variables=, =init/eessi_archdetect.sh=.
+[[https://github.com/EESSI/software-layer-scripts/blob/main/init/eessi_defaults][init/eessi_defaults]], [[https://github.com/EESSI/software-layer-scripts/blob/main/init/minimal_eessi_env][init/minimal_eessi_env]],
+[[https://github.com/EESSI/software-layer-scripts/blob/main/init/eessi_environment_variables][init/eessi_environment_variables]], [[https://github.com/EESSI/software-layer-scripts/blob/main/init/eessi_archdetect.sh][init/eessi_archdetect.sh]].
 
 Live evidence: the nested catalogs and the stored variant symlinks quoted
 here were read out of the =software.eessi.io= root catalog at revision

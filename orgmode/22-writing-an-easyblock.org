@@ -87,7 +87,7 @@ dashes to underscores, anything else dropped. =netCDF-Fortran= lives in
 ='easybuild.easyblocks.netcdf_fortran'=.
 
 Generic easyblocks carry *no* prefix and live in
-=easybuild/easyblocks/generic/=. That absence is how the two
+[[https://github.com/easybuilders/easybuild-easyblocks/blob/develop/easybuild/easyblocks/generic/][easybuild/easyblocks/generic/]]. That absence is how the two
 apart in =eb --list-easyblocks=: a name starting =EB_= is
 software-specific, everything else is generic.
 
@@ -232,7 +232,7 @@ instead if not.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-22 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-22 :title Where this page comes from :kind sources
 #+begin_detail
 The counts and the =NotImplementedError= were read out of EasyBuild 5.3.1
 as installed on 2026-09-10: 82 generic classes in 47 modules and 282

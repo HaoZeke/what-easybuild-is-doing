@@ -126,10 +126,9 @@ partial log is a failed test, not a quiet success.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-39 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-39 :title Where this page comes from :kind sources
 #+begin_detail
-The STREAM test is the opening example of the official ReFrame 4
-tutorial
+The STREAM test is the opening example of the official [[https://reframe-hpc.readthedocs.io/en/stable/tutorial.html][ReFrame 4 tutorial]]
 ([[https://reframe-hpc.readthedocs.io/en/stable/tutorial.html][tutorial.html]],
 fetched 2026-09-11) and of the CSCS webinar (Karakasis, 2022). The
 claim that ReFrame does not look at the exit code is from the

@@ -161,7 +161,7 @@ Four incidents. Name the EasyBuild 5 surface, and the first check.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-38 :title Where This page comes from :kind sources
+#+ATTR_EB: :id sources-38 :title Where this page comes from :kind sources
 #+begin_detail
 EasyBuild docs, last update 2026-08-09:
 
@@ -173,8 +173,8 @@ EasyBuild docs, last update 2026-08-09:
 - [[https://docs.easybuild.io/version-specific/generic-easyblocks/][Dataset]]
  easyblock (=object_storage_ignore_dirs=, no compile)
 - EasyBuild 5.4.0 notes: =--bwrap= on overlayfs / read-only
- filesystems (#5173)
-- EasyBuild #4910: RPATH wrappers and =noexec= =/tmp=
+ filesystems ([[https://github.com/easybuilders/easybuild-framework/issues/5173][#5173]])
+- EasyBuild [[https://github.com/easybuilders/easybuild-framework/issues/4910][#4910]]: RPATH wrappers and =noexec= =/tmp=
 #+end_detail
 
 #+begin_keypoints
