@@ -27,6 +27,20 @@ A reference to CUDA 12.9.1 follows.
 The later part is a =versionsuffix=.
 The =versionsuffix= is the most easily misread parameter in EasyBuild.
 The =versionsuffix= resembles a constraint but is a label.
+#+begin_export rst
+.. figure:: _static/diagrams/rail-module-name.svg
+   :alt: module name railroad with optional versionsuffix on a loop
+   :class: eb-diagram
+
+   The suffix rides the optional loop. It is not a dependency constraint.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/rail-dep-tuple.svg
+   :alt: name and version required, versionsuffix and toolchain optional
+   :class: eb-diagram
+
+   The dependency tuple. Name and version are on the rail. The rest is optional.
+#+end_export
 * The suffix and the dependency are two different lines
 The easyconfig behind that module states both of these.
 #+begin_src easyconfig :widget parse

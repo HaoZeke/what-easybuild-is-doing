@@ -21,7 +21,16 @@ The other task is a *bump* that rewrites an easyconfig written for one toolchain
 Neither task invokes =eb=.
 Both generate files that a human then builds.
 [[https://eb-stack.rgoswami.me][eb-stack]] is the tool.
-This chapter describes those two tasks and includes the files on the page.
+A planned CycloneDX SBOM is one of the files it writes.
+The graph below is that SBOM for a GROMACS bump, drawn by =eb-stack stack graph= (and by =scripts/sbom_to_dot.py=).
+#+begin_export rst
+.. figure:: _static/diagrams/sbom-gromacs.svg
+   :alt: FFTW, OpenBLAS, OpenMPI, GROMACS as a CycloneDX dependency graph
+   :class: eb-diagram
+
+   Planned SBOM for a GROMACS generation. Edges are runtime dependsOn.
+#+end_export
+This page describes those two tasks and includes the files on the page.
 * A port starts as someone else's recipe
 The conda-forge feedstock for eOn 2.16.0 is frozen in eb-stack's fixtures.
 It includes name, version, sources, host dependencies, and tests.

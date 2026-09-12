@@ -18,6 +18,14 @@
 The file provides a VS Code installation in a browser on a supercomputer.
 The file contains twenty lines.
 Recipes of this form are merged weekly.
+The installed module name is a railroad, not a sentence.
+#+begin_export rst
+.. figure:: _static/diagrams/rail-module-name.svg
+   :alt: name, hyphen, version, hyphen, toolchain, hyphen, toolchain version, optional versionsuffix
+   :class: eb-diagram
+
+   Module name grammar. The versionsuffix is optional. Nothing on this rail is a range.
+#+end_export
 #+begin_src easyconfig :widget parse
 name = 'code-server'
 version = '4.130.0'

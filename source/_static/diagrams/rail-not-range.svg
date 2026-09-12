@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 404 48" role="img">
+<path d="M8 24.0 H24.0" fill="none" stroke="#1a1917" stroke-width="1.6"/>
+<rect x="24.0" y="10.0" width="52.0" height="28.0" rx="4" fill="#f7f6f3" stroke="#1a1917" stroke-width="1.4"/><text x="50.0" y="28.5" text-anchor="middle" font-family="Inter,Helvetica,sans-serif" font-size="12" fill="#1a1917">name</text>
+<path d="M76.0 24.0 H92.0" fill="none" stroke="#1a1917" stroke-width="1.6"/>
+<rect x="92.0" y="10.0" width="48.0" height="28.0" rx="4" fill="#1a1917" stroke="#1a1917" stroke-width="1.4"/><text x="116.0" y="28.5" text-anchor="middle" font-family="Inter,Helvetica,sans-serif" font-size="12" fill="#f7f6f3">>=</text>
+<path d="M140.0 24.0 H156.0" fill="none" stroke="#1a1917" stroke-width="1.6"/>
+<rect x="156.0" y="10.0" width="76.0" height="28.0" rx="4" fill="#f7f6f3" stroke="#1a1917" stroke-width="1.4"/><text x="194.0" y="28.5" text-anchor="middle" font-family="Inter,Helvetica,sans-serif" font-size="12" fill="#1a1917">version</text>
+<path d="M232.0 24.0 H248.0" fill="none" stroke="#1a1917" stroke-width="1.6"/>
+<rect x="248.0" y="10.0" width="48.0" height="28.0" rx="4" fill="#1a1917" stroke="#1a1917" stroke-width="1.4"/><text x="272.0" y="28.5" text-anchor="middle" font-family="Inter,Helvetica,sans-serif" font-size="12" fill="#f7f6f3"><</text>
+<path d="M296.0 24.0 H312.0" fill="none" stroke="#1a1917" stroke-width="1.6"/>
+<rect x="312.0" y="10.0" width="52.0" height="28.0" rx="4" fill="#f7f6f3" stroke="#1a1917" stroke-width="1.4"/><text x="338.0" y="28.5" text-anchor="middle" font-family="Inter,Helvetica,sans-serif" font-size="12" fill="#1a1917">next</text>
+<path d="M364.0 24.0 H380.0" fill="none" stroke="#1a1917" stroke-width="1.6"/>
+<path d="M380.0 24.0 H388.0" fill="none" stroke="#1a1917" stroke-width="1.6"/>
+</svg>

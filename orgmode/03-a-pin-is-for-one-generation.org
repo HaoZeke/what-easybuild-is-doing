@@ -33,6 +33,20 @@ In Python, =install_requires= accepts =>=1.14.6=.
 Cargo interprets =1.14.6= as a compatible version constraint.
 Conda uses =>=1.14.6,<2= as its constraint syntax.
 EasyBuild lacks operators, ranges, carets, and tildes in its syntax.
+#+begin_export rst
+.. figure:: _static/diagrams/rail-pin.svg
+   :alt: name, exactly, version
+   :class: eb-diagram
+
+   What EasyBuild writes.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/rail-not-range.svg
+   :alt: name, greater-or-equal version, less-than next
+   :class: eb-diagram
+
+   What other solvers write. EasyBuild does not.
+#+end_export
 A dependency consists solely of a name and a specific version.
 Resolution requires that exact module; otherwise the build fails.
 A site wrap or a =ModuleRC= =.modulerc= can map an old name to a newer module; see [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]], and this does not constitute a range here.

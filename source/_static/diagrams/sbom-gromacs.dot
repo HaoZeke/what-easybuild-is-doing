@@ -1,0 +1,17 @@
+digraph sbom {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.25",
+         nodesep="0.4", ranksep="0.7", fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3",
+        color="#1a1917", fontname="Inter,Helvetica,sans-serif",
+        fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  pkg_generic_FFTW_3_3_10_toolchain_foss_2025b [label="FFTW\n3.3.10\nfoss-2025b"];
+  pkg_generic_GROMACS_2025_0_toolchain_foss_2025b [label="GROMACS\n2025.0\nfoss-2025b"];
+  pkg_generic_OpenBLAS_0_3_27_toolchain_foss_2025b [label="OpenBLAS\n0.3.27\nfoss-2025b"];
+  pkg_generic_OpenMPI_5_0_3_toolchain_foss_2025b [label="OpenMPI\n5.0.3\nfoss-2025b"];
+  pkg_generic_FFTW_3_3_10_toolchain_foss_2025b -> pkg_generic_OpenBLAS_0_3_27_toolchain_foss_2025b;
+  pkg_generic_FFTW_3_3_10_toolchain_foss_2025b -> pkg_generic_OpenMPI_5_0_3_toolchain_foss_2025b;
+  pkg_generic_GROMACS_2025_0_toolchain_foss_2025b -> pkg_generic_OpenBLAS_0_3_27_toolchain_foss_2025b;
+  pkg_generic_GROMACS_2025_0_toolchain_foss_2025b -> pkg_generic_OpenMPI_5_0_3_toolchain_foss_2025b;
+  pkg_generic_GROMACS_2025_0_toolchain_foss_2025b -> pkg_generic_FFTW_3_3_10_toolchain_foss_2025b;
+}

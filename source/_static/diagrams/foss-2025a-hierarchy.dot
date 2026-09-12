@@ -1,0 +1,14 @@
+digraph foss_2025a {
+  graph [rankdir=BT, bgcolor="transparent", pad="0.25", nodesep="0.35", ranksep="0.45",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  system  [label="system"];
+  gcccore [label="GCCcore\n14.2.0"];
+  gcc     [label="GCC\n14.2.0"];
+  gfbf    [label="gfbf\n2025a"];
+  gompi   [label="gompi\n2025a"];
+  foss    [label="foss\n2025a"];
+  system -> gcccore -> gcc -> gfbf -> gompi -> foss;
+}

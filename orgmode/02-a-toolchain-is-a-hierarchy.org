@@ -29,6 +29,13 @@ toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
 =foss-2025a= resembles a label for the 2025a open-source compiler stack.
 =foss-2025a= forms the top of a structure.
+#+begin_export rst
+.. figure:: _static/diagrams/foss-2025a-hierarchy.svg
+   :alt: system under GCCcore 14.2.0 under GCC under gfbf under gompi under foss 2025a
+   :class: eb-diagram
+
+   foss-2025a hierarchy. A package on foss may depend on anything below it in this walk.
+#+end_export
 The structure defines which versions of which libraries a package on this toolchain may see.
 [[cite:geimerModernScientificSoftware2014][Geimer, Hoste and McLay 2014]] explains the *module* tree shape.
 A Core compiler extends =$MODULEPATH= into a Compiler layer.
