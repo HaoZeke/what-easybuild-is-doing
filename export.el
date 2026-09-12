@@ -14,7 +14,28 @@
 
 (require 'ox-rst)
 (require 'ox-publish)
+(require 'ol)
 (require 'subr-x)
+
+;; [[cite:hosteEasybuildBuildingSoftware2012][Hoste et al. 2012]]
+;; becomes :cite:t:`key` so Sphinx prints Author (year) from refs.bib.
+(org-link-set-parameters
+ "cite"
+ :export (lambda (path desc backend _info)
+           (if (org-export-derived-backend-p backend 'rst)
+               (if (and desc (not (string= desc path)))
+                   (format ":cite:t:`%s`" path)
+                 (format ":cite:`%s`" path))
+             (or desc path))))
+
+;; A clean Emacs has no org-cite bibliography. Without this, a cite:
+;; link that org-element still parses as fuzzy aborts the whole
+;; publish. The handler above is the real export; this is the latch.
+(setq org-export-with-broken-links t)
+(let ((bib (expand-file-name "source/refs.bib"
+                             (file-name-directory load-file-name))))
+  (when (file-readable-p bib)
+    (setq org-cite-global-bibliography (list bib))))
 
 (defun ebguide--indent (text n)
   "Indent every non-blank line of TEXT by N spaces."
