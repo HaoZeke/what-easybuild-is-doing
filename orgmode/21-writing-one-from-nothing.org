@@ -1,6 +1,19 @@
 #+TITLE: Writing one from nothing
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  sources --> easyblock --> sanity
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/21-writing-one-from-nothing.svg
+   :alt: write recipe
+   :class: eb-diagram
+
+   write recipe.
+#+end_export
 
 #+begin_objectives
 1. Write a working easyconfig for software that has none, starting from

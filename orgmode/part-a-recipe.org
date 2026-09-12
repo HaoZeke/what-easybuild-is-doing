@@ -1,5 +1,18 @@
 #+TITLE: RecipeReader
 #+OPTIONS: toc:nil num:nil
+#+begin_export rst
+.. figure:: _static/illustrations/recipe-reader.jpg
+   :alt: RecipeReader plate
+   :class: eb-diagram
+
+   RecipeReader.
+#+end_export
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  file --> evaluate --> module
+</pre>
+#+end_export
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker

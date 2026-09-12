@@ -1,5 +1,18 @@
 #+TITLE: Journeys
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  first --> failed --> port --> test
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/journeys.svg
+   :alt: journeys
+   :class: eb-diagram
+
+   journeys.
+#+end_export
 A journey defines a how‑to path across pages that already exist.
 The same page may belong to multiple paths.
 #+begin_export rst

@@ -1,6 +1,19 @@
 #+TITLE: Standing where the build stood
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  eb --> module --> rebuild
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/24-development-environments.svg
+   :alt: dev env
+   :class: eb-diagram
+
+   dev env.
+#+end_export
 
 #+begin_objectives
 1. Find the four artifacts EasyBuild already left inside every

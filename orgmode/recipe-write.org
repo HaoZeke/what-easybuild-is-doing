@@ -1,5 +1,18 @@
 #+TITLE: Write one
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  sources --> sanity --> file
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-write.svg
+   :alt: recipe write
+   :class: eb-diagram
+
+   recipe write.
+#+end_export
 A recipe for software that lacks one.
 A port from conda-forge or Spack.
 A bump to the next generation.

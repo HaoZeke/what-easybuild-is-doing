@@ -1,6 +1,20 @@
 #+TITLE: What a build is allowed to see
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  host libs -/-> prefix
+RPATH --> own tree
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/14-the-isolation-policy.svg
+   :alt: isolation
+   :class: eb-diagram
+
+   isolation.
+#+end_export
 
 #+begin_objectives
 1. Say what environment a build runs in, and what EasyBuild removes from

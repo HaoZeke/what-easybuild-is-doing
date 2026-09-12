@@ -1,6 +1,19 @@
 #+TITLE: The same stack somewhere else
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  siteA --> CVMFS --> siteB
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/26-the-same-stack-somewhere-else.svg
+   :alt: same stack
+   :class: eb-diagram
+
+   same stack.
+#+end_export
 
 #+begin_objectives
 1. Get an optimised software stack onto a machine the operator does not administer,

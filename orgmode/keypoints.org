@@ -1,6 +1,19 @@
 #+TITLE: What to remember
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  claim --> page --> check
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/keypoints.svg
+   :alt: keypoints
+   :class: eb-diagram
+
+   keypoints.
+#+end_export
 Keypoints for each chapter are produced in reading order directly from the chapters instead of manual maintenance.
 The Carpentries refer to this as a digest ([[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]]).
 It has two purposes.

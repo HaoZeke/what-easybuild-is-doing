@@ -1,5 +1,18 @@
 #+TITLE: When it fails
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  log --> cause --> fix
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-fail.svg
+   :alt: recipe fail
+   :class: eb-diagram
+
+   recipe fail.
+#+end_export
 Parameters that are misread cause the greatest time consumption.
 The log shows that the file is not the problem.
 #+begin_export rst

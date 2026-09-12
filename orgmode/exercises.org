@@ -1,5 +1,18 @@
 #+TITLE: Every exercise in this book
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  prompt --> try --> answer
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/exercises.svg
+   :alt: exercises
+   :class: eb-diagram
+
+   exercises.
+#+end_export
 Each chapter includes one or two items, positioned where the chapter has just taught the concept they test.
 This page enumerates all items in reading order.
 A taught session may select a subset, and an individual reader can locate the desired item.

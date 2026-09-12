@@ -1,5 +1,18 @@
 #+TITLE: Parameters multiply the suite
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  class --> parameter --> N cases
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/44-parameters-multiply-the-suite.svg
+   :alt: params
+   :class: eb-diagram
+
+   params.
+#+end_export
 
 #+begin_questions
 - What is the difference between a =parameter= and a =variable=?

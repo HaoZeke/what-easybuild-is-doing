@@ -1,5 +1,18 @@
 #+TITLE: The bot is three processes and a comment
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  comment --> bot: build --> artifact
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/31-the-eessi-bot.svg
+   :alt: bot
+   :class: eb-diagram
+
+   bot.
+#+end_export
 
 #+begin_questions
 - What does a =bot: build= comment start, and what does it not start?

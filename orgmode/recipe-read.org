@@ -1,5 +1,18 @@
 #+TITLE: Read a file
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  file --> name --> toolchain
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-read.svg
+   :alt: recipe read
+   :class: eb-diagram
+
+   recipe read.
+#+end_export
 EasyBuild processes a file before any =eb= command is executed.
 The tutorial appears first.
 #+begin_export rst

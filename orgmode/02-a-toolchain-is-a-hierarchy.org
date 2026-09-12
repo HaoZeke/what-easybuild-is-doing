@@ -1,5 +1,11 @@
 #+TITLE: A toolchain is a hierarchy
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  system --> GCCcore --> GCC --> foss
+</pre>
+#+end_export
 
 #+begin_questions
 - What does =foss-2025a= name, if it is not a label?

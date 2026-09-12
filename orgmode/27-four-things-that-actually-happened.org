@@ -1,6 +1,19 @@
 #+TITLE: Four things that actually happened
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  login --> build --> GPU --> user job
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/27-four-things-that-actually-happened.svg
+   :alt: four facts
+   :class: eb-diagram
+
+   four facts.
+#+end_export
 
 #+begin_objectives
 1. Recognise each of these four failure shapes when it happens.

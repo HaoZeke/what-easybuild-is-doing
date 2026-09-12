@@ -1,5 +1,25 @@
 #+TITLE: Journey: a build failed
 #+OPTIONS: toc:nil num:nil
+#+begin_export rst
+.. figure:: _static/illustrations/failed-build.jpg
+   :alt: failed build plate
+   :class: eb-diagram
+
+   A failed build is a missing path and a pin.
+#+end_export
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  log --> start_dir --> pin
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/journey-a-build-failed.svg
+   :alt: journey fail
+   :class: eb-diagram
+
+   journey fail.
+#+end_export
 The log appears first.
 The parameters that usually caused it follow.
 

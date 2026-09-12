@@ -1,5 +1,18 @@
 #+TITLE: A portable test leaves the machine in the config
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  test --> config --> any site
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/45-a-portable-test-leaves-the-machine-in-the-config.svg
+   :alt: portable
+   :class: eb-diagram
+
+   portable.
+#+end_export
 
 #+begin_questions
 - Why is =valid_systems = ['snellius']= a trap?

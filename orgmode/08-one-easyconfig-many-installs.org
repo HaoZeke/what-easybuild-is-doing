@@ -1,5 +1,18 @@
 #+TITLE: One easyconfig, many installs
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  .eb --> archA & archB --> two modules
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/08-one-easyconfig-many-installs.svg
+   :alt: many installs
+   :class: eb-diagram
+
+   many installs.
+#+end_export
 
 #+begin_objectives
 1. Say what =exts_list= installs, and which earlier chapters then apply

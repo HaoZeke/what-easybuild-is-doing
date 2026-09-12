@@ -1,5 +1,18 @@
 #+TITLE: A wrapper is the range EasyBuild will not write
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  old name --> .modulerc --> new module
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/37-wrapping-and-modulerc.svg
+   :alt: wrap
+   :class: eb-diagram
+
+   wrap.
+#+end_export
 
 #+begin_questions
 - What does a =ModuleRC= easyconfig install, if it installs no

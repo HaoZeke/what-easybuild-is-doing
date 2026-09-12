@@ -1,5 +1,18 @@
 #+TITLE: StackWalker
 #+OPTIONS: toc:nil num:nil
+#+begin_export rst
+.. figure:: _static/illustrations/stack-walker.jpg
+   :alt: StackWalker plate
+   :class: eb-diagram
+
+   StackWalker.
+#+end_export
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  stratum --> CVMFS --> tree
+</pre>
+#+end_export
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker

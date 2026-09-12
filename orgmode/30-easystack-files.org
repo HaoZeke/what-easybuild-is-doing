@@ -1,5 +1,18 @@
 #+TITLE: An easystack is the list the bot will build
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  yaml --> eb --easystack --> many .eb
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/30-easystack-files.svg
+   :alt: easystack
+   :class: eb-diagram
+
+   easystack.
+#+end_export
 
 #+begin_questions
 - What is an easystack file, if it is not a second recipe format?

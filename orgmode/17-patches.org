@@ -1,6 +1,19 @@
 #+TITLE: Patches, and what a patch is relative to
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  tarball --> patch -pN --> tree
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/17-patches.svg
+   :alt: patch
+   :class: eb-diagram
+
+   patch.
+#+end_export
 
 #+begin_objectives
 1. Read a =patches= entry, in both its forms, and say where it will be

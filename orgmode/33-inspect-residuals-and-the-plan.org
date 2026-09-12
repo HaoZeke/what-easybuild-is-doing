@@ -1,5 +1,18 @@
 #+TITLE: Inspect writes a work queue, not a recipe
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  foreign --> residuals --> plan
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/33-inspect-residuals-and-the-plan.svg
+   :alt: inspect
+   :class: eb-diagram
+
+   inspect.
+#+end_export
 
 #+begin_questions
 - What two files does =package inspect= write, and which claim do they

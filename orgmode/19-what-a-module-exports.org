@@ -1,6 +1,19 @@
 #+TITLE: What a module exports
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  modulefile --> PATH --> depends_on
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/19-what-a-module-exports.svg
+   :alt: module
+   :class: eb-diagram
+
+   module.
+#+end_export
 
 #+begin_questions
 - What does a generated modulefile actually export?

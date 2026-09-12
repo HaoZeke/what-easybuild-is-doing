@@ -1,5 +1,18 @@
 #+TITLE: Format, lint, and check are three different questions
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  .eb --> style --> checksums
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/34-recipe-format-lint-check.svg
+   :alt: lint
+   :class: eb-diagram
+
+   lint.
+#+end_export
 
 #+begin_questions
 - What does =recipe format= change, and what does it leave untouched?

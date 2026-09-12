@@ -1,5 +1,18 @@
 #+TITLE: How it runs
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  eb --> log --> module
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-run.svg
+   :alt: recipe run
+   :class: eb-diagram
+
+   recipe run.
+#+end_export
 Eighteen steps describe what a build is allowed to see and what a module exports.
 The machinery exists.
 #+begin_export rst

@@ -1,5 +1,18 @@
 #+TITLE: Compile or run-only
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  sources --> compile OR run-only
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/43-compile-or-run-only.svg
+   :alt: compile vs run
+   :class: eb-diagram
+
+   compile vs run.
+#+end_export
 
 #+begin_questions
 - When does a test compile, and when does it load a module?

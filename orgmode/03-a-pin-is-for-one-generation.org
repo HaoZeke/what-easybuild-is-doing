@@ -1,5 +1,11 @@
 #+TITLE: A pin is for one generation
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  dep tuple --> exact module --> or fail
+</pre>
+#+end_export
 
 #+begin_questions
 - What does =('HDF5', '1.14.6')= claim?

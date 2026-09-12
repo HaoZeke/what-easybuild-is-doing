@@ -1,5 +1,18 @@
 #+TITLE: The pipeline has six stages
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  setup --> compile --> run --> sanity --> perf --> cleanup
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/40-the-pipeline-has-six-stages.svg
+   :alt: pipeline
+   :class: eb-diagram
+
+   pipeline.
+#+end_export
 
 #+begin_questions
 - In what order do the stages run?

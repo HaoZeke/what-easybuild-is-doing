@@ -1,5 +1,18 @@
 #+TITLE: A site stack next to EESSI, not inside it
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  site MPI --> inject --> EESSI tree
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/32-host-injections.svg
+   :alt: host inject
+   :class: eb-diagram
+
+   host inject.
+#+end_export
 
 #+begin_questions
 - What does =EESSI_SITE_SOFTWARE_PREFIX= change, and when must it be

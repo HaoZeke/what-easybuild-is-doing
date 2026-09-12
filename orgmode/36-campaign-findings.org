@@ -1,5 +1,18 @@
 #+TITLE: A campaign finding is a typed failure, not a log
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  plan --> build --> finding
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/36-campaign-findings.svg
+   :alt: campaign
+   :class: eb-diagram
+
+   campaign.
+#+end_export
 
 #+begin_questions
 - What three booleans does =*.campaign.json= store, and which one can

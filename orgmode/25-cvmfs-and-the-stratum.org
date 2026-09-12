@@ -1,6 +1,19 @@
 #+TITLE: Reading a stack off the wire: CernVM-FS
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  stratum-0 --> stratum-1 --> client
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/25-cvmfs-and-the-stratum.svg
+   :alt: CVMFS
+   :class: eb-diagram
+
+   CVMFS.
+#+end_export
 
 #+begin_objectives
 1. Verify the content-addressing and signing chain of a real repository

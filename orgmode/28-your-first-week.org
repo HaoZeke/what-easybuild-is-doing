@@ -1,6 +1,19 @@
 #+TITLE: Your first week on somebody's stack
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  read --> build --> module --> ticket
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/28-your-first-week.svg
+   :alt: first week
+   :class: eb-diagram
+
+   first week.
+#+end_export
 
 #+begin_objectives
 1. Take a "bump this package" ticket from the request to a built module,

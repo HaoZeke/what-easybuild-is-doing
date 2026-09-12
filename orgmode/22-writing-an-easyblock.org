@@ -1,6 +1,19 @@
 #+TITLE: Writing an easyblock
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  ConfigureMake --> override --> class
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/22-writing-an-easyblock.svg
+   :alt: easyblock
+   :class: eb-diagram
+
+   easyblock.
+#+end_export
 
 #+begin_objectives
 1. Decide whether a build needs an easyblock or a parameter.

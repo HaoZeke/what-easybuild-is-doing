@@ -1,5 +1,18 @@
 #+TITLE: Afterword: when EasyBuild is the wrong tool
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  EasyBuild --> or not --> conda/spack
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/afterword-when-easybuild-is-the-wrong-tool.svg
+   :alt: stop
+   :class: eb-diagram
+
+   stop.
+#+end_export
 This chapter contains no widgets.
 This chapter contains no parameters.
 This chapter opposes the subject of every other chapter.

@@ -1,5 +1,18 @@
 #+TITLE: Journey: write a test
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  kind --> class --> run
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/journey-write-a-test.svg
+   :alt: journey test
+   :class: eb-diagram
+
+   journey test.
+#+end_export
 Four kinds of testing.
 A ReFrame class runs an installed module.
 [[file:23-testing.org][Testing and the four things it can mean]] [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]]

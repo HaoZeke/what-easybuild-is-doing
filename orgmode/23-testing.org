@@ -1,6 +1,19 @@
 #+TITLE: Testing, and the four things it can mean
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  smoke --> sanity --> unit --> ReFrame
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/23-testing.svg
+   :alt: four kinds
+   :class: eb-diagram
+
+   four kinds.
+#+end_export
 
 #+begin_objectives
 1. Tell apart the four things called "testing" in an EasyBuild workflow,

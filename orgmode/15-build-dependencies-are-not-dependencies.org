@@ -1,6 +1,20 @@
 #+TITLE: Build dependencies are not dependencies
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  builddeps --> compile
+deps --> module
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/15-build-dependencies-are-not-dependencies.svg
+   :alt: two lists
+   :class: eb-diagram
+
+   two lists.
+#+end_export
 
 #+begin_objectives
 1. Say which list a given dependency belongs in.

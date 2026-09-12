@@ -1,6 +1,19 @@
 #+TITLE: Extensions, and what an entry in exts_list inherits
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  exts_list --> bundle --> one module
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/29-extensions.svg
+   :alt: extensions
+   :class: eb-diagram
+
+   extensions.
+#+end_export
 
 #+begin_objectives
 1. Read any =exts_list= entry, in all three of its forms, and say which

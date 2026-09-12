@@ -1,5 +1,18 @@
 #+TITLE: Software maps to tests
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  module --> yml --> suite
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/46-software-maps-to-tests.svg
+   :alt: map
+   :class: eb-diagram
+
+   map.
+#+end_export
 
 #+begin_questions
 - What runs when a new module lands in EESSI?

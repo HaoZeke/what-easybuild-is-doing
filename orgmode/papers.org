@@ -1,5 +1,18 @@
 #+TITLE: References
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  cite --> bib --> page
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/papers.svg
+   :alt: papers
+   :class: eb-diagram
+
+   papers.
+#+end_export
 TS exploration methods identify a candidate transition mechanism.
 The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
 The energy barrier is the difference between the energy at the saddle and the reactant state.

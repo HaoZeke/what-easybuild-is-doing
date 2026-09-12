@@ -1,5 +1,18 @@
 #+TITLE: SeisSol, from a Spack recipe to a PR
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  Spack --> eb-stack --> .eb --> PR
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/48-seissol-from-spack-to-a-pr.svg
+   :alt: SeisSol
+   :class: eb-diagram
+
+   SeisSol.
+#+end_export
 
 #+begin_questions
 - When both a Spack =package.py= and an old easyconfig exist, which

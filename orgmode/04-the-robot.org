@@ -1,5 +1,18 @@
 #+TITLE: The robot
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  robot path --> .eb --> easyblock --> deps
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/04-the-robot.svg
+   :alt: robot search
+   :class: eb-diagram
+
+   robot search.
+#+end_export
 
 #+begin_questions
 - What is a bare =.eb= filename, if it is not a path?

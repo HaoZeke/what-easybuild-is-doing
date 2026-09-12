@@ -1,5 +1,18 @@
 #+TITLE: Four EasyBuild 5 surfaces the earlier chapters skipped
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  lock.json --> bwrap --> dataset
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/38-locks-bwrap-python-datasets.svg
+   :alt: lock
+   :class: eb-diagram
+
+   lock.
+#+end_export
 
 #+begin_questions
 - What does an EasyBuild install lock prevent, and how is it not a

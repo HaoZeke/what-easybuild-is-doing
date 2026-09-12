@@ -1,5 +1,18 @@
 #+TITLE: Build your own, without asking anyone
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  prefix --> eb --> own modulepath
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/10-build-your-own-without-asking.svg
+   :alt: user install
+   :class: eb-diagram
+
+   user install.
+#+end_export
 
 #+begin_objectives
 1. Install software into a directory the operator owns, on a machine where that operator is

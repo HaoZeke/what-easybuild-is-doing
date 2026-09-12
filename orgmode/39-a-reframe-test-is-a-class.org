@@ -1,5 +1,18 @@
 #+TITLE: A ReFrame test is a class
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  class --> fields --> run
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/39-a-reframe-test-is-a-class.svg
+   :alt: class
+   :class: eb-diagram
+
+   class.
+#+end_export
 
 #+begin_questions
 - What is the unit of work ReFrame runs?

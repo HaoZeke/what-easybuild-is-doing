@@ -1,5 +1,11 @@
 #+TITLE: An easyconfig is Python
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  Python namespace --> name --> easyblock class
+</pre>
+#+end_export
 
 #+begin_questions
 - Why is one name quoted and the other not?

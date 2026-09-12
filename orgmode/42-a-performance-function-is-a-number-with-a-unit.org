@@ -1,5 +1,18 @@
 #+TITLE: A performance function is a number with a unit
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  extract --> number --> unit
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/42-a-performance-function-is-a-number-with-a-unit.svg
+   :alt: perf
+   :class: eb-diagram
+
+   perf.
+#+end_export
 
 #+begin_questions
 - What is the difference between a sanity function and a performance

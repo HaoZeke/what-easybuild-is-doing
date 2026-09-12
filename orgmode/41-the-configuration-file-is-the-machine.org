@@ -1,5 +1,18 @@
 #+TITLE: The configuration file is the machine
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  reframe.py --> system --> partition
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/41-the-configuration-file-is-the-machine.svg
+   :alt: config
+   :class: eb-diagram
+
+   config.
+#+end_export
 
 #+begin_questions
 - What belongs in the test, and what belongs in the configuration?

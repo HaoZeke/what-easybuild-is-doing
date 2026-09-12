@@ -1,4 +1,17 @@
 #+TITLE: Journey: first recipe
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  read --> mechanisms --> module
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/journey-first-recipe.svg
+   :alt: journey first
+   :class: eb-diagram
+
+   journey first.
+#+end_export
 TS exploration methods identify a candidate transition mechanism.
 The estimate of the transition rate (under HTST

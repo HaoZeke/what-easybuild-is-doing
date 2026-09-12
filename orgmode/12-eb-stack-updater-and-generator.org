@@ -1,5 +1,11 @@
 #+TITLE: eb-stack ports a recipe and bumps one
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  conda/spack --> plan --> SBOM --> .eb
+</pre>
+#+end_export
 
 #+begin_questions
 - What does a conda-forge =recipe.yaml= become, as an easyconfig?

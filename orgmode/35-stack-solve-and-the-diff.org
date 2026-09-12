@@ -1,5 +1,18 @@
 #+TITLE: A stack lock is not a package lock
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  universe --> Resolvo --> lock
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/35-stack-solve-and-the-diff.svg
+   :alt: solve
+   :class: eb-diagram
+
+   solve.
+#+end_export
 
 #+begin_questions
 - What does =stack solve= take that =package plan= does not?

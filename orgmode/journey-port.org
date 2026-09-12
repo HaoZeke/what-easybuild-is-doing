@@ -1,5 +1,18 @@
 #+TITLE: Journey: port a package
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  conda/spack --> eb-stack --> .eb
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/journey-port.svg
+   :alt: journey port
+   :class: eb-diagram
+
+   journey port.
+#+end_export
 Previous rewrite failed the voice gate: rgoswami.AIVocabulary, rgoswami.TricolonAbuse.
 Rewrite again without those hinges.
 Keep every fact.

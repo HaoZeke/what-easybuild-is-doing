@@ -1,5 +1,18 @@
 #+TITLE: EESSI, somebody else's stack
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  stratum --> CVMFS --> client --> modules
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/11-eessi-somebody-elses-stack.svg
+   :alt: EESSI
+   :class: eb-diagram
+
+   EESSI.
+#+end_export
 
 #+begin_questions
 - What is EESSI, if it is not an install of EasyBuild?

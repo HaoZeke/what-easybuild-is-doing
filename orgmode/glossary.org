@@ -1,6 +1,19 @@
 #+TITLE: Glossary
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  term --> object
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/glossary.svg
+   :alt: glossary
+   :class: eb-diagram
+
+   glossary.
+#+end_export
 Each term appears a single time on this page, and any chapter may reference it in situ.
 Encountering =versionsuffix= in One easyconfig, many installs does not require this page, while a reader requiring the complete vocabulary can obtain it here.
 Definitions are presented mechanically rather than descriptively: they specify what the entity *is* in the code and what alterations occur when it changes.

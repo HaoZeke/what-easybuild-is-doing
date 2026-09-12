@@ -1,6 +1,19 @@
 #+TITLE: A path through this book
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  task --> level --> part
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/learning-path.svg
+   :alt: path
+   :class: eb-diagram
+
+   path.
+#+end_export
 Filenames keep a number to allow the source tree to sort.
 That number does not indicate a reading order.
 The page is the curriculum and contains hour-sized levels with named prerequisite edges.

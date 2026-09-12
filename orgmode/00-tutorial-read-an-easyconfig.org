@@ -1,5 +1,18 @@
 #+TITLE: Tutorial: read an easyconfig the way EasyBuild does
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  file --> templates --> easyblock --> toolchain
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/00-tutorial-read-an-easyconfig.svg
+   :alt: tutorial walk
+   :class: eb-diagram
+
+   tutorial walk.
+#+end_export
 The model this page is teaching evaluates the file.
 The model this page is teaching formats the templates.
 The model this page is teaching picks the easyblock.

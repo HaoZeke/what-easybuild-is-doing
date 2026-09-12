@@ -1,5 +1,18 @@
 #+TITLE: What "installed" means
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  eb ok --> modulefile --> module load
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/06-what-installed-means.svg
+   :alt: installed
+   :class: eb-diagram
+
+   installed.
+#+end_export
 
 #+begin_objectives
 1. Name the three checks EasyBuild can run, and say what a pass of each

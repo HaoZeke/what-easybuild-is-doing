@@ -1,5 +1,18 @@
 #+TITLE: Playground
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  try --> widget --> reset
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/playground.svg
+   :alt: playground
+   :class: eb-diagram
+
+   playground.
+#+end_export
 Previous rewrite failed the voice gate: rgoswami.AIVocabulary.
 Rewrite again without those hinges.
 Keep every fact.

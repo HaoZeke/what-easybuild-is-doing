@@ -1,6 +1,19 @@
 #+TITLE: Reading a failed build
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  log --> start_dir --> missing file
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/20-reading-a-failed-build.svg
+   :alt: failed build
+   :class: eb-diagram
+
+   failed build.
+#+end_export
 
 #+begin_objectives
 1. Read EasyBuild's error block and say which of its six fields to use

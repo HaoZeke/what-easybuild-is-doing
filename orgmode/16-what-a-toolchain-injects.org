@@ -1,6 +1,19 @@
 #+TITLE: What a toolchain injects
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  toolchain --> CC/FC --> flags
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/16-what-a-toolchain-injects.svg
+   :alt: inject
+   :class: eb-diagram
+
+   inject.
+#+end_export
 
 #+begin_objectives
 1. Say which environment variables a toolchain sets during a build, and

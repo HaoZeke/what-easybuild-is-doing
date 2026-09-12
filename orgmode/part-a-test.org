@@ -1,5 +1,18 @@
 #+TITLE: ReframeReader
 #+OPTIONS: toc:nil num:nil
+#+begin_export rst
+.. figure:: _static/illustrations/reframe-reader.jpg
+   :alt: ReframeReader plate
+   :class: eb-diagram
+
+   ReframeReader.
+#+end_export
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  class --> pipeline --> run
+</pre>
+#+end_export
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker

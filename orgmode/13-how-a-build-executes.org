@@ -1,6 +1,19 @@
 #+TITLE: How a build executes
 
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  fetch --> extract --> patch --> configure --> build --> install
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/13-how-a-build-executes.svg
+   :alt: build stages
+   :class: eb-diagram
+
+   build stages.
+#+end_export
 
 #+begin_questions
 - In what order do the steps run?

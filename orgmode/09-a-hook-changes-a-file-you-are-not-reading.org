@@ -1,5 +1,18 @@
 #+TITLE: A hook changes a file you are not reading
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  easyconfig --> hook --> written file
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/09-a-hook-changes-a-file-you-are-not-reading.svg
+   :alt: hooks
+   :class: eb-diagram
+
+   hooks.
+#+end_export
 
 #+begin_objectives
 1. Say what a hook is and when it runs.

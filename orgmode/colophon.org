@@ -1,5 +1,18 @@
 #+TITLE: At the back
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  samples --> citations --> build
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/colophon.svg
+   :alt: colophon
+   :class: eb-diagram
+
+   colophon.
+#+end_export
 
 * Where this runs
 EasyBuild is a Python package.

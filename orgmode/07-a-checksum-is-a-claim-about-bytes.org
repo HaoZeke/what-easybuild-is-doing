@@ -1,5 +1,18 @@
 #+TITLE: A checksum is a claim about bytes
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  bytes --> SHA256 --> recipe field
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/07-a-checksum-is-a-claim-about-bytes.svg
+   :alt: checksum
+   :class: eb-diagram
+
+   checksum.
+#+end_export
 
 #+begin_objectives
 1. Read a =checksums= block, including the case where one entry is a

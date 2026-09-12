@@ -1,5 +1,18 @@
 #+TITLE: Reading a failed ReFrame run
 #+OPTIONS: toc:nil num:nil
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  stage --> output --> reason
+</pre>
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/47-reading-a-failed-reframe-run.svg
+   :alt: failed run
+   :class: eb-diagram
+
+   failed run.
+#+end_export
 
 #+begin_questions
 - Where are the files when a test fails?
