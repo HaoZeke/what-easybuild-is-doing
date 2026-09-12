@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # Pull the rendered book off the build host and serve it locally.
 #
-# The build runs on rg.terra under Slurm, because it needs Emacs and Sphinx
-# and this laptop does not run builds. Reading the result is a different
-# question, and it wants a browser on this machine, so the html comes back
-# and a static server hands it over.
-#
-# Nothing here builds. If build/html on the remote is stale, run
-# scripts/build.sbatch there first.
+# Pull a already-rendered tree from a build host and serve it locally.
+# Nothing here builds. GUIDE_HOST must be set (ssh Host). If the remote
+# tree is stale, run scripts/build.sbatch there first.
 set -euo pipefail
 
-host="${GUIDE_HOST:-rg.terra}"
+if [[ -z "${GUIDE_HOST:-}" ]]; then
+    echo "serve: set GUIDE_HOST to the ssh Host that has the rendered book" >&2
+    exit 2
+fi
+host="$GUIDE_HOST"
 remote="${GUIDE_REMOTE:-Git/tmp/what-easybuild-is-doing/build}"
 port="${GUIDE_PORT:-8173}"
 here="$(cd "$(dirname "$0")/.." && pwd)"
