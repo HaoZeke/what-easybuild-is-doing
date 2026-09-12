@@ -109,8 +109,6 @@ Parameters multiply the suite's =parameter=.
 A portable test leaves the machine in the config's =find_modules=.
 These illustrate how a suite avoids defining a separate class for each module.
 * What the generated job script actually contains
-Previous attempt returned empty.
-Return the rewrite.
 #+begin_example
 #!/bin/bash
 stream.x

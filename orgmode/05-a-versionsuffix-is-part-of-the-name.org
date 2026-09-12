@@ -8,7 +8,6 @@
 3. Say what a module named for a version does and does not guarantee
  about the tree under it.
 #+end_objectives
-No prose was provided for rewriting.
 #+begin_example
 NVHPC/25.11-CUDA-12.9.1
 #+end_example

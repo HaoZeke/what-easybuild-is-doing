@@ -185,8 +185,6 @@ For Python, the conventional filter is an import:.
 #+begin_example
 exts_filter = ("python -c 'import %(ext_name)s'", '')
 #+end_example
-Previous attempt returned empty.
-Return the rewrite.
 #+ATTR_EB: :id docs-vs-code-exts :title Documentation and code, on extension options :kind discrepancy
 #+begin_detail
 Three behaviours that are in the code and not on the documentation site,
