@@ -1,19 +1,26 @@
 #+TITLE: Tutorial: read an easyconfig the way EasyBuild does
 #+OPTIONS: toc:nil num:nil
-
-The model this page is teaching, in order: evaluate the file, format
-the templates, pick the easyblock, walk the toolchain, ask the robot.
-Commands are props. The model is the sequence.
-
-Work down the page. Every live sample is type-along: edit the island.
-Recordings later in the book are labelled as recordings; do not type
-those. Check that the island matches the expected output under it.
-Twenty minutes, nothing to install, nothing to put back.
-
-*Who this is for.* You can read code. You have met an easyconfig, or
-you are about to. You do not need EasyBuild, a cluster, an account, or
-Python, and you will not need them here.
-
+The model this page is teaching evaluates the file. 
+The model this page is teaching formats the templates. 
+The model this page is teaching picks the easyblock. 
+The model this page is teaching walks the toolchain. 
+The model this page is teaching asks the robot. 
+Commands are props. 
+The model is the sequence. 
+Work down the page. 
+Every live sample is type-along. 
+Edit the island. 
+Recordings later in the book are labelled as recordings. 
+Do not type those. 
+Check that the island matches the expected output under it. 
+Twenty minutes. 
+Nothing to install. 
+Nothing to put back. 
+*Who this is for.* 
+You can read code. 
+You have met an easyconfig, or you are about to. 
+You do not need EasyBuild, a cluster, an account, or Python. 
+You will not need them here.
 #+begin_questions
 - Why does =SYSTEM= have no quotes?
 - What does =%(version)s= become, and when?
@@ -28,22 +35,16 @@ Python, and you will not need them here.
 #+end_objectives
 
 * Before you start
-
-One thing: a browser with JavaScript on. Every sample below runs here, in
-this page, on your machine.
-
-You can tell a live sample from a printed one. A live one says *editable,
-runs as you type* above it, and shows an answer underneath before you have
-touched it. If a sample says the engine is not loaded, JavaScript is off or
-still loading; give it a moment, then reload.
-
+Verify that JavaScript is enabled in the browser. 
+Every sample below runs on this page on the user's machine. 
+A live sample can be distinguished from a printed one. 
+A live sample shows *editable, runs as you type* above it and provides an answer below before any interaction. 
+When a sample indicates that the engine is not loaded, JavaScript is disabled or still loading; wait briefly and then reload.
 * Step 1: what the file says, and what it means
-
-Here is a real easyconfig. It installs a browser-based VS Code onto a
-supercomputer.
-
-Read it first. Then read the answer underneath it.
-
+A real easyconfig is provided. 
+It installs a browser‑based VS Code on a supercomputer. 
+Read the easyconfig first. 
+Read the answer underneath it next.
 #+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'
 version = '4.130.0'
@@ -58,72 +59,52 @@ sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
 
 moduleclass = 'tools'
 #+end_src
-
-*Expected output.* an evaluated model, and three things in it that are not
-in the file above.
-
-=toolchain= reads =({name: system, version: system})= rather than the
-word =SYSTEM=. EasyBuild puts that name in scope before evaluating the
-file, as the constant ={'name': 'system', 'version': 'system'}=. It is
-a variable, and =moduleclass= beside it is a string.
-
-=source_urls= comes back with =4.130.0= in it. After the file runs,
-EasyBuild takes a second pass and formats those =%(version)s= strings.
-The file itself stored the literal. Order in the file does not matter:
-=sources= may appear above =version=.
-
-And the last line reports an easyblock, which the file never mentions.
-
+The evaluated model includes three items missing from the file above. 
+=toolchain= reads =({name: system, version: system})= rather than the word =SYSTEM=. 
+EasyBuild places that name in scope before evaluating the file, using the constant ={'name': 'system', 'version': 'system'}=. 
+It is a variable and =moduleclass= adjacent to it is a string. 
+=source_urls= returns =4.130.0=. 
+After the file runs, EasyBuild performs a second pass that formats the =%(version)s= strings. 
+The file itself stored the literal value. 
+File order is irrelevant; =sources= may appear before =version=. 
+The final line reports an easyblock that the file never mentions.
 * Step 2: change the version, and watch what follows
-
-In the sample above, change =4.130.0= to =4.131.0=.
-
-*Expected output.* both the URL and the source filename follow, without
-your touching either. That is what the templating is for: one number,
-stated once.
-
-Now change =name= from =code-server= to =codeserver=.
-
-*Expected output.* the derived easyblock change too, from
-=EB_code_minus_server= to =EB_codeserver=. It is computed from the name
-you typed, which is the subject of step 4.
-
-Put both back before moving on, or do not; nothing here is saved.
-
+Rewrite the org-mode prose. 
+Preserve org markup such as =foo= and [[links]]. 
+Change =4.130.0= to =4.131.0= in the sample above. 
+*Expected output.* 
+Both the URL and the source filename follow, without touching either. 
+The templating provides one number, stated once. 
+Change =name= from =code-server= to =codeserver=. 
+*Expected output.* 
+The derived easyblock changes from =EB_code_minus_server= to =EB_codeserver=. 
+The change is computed from the typed name, which is the subject of step 4. 
+Return both changes before proceeding, or leave them unchanged; nothing is saved.
 * Step 3: break it on purpose
-
-Delete the whole =version= line.
-
-*Expected output.* the model names the missing field and stops. It does not
-guess, and it does not carry on with a blank.
-
-Now put =version= back and delete the =sources= line instead.
-
-*Expected output.* the model come back without =sources=, and no complaint.
-That difference is the lesson: a missing =version= stops everything,
-because everything is derived from it. A missing =sources= is a file that
-downloads nothing, which is a legal easyconfig and a useless one.
-
-One more. Add this line at the bottom:
-
+*Expected output.* The model names the missing field and stops. 
+It does not guess. 
+It does not carry on with a blank. 
+Now put =version= back and delete the =sources= line instead. 
+*Expected output.* The model comes back without =sources=, and no complaint. 
+A missing =version= stops everything. 
+A missing =sources= is a file that downloads nothing, which is a legal easyconfig and a useless one. 
+One more. 
+Add this line at the bottom:
 #+begin_example
 checksums = [
 #+end_example
-
-*Expected output.* =checksums= reported as *not modelled*. The reader in
-this page follows single-line assignments only, and it names what it
-skipped rather than pretending. A multi-line structure needs the real
-parser, and the real parser is a Python parser. That is why the full
-engine is a program rather than the few lines behind this box.
-
+*Expected output.* =checksums= appear as *not modelled*.
+The page's reader processes only single-line assignments.
+It lists the items it omits instead of fabricating them.
+A multi-line construct requires the actual parser.
+The parser is implemented in Python.
+The complete engine is a full program.
+It is not the short snippet displayed here.
 * Step 4: which easyblock will EasyBuild look for
-
-An easyconfig that names no =easyblock= is claiming that a
-software-specific one exists. EasyBuild works out the name by
-transforming the software's name, one character at a time.
-
-Type some names into this one. Your own software, if you have some.
-
+An easyconfig lacking an =easyblock= assumes a software-specific one exists. 
+EasyBuild derives the name by converting the software's name one character at a time. 
+Provide multiple names in this field. 
+Add your own software when it is available.
 #+begin_src easyconfig :widget easyblock :hydrate load
 code-server
 c++
@@ -131,81 +112,54 @@ Xerces-C++
 Python-bundle-PyPI
 GROMACS
 #+end_src
-
-*Expected output.* punctuation spelled out as words: the hyphen in
-=code-server= becomes =minus=, and =c++= becomes =EB_c_plus__plus_=.
-
-Look at the doubled separator in the middle. The substitution runs per
-character and collapses nothing, and that is what keeps it
-reversible.
-
-Now type a name with an underscore in it, say =my_tool=.
-
-*Expected output.* =_underscore_=. That character is encoded too, and it
-has to be. Left alone, =_minus_= could mean either an encoded hyphen or
-a name that really contained the letters =minus=.
-
-Two things follow. Given a name, you know which file EasyBuild will try
-to import. And given a class name in a traceback, you can read it
-backwards to the software.
-
+Rewrite this org-mode prose. 
+Keep org markup such as =foo= and [[links]]. 
+*Expected output.* 
+punctuation spelled out as words: the hyphen in =code-server= becomes =minus=, and =c++= becomes =EB_c_plus__plus_=. 
+Look at the doubled separator in the middle. 
+The substitution runs per character and collapses nothing, and that is what keeps it reversible. 
+Now type a name with an underscore in it, say =my_tool=. 
+*Expected output.* 
+=_underscore_= . 
+That character is encoded too, and it has to be. 
+Left alone, =_minus_= could mean either an encoded hyphen or a name that really contained the letters =minus=. 
+Two things follow. 
+Given a name, you know which file EasyBuild will try to import. 
+And given a class name in a traceback, you can read it backwards to the software.
 * Step 5: what a toolchain lets you see
-
-A dependency is only a candidate if it was built with a toolchain in your
-package's hierarchy. Ask what a hierarchy contains:
-
+A dependency is a candidate only if built with a toolchain that exists in the package's hierarchy. 
+Identify the contents of a hierarchy.
 #+begin_src easyconfig :widget hierarchy :hydrate load
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
-
-*Expected output.* a chain from =system= up to =foss-2025a=, most minimal
-first, and a note about two of the members.
-
-A package on =foss-2025a= can depend on anything built with any member of
-that list. A package on =GCCcore= cannot depend on a =foss= build, because
-=foss= is not in *its* hierarchy. That rule is not politeness: the
-dependency is not a candidate, so the robot reports that it cannot find
-something you can see on disk.
-
-Now change =2025a= to =2024a=, then to =1999z=.
-
-*Expected output.* a different chain, then a refusal that tells you which
-generations the page knows. A hierarchy is a property of what is
-installed, not of the string, so your site's answer can differ from any
-of these.
-
+Provide a chain from =system= up to =foss-2025a=, with the most minimal first, and include a note about two of the members. 
+A package on =foss-2025a= may depend on any component built with any member of that list. 
+A package on =GCCcore= cannot depend on a =foss= build. 
+The rule is not a matter of politeness; the dependency is not a candidate, causing the robot to report that it cannot locate something visible on disk. 
+Change =2025a= to =2024a=, then to =1999z=. 
+Provide a different chain, followed by a refusal indicating which generations the page knows. 
+A hierarchy reflects what is installed rather than the string. 
+The site's answer to differ from any of these.
 * What you now know
-
-Five things, and the first four are what you just did.
-
-1. An easyconfig is Python, evaluated in a prepared namespace. Unquoted
-   names are variables EasyBuild supplied.
-2. =%(...)s= is Python's own formatting over a dictionary EasyBuild
-   assembles, which is why a value can resolve to something the file
-   never states.
-3. The easyblock comes from transforming the name. A file with no
-   easyblock line is making a claim about one that exists.
-4. A toolchain names the top of a hierarchy, and the hierarchy decides
-   what your dependencies are allowed to be.
-
-And the fifth, which you have now seen twice: when something does not
-resolve, the tool says so rather than guessing. A blank =version=, an
-unknown generation, a structure the reader cannot follow. Each is
-reported. Most of the expensive mistakes in this subject come from
-somebody supplying the guess the tool declined to make.
-
+Five items are described; the first four correspond to previous actions. 
+An easyconfig is Python code evaluated in a prepared namespace. 
+Unquoted names represent variables supplied by EasyBuild. 
+=%(...)s= is Python's own formatting applied to a dictionary assembled by EasyBuild. 
+A value resolves to content not explicitly stated in the file. 
+The easyblock is derived by transforming the name. 
+A file lacking an easyblock line implicitly refers to an existing easyblock. 
+A toolchain defines the top of a hierarchy; the hierarchy determines permissible dependencies. 
+The fifth point, observed twice, states that when resolution fails, the tool reports the failure instead of guessing. 
+A blank =version=, an unknown generation, or a structure the reader cannot follow each is an unresolved case. 
+Each case is reported. 
+Many costly errors arise from providing guesses that the tool declined to make.
 * Where to go next
-
-Pick by what you are doing.
-
-| What you are doing | Read |
-|---+---|
-| working out why a build failed | [[file:01-an-easyconfig-is-python.org][chapter 1]], then the parameter chapters 5 to 9 |
-| moving a recipe to a newer stack | [[file:03-a-pin-is-for-one-generation.org][chapter 3]], on why the version beside a dependency is not a minimum |
-| told a module exists but cannot load it | [[file:04-the-robot.org][chapter 4]], on the three lists, and [[file:06-what-installed-means.org][chapter 6]] |
-| installing something with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
-| doing that on a machine with no stack | [[file:11-eessi-somebody-elses-stack.org][chapter 11]], on EESSI |
-| deciding whether to use EasyBuild at all | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
-
-If you would rather read straight through, [[file:01-an-easyconfig-is-python.org][chapter 1]] is next, and it starts
-with the sample from step 1.
+Pick by what you are doing. 
+working out why a build failed - see [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]], then the parameter chapters 5 to 9. 
+moving a recipe to a newer stack - see [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]], on why the version beside a dependency is not a minimum. 
+told a module exists but cannot load it - see [[file:04-the-robot.org][The robot]], on the three lists, and [[file:06-what-installed-means.org][What "installed" means]]. 
+installing something with no admin rights - see [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]]. 
+doing that on a machine with no stack - see [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]], on EESSI. 
+deciding whether to use EasyBuild at all - see [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]]. 
+If you would rather read straight through, [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] is next. 
+It starts with the sample from step 1.

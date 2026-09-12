@@ -1,78 +1,56 @@
-#+TITLE: Chapter 22. Writing an easyblock
+#+TITLE: Writing an easyblock
 
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Decide whether a build needs an easyblock or a parameter.
 2. Write one: which class to derive from, which methods to override, and
-   how to add a parameter of your own.
+ how to add a parameter of your own.
 3. Load it without installing it anywhere, and test it without building
-   anything.
+ anything.
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:13-how-a-build-executes.org][Chapter 13]], because an easyblock is
-  organised around the steps.
-- [[file:21-writing-one-from-nothing.org][Chapter 21]], because the decision
-  in this chapter is whether an easyconfig was enough.
+- [[file:13-how-a-build-executes.org][How a build executes]]
+ organised around the steps.
+- [[file:21-writing-one-from-nothing.org][Writing one from nothing]]
+ in this chapter is whether an easyconfig was enough.
 - Enough Python to read a class and call a parent method. Nothing more.
 #+end_prerequisites
-
-An easyblock is Python that EasyBuild runs. That makes it the most
-powerful thing in this book and the one most often reached for too early.
-
+An easyblock is Python code executed by EasyBuild.
+It is the most powerful element in this book.
+It is the one most frequently used prematurely.
 * The decision, before the code
-
-EasyBuild 5.3.1 ships 82 generic easyblock classes in 47 modules, and 282
-software-specific ones. The generic ones exist because most software
-builds are one of a dozen shapes, and the right first question is which
-shape yours is.
-
-Three questions, in order, and the first two usually end it.
-
-*Can =configopts= say it?* A build needing an unusual flag, an
-environment variable, a command before configure or after install, needs
-no code. =preconfigopts=, =configopts=, =prebuildopts=, =buildopts=,
-=preinstallopts=, =installopts= and =postinstallcmds= are strings that
-get spliced into the commands from
-[[file:13-how-a-build-executes.org][chapter 13]], and they cover more
-than people expect.
-
-*Is there a generic easyblock for this build system?* =CMakeMake=,
-=MesonNinja=, =PythonPackage=, =Cargo=, =Bundle=, =Tarball=, =Binary=,
-=MakeCp=, =PerlModule=. Deriving from the right one and overriding a
-single method is a fraction of the work of starting from scratch, and it
-is the recommended path in EasyBuild's own documentation.
-
-*Will more than one easyconfig need it?* This is the real threshold. An
-easyblock is code your site maintains across EasyBuild versions. One
-package with one strange step is a =postinstallcmds= line with a comment.
-Five versions of one package with a strange step every time is an
-easyblock.
-
+EasyBuild 5.3.1 provides 82 generic easyblock classes across 47 modules and 282 software‑specific classes.
+The generic classes exist.
+Three questions are posed in sequence.
+The first two normally resolve the issue.
+*Can =configopts= say it?* A build that requires an unusual flag, an environment variable, or a command before configure or after install does not need additional code.
+=preconfigopts=, =configopts=, =prebuildopts=, =buildopts=, =preinstallopts=, =installopts= and =postinstallcmds= are strings inserted into the commands described in [[file:13-how-a-build-executes.org][How a build executes]].
+They handle more cases than expected.
+*Is there a generic easyblock for this build system?* =CMakeMake=, =MesonNinja=, =PythonPackage=, =Cargo=, =Bundle=, =Tarball=, =Binary=, =MakeCp=, =PerlModule= are available.
+Deriving from the appropriate class and overriding a single method requires only a fraction of the effort of building from scratch.
+This approach is recommended in EasyBuild documentation.
+*Will more than one easyconfig need it?* This question determines the true threshold.
+An easyblock represents code maintained by a site across EasyBuild versions.
+A single package with one unusual step can be addressed with a =postinstallcmds= line and a comment.
+Multiple versions of the same package each requiring an unusual step justify creating an easyblock.
 * What to derive from
-
-=EasyBlock=, in =easybuild.framework.easyblock=, is abstract. It is not
-abstract by convention:
-
+=EasyBlock= resides in =easybuild.framework.easyblock= and is abstract.
+It is not abstract by convention.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "Three methods every easyblock must supply"
 $ python3 -c 'import inspect
 > from easybuild.framework.easyblock import EasyBlock
 > print(inspect.getsource(EasyBlock.install_step))'
-    def install_step(self):
-        """Dummy install step, should be implemented in derived classes."""
-        raise NotImplementedError
+ def install_step(self):
+ """Dummy install step, should be implemented in derived classes."""
+ raise NotImplementedError
 #+end_src
-
-=configure_step=, =build_step= and =install_step= raise
-=NotImplementedError= on the base class. Every other step has a working
-default, which is why an easyblock deriving from =ConfigureMake= can be
-twenty lines.
-
-The naming rules are mechanical and worth getting right, because
-EasyBuild finds an easyblock by *computing* its name rather than by
-looking it up.
-
+The base class raises =NotImplementedError= for =configure_step=, =build_step= and =install_step=.
+All other steps provide a functional default.
+Create an easyblock that inherits from =ConfigureMake= and is only twenty lines long.
+Mechanical naming rules must be applied correctly.
+EasyBuild locates an easyblock by *computing* its name instead of performing a lookup.
 #+ATTR_EB: :id easyblock-naming :title How an easyblock's name and file are computed :kind reference
 #+begin_detail
 Software-specific easyblocks are named =EB_<softwarename>= with the name
@@ -96,12 +74,8 @@ The =easyblock= easyconfig parameter overrides the whole computation.
 With no such parameter, the class name is derived from =name=, which is
 why renaming software renames the easyblock it looks for.
 #+end_detail
-
-That encoding (see [[dive:easyblock-naming]]) is the same problem
-[[file:01-an-easyconfig-is-python.org][chapter 1]]'s widget solves, and
-the reason the book has one: it is a rule that can be computed and therefore a
-rule that can be checked.
-
+That encoding (see [[dive:easyblock-naming]]) is solved by the widget in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+The book contains one.
 * The methods that actually get overridden
 
 #+begin_src easyconfig :widget parse
@@ -125,149 +99,128 @@ from easybuild.tools.filetools import apply_regex_substitutions
 
 
 class EB_example(ConfigureMake):
-    """Support for building/installing example."""
+ """Support for building/installing example."""
 
-    @staticmethod
-    def extra_options(extra_vars=None):
-        """Custom easyconfig parameters for example."""
-        extra_vars = ConfigureMake.extra_options(extra_vars)
-        extra_vars.update({
-            'with_widgets': [False, "Build the widget backend", CUSTOM],
-        })
-        return extra_vars
+ @staticmethod
+ def extra_options(extra_vars=None):
+ """Custom easyconfig parameters for example."""
+ extra_vars = ConfigureMake.extra_options(extra_vars)
+ extra_vars.update({
+ 'with_widgets': [False, "Build the widget backend", CUSTOM],
+ })
+ return extra_vars
 
-    def configure_step(self):
-        """Patch the makefile template, then configure as usual."""
-        apply_regex_substitutions('Makefile.in',
-                                  [(r'^CC\s*=.*', 'CC = %s' % os.getenv('CC'))])
-        if self.cfg['with_widgets']:
-            self.cfg.update('configopts', '--enable-widgets')
-        super(EB_example, self).configure_step()
+ def configure_step(self):
+ """Patch the makefile template, then configure as usual."""
+ apply_regex_substitutions('Makefile.in',
+ [(r'^CC\s*=.*', 'CC = %s' % os.getenv('CC'))])
+ if self.cfg['with_widgets']:
+ self.cfg.update('configopts', '--enable-widgets')
+ super(EB_example, self).configure_step()
 #+end_example
-
 Four things in that are the whole idiom.
 
-*=self.cfg[...]= is the easyconfig.* Every parameter is readable, and
-=self.cfg.update= appends to a string or list parameter rather than
-replacing it, which matters when the easyconfig also set it.
-=self.name=, =self.version=, =self.toolchain= and
-=self.all_dependencies= are shortcuts to the ones used constantly.
+*=self.cfg[...]= is the easyconfig.*
 
-*=extra_options= is how a parameter is born.* A =@staticmethod= returning
-a dict of =name: [default, help, category]=, merged with the parent's.
-The category is =CUSTOM= for an optional parameter and =MANDATORY= for
-one the easyconfig must set. Once declared, it is a real parameter:
-=eb -a -e EB_example= lists it, and an easyconfig that misspells it gets
-the unknown-parameter warning from
-[[file:21-writing-one-from-nothing.org][chapter 21]].
+Every parameter is readable.
 
-*Call the parent, and know where.* =super().configure_step()= last means
-"run the subclass preparation, then configure normally". First means "configure,
-then fix up what it produced". Getting that order wrong produces a build
-that works on your machine and fails on a clean one, because the two
-orders differ only when something already exists.
+=self.cfg.update= appends to a string or list parameter rather than replacing it.
 
-*Use =setvar=, not =os.environ=.* EasyBuild tracks environment changes so
-they can be logged and reported under
-[[file:20-reading-a-failed-build.org][chapter 20]]'s extended dry run. A
-direct write to =os.environ= happens invisibly and does not appear in
-=-x= output at all.
+This matters when the easyconfig also sets it.
 
-One correction to make before copying an example from the upstream
-documentation: that page still documents =run_cmd= and =run_cmd_qa=, which
-EasyBuild 5 replaced with =run_shell_cmd=. The framework's own step
-methods use =run_shell_cmd=, and there is a migration page for the
-change. An easyblock written from that page will import a function that
-is no longer there.
+=self.name=, =self.version=, =self.toolchain= and =self.all_dependencies= are shortcuts to the ones used constantly.
 
+*extra_options= is how a parameter is born.*
+
+A =@staticmethod= returns a dict of =name: [default, help, category]=.
+
+The dict is merged with the parent's.
+
+The category is =CUSTOM= for an optional parameter.
+
+The category is =MANDATORY= for a parameter the easyconfig must set.
+
+Once declared, it is a real parameter.
+
+=eb -a -e EB_example= lists it.
+
+An easyconfig that misspells it gets the unknown-parameter warning from [[file:21-writing-one-from-nothing.org][Writing one from nothing]].
+
+*Call the parent, and know where.*
+
+=super().configure_step()= last means run the subclass preparation, then configure normally.
+
+First means configure, then fix up what it produced.
+
+Getting that order wrong produces a build that works on your machine.
+
+The same build fails on a clean one.
+
+*Use =setvar=, not =os.environ=.*
+
+EasyBuild tracks environment changes.
+
+They can be logged and reported under [[file:20-reading-a-failed-build.org][Reading a failed build]]'s extended dry run.
+
+A direct write
 * Loading one without installing it
-
-An easyblock does not have to be installed into EasyBuild to try it.
-
+An easyblock can be tried without being installed into EasyBuild.
 #+begin_example
 eb example-1.0.eb --include-easyblocks=$HOME/myeb/*.py
 #+end_example
-
-=--include-easyblocks= takes a comma-separated list of paths, absolute,
-relative or globbed, and generic easyblocks are expected in a
-subdirectory named =generic=. What it does is worth knowing because it
-explains the precedence: EasyBuild builds a temporary directory
-containing the right Python package structure, symlinks your modules into
-it, and puts that directory *first* on the Python search path. So an
-included easyblock shadows the one that shipped, which is exactly what
-needed while testing and exactly what must not be left in a site
-configuration.
-
-=eb --list-easyblocks=detailed= then reports which file was actually
-loaded, path included. That is the check worth running when an easyblock
-appears not to have taken effect, because the failure mode is silent:
-EasyBuild uses the shipped one and everything looks normal.
-
-Two related options exist for the same purpose against upstream work in
-progress, =--include-easyblocks-from-pr= and
-=--include-easyblocks-from-commit=, and they are mutually exclusive.
-
+=--include-easyblocks= accepts a comma‑separated list of paths, which may be absolute, relative, or globbed, and expects generic easyblocks in a subdirectory named =generic=.
+The option builds a temporary directory with the correct Python package layout, symlinks the modules into it, and places that directory first on the Python search path, thereby defining precedence.
+An included easyblock overrides the shipped one, which is desirable for testing but must not remain in a site configuration.
+=eb --list-easyblocks=detailed= reports the exact file that was loaded, including its path.
+This check is useful when an easyblock seems ineffective.
+The mutually exclusive options =--include-easyblocks-from-pr= and =--include-easyblocks-from-commit= provide the same functionality for upstream work in progress.
 * Testing it without building anything
-
-The documented order, and it is a good one.
-
-*=eb -x=*, the extended dry run, walks the whole procedure and reports
-what each step *would* do, including the commands and the environment
-changes. It ends with =(no ignored errors during dry run)= when nothing
-went wrong, and that line is the thing to look for rather than the
-absence of a traceback.
-
-*=eb --module-only --force=*, which skips to the module step and
-generates the modulefile, so the easyblock's exports are readable
-before anything is compiled.
-
-And the trap that comes with the second: under =--module-only=, most =*_step= methods do not run.
-So an easyblock whose =configure_step= sets =self.foo= and whose
-=sanity_check_step= reads it will find =None=. The fix is a helper method
-that both call, rather than state carried between steps.
-
-Then a real build, and then
-[[file:23-testing.org][chapter 23]], because an easyblock that produces
-an installation is not the same as an easyblock that produces a working
-one.
-
+The documented order is effective.
+*=eb -x=*, the extended dry run, traverses the entire procedure and reports the actions each step *would* perform, including commands and environment changes.
+It concludes with =(no ignored errors during dry run)= when no errors occur, and that line is the indicator to look for instead of the absence of a traceback.
+*=eb --module-only --force=*, jumps directly to the module step and creates the modulefile.
+The easyblock's exports become readable before any compilation.
+A trap of the second command is that under =--module-only=, most =*_step= methods are skipped.
+An easyblock whose =configure_step= sets =self.foo= and whose =sanity_check_step= reads it will encounter =None=.
+The fix provides a helper method invoked by both steps, preventing state from being carried between steps.
+A real build follows, then [[file:23-testing.org][Testing, and the four things it can mean]].
 #+ATTR_EB: :id EB-Easyblock-1 :title Four requests, and only one of them is code
 #+begin_exercise
 For each, say whether you would write an easyblock, and what you would do
 instead if not.
 
 1. A package whose =configure= needs =--with-hdf5= pointing at the HDF5
-   module's root.
+ module's root.
 2. A package that ships a =Makefile.in= with =CC = gcc= hardcoded, and
-   has done for six releases.
+ has done for six releases.
 3. A package that installs correctly but leaves its binaries in
-   =libexec/=, so the module exports nothing on =$PATH=.
+ =libexec/=, so the module exports nothing on =$PATH=.
 4. A package whose build must be run twice, with different flags, and the
-   second run needs a file the first one produced.
+ second run needs a file the first one produced.
 
 #+begin_solution
 1. No easyblock. =configopts = '--with-hdf5=$EBROOTHDF5'=, using the
-   variable from [[file:19-what-a-module-exports.org][chapter 19]] that
-   the dependency's module set during =prepare=.
+ variable from [[file:19-what-a-module-exports.org][What a module exports]] that
+ the dependency's module set during =prepare=.
 
 2. An easyblock, and this is the case that justifies one. Six releases
-   means the substitution will be needed again, so
-   =apply_regex_substitutions= in =configure_step= is worth maintaining.
-   A patch would work for one version and conflict on the next, which is
-   [[file:17-patches.org][chapter 17]]'s argument.
+ means the substitution will be needed again, so
+ =apply_regex_substitutions= in =configure_step= is worth maintaining.
+ A patch would work for one version and conflict on the next, which is
+ [[file:17-patches.org][Patches, and what a patch is relative to]]'s argument.
 
 3. No easyblock. =modextrapaths = {'PATH': 'libexec'}=, which is
-   chapter 19. Nothing about the build changed; only what the module says
-   about it.
+ What a module exports. Nothing about the build changed; only what the module says
+ about it.
 
 4. Probably no easyblock. A list-valued =configopts= makes EasyBuild
-   iterate the whole =ready=-to-=extensions= block once per entry, which
-   is exactly two builds with different flags, and it is
-   [[file:13-how-a-build-executes.org][chapter 13]]'s =postiter= step
-   putting the environment back between them. Reach for an easyblock only
-   if the second run needs to *find* the first one's output in a way no
-   flag can express, and then say so in a comment, because the next
-   person will assume the iteration would have worked.
+ iterate the whole =ready=-to-=extensions= block once per entry, which
+ is exactly two builds with different flags, and it is
+ [[file:13-how-a-build-executes.org][How a build executes]]'s =postiter= step
+ putting the environment back between them. Reach for an easyblock only
+ if the second run needs to *find* the first one's output in a way no
+ flag can express, and then say so in a comment
+ person will assume the iteration would have worked.
 #+end_solution
 #+end_exercise
 
@@ -284,7 +237,7 @@ Upstream documentation, fetched 2026-09-10:
 - [[https://docs.easybuild.io/hooks/][hooks]]: the most reliable published enumeration of the steps
 - [[https://docs.easybuild.io/easybuild-v5/run_shell_cmd/][the run_shell_cmd migration]]
 
-One caution repeated in the chapter because it costs an afternoon: the
+One caution repeated in the chapter
 implementing-easyblocks page documents the EasyBuild 4 shell API
 (=run_cmd=, =run_cmd_qa=) and imports =LooseVersion= from =distutils=,
 which was removed from Python's standard library in 3.12. The framework's
@@ -293,13 +246,13 @@ own step methods use =run_shell_cmd=.
 
 #+begin_keypoints
 - Reach for =configopts= first, a generic easyblock second, and your own
-  code only when more than one easyconfig will need it.
+ code only when more than one easyconfig will need it.
 - =configure_step=, =build_step= and =install_step= are the three the
-  abstract class does not implement.
+ abstract class does not implement.
 - =extra_options= is how a parameter is born; =setvar= is how an
-  environment variable is set so the dry run can see it.
+ environment variable is set so the dry run can see it.
 - =--include-easyblocks= shadows the shipped easyblock, and
-  =--list-easyblocks=detailed= is how to confirm which file loaded.
+ =--list-easyblocks=detailed= is how to confirm which file loaded.
 - Under =--module-only= most steps do not run, so state carried between
-  steps arrives as =None=.
+ steps arrives as =None=.
 #+end_keypoints

@@ -1,44 +1,39 @@
-#+TITLE: Chapter 33. Inspect writes a work queue, not a recipe
+#+TITLE: Inspect writes a work queue, not a recipe
 #+OPTIONS: toc:nil num:nil
 
 #+begin_questions
 - What two files does =package inspect= write, and which claim do they
-  establish?
+ establish?
 - When is a leftover a residual, and when is it only a parser note?
 - Why does =package plan= exit without =--stack-policy=?
 #+end_questions
 
 #+begin_objectives
 1. Run =package inspect= on a foreign recipe and name every section of
-   =package.plan.json= that is evidence, and every residual that is work.
+ =package.plan.json= that is evidence, and every residual that is work.
 2. Tell a =mechanical= residual from a =judgment= residual from a
-   =blocking= one, and say which stage each belongs to.
+ =blocking= one, and say which stage each belongs to.
 3. Write the =package plan= command that turns that inspect tree into a
-   lock and a =.eb=, including the stack policy the CLI requires.
+ lock and a =.eb=, including the stack policy the CLI requires.
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:12-eb-stack-updater-and-generator.org][Chapter 12]]: the
-  claim ladder. This chapter is the first two rungs' artifacts.
+- [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]: the
+ claim ladder. This chapter is the first two rungs' artifacts.
 #+end_prerequisites
-
-[[file:12-eb-stack-updater-and-generator.org][Chapter 12]] named
-=package inspect= and stopped. The command is the one that can be
-run from a fresh clone with no EasyBuild and no robot tree. What it
-writes is the rest of this chapter.
-
-The fixture is the rattler-build v1 recipe for eOn, frozen from the
-conda-forge feedstock:
-
+[[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] placed the conda-forge recipe beside the =.eb= and halted at the residual queue.
+=package inspect= is the command executable from a fresh clone lacking EasyBuild and a robot tree.
+Its output is the remainder of this chapter.
+The fixture comprises the rattler-build v1 recipe for eOn, captured from the conda-forge feedstock:.
 #+begin_example
 eb-stack package inspect \
-  --source fixtures/foreign_ingest/conda_eon/recipe.yaml \
-  --format conda-forge \
-  --toolchain-name foss \
-  --toolchain-version 2026.1 \
-  --package-config examples/packages/common.toml \
-  --package-config examples/packages/eon.toml \
-  --out-dir /tmp/eon-inspect
+ --source fixtures/foreign_ingest/conda_eon/recipe.yaml \
+ --format conda-forge \
+ --toolchain-name foss \
+ --toolchain-version 2026.1 \
+ --package-config examples/packages/common.toml \
+ --package-config examples/packages/eon.toml \
+ --out-dir /tmp/eon-inspect
 #+end_example
 
 Two files come out, and nothing else:
@@ -47,15 +42,13 @@ Two files come out, and nothing else:
 /tmp/eon-inspect/package.plan.json
 /tmp/eon-inspect/package.sbom.cdx.json
 #+end_example
-
-There is no =locks/= directory and no =easyconfigs/=. Inspection
-does not call Resolvo. It establishes no rung of the ladder.
-
+The =locks/= directory is missing and the =easyconfigs/= directory is missing.
+Resolvo is not called by Inspection.
+No rung of the ladder is established.
 * The plan is a manifest with provenance
-
-=package.plan.json= has =schema_version= 1. Unknown fields are
-rejected. The sections that matter on a first read:
-
+=package.plan.json= has =schema_version= 1.
+Unknown fields are rejected.
+The sections that matter on a first read are:
 | Field | What it records |
 |---+---|
 | =origin= | =conda-forge=, =spack=, =pypi=, =cran=, =cargo=, or =easy-build= |
@@ -66,65 +59,51 @@ rejected. The sections that matter on a first read:
 | =profiles= | independently installable products |
 | =outputs= | requested profile and stack-policy pairs |
 | =residuals= | the work queue |
-
-Provenance on a source or a dependency is =exact=, =derived=, or
-=ambiguous=, plus a span. Written paths are identities
-(=conda-forge/recipe.yaml=, =spack/package.py=), not checkout
-locations, so two hosts produce the same JSON from the same input.
-
-A conda =build.number= is a parser *note*. So is a compiler or
-=cross-python= template that the EasyBuild toolchain already
-represents. Notes are diagnostics. Planning never greps them for
-the word "residual". Anything that needs a human or a later stage
-is a typed residual instead.
-
+Provenance on a source or a dependency is =exact=, =derived=, or =ambiguous=, plus a span.
+Written paths are identities (=conda-forge/recipe.yaml=, =spack/package.py=).
+Written paths are not checkout locations.
+Two hosts produce the same JSON from the same input.
+A conda =build.number= is a parser *note*.
+A compiler or =cross-python= template that the EasyBuild toolchain already represents is also a parser *note*.
+Notes are diagnostics.
+Planning never greps them for the word "residual".
+Anything that needs a human or a later stage is a typed residual instead.
 * Residuals are the work queue
-
-A residual has =id=, =stage=, =category=, =severity=, =summary=,
-and optional =evidence= and =provenance=:
-
+Each residual includes =id=, =stage=, =category=, =severity=, =summary=.
+Each residual may also contain =evidence= and =provenance=.
 #+begin_example
 {
-  "id": "foreign:imperative-patch:0",
-  "stage": "parse",
-  "category": "imperative-patch",
-  "severity": "judgment",
-  "summary": "imperative patch method requires EasyBuild translation",
-  "provenance": {
-    "span": {"path": "package.py", "start_line": 42}
-  }
+ "id": "foreign:imperative-patch:0",
+ "stage": "parse",
+ "category": "imperative-patch",
+ "severity": "judgment",
+ "summary": "imperative patch method requires EasyBuild translation",
+ "provenance": {
+ "span": {"path": "package.py", "start_line": 42}
+ }
 }
 #+end_example
-
-Severity has three values, and they are the triage:
-
-- =mechanical=: deterministic formatting or metadata. =recipe format=
-  can close some of these.
-- =judgment=: package-authoring or target evidence is required. A
-  Spack =def patch(self):= method that is not a file is this.
-- =blocking=: the next pipeline stage cannot make a valid claim. A
-  missing SHA-256 on a version bump without =--source-checksum= is
-  this.
-
-Stage is =parse=, =normalization=, =resolution=, =emission=,
-=build=, or =verification=. An inspect residual is almost always
-=parse=. A bump that changes the package version and does not pass
-=--source-checksum= adds a residual because source bytes cannot be
-inferred from a version string.
-
-The foreign-ingest README is explicit about the limit: these
-fixtures drive parser regression. They do not claim parity with a
-hand-authored EasyBuild pull request. Product flags, generation
-pins, and multi-source extract layout remain residual. That
-sentence is why inspect exists as a command of its own. The work
-queue is visible *before* Resolvo spends a robot tree on a recipe
-that still needs judgment.
-
-The planned SBOM, =package.sbom.cdx.json=, is CycloneDX 1.5 derived
-from the same plan. It is a pre-build inventory. It carries no
-generation timestamp, so two inspect runs of the same input hash
-the same. It does not establish =builds= or =binary-verified=.
-
+Severity has three values that constitute the triage.
+- =mechanical=: deterministic formatting or metadata. 
+- =recipe format= can close some of these. 
+- =judgment=: package-authoring or target evidence is required. 
+- A Spack =def patch(self):= method that is not a file is this. 
+- =blocking=: the next pipeline stage cannot make a valid claim. 
+- A missing SHA-256 on a version bump without =--source-checksum= is this. 
+Stage is =parse=, =normalization=, =resolution=, =emission=, =build=, or =verification=.
+An inspect residual is almost always =parse=.
+A bump that changes the package version and does not pass =--source-checksum= adds a residual.
+The foreign-ingest README is explicit about the limit.
+These fixtures drive parser regression.
+They do not claim parity with a hand-authored EasyBuild pull request.
+Product flags, generation pins, and multi-source extract layout remain residual.
+That sentence explains why inspect exists as a command of its own.
+The work queue is visible *before* Resolvo spends a robot tree on a recipe that still needs judgment.
+The planned SBOM, =package.sbom.cdx.json=, is CycloneDX 1.5 derived from the same plan.
+It is a pre-build inventory.
+It carries no generation timestamp.
+Two inspect runs of the same input hash the same.
+It does not establish =builds= or =binary-verified=.
 #+ATTR_EB: :id EB-Residual-1 :title Note, residual, or claim
 #+begin_exercise
 Four inspect outputs. For each, say whether it is a parser note, a
@@ -137,37 +116,35 @@ typed residual (and which severity), or a claim.
 
 #+begin_solution
 1. A parser note. The EasyBuild toolchain represents the rebuild
-   counter; nothing in the next stage has to act on it.
+ counter; nothing in the next stage has to act on it.
 
 2. A =judgment= residual, category =imperative-patch=, stage
-   =parse=. There is no patch file to copy beside the emitted
-   =.eb=. Someone has to write one, or drop the change.
+ =parse=. There is no patch file to copy beside the emitted
+ =.eb=. Someone has to write one, or drop the change.
 
 3. Evidence in =sources=. Not a residual. Provenance is =exact=.
 
 4. The planned SBOM. Not a claim. The same inventory in a
-   different schema. =resolves= still has not been established.
+ different schema. =resolves= still has not been established.
 #+end_solution
 #+end_exercise
 
 * Plan is inspect plus Resolvo, and it needs a policy
-
-The command that establishes =resolves= is =package plan=. The
-current CLI requires =--stack-policy=. Chapter 12's sample omitted
-it. The live form, from the tutorial, is:
-
+The command defining =resolves= is =package plan=.
+The current CLI requires =--stack-policy=. eb-stack ports a recipe and bumps one's example left it out.
+The live form from the tutorial is:
 #+begin_example
 eb-stack package plan \
-  --source fixtures/foreign_ingest/conda_eon/recipe.yaml \
-  --format conda-forge \
-  --toolchain-name foss \
-  --toolchain-version 2026.1 \
-  --package-config examples/packages/common.toml \
-  --package-config examples/packages/eon.toml \
-  --easyconfigs "$ROBOT" \
-  --easyconfigs /tmp/eb-stack/overlay \
-  --stack-policy examples/stacks/eon-foss-2026.1.toml \
-  --out-dir "$BUNDLE"
+ --source fixtures/foreign_ingest/conda_eon/recipe.yaml \
+ --format conda-forge \
+ --toolchain-name foss \
+ --toolchain-version 2026.1 \
+ --package-config examples/packages/common.toml \
+ --package-config examples/packages/eon.toml \
+ --easyconfigs "$ROBOT" \
+ --easyconfigs /tmp/eb-stack/overlay \
+ --stack-policy examples/stacks/eon-foss-2026.1.toml \
+ --out-dir "$BUNDLE"
 #+end_example
 
 The generated tree is now:
@@ -178,64 +155,49 @@ package.sbom.cdx.json
 locks/default.lock.json
 easyconfigs/e/eOn/eOn-2.16.0-foss-2026.1.eb
 #+end_example
-
-The lock is the Resolvo result. Direct dependencies name selected
-versions, toolchains, versionsuffixes, source easyconfig paths,
-build/runtime roles, pin outcomes, and candidate exclusions.
-
-The stack-policy TOML is not optional decoration. The eOn example
-records the Eigen 5 identity the safemath core-guard patch needs,
-as a =preferred= pin with the complete EasyBuild toolchain and
-versionsuffix. Resolvo tries that candidate first. If another
-declared requirement makes it infeasible, the solver picks a
-compatible alternative and sets =fallback = true= with a reason.
-=locked= is the mode that must fail instead.
-
-=package bump= of an existing =.eb= writes the same bundle.
-Without =--stack-policy= the bump solver uses an unconstrained
-policy for the requested toolchain. =plan= of a foreign recipe does
-not get that relaxation: the flag is required.
-
-When a direct dependency has no robot candidate, =--package-catalog=
-and =--package-sources= close the hole without inventing versions.
-A closed plan writes companions under =packages/=, a shared
-=easyconfigs/= overlay, =build-order.json=, and
-=closure.sbom.cdx.json=. Robot candidates still win over catalog
-entries.
-
+The lock corresponds to the Resolvo result.
+Direct dependencies specify selected versions, toolchains, versionsuffixes, source easyconfig paths, build/runtime roles, pin outcomes, and candidate exclusions.
+The stack-policy TOML is mandatory, not optional decoration.
+The eOn example records the Eigen 5 identity required by the safemath core-guard patch as a =preferred= pin with the complete EasyBuild toolchain and versionsuffix.
+Resolvo attempts that candidate first.
+If another declared requirement renders it infeasible, the solver selects a compatible alternative and sets =fallback = true= with a reason.
+=locked= is the mode that must instead fail.
+=package bump= of an existing =.eb= produces the same bundle.
+Without =--stack-policy=, the bump solver applies an unconstrained policy for the requested toolchain.
+=plan= of a foreign recipe does not receive that relaxation.
+The flag is required.
+When a direct dependency lacks a robot candidate, =--package-catalog= and =--package-sources= close the gap without inventing versions.
+A closed plan writes companions under =packages/=, a shared =easyconfigs/= overlay, =build-order.json=, and =closure.sbom.cdx.json=.
+Robot candidates continue to take precedence over catalog entries.
 #+ATTR_EB: :id EB-Plan-1 :title What is missing from this command
 #+begin_exercise
-A colleague pastes chapter 12's plan sample:
+A colleague pastes eb-stack ports a recipe and bumps one's plan sample:
 
 #+begin_example
 eb-stack package plan \
-  --source recipe.yaml \
-  --format conda-forge \
-  --toolchain-name foss \
-  --toolchain-version 2024a \
-  --easyconfigs /path/to/easybuild-easyconfigs \
-  --out-dir /tmp/new-package
+ --source recipe.yaml \
+ --format conda-forge \
+ --toolchain-name foss \
+ --toolchain-version 2024a \
+ --easyconfigs /path/to/easybuild-easyconfigs \
+ --out-dir /tmp/new-package
 #+end_example
-
-1. What does the current CLI do with this?
-2. Which file is added, and what does a =preferred= pin in it
-   control?
-3. After a successful plan, which two paths have to exist before
-   =campaign run= is even willing to start?
-
+1. What does the current CLI do with this? 
+2. Which file is added, and what does a =preferred= pin in it control? 
+3. After a successful plan, which two paths must exist before =campaign run= starts?
 #+begin_solution
 1. It exits with an error. =--stack-policy= is required on =package plan=.
 
 2. A stack-policy TOML, for example
-   =examples/stacks/eon-foss-2026.1.toml=. A =preferred= pin names
-   the candidate Resolvo tries first and records =fallback = true=
-   if it cannot keep it. It is not a lock until the solve writes
-   =locks/default.lock.json=.
+ =examples/stacks/eon-foss-2026.1.toml=. A =preferred= pin names
+ the candidate Resolvo tries first and records =fallback = true=
+ if it cannot keep it. It is not a lock until the solve writes
+ =locks/default.lock.json=.
 
 3. At least one =locks/<profile>.lock.json= and one emitted
-   =.eb=. Inspect's two JSON files are not enough. The campaign
-   reference says so: a campaign requires at least one lock and
-   recipe.
+ =.eb=. Inspect's two JSON files are not enough. The campaign
+ reference says so: a campaign requires at least one lock and
+ recipe.
 #+end_solution
 #+end_exercise
 
@@ -244,19 +206,19 @@ eb-stack package plan \
 eb-stack source and docs, HaoZeke/eb-stack, read 2026-09-11:
 
 - =docs/orgmode/tutorial.org= (inspect then plan, Eigen preferred
-  pin, =--stack-policy=).
+ pin, =--stack-policy=).
 - =docs/orgmode/reference/cli.org= and
-  =docs/orgmode/reference/package-bundles.org= (bundle layout,
-  residual severity, planned SBOM, closed catalog bundles).
+ =docs/orgmode/reference/package-bundles.org= (bundle layout,
+ residual severity, planned SBOM, closed catalog bundles).
 - =src/main.rs= =PackageCommand::Inspect= / =Plan= / =Bump=.
 - =fixtures/foreign_ingest/README.md=.
 #+end_detail
 
 #+begin_keypoints
 - =package inspect= writes =package.plan.json= and a planned
-  CycloneDX SBOM. It establishes no claim.
+ CycloneDX SBOM. It establishes no claim.
 - Residuals are the work queue. Notes are not. Severity is
-  =mechanical=, =judgment=, or =blocking=.
+ =mechanical=, =judgment=, or =blocking=.
 - =package plan= requires =--stack-policy=. The lock and the
-  emitted =.eb= are what establish =resolves=.
+ emitted =.eb= are what establish =resolves=.
 #+end_keypoints

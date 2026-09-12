@@ -1,17 +1,15 @@
-#+TITLE: Chapter 7. A checksum is a claim about bytes
+#+TITLE: A checksum is a claim about bytes
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Read a =checksums= block, including the case where one entry is a
-   dictionary, and say why it is one.
+ dictionary, and say why it is one.
 2. Say what a verified checksum establishes and what it leaves open.
 3. Say which parameters break loudly on a version bump and which break
-   quietly.
+ quietly.
 #+end_objectives
-
-Chapter 1's easyconfig spends more lines on where the sources come
-from than on anything else. Here is that part again, on its own:
-
+The easyconfig in An easyconfig is Python allocates more lines to describing source locations than to any other aspect.
+The following excerpt presents that section in isolation.
 #+begin_src easyconfig :widget parse
 name = 'code-server'
 version = '4.130.0'
@@ -19,68 +17,55 @@ version = '4.130.0'
 source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
 sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
 checksums = [
-    {
-        'code-server-4.130.0-linux-amd64.tar.gz':
-            '3de23052e34fa705b3817efa66201cbc8d8ba6615b4cd03120c39bfc0ae1b7ab',
-        'code-server-4.130.0-linux-arm64.tar.gz':
-            '795366c40d0b32bc6fbbedf8dc992f9767a6125cc6dce965766c5f79e06bb725',
-    }
+ {
+ 'code-server-4.130.0-linux-amd64.tar.gz':
+ '3de23052e34fa705b3817efa66201cbc8d8ba6615b4cd03120c39bfc0ae1b7ab',
+ 'code-server-4.130.0-linux-arm64.tar.gz':
+ '795366c40d0b32bc6fbbedf8dc992f9767a6125cc6dce965766c5f79e06bb725',
+ }
 ]
 #+end_src
-
-Three parameters, and each one is a different kind of statement. This
-chapter is about the third, which is the one people trust furthest
-beyond what it says.
-
+Three parameters exist, each representing a distinct type of statement.
+This chapter discusses the third parameter, which people trust most beyond its literal meaning.
 * The list is positional, and then one entry is a dictionary
-
-=sources= is a list. =checksums= is a list. They line up by position:
-the first checksum is for the first source.
-
-So the outer list here has exactly one element, because =sources= has
-one element. That element is not a string. It is a dictionary from
-filename to checksum, and it carries two entries for one source.
-
-Both facts are needed to read it. The dictionary is there because
-=sources= templates =%(mapped_arch)s=, from [[file:01-an-easyconfig-is-python.org][chapter 1]], so that single
-line resolves to a different filename on x86-64 than on aarch64. One
-source line, two possible files, and the dictionary says which
-checksum belongs to which.
-
-Look at what the keys are. Not =amd64= and =arm64=, and not an
-architecture at all: full resolved filenames. The dictionary does not
-know about architectures. It knows about names, and the templating
-decides which name gets looked up.
-
-That has a consequence. Add support for a third
-architecture and the dictionary does not complain about the gap. The
-lookup simply fails to find a key, on that architecture only, on the
-machine that has it. A per-architecture dictionary is silent about the
-architectures it does not mention.
-
+The variable =sources= is a list.
+The variable =checksums= is a list.
+Elements of =checksums= correspond to elements of =sources= by position.
+The first checksum belongs to the first source.
+The outer list in this example contains exactly one element.
+That element is a dictionary rather than a string.
+The dictionary maps filenames to checksums.
+The dictionary contains two entries for the single source.
+Both facts are required to interpret the structure.
+The dictionary exists.org][An easyconfig is Python]].
+The single line can resolve to different filenames on x86-64 and on aarch64.
+One source line therefore yields two possible files.
+The dictionary indicates which checksum belongs to each file.
+The keys of the dictionary are full resolved filenames.
+The keys are not architecture identifiers such as =amd64= or =arm64=.
+The dictionary does not contain architecture information.
+The dictionary stores names.
+The templating system determines which name to look up.
+Adding support for a third architecture does not cause the dictionary to raise an error for the missing entry.
+The lookup simply fails to find a key for that architecture on the machine that provides it.
+A per-architecture dictionary remains silent about architectures that are not listed.
 * What a checksum can and cannot report
-
-A checksum verifies bytes. That is what it does, and all of what it
-does.
-
-It cannot report the archive contains the version it is thought to.
-If upstream re-tags a release and the archive changes, the checksum
-fails and something is learned. Suppose instead that upstream
-publishes a *different* archive also calling itself 4.130.0, and a
-checksum is computed over that one. It passes forever and reports nothing.
-
-It cannot report the archive has the layout your easyconfig expects.
-Chapter 1's failure again, and the two claims are worth putting side
-by side, because they are independent:
-
+A checksum verifies the bytes.
+That is its sole purpose.
+It cannot indicate that the archive contains the expected version.
+If upstream re‑tags a release and the archive changes, the checksum fails.
+Information.
+Suppose upstream publishes a *different* archive also labeled 4.130.0 and a checksum is computed for that archive.
+The checksum then passes indefinitely and reports nothing.
+It cannot indicate that the archive matches the layout expected by your easyconfig.
+This mirrors the failure described in An easyconfig is Python, and the two claims merit side‑by‑side comparison.
 #+begin_quote
 The checksum verified against the archive.
 The archive did not contain the directory the build expected.
 #+end_quote
-
-Both true at once. Verification passed, at full strength, over exactly
-the right bytes, and the build then failed on =start_dir=.
-
+Both statements hold simultaneously.
+Verification succeeded at full strength on exactly the right bytes.
+The build then failed on =start_dir=.
 #+ATTR_EB: :id EB-Checksum-1 :title One architecture, one missing key
 #+begin_exercise
 A site adds riscv64 support to the code-server easyconfig. The build
@@ -93,7 +78,7 @@ two entries from the chapter's sample, keyed =amd64= and =arm64=.
 1. What is the failure, precisely?
 2. Why did no x86-64 or arm64 build catch it?
 3. What is the smallest change that fixes it, and what would you need in
-   order to make that change?
+ order to make that change?
 
 #+begin_solution
 The dictionary has no key for the filename that architecture produces.
@@ -102,7 +87,7 @@ mention, so the lookup found nothing to verify against. (aarch64 would
 not have failed: that easyblock maps it to =arm64=, and that key is
 already there.)
 
-No x86-64 or arm64 build could catch it, because on those machines the
+No x86-64 or arm64 build could catch it
 template resolves to a key that is present. The dictionary is keyed by
 resolved filename rather than by architecture, and it says nothing at
 all about the filenames it omits. A per-architecture gap is invisible
@@ -116,68 +101,49 @@ and copying a value from anywhere else would verify the wrong file.
 #+end_exercise
 
 * Which is why a source change is the dangerous kind
-
-Chapter 1 put this as a rule about parameters that describe the shape
-of the source. Here it is as a rule about editing.
-
-Change the version and the checksum must change. Forgetting is
-not available: the build stops on a mismatch and returns the value
-it computed. That loudness belongs to the parameter, not to anyone's
-diligence.
-
-Change what *kind* of thing is being downloaded and nothing is loud.
-The QMCPACK easyconfig in chapter 1 had been building from a pinned
-development commit and moved to a release tarball. That change
-rewrites =sources=, and the checksum with it, so both got attention.
-
-Everything else about the source block also changed, and none of it
-announced itself:
-
-- a git checkout gets archived under the repository's name. The
-  sources were one level down.
-- a release tarball unpacks to =name-version/=, sources at the top.
-- =start_dir= described the first arrangement, and nobody touched
-  it.
-
-A checksum protects against the wrong bytes. Nothing in the format
-protects against the right bytes in a different shape.
-
+An easyconfig is a Python file that defines parameters describing the shape of the source.
+It also is a rule for editing.
+Changing the version requires updating the checksum.
+The build stops on a mismatch and returns the computed value.
+Forgetting is not possible.
+The loudness is a property of the parameter, not of any diligence.
+Changing the *kind* of thing being downloaded does not produce loudness.
+The QMCPACK easyconfig, which is a Python easyconfig, was building from a pinned development commit and switched to a release tarball.
+That change rewrites =sources= and updates the checksum, drawing attention to both.
+All other aspects of the source block also changed without announcement.
+A git checkout is archived under the repository's name.
+The sources were one level down.
+A release tarball unpacks to =name-version/= with sources at the top.
+=start_dir= described the initial arrangement and remained untouched.
+A checksum protects against the wrong bytes.
+The format does not protect against correctly formed bytes arranged in a different shape.
 * Borrowing a checksum from another packaging system
-
-One more way a verified checksum can be the wrong verified checksum.
-
-One version of a project can exist as more than one legitimate
-archive. GitHub generates a tarball from a tag. The project also
-publishes a release archive, often with vendored dependencies or a
-generated =configure= that the tag does not contain. Both are that
-version. They are not the same bytes, and neither is wrong.
-
-So a checksum copied from a conda-forge recipe or a Spack
-=package.py= can be perfectly correct about the wrong archive: not the
-one your =source_urls= points at. The value is right and the version
-is right. The build then fails a verification that is working exactly
-as designed.
-
-The rule that follows is narrow and worth keeping. A borrowed checksum
-needs the URL it was computed over, and the version alone will not do.
-Two ecosystems agreeing on a version number is not two ecosystems
-agreeing on an artifact.
-
+Another situation exists where a verified checksum is applied to the wrong archive.
+A single project version may correspond to several legitimate archives.
+GitHub generates a tarball from a tag.
+The project may also publish a release archive that often contains vendored dependencies or a generated =configure= absent from the tag.
+Both archives correspond to the same version.
+They differ in byte content, yet neither is incorrect.
+A checksum copied from a conda-forge recipe or a Spack =package.py= can be entirely correct for an archive other than the one listed in =source_urls=.
+The checksum value is correct and the version is correct.
+The build fails a verification that operates exactly as intended.
+The following rule is narrow and worth preserving.
+A borrowed checksum requires the URL over which it was computed; the version alone is insufficient.
+Two ecosystems that agree on a version number do not necessarily agree on an artifact.
 * Loud and quiet
-
-The reason a version bump is safer than a source change is that the two
-break differently:
+Version bumps are safer than source changes.
+The two break in different ways.
 
 | Change | How it is found |
 |---+---|
-| The version | The checksum mismatches and the build stops, holding out the value it computed. |
+| The version | The checksum mismatches and the build stops. Out the value it computed. |
 | The archive's layout | =start_dir= or a patch level still parses, and the build fails later on a path. |
 | The kind of source, tag to release | Both of the above, and only the first announces itself. |
 | A checksum borrowed from another ecosystem | Verification fails against an artifact that really is that version. |
 
-Everything a checksum protects is in the first row. Nothing in the
-other three is a checksum's job, which is why chapter 1's failure got
-past a verification working perfectly.
-
-Next: =exts_list=, where one easyconfig installs hundreds of packages
-and every row above applies to each of them.
+The first row contains everything a checksum protects.
+The other three rows are not the checksum's responsibility.
+An easyconfig is Python's failure got past a verification working perfectly.
+Next: =exts_list=.
+One easyconfig installs hundreds of packages.
+Each row above applies to each of them.

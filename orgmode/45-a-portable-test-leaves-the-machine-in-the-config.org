@@ -1,0 +1,138 @@
+#+TITLE: A portable test leaves the machine in the config
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- Why is =valid_systems = ['snellius']= a trap?
+- Where does a portable test read the core count from?
+- What does the EESSI mixin replace in the class body?
+#+end_questions
+
+#+begin_objectives
+1. Point at the three lines that make a ReFrame test specific to
+ one cluster, and say where each line belongs instead.
+2. Read an EESSI mixin test and say what =device_type= and
+ =compute_unit= cause the hooks to set.
+3. Skip a test when the node cannot run it, rather than
+ hardcoding a size that node will never have.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]],
+ for the configuration.
+- [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]], for
+ the product those hooks run on.
+#+end_prerequisites
+The mpi4py test in Parameters multiply the suite runs on Snellius.
+The suite runs on no other system.
+Three separate reasons cause this.
+#+begin_src python
+valid_systems = ['snellius']
+self.num_tasks_per_node = min(self.num_tasks, 128)
+module_name = parameter([
+ 'mpi4py/3.1.4-gompi-2023a',
+ 'mpi4py/3.1.5-gompi-2023b',
+])
+#+end_src
+The first binds the test to a single system name.
+The second provides the system's core count as a constant.
+The third supplies two module strings present in that site's tree.
+A 64-core node running EESSI's =mpi4py/3.1.5-gompi-2023b= still fails the first filter and oversubscribes when the name is patched manually.
+EESSI's writing-tests page presents a three-step tutorial: write the Slurm scripts for one machine, write the ReFrame test that encodes those scripts, then remove the machine.
+The third step is a mixin.
+The test class retains the workload.
+The configuration retains the node.
+* What the mixin changes
+
+#+begin_src python
+@rfm.simple_test
+class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
+ device_type = DEVICE_TYPES[CPU]
+ compute_unit = COMPUTE_UNIT[CPU]
+ module_name = parameter(find_modules('mpi4py'))
+ n_iterations = variable(int, value=1000)
+ executable = 'python3'
+ time_limit = '5m00s'
+ readonly_files = ['mpi4py_reduce.py']
+
+ def required_mem_per_node(self):
+ return self.num_tasks_per_node * 100 + 250
+#+end_src
+=EESSI_Mixin= provides hooks that read the partition.
+The expression "One full node" corresponds to =compute_unit = COMPUTE_UNIT[CPU]=.
+The hook assigns =num_tasks= from =processor.num_cpus= in the configuration.
+A node with 64 cores receives 64 tasks.
+A node with 128 cores receives 128 tasks.
+The test file lacks both numbers.
+=find_modules('mpi4py')= queries the modules tool for what is loaded on *this* machine.
+The parameter list is no longer two strings from last year's Snellius tree.
+A site with a single mpi4py module yields one case.
+A site with four mpi4py modules yields four cases.
+=valid_systems= is no longer a hostname.
+The mixin requests the configuration features declared: CPU, GPU, and a minimum memory.
+A partition that does not advertise those features skips the test.
+That skip is a result.
+It is the correct result.
+=required_mem_per_node= follows the same concept as a residual in [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]].
+The test defines a requirement.
+The framework compares the requirement to the partition.
+A mismatch results in a skip rather than a job that OOM‑kills the node.
+* The configuration is now the only machine file
+The configuration file provides the machine's =processor.num_cpus= and =features= values read by these hooks.
+A site that omits them produces tests that cannot compute a task count.
+Those tests skip or fall back to a conservative option.
+A site that misrepresents the configuration causes tests to follow the same misrepresentation.
+The portable suite reflects the accuracy of that file.
+CSCS's webinar demonstrates the same expansion: STREAM as a local binary, followed by the same class on any partition described by the configuration.
+ExCALIBUR-tests applies this in item 3 of its outline, "Configuring ReFrame to run tests on HPC systems", before creating a second test.
+The order conveys the lesson.
+The machine is entered into the configuration first.
+#+ATTR_EB: :id EB-ReFrame-45-1 :title What to move
+#+begin_exercise
+A GROMACS test contains these four assignments. For each,
+say whether it stays in the test, moves to the
+configuration, or becomes a hook that reads the
+configuration.
+
+1. =executable = 'gmx'=
+2. =valid_systems = ['snellius:gpu']=
+3. =num_tasks = 128=
+4. =modules = ['GROMACS/2024.4-foss-2023b']=
+#+begin_solution
+1. Stays. The workload names the binary.
+
+2. Moves. The configuration marks the GPU partition with a
+ =gpu= feature. The test requests =+gpu=. Binding the
+ cluster name makes every other site skip the test.
+
+3. Becomes a hook. =compute_unit= of one node, or of one
+ GPU, reads =num_cpus= or the device count from the
+ partition. 128 is Snellius.
+
+4. Becomes =parameter(find_modules('GROMACS'))=, or a
+ single =find_modules= result if the suite is checking
+ one installation. The version string is a fact about
+ one tree.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-45 :title Where this chapter comes from :kind sources
+#+begin_detail
+EESSI
+[[https://www.eessi.io/docs/test-suite/writing-portable-tests/][writing
+portable tests]], fetched 2026-09-11: the three-step
+tutorial, =EESSI_Mixin=, =find_modules=, =device_type=,
+=compute_unit=, =required_mem_per_node=. EUM25 slides on
+the same mixin. CSCS 2022 webinar: STREAM expanded until
+it runs on any configured partition.
+#+end_detail
+
+#+begin_keypoints
+- A cluster name, a core count and a module string in the
+ test are three facts about one machine.
+- The mixin reads the partition. "One full node" is a
+ request; the configuration supplies the number.
+- =find_modules= builds the parameter list from the tree
+ that is actually loaded.
+- A missing feature or too little memory is a skip, not a
+ failed job.
+#+end_keypoints

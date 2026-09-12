@@ -1,4 +1,4 @@
-#+TITLE: Chapter 1. An easyconfig is Python
+#+TITLE: An easyconfig is Python
 #+OPTIONS: toc:nil num:nil
 
 #+begin_questions
@@ -10,15 +10,14 @@
 #+begin_objectives
 1. Say why =SYSTEM= carries no quotes and ='tools'= does.
 2. Predict the easyblock class EasyBuild will look for, from a software
-   name alone, and read one backwards to the name.
+ name alone, and read one backwards to the name.
 3. Say what an easyconfig with no =easyblock= line is claiming.
 4. Read an EasyBuild error for the assumption behind it rather than the
-   state it reports.
+ state it reports.
 #+end_objectives
-
-This file installs VS Code in a browser on a supercomputer. Twenty
-lines. Recipes of this shape are merged every week.
-
+The file provides a VS Code installation in a browser on a supercomputer.
+The file contains twenty lines.
+Recipes of this form are merged weekly.
 #+begin_src easyconfig :widget parse
 name = 'code-server'
 version = '4.130.0'
@@ -31,53 +30,54 @@ toolchain = SYSTEM
 source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
 sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
 checksums = [
-    {
-        'code-server-4.130.0-linux-amd64.tar.gz':
-            '3de23052e34fa705b3817efa66201cbc8d8ba6615b4cd03120c39bfc0ae1b7ab',
-        'code-server-4.130.0-linux-arm64.tar.gz':
-            '795366c40d0b32bc6fbbedf8dc992f9767a6125cc6dce965766c5f79e06bb725',
-    }
+ {
+ 'code-server-4.130.0-linux-amd64.tar.gz':
+ '3de23052e34fa705b3817efa66201cbc8d8ba6615b4cd03120c39bfc0ae1b7ab',
+ 'code-server-4.130.0-linux-arm64.tar.gz':
+ '795366c40d0b32bc6fbbedf8dc992f9767a6125cc6dce965766c5f79e06bb725',
+ }
 ]
 
 moduleclass = 'tools'
 #+end_src
-
-The file reads as YAML would: names on the left, values on the right,
-no functions, no =if=. Line seven breaks that reading. =SYSTEM= has
-no quotes. =moduleclass= does. That is not a house style. EasyBuild
-executed this file as Python, and =SYSTEM= was already a variable in
-the evaluation namespace.
-
+The file reads as YAML would: names on the left, values on the right, no functions, no =if=.
+Line seven breaks that reading.
+=SYSTEM= has no quotes.
+=moduleclass= does.
+That is not a house style.
+EasyBuild executed this file as Python.
+=SYSTEM= was already a variable in the evaluation namespace.
 Once that is visible, a lot of the rest of EasyBuild stops being folklore.
-The templating is Python's own =%=. The missing =easyblock= line is a
-claim that a class exists. The quoting is not inconsistent. One of
-those names was supplied. The other was typed.
-
+The templating is Python's own =%=.
+The missing =easyblock= line is a claim that a class exists.
+The quoting is not inconsistent.
+One of those names was supplied.
+The other was typed.
 * Why that distinction earns its place in chapter one
-
-EasyBuild executes an easyconfig in a namespace it has prepared, which
-carries the set of names the file is allowed to use. =SYSTEM= on line
-seven is not a keyword and not a string. It is a value EasyBuild put in
-the namespace before evaluating the file: ={'name': 'system',
-'version': 'system'}=. That is why it has no quotes around it while
-=moduleclass= does. One is a variable, the other is a literal.
-
-Run the sample at the top and read the model it gives back. =toolchain=
-comes out as a structure with a name and a version. The text =SYSTEM=
-is gone by then, because the assignment happened before anything read
-the value.
-
-Look at the last two lines of that output. The
-file names no easyblock, and the model reports the one EasyBuild will
-derive from the name anyway. That is the rest of this chapter.
-
-The same fact explains a thing that trips people up later. Since the
-file is Python, it can compute. A list comprehension in an easyconfig
-is legal. A loop that builds =exts_list= from a table is legal. Almost
-no easyconfig does either, and the convention against it is a good one.
-But it is a *convention*. Nothing in the format forbids computation,
-because there is no format, only a namespace.
-
+EasyBuild executes an easyconfig in a prepared namespace.
+The namespace carries the set of names the file is allowed to use.
+=SYSTEM= on line seven is not a keyword.
+=SYSTEM= on line seven is not a string.
+It is a value EasyBuild put in the namespace before evaluating the file: ={'name': 'system', 'version': 'system'}=.
+It has no quotes around it while =moduleclass= does.
+One is a variable.
+The other is a literal.
+Run the sample at the top and read the model it gives back.
+=toolchain= comes out as a structure with a name and a version.
+The text =SYSTEM= is gone by then.
+Look at the last two lines of that output.
+The file names no easyblock.
+The model reports the one EasyBuild will derive from the name anyway.
+That is the rest of this chapter.
+The same fact explains a thing that trips people up later.
+The file is Python.
+It can compute.
+A list comprehension in an easyconfig is legal.
+A loop that builds =exts_list= from a table is legal.
+Almost no easyconfig does either.
+The convention against it is a good one.
+It is a *convention*.
+Nothing in the format forbids computation.
 * The things in angle brackets are not in angle brackets
 
 Look at =sources=:
@@ -88,38 +88,33 @@ version = '4.130.0'
 sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
 source_urls = ['https://github.com/coder/code-server/releases/download/v%(version)s/']
 #+end_src
-
-=%(version)s= is old-style Python string formatting, applied *after*
-the file has run, to a dictionary EasyBuild assembles from the
-easyconfig. The file stored the literal. =%(version)s= works even if
-=version= is set below =sources=. What EasyBuild added is that second
-pass, plus names such as =SOURCE_TAR_GZ= that *are* in the eval
-namespace.
-
-Run the sample and watch =%(version)s= resolve. Then change the version
-and watch it move. Every value derived from it moves with it, and that
-is the whole of what templating does.
-
-The one that does not resolve is =%(mapped_arch)s=, and nothing in the
-file sets =mapped_arch=. On a cluster it resolves anyway, to =amd64= on
-x86-64.
-
-It resolves because something outside the easyconfig put it in the
-dictionary. That something is the easyblock, and it is the subject of
-the rest of this chapter.
-
+=%(version)s= is old‑style Python string formatting applied *after* the file runs.
+It uses a dictionary that EasyBuild assembles from the easyconfig.
+The file stores the literal.
+=%(version)s= works even when =version= is set below =sources=.
+EasyBuild adds that second pass.
+EasyBuild also adds names such as =SOURCE_TAR_GZ= that *are* in the eval namespace.
+Run the sample.
+Observe =%(version)s= resolve.
+Change the version.
+Observe it move.
+Every value derived from it moves with it.
+This is the entirety of templating.
+The one that does not resolve is =%(mapped_arch)s=.
+Nothing in the file sets =mapped_arch=.
+On a cluster it resolves anyway.
+It resolves to =amd64= on x86-64.
+It resolves.
+That something is the easyblock.
+It is the subject of the remainder of this chapter.
 * EasyBuild derives the easyblock from the name, and the derivation is a string transformation
-
-The easyconfig above never says how to install anything. No =easyblock=
-line, no configure flags, no =make= invocation, no install prefix. It
-says what to download and what the checksums are, and stops.
-
-So how does it get installed?
-
-EasyBuild looks for an easyblock named after the software, and the
-lookup is a name mangling. The package is =code-server=. The module it
-looks for is =code_server=, and the class inside it is:
-
+The easyconfig above does not state how to install anything.
+No =easyblock= line, no configure flags, no =make= invocation, no install prefix.
+It lists the download sources and their checksums, then stops.
+How is the installation performed?
+EasyBuild searches for an easyblock named after the software, applying name mangling.
+The package name is =code-server=.
+The module searched for is =code_server=, and the class inside it is specified next.
 #+begin_src easyconfig :widget easyblock
 code-server
 c++
@@ -128,31 +123,29 @@ Xerces-C++
 Python-bundle-PyPI
 #+end_src
 
-=EB_code_minus_server=. The hyphen became the literal word =minus=.
+=EB_code_minus_server=.
+The hyphen became the literal word =minus=.
 
-That is not a joke at EasyBuild's expense. It answers a real problem.
-Class names have to be valid Python identifiers and package names are
-not, so something has to bridge the two. The bridge also has to be
-*reversible*: without that, two differently-named packages could collide
-on one class. Spelling the punctuation out gives both.
+That is not a joke at EasyBuild's expense.
+It answers a real problem.
+Class names have to be valid Python identifiers and package names are not, so something has to bridge the two.
+The bridge also has to be *reversible*: without that, two differently-named packages could collide on one class.
+Spelling the punctuation out gives both.
 
-The framework's own justification names =c++= and =C#=, and both appear in
-the sample above. Run it and watch =c++= become =EB_c_plus__plus_=. The
-doubled separator is the tell: the substitution runs per character and
-collapses nothing.
+The framework's own justification names =c++= and =C#=, and both appear in the sample above.
+Run it and watch =c++= become =EB_c_plus__plus_=.
+The doubled separator is the tell: the substitution runs per character and collapses nothing.
 
-The consequence people trip over stays invisible in =code-server=,
-because that name has no =_=. Try =Python-bundle-PyPI=, then try a name
-with =_= in it. The character is *itself* encoded, to =_underscore_=.
+The consequence people trip over stays invisible in =code-server=.
+Try =Python-bundle-PyPI=, then try a name with =_= in it.
+The character is *itself* encoded, to =_underscore_=.
 
-That is what keeps the mapping reversible. Left alone, =_minus_= would
-be ambiguous: an encoded hyphen, or a name that really did spell out
-=minus= between two of them. The cost is a class name longer and
-stranger than expected. That is the moment people decide the lookup
-is broken rather than mechanical.
+That is what keeps the mapping reversible.
+Left alone, =_minus_= would be ambiguous: an encoded hyphen, or a name that really did spell out =minus= between two of them.
+The class name is longer and stranger than expected.
+That is the moment people decide the lookup is broken rather than mechanical.
 
-Surprising exactly once, and then it explains a whole category of "why is
-the easyblock not being found".
+Surprising exactly once, and then it explains a whole category of "why is the easyblock not being found".
 
 #+ATTR_EB: :id EB-Python-1 :title Read a class name backwards
 #+begin_exercise
@@ -162,7 +155,7 @@ A traceback names a class you have never seen:
 
 1. What software is it?
 2. Two different packages are called =a-b= and =a_minus_b=. Work out
-   both class names. Does the encoding keep them apart?
+ both class names. Does the encoding keep them apart?
 
 Use the sample above for the second one rather than doing it in your
 head.
@@ -172,122 +165,99 @@ head.
 name was transformed.
 
 =a-b= gives =EB_a_minus_b=. =a_minus_b= gives
-=EB_a_underscore_minus_underscore_b=, because the underscores are encoded
+=EB_a_underscore_minus_underscore_b=
 too. So they stay apart, and that is the entire reason the underscore is
 not left alone: without encoding it, both names would collide on
 =EB_a_minus_b= and one package would silently get the other's easyblock.
 #+end_solution
-#+end_exercise
-
-For =code-server= the class exists, and it does three things worth
-knowing:
-
-- it computes =mapped_arch=, the source of that template value. Any
-  architecture that is neither x86-64 nor aarch64 raises an error.
-- it defaults the install step to copying the unpacked tree into
-  place, because the release archive is already built software.
-- it runs =code-server --help= as a sanity check. The install is not
-  finished until the binary has run.
-
-None of that is in the easyconfig. All of it is implied by the name.
-
+#+end_exercise The class for =code-server= exists.
+It performs three actions.
+It computes =mapped_arch=, the source of that template value.
+It raises an error for any architecture that is neither x86-64 nor aarch64.
+It defaults the install step to copying the unpacked tree into place.
+It runs =code-server --help= as a sanity check.
+The install is not finished until the binary has run.
+None of that appears in the easyconfig.
+All of it is implied by the name.
 * What happens when the class does not exist
-
-Guess before reading on. The first answer is wrong, and it is the wrong
-answer that gets carried around.
-
-That answer: EasyBuild falls back to something generic, =ConfigureMake=
-being the usual guess, and tries =./configure && make && make install=.
-It does not. EasyBuild has no default. If no =easyblock= is given and no
-software-specific class can be imported, the build stops:
-
+Guess before reading on.
+The first answer is wrong, and it is the wrong answer that gets carried around.
+That answer: EasyBuild falls back to something generic, =ConfigureMake= being the usual guess, and tries =./configure && make && make install=.
+It does not.
+EasyBuild has no default.
+If no =easyblock= is given and no software-specific class can be imported, the build stops:
 #+begin_example
 No software-specific easyblock 'EB_example' found for example
 #+end_example
-
-That is =get_easyblock_class= in
-=easybuild/framework/easyconfig/easyconfig.py=, raising with the exit
-code =MISSING_EASYBLOCK=. The two parameters that could soften it,
-=error_on_missing_easyblock= and =error_on_failed_import=, both
-default to true, and the build path does not override them. The one
-caller that does pass false is the *extensions* machinery, where
-falling through to a generic extension handler is the right behaviour.
-
-Read that in reverse and it becomes a tool. A missing =easyblock= line
-is not a shrug. It claims, positively, that a software-specific
-easyblock exists. So in the sample at the top of this
-chapter, the missing line reports that =code_server.py= is out there
-before anyone has gone looking for it. And an easyconfig that *does* say
-=easyblock = 'ConfigureMake'= is not being verbose: naming a generic
-easyblock is the only way to get one.
-
-A second, nastier failure hides behind the same code. An easyblock
-module that exists but carries a broken import of its own also raises
-=ImportError=. EasyBuild separates the two cases by regex-matching the
-error message against the module name it wanted. A match means "no such
-easyblock". Anything else gets reported as =Failed to import ...
-easyblock=. That second message says the easyblock is present and its
-own dependencies are the problem, and editing your easyconfig will not
-help.
-
-* An aside on reading the error, because a lot of them will be read
-
-Everything in this chapter has been about what EasyBuild infers. Here is
-what that looks like when an inference is wrong, from a real run on a
-real cluster. The package is QMCPACK, a quantum Monte Carlo code, and the
-easyconfig had just been moved from a pinned development commit onto the 4.4.0
-release.
-
+The function =get_easyblock_class= in =easybuild/framework/easyconfig/easyconfig.py= raises the exit code =MISSING_EASYBLOCK=.
+The parameters =error_on_missing_easyblock= and =error_on_failed_import= both default to true.
+The parameters =error_on_missing_easyblock= and =error_on_failed_import= are not overridden by the build path.
+The only caller that passes false is the *extensions* machinery.
+Falling through to a generic extension handler is the correct behaviour in that context.
+Reversing that description yields a tool.
+A missing =easyblock= line does not indicate a shrug.
+It positively claims that a software-specific easyblock exists.
+In the sample at the top of this chapter, the missing line reports that =code_server.py= is present before any search occurs.
+An easyconfig that *does* specify =easyblock = 'ConfigureMake'= is not verbose.
+Naming a generic easyblock is the only way to obtain one.
+A second, more severe failure is hidden behind the same code.
+An existing easyblock module with a broken internal import also raises =ImportError=.
+EasyBuild separates the two cases by regex‑matching the error message against the requested module name.
+A match indicates "no such easyblock".
+Any other case is reported as =Failed to import... easyblock=.
+The second message indicates that the easyblock is present but its own dependencies cause the problem.
+Editing the easyconfig will not help.
+* An aside on reading the error
+All material in this chapter addresses the inferences generated by EasyBuild.
+An incorrect inference from an actual run on an actual cluster is shown.
+The package is QMCPACK, a quantum Monte Carlo code, and the easyconfig was shifted from a pinned development commit to the 4.4.0 release.
 #+begin_src ebtranscript :source "SURF Snellius, production run 20260909_063530, snel-zen4_h100, EasyBuild 5.3.1" :caption "A build that got everything right and failed anyway"
 == processing EasyBuild easyconfig
 /sw/eb/easyconfigs-surf/q/QMCPACK/QMCPACK-4.4.0-foss-2025a.eb
 == building and installing QMCPACK/4.4.0-foss-2025a...
 == fetching files and verifying checksums...
-  >> download succeeded:
+ >> download succeeded:
 https://github.com/QMCPACK/QMCPACK/archive/v4.4.0.tar.gz
-  >> sources:
-  >> qmcpack-4.4.0.tar.gz
+ >> sources:
+ >> qmcpack-4.4.0.tar.gz
 [SHA256: 72accd955b59f9040ac8643059bc26c031e94b355299eecd293d10a872b6fc15]
 == unpacking...
-  >> running shell command:
-        tar xzf qmcpack-4.4.0.tar.gz
-  >> command completed: exit 0, ran in 00h00m02s
+ >> running shell command:
+ tar xzf qmcpack-4.4.0.tar.gz
+ >> command completed: exit 0, ran in 00h00m02s
 == patching...
 == preparing...
-  >> loading toolchain module: foss/2025a
-  >> loading modules for build dependencies:
-  >>  * CMake/3.31.3-GCCcore-14.2.0
-  >>  * Ninja/1.12.1-GCCcore-14.2.0
-  >>  * pkgconf/2.3.0-GCCcore-14.2.0
+ >> loading toolchain module: foss/2025a
+ >> loading modules for build dependencies:
+ >> * CMake/3.31.3-GCCcore-14.2.0
+ >> * Ninja/1.12.1-GCCcore-14.2.0
+ >> * pkgconf/2.3.0-GCCcore-14.2.0
 == FAILED: Installation ended unsuccessfully: Specified start dir
 /tmp/jenkins/build/QMCPACK/4.4.0/foss-2025a/qmcpack-4.4.0/qmcpack does not exist
 #+end_src
+The earlier steps were read until they stopped.
+The correct URL was used.
+The checksum was verified against the archive.
+=tar xzf= returned exit code 0.
+Patching, the toolchain, and every build dependency were all fine.
+Every check that would be expected to run had already succeeded.
 
-Read what passed before it stopped. The right URL. The checksum verified
-against the archive. =tar xzf= exit 0. Patching, the toolchain, every
-build dependency, all fine. Every check a person would think to run had
-already succeeded.
-
-Then a path does not exist.
-
-The error names the *consequence*. Something looked for
-=qmcpack-4.4.0/qmcpack= and did not find it. The message says that and
-nothing else. Who looked, and why they expected it, is missing.
-Answering those two questions is the work. The lever is already in this
-chapter. The easyconfig is a Python file, so whatever expected that path is
-a value somebody assigned in it.
-
-The value was =start_dir=, and it said =qmcpack=. Five minutes earlier
-that had been correct. The easyconfig built from a git checkout, and
-EasyBuild archives a clone under the repository's name, so the sources
-sat one level down inside =qmcpack/=. A release tarball unpacks to
-=qmcpack-4.4.0/= with the sources at the top. The line was
-right about the old source and wrong about the new one. The change from
-one to the other says nothing about =start_dir= at all.
-
-A complete recipe with one hole. The lint sample names the hole; it
-does not fill it.
-
+A required path does not exist.
+The error names the *consequence*.
+Something looked for =qmcpack-4.4.0/qmcpack= and did not find it.
+The message says that and nothing else.
+The identity of the lookup and the expectation are missing.
+Answering those two questions is the work.
+The lever is already provided in this chapter.
+The easyconfig is a Python file, so the expected path is a value assigned in it.
+The value was =start_dir=, and it was set to =qmcpack=.
+Five minutes earlier that value had been correct.
+The easyconfig was built from a git checkout, and EasyBuild archives a clone under the repository's name, so the sources resided one level down inside =qmcpack/=.
+A release tarball unpacks to =qmcpack-4.4.0/= with the sources at the top level.
+The line was correct for the old source and incorrect for the new one.
+The change from one to the other says nothing about =start_dir=.
+A complete recipe contains one hole.
+The lint sample names the hole; it does not fill it.
 #+ATTR_EB: :id EB-Python-fade-1 :title Fill the hole the linter names
 #+begin_exercise
 This recipe is otherwise complete. The lint widget reports a missing
@@ -335,38 +305,33 @@ against a git checkout archived under the repository's name, and they
 are quiet in exactly the same way. A diff against the previous recipe
 will report them unchanged, which is the wrong question.
 #+end_solution
-#+end_exercise
-
-Two things worth taking from that, and neither is about QMCPACK.
-
-First: *an EasyBuild error reports the state it found. The assumption
-behind that state appears nowhere in the message.* "Does not exist" is
-accurate and never the interesting fact. What expected the path to exist
-is interesting, and it is in the easyconfig or in the easyblock the
-easyconfig's name selected.
-
-Second: *the parameters that break on a version bump describe the shape
-of the source.* The software's own requirements do not move. The
-archive's layout does. A checksum change is loud and cannot be forgotten.
-=start_dir=, patch strip levels, anything naming a subdirectory:
-those are quiet. They were right before, and a diff against the previous
-easyconfig reports them unchanged. Unchanged is the wrong question. The
-question is whether they still hold for the archive now being unpacked.
-
+#+end_exercise Two observations are relevant.
+Neither concerns QMCPACK.
+First: *An EasyBuild error reports the state it discovered*.
+The assumption underlying that state is absent from the message.
+"Does not exist" is accurate.
+The interesting fact is the expectation that the path exists.
+That expectation resides in the easyconfig or in the EasyBlock selected by the easyconfig's name.
+Second: *The parameters that break on a version bump describe the source layout*.
+The software's own requirements remain unchanged.
+The archive's layout changes.
+A checksum change is prominent.
+A checksum change cannot be ignored.
+=start_dir=, patch strip levels, and any subdirectory name are quiet.
+They were correct previously.
+A diff against the prior easyconfig shows them unchanged.
+Unchanged is not the relevant question.
+The relevant question is whether they still apply to the archive currently being unpacked.
 * Three consequences
-
-An easyconfig is a Python file evaluated in a prepared namespace, and
-all three of these appear constantly.
-
-1. Unquoted names like =SYSTEM= are variables EasyBuild supplied. That
-   is why the quoting looks inconsistent and is not.
-2. =%(...)s= is Python's own string formatting, over a dictionary built
-   from the easyconfig plus whatever the easyblock adds. So a template
-   can resolve to something the file never mentions.
-3. The easyblock comes from transforming the software's name. With no
-   specific one available the build stops rather than guessing, which
-   makes a missing =easyblock= line a claim that one exists.
-
-The next chapter is about =toolchain=. It is the one line in the sample
-still unread, and it causes more confusion than the other
-nineteen together.
+An easyconfig is a Python file evaluated in a prepared namespace.
+All three of these appear constantly.
+Unquoted names like =SYSTEM= are variables supplied by EasyBuild.
+The quoting appears inconsistent, but it is not.
+=%(...)s= is Python's string formatting applied to a dictionary built from the easyconfig and the easyblock.
+A template can resolve to a value not mentioned in the file.
+The easyblock comes from transforming the software's name.
+If no specific easyblock is available, the build stops instead of guessing.
+A missing =easyblock= line implies that an easyblock exists.
+The next chapter is about =toolchain=.
+It is the only unread line in the sample.
+It causes more confusion than the other nineteen lines combined.

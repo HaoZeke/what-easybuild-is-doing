@@ -1,112 +1,158 @@
 #+TITLE: A path through this book
 
 #+OPTIONS: toc:nil num:nil
+Filenames keep a number to allow the source tree to sort.
+That number does not indicate a reading order.
+The page is the curriculum and contains hour-sized levels with named prerequisite edges.
+A reader arrives with a task.
+The map can be entered at any point.
+The book consists of three parts, each represented by a page.
 
-The chapters are numbered, and numbering is not a curriculum. This page is
-the curriculum: levels sized at about an hour each, with the prerequisite
-edges named, so a session can start where the work starts.
+| Part | For |
+|---+---|
+| [[file:part-a-recipe.org][The recipe]] | the file and the build |
+| [[file:part-a-stack.org][The stack]] | a tree on a machine that may not have built it |
+| [[file:part-a-test.org][The test]] | four kinds of testing, then ReFrame |
 
-The shape is Aalto's, from their *Hands-on Scientific Computing* map, and so
-is the reasoning behind it: a reader arrives with a task rather than at
-lesson one, and a map they can enter anywhere serves them better than a
-sequence they have to abandon.
+The levels are hour-sized entries into those parts.
+Numbering does not represent the curriculum.
+* By task
+| Task | Read |
+|---+---|
+| A build just failed. | [[file:20-reading-a-failed-build.org][Reading a failed build]] |
+| A module will not load. | [[file:04-the-robot.org][The robot]] and [[file:06-what-installed-means.org][What "installed" means]] |
+| A recipe for software that has none. | [[file:21-writing-one-from-nothing.org][Writing one from nothing]] |
+| A port from conda-forge or Spack. | [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] |
+| A SeisSol-shaped port that also has an old easyconfig. | [[file:48-seissol-from-spack-to-a-pr.org][SeisSol, from a Spack recipe to a PR]] |
+| A stack on a machine with none. | [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] |
+| A ReFrame test of an installed module. | [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] |
+| EasyBuild is the wrong tool. | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
+* The recipe
 
 * Level A. Read a recipe
-
-An hour. Nothing installed, nothing to configure.
+One hour.
+No installations are present.
+No configuration is required.
 
 | Read | For |
 |---+---|
 | [[file:00-tutorial-read-an-easyconfig.org][the tutorial]] | predicting what EasyBuild will do with a file |
-| [[file:01-an-easyconfig-is-python.org][chapter 1]] | why the file is Python, and what that costs |
-| [[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]] | which dependencies a toolchain permits |
+| [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] | why the file is Python, and what that costs |
+| [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] | which dependencies a toolchain permits |
 
-At the end an easyconfig can be read aloud: what it will download,
-which easyblock it will look for, and which dependencies it may use.
-
+Finally, an easyconfig can be read aloud.
+It will download.
+It will search for an easyblock.
+It may use dependencies.
 * Level B. Understand why a build fails
-
-Two hours, and the level most support tickets live in. Needs level A.
+Two hours.
+The level where most support tickets reside.
+Requires level A.
 
 | Read | For |
 |---+---|
-| [[file:03-a-pin-is-for-one-generation.org][chapter 3]] | why a version is a pin and not a floor |
-| [[file:04-the-robot.org][chapter 4]] | what =--robot= resolves, and in what order |
-| [[file:05-a-versionsuffix-is-part-of-the-name.org][chapter 5]] | why a suffix is identity |
-| [[file:06-what-installed-means.org][chapter 6]] | what a sanity check asserts |
-| [[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]] | what a checksum does and does not promise |
-
+| [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] | why a version is a pin and not a floor |
+| [[file:04-the-robot.org][The robot]] | what =--robot= resolves, and in what order |
+| [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] | why a suffix is identity |
+| [[file:06-what-installed-means.org][What "installed" means]] | what a sanity check asserts |
+| [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] | what a checksum does and does not promise |
 * Level C. Work on a machine
-
-Two hours. Needs level A; level B makes it faster.
-
-| Read | For |
-|---+---|
-| [[file:20-reading-a-failed-build.org][chapter 20]] | reading the error block and the log |
-| [[file:24-development-environments.org][chapter 24]] | standing in the build's own environment |
-| [[file:10-build-your-own-without-asking.org][chapter 10]] | installing with no admin rights |
-| [[file:28-your-first-week.org][chapter 28]] | three tasks of the kind handed to a newcomer |
-
-Level C is the one to read while something is failing. Chapter 20 is
-written to be read in that state.
-
+Estimated time: two hours.
+Requires level A. Level B speeds it up.
+[[file:20-reading-a-failed-build.org][Reading a failed build]] covers reading the error block and the log.
+[[file:24-development-environments.org][Standing where the build stood]] covers standing in the build's own environment.
+[[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]] covers installing with no admin rights.
+[[file:28-your-first-week.org][Your first week on somebody's stack]] covers three tasks of the kind handed to a newcomer.
+Use level C when something is failing.
+Reading a failed build is intended for that situation.
 * Level D. Build the machinery
-
-Three hours. Needs B and C.
-
-| Read | For |
-|---+---|
-| [[file:13-how-a-build-executes.org][chapter 13]] | the eighteen steps, and which parameter belongs to which |
-| [[file:14-the-isolation-policy.org][chapter 14]] | what a build is allowed to see |
-| [[file:15-build-dependencies-are-not-dependencies.org][chapter 15]] | the three dependency kinds |
-| [[file:16-what-a-toolchain-injects.org][chapter 16]] | =toolchainopts= and =optarch= |
-| [[file:17-patches.org][chapter 17]] | strip levels, and applying cleanly against applying correctly |
-| [[file:19-what-a-module-exports.org][chapter 19]] | what a user actually meets |
-
+Three hours.
+Requires B and C. Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps.
+Read [[file:13-how-a-build-executes.org][How a build executes]] for which parameter belongs to which.
+Read [[file:14-the-isolation-policy.org][What a build is allowed to see]] for what a build is allowed to see.
+Read [[file:15-build-dependencies-are-not-dependencies.org][Build dependencies are not dependencies]] for the three dependency kinds.
+Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =toolchainopts=.
+Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =optarch=.
+Read [[file:17-patches.org][Patches, and what a patch is relative to]] for strip levels.
+Read [[file:17-patches.org][Patches, and what a patch is relative to]] for applying cleanly against applying correctly.
+Read [[file:19-what-a-module-exports.org][What a module exports]] for what a user actually meets.
 * Level E. Write a recipe
-
-Three hours. Needs D.
+Three hours.
+Needs D.
 
 | Read | For |
 |---+---|
-| [[file:21-writing-one-from-nothing.org][chapter 21]] | an easyconfig for software that has none |
-| [[file:08-one-easyconfig-many-installs.org][chapter 8]] | =exts_list= and bundles |
-| [[file:18-language-ecosystems.org][chapter 18]] | Python, R, Rust, and the ecosystem with no easyblock |
-| [[file:29-extensions.org][chapter 29]] | what an exts_list entry inherits, and what it does not |
-| [[file:22-writing-an-easyblock.org][chapter 22]] | when a parameter is not enough |
-| [[file:23-testing.org][chapter 23]] | the four things called testing |
+| [[file:21-writing-one-from-nothing.org][Writing one from nothing]] | an easyconfig for software that has none |
+| [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]] | =exts_list= and bundles |
+| [[file:18-language-ecosystems.org][Languages that bring their own package manager]] | Python, R, Rust, and the ecosystem with no easyblock |
+| [[file:29-extensions.org][Extensions, and what an entry in exts_list inherits]] | what an exts_list entry inherits, and what it does not |
+| [[file:22-writing-an-easyblock.org][Writing an easyblock]] | when a parameter is not enough |
+| [[file:23-testing.org][Testing, and the four things it can mean]] | the four things called testing |
 
+Testing, and the four things it can mean names the fourth kind and stops.
+[[file:part-a-test.org][The test]] is that kind.
 * Level F. Distribute a stack
-
-Two hours. Needs A; the rest is independent of B to E, which is why it is
-last rather than hard.
+Two hours.
+It needs A. The remainder is independent of B to E. It is placed last rather than hard.
 
 | Read | For |
 |---+---|
-| [[file:11-eessi-somebody-elses-stack.org][chapter 11]] | using a stack nobody at your site built |
-| [[file:25-cvmfs-and-the-stratum.org][chapter 25]] | how a stack reaches a machine, verified |
-| [[file:26-the-same-stack-somewhere-else.org][chapter 26]] | four machines, three routes |
-| [[file:30-easystack-files.org][chapter 30]] | the YAML list the bot builds |
-| [[file:31-the-eessi-bot.org][chapter 31]] | comment, artefact, ingest |
-| [[file:32-host-injections.org][chapter 32]] | a site stack next to EESSI |
-| [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] | why a site's builds differ from a reading of the file |
+| [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] | using a stack nobody at your site built |
+| [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]] | how a stack reaches a machine, verified |
+| [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] | four machines, three routes |
+| [[file:30-easystack-files.org][An easystack is the list the bot will build]] | the YAML list the bot builds |
+| [[file:31-the-eessi-bot.org][The bot is three processes and a comment]] | comment, artefact, ingest |
+| [[file:32-host-injections.org][A site stack next to EESSI, not inside it]] | a site stack next to EESSI |
+| [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]] | why a site's builds differ from a reading of the file |
+* The test
+The official tutorial, the CSCS webinar, ExCALIBUR-tests and the EESSI suite each follow the same sequence.
+The sequence consists of a test class, the pipeline, the configuration file, a performance number, and the portable suite.
+There are two levels.
+The grain matches the recipe.
+* Level G. Write a ReFrame test
+Duration: two hours.
+Requires [[file:23-testing.org][Testing, and the four things it can mean]]; [[file:06-what-installed-means.org][What "installed" means]] accelerates the sanity comparison.
 
-* Whenever
-
-Not a level. Read these when the question comes up.
-
-| Read | When |
+| Read | For |
 |---+---|
-| [[file:12-eb-stack-updater-and-generator.org][chapter 12]] | how sure any of this is |
-| [[file:33-inspect-residuals-and-the-plan.org][chapter 33]] | inspect artifacts and the residual queue |
-| [[file:34-recipe-format-lint-check.org][chapter 34]] | format, lint, and check |
-| [[file:35-stack-solve-and-the-diff.org][chapter 35]] | whole-stack lock, build list, diff |
-| [[file:36-campaign-findings.org][chapter 36]] | typed campaign findings |
-| [[file:37-wrapping-and-modulerc.org][chapter 37]] | ModuleRC, wrapping, and =-Dr= |
-| [[file:38-locks-bwrap-python-datasets.org][chapter 38]] | install locks, bwrap, datasets |
-| [[file:27-four-things-that-actually-happened.org][chapter 27]] | the failures in full, with the diagnosis |
-| [[file:glossary.org][the glossary]] | a word in this book means something specific |
-| [[file:keypoints.org][the keypoints]] | a chapter was read last week |
-| [[file:exercises.org][the exercises]] | a session is being run, or a self-check is needed |
-| [[file:papers.org][references]] | the papers the chapters cite |
-| [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] | deciding whether to use EasyBuild at all |
+| [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] | a test is a decorated class, and the class decides it passed |
+| [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] | setup, compile, run, sanity, performance, cleanup |
+| [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]] | systems, partitions, environments |
+| [[file:42-a-performance-function-is-a-number-with-a-unit.org][A performance function is a number with a unit]] | a figure of merit, a reference, a threshold |
+| [[file:43-compile-or-run-only.org][Compile or run-only]] | when the test builds, when it loads a module |
+
+A run-only test can be read aloud, detailing its execution, pass criteria, and the file that defines the permissible machine.
+* Level H. Run a portable suite
+Two hours.
+Needs G. [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]] compares =parameter= against =variable= and explores the cartesian product.
+[[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]] explains why =valid_systems = ['snellius']= is the trap.
+[[file:46-software-maps-to-tests.org][Software maps to tests]] describes the mapping file, the CSCS layout, and the three uses.
+[[file:47-reading-a-failed-reframe-run.org][Reading a failed ReFrame run]] covers the stage directory, =rfm_job.out=, and =--restore-session=.
+* Whenever
+Not a level.
+
+Read [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] when port a conda-forge or Spack recipe, or bump a generation.
+
+Read [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] when inspecting artifacts and the residual queue.
+
+Read [[file:34-recipe-format-lint-check.org][Format, lint, and check are three different questions]] when formatting, linting, and checking.
+
+Read [[file:35-stack-solve-and-the-diff.org][A stack lock is not a package lock]] when performing whole‑stack lock, build list, and diff.
+
+Read [[file:36-campaign-findings.org][A campaign finding is a typed failure, not a log]] when reviewing typed campaign findings.
+
+Read [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]] when handling ModuleRC, wrapping, and =-Dr=.
+
+Read [[file:38-locks-bwrap-python-datasets.org][Four EasyBuild 5 surfaces the earlier chapters skipped]] when installing locks, bwrap, and datasets.
+
+Read [[file:27-four-things-that-actually-happened.org][Four things that actually happened]] when examining the failures in full, with the diagnosis.
+
+Read [[file:glossary.org][the glossary]] when a word in this book means something specific.
+
+Read [[file:keypoints.org][the keypoints]] when a page was read last week.
+
+Read [[file:exercises.org][the exercises]] when a session is being run, or a self‑check is needed.
+
+Read [[file:papers.org][references]] when consulting the papers the chapters cite.
+
+Read [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] when deciding whether to use EasyBuild at all.

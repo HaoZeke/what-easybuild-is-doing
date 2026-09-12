@@ -1,0 +1,16 @@
+#+TITLE: Journeys
+#+OPTIONS: toc:nil num:nil
+A journey defines a how‑to path across pages that already exist.
+The same page may belong to multiple paths.
+#+begin_export rst
+.. rst-class:: eb-journeys
+
+- `First recipe <journey-first-recipe.html>`_
+ Read a file the way EasyBuild does, then the four mechanisms.
+- `A build failed <journey-a-build-failed.html>`_
+ The log, then the parameters that usually caused it.
+- `Port a package <journey-port.html>`_
+ conda-forge or Spack in, an easyconfig out.
+- `Write a test <journey-write-a-test.html>`_
+ Four kinds of testing, then a ReFrame class that runs.
+#+end_export

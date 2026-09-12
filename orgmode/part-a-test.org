@@ -1,0 +1,33 @@
+#+TITLE: The test
+#+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. rst-class:: eb-part-kicker
+
+Part 3
+#+end_export
+A module that loads is not a module that ran the workload.
+[[file:23-testing.org][Testing, and the four things it can mean]] names four kinds of testing.
+The fourth kind is ReFrame.
+ReFrame is a decorated class.
+ReFrame is a six-stage pipeline.
+ReFrame is a configuration file that is the machine.
+CSCS teaches ReFrame as its own course.
+This part also teaches ReFrame.
+Start at [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]].
+This step assumes that Testing, and the four things it can mean has already been read.
+#+begin_export rst
+.. toctree::
+ :maxdepth: 1
+
+ 23-testing
+ 39-a-reframe-test-is-a-class
+ 40-the-pipeline-has-six-stages
+ 41-the-configuration-file-is-the-machine
+ 42-a-performance-function-is-a-number-with-a-unit
+ 43-compile-or-run-only
+ 44-parameters-multiply-the-suite
+ 45-a-portable-test-leaves-the-machine-in-the-config
+ 46-software-maps-to-tests
+ 47-reading-a-failed-reframe-run
+#+end_export

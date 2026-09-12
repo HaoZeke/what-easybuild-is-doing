@@ -1,0 +1,154 @@
+#+TITLE: Reading a failed ReFrame run
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- Where are the files when a test fails?
+- What is the first field in =FAILURE INFO=?
+- What does =--restore-session --failed= rerun, and what does
+ it leave alone?
+#+end_questions
+
+#+begin_objectives
+1. Read a =FAILURE INFO= block and say which stage failed, and
+ where the stage directory is.
+2. Open =rfm_job.out= and the generated =rfm_job.sh=, and say
+ which one answers "what ran" and which one answers "what
+ it printed".
+3. Rerun only the failed cases from the last session.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]], for
+ the stage names.
+- [[file:20-reading-a-failed-build.org][Reading a failed build]], for the
+ same skill against EasyBuild's error block.
+#+end_prerequisites
+A ReFrame test that fails retains its files.
+A ReFrame test that succeeds copies a few artifacts to the output directory and removes the stage.
+Examining a failure involves inspecting the stage directory identified by the =FAILURE INFO= block.
+The official tutorial triggers a failure by misspelling the sanity pattern.
+The report is displayed as follows:
+#+begin_example
+FAILURE INFO for stream_test (run: 1/1)
+ * System partition: generic:default
+ * Environment: builtin
+ * Stage directory: /home/user/stage/generic/default/builtin/stream_test
+ * Node list: myhost
+ * Job type: local (id=19)
+ * Failing phase: sanity
+ * Rerun with '-n /2e15a047 -p builtin --system generic:default -r'
+ * Reason: sanity error: pattern 'Slution Validates' not found
+ in 'rfm_job.out'
+--- rfm_job.out (first 10 lines) ---
+STREAM version $Revision: 5.10 $
+#+end_example
+The first field is =Failing phase=, the same name used by EasyBuild's error block for a step.
+The =sanity= value shows that the job ran and the verdict failed.
+The =run_complete= value shows that the job was submitted and the wait failed.
+The =setup= value shows that nothing ran.
+The second field is =Stage directory=.
+All resources used by the test are located there.
+* Three files in the stage
+
+#+begin_example
+rfm_job.sh
+rfm_job.out
+rfm_job.err
+#+end_example
+The file =rfm_job.sh= is the generated job script.
+In the tutorial's initial STREAM test, the script consists of the two lines =#!/bin/bash= and =stream.x=.
+For a run‑only module test, the script contains =module load= followed by the launcher and the executable.
+When an incorrect module is loaded or when =#SBATCH -n= is set to 128 on a 64‑core node, the script reports the issue.
+The test class does not report the issue.
+The file =rfm_job.out= corresponds to =self.stdout=.
+After job completion on the ReFrame host, the sanity function and the performance functions read this file.
+A pattern missing from the first ten lines of the =FAILURE INFO= excerpt often appears later in this file or in =rfm_job.err=.
+Upon success, the three files are moved to =output/<system>/<partition>/<environ>/<test>/= and the stage directory is removed.
+Upon failure, the files remain in place. a site that greps only =output/= for failures finds no results.
+* Restore the session, not the suite
+
+#+begin_example
+reframe --restore-session --failed -r
+#+end_example
+The most recent session resides at =$HOME/.reframe/reports/latest.json=.
+The option =--restore-session= reads that file.
+The flag =--failed= selects cases that did not pass.
+Passed dependencies are restored rather than rerun.
+The tutorial's dependency‑chain example reruns =T6= alone after a prior full run.
+The restored parents are not compiled again.
+The =Rerun with= line in =FAILURE INFO= expresses the same concept for a single hash.
+The specification =-n /2e15a047= refers to that test case only, not to every case sharing the class name.
+The option =--keep-stage-files= retains the stage on success as well.
+A later‑restoring session requires the retained stage.
+Without this option, a passed dependency has already been cleaned up.
+It cannot be restored as files.
+* What the phase does not say
+A sanity failure does not constitute a performance regression.
+A performance miss does not constitute a wrong answer.
+A skip from A portable test leaves the machine in the config (missing feature, not enough memory) does not constitute a failure; the listing shows =skipped=.
+Treating skips as passes causes a GPU test to appear green on a CPU partition.
+The debug log resides at =$RFM_PREFIX/logs/reframe_<date>_<time>.log=, or at =/tmp/rfm-*.log= when no prefix is set.
+The file records why a test was filtered out before any stage executed.
+If =reframe -l= fails to list a test that the on‑disk file defines, that log is consulted next, not the stage directory.
+#+ATTR_EB: :id EB-ReFrame-47-1 :title Where to look
+#+begin_exercise
+Four reports. For each, name the first file or directory
+to open, and what a pass of the next run would require.
+
+1. =Failing phase: sanity=, pattern =Sum of all ranks: 8128=
+ not found, =scale= was 128.
+2. =Failing phase: run_complete=, job cancelled, time limit
+ 5 minutes, GROMACS hEGFRDimer.
+3. =reframe -l= does not list the new test. The class has
+ =@rfm.simple_test= and =valid_systems = ['snellius']=.
+ The configuration's system is named =roihu=.
+4. =Failing phase: performance=, =copy_bw= 8000 MB/s
+ against 20000 ± 20%.
+#+begin_solution
+1. =rfm_job.out= in the stage directory. The expected sum
+ is 128 x 127 / 2 = 8128. If the file prints a different
+ sum, the ranks were not 128. If it prints nothing, the
+ script did not run the Python. The next run needs the
+ printed line to match, not a looser regex.
+
+2. =rfm_job.sh= for the time limit and the input size, then
+ the scheduler reason. A five-minute limit on a 465k-atom
+ system is the wrong case for a contribution check;
+ Crambin with the =CI= tag is. Raising the limit and
+ rerunning the dimer is a nightly question.
+
+3. The debug log, then the configuration. The test was
+ filtered before setup. Either =valid_systems= becomes a
+ feature request (A portable test leaves the machine in the config) or the configuration's
+ system name matches. Rerunning without that change
+ still lists nothing.
+
+4. The perflog, and the reference in the test or the
+ configuration. Sanity passed. The next run needs a
+ number inside the threshold, or a reference that
+ describes this partition. Copying 20000 from a
+ different machine is how this failure repeats.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-47 :title Where this chapter comes from :kind sources
+#+begin_detail
+ReFrame 4.10 tutorial: the induced STREAM sanity failure,
+the three artifacts, =--restore-session --failed=,
+=--keep-stage-files=, and the =Rerun with= hash. Pipeline
+page: =run_complete=, cleanup deferred for dependents.
+EESSI usage page: =$RFM_PREFIX= layout for logs, stage,
+output, perflogs.
+#+end_detail
+
+#+begin_keypoints
+- =Failing phase= is the first field. The stage directory
+ is the second.
+- =rfm_job.sh= is what ran. =rfm_job.out= is what it
+ printed. On failure both stay in the stage; on success
+ they move to =output/=.
+- =--restore-session --failed= reruns the failures and
+ restores passed dependencies.
+- A skip is not a pass. A missing listing is a filter, and
+ the debug log is the file that recorded it.
+#+end_keypoints

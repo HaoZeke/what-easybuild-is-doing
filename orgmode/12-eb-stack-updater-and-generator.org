@@ -1,222 +1,282 @@
-#+TITLE: Chapter 12. eb-stack, the updater and generator
+#+TITLE: eb-stack ports a recipe and bumps one
 #+OPTIONS: toc:nil num:nil
 
 #+begin_questions
-- What does =eb-stack package bump= write, and what does it not run?
-- Which claim does a Resolvo lock establish?
-- Are the in-page samples the generator?
+- What does a conda-forge =recipe.yaml= become, as an easyconfig?
+- What does a bump change in a GROMACS file, and what does it leave?
+- What still has to run =eb=?
 #+end_questions
 
 #+begin_objectives
-1. Say what eb-stack emits, and what still has to run =eb=.
-2. Tell a bump of an existing recipe from a plan of a new one.
-3. Given a piece of evidence, say which claim it establishes and which
-   it does not.
+1. Given a conda-forge recipe or a Spack =package.py=, name the command
+ that writes the =.eb=, and say what still has to be built.
+2. Read a bump: name every pin that moved with the toolchain, and the
+ lines that did not.
+3. Tell a port of software EasyBuild does not have from an annual
+ retarget of software it does.
 #+end_objectives
+eb-stack performs two tasks.
+One task is a *port*: input from conda-forge or Spack (or PyPI, CRAN, Cargo) and output of an EasyBuild recipe.
+The other task is a *bump*: an easyconfig written for one toolchain generation rewritten for the next.
+Neither task invokes =eb=.
+Both generate files that a human then builds.
+[[https://eb-stack.rgoswami.me][eb-stack]] is the tool.
+This chapter describes those two tasks and includes the files on the page.
+* A port starts as someone else's recipe
+The conda-forge feedstock for eOn 2.16.0 resides frozen in eb-stack's fixtures.
+It contains name, version, sources, host dependencies, and tests.
+It is not an easyconfig.
+#+begin_src yaml
+context:
+ version: "2.16.0"
 
-eb-stack does not rewrite EasyBuild. The tool generates EasyBuild
-recipes, updates existing ones, and hands them to =eb=.
+package:
+ name: eon
+ version: ${{ version }}
 
-[[https://eb-stack.rgoswami.me][eb-stack]] parses conda-forge,
-Spack, PyPI, CRAN, Cargo, LuaRocks, Raku, and EasyBuild recipes
-into one plan. It solves each product profile with Resolvo. It
-writes one conventional =.eb= file per variant. Then a campaign
-runs those files through EasyBuild on a real target. New packages
-and annual bumps use the same artifacts.
+source:
+ - url: https://github.com/TheochemUI/eOn/releases/download/v${{ version }}/eon-v${{ version }}.tar.xz
+ sha256: 3d4da89a393c8821bf370cb97c9d2403718d83f9cbb5e8b918cd90af14ed52dc
+ - url: https://github.com/OmniPotentRPC/rgpot/archive/refs/tags/v2.2.1.tar.gz
+ sha256: d4687bc719e19174e89288dd16dd45d7a8645d7205c7f8d8fc4d677266055918
+ target_directory: subprojects/rgpot
+ - url: https://github.com/lode-org/readcon-core/archive/refs/tags/v0.13.1.tar.gz
+ sha256: a261e69b87228dcc8f161eef800590b0395b4c93605b838c6216d40a1780f0bf
+ target_directory: readcon-core-src
 
-The samples on these pages are not that pipeline. They borrow three
-tables the generator already has to export: the easyblock encoding,
-the template constants, and the foss hierarchies. Press Escape and
-those tables are what the page is playing with. That is not
-eb-stack, and it is not EasyBuild.
-
-#+begin_src easyconfig :widget easyblock
-code-server
-c++
-C#
+requirements:
+ host:
+ - python
+ - numpy
+ - pyyaml
+ - eigen >=3.4,<3.5
+ - libblas
+ - quill
+ - xtb
+ - libtorch
+ - libmetatomic-torch >=0.1.15,<0.2
 #+end_src
-
-* Two commands, one emitted file
-
-When a recipe already exists, bump it.
-
-#+begin_example
-eb-stack package bump \
-  --source GROMACS-2024.4-foss-2023b.eb \
-  --toolchain-name foss \
-  --toolchain-version 2024a \
-  --easyconfigs /path/to/easybuild-easyconfigs \
-  --out-dir /tmp/gromacs-2024a
-#+end_example
-
-The source recipe is the floor. The target robot tree is the
-candidate set. Resolvo picks one hierarchy-compatible closure. The
-output is
-=/tmp/gromacs-2024a/easyconfigs/g/GROMACS/GROMACS-2024.4-foss-2024a.eb=,
-plus a plan, an SBOM, and a lock. EasyBuild has no notion of a
-minimum, so a pin carried across generations states a requirement
-the package never made. The bump drops those floors when the
-toolchain moves. That is [[file:03-a-pin-is-for-one-generation.org][chapter 3]], automated.
-
-When the software has no EasyBuild recipe yet, plan it, from a
-conda-forge =recipe.yaml= or a Spack =package.py= or a PyPI name:
-
+The command that converts the file to an easyconfig is =package plan=.
+Using =--format conda-forge= selects the parser.
+The option =--stack-policy= is required.
 #+begin_example
 eb-stack package plan \
-  --source recipe.yaml \
-  --format conda-forge \
-  --toolchain-name foss \
-  --toolchain-version 2024a \
-  --easyconfigs /path/to/easybuild-easyconfigs \
-  --stack-policy examples/stacks/eon-foss-2026.1.toml \
-  --out-dir /tmp/new-package
+ --source fixtures/foreign_ingest/conda_eon/recipe.yaml \
+ --format conda-forge \
+ --toolchain-name foss \
+ --toolchain-version 2024a \
+ --package-config examples/packages/common.toml \
+ --package-config examples/packages/eon.toml \
+ --easyconfigs /path/to/easybuild-easyconfigs \
+ --stack-policy site/foss-2024a.toml \
+ --out-dir /tmp/eon-from-conda
 #+end_example
-
-=--stack-policy= is required. [[file:33-inspect-residuals-and-the-plan.org][Chapter 33]]
-is the inspect artifacts and the residual queue.
-[[file:34-recipe-format-lint-check.org][Chapter 34]] is =format=,
-=lint=, and =check=. [[file:35-stack-solve-and-the-diff.org][Chapter 35]]
-is the whole-stack lock. [[file:36-campaign-findings.org][Chapter 36]]
-is the campaign state.
-
-The same pipeline emits a new =.eb=. Parsers do not execute the
-foreign recipe. Unsupported expressions become residuals, not
-guessed dependencies. =package inspect= is that ingest without the
-solve or the file; it establishes nothing on the ladder.
-
-Either way the next commands are the same:
-
+What comes out is a tree, not a speech:
 #+begin_example
-eb-stack recipe lint /tmp/gromacs-2024a/easyconfigs/g/GROMACS/*.eb
-eb-stack recipe check \
-  --recipe /tmp/gromacs-2024a/easyconfigs/g/GROMACS/GROMACS-2024.4-foss-2024a.eb \
-  --easyconfigs /path/to/robot
-eb-stack campaign run \
-  --bundle /tmp/gromacs-2024a \
-  --config targets/base.toml \
-  --config targets/site.toml \
-  --target site-builder \
-  --state /tmp/gromacs-2024a.campaign.json
+package.plan.json
+package.sbom.cdx.json
+locks/default.lock.json
+easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb
 #+end_example
+The =.eb= artifact is built by EasyBuild.
+The lock denotes the solver's assignment.
+The plan includes the parsed foreign recipe and residuals; parser‑invented items appear as typed leftovers instead of guessed dependencies.
+[[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] denotes that queue.
+This chapter contains the two files that a reader may place side by side.
+Below appears the emitted recipe claim from the same fixture.
+The name and version remain retained.
+=eon= transformed into =eOn=.
+=eigen >=3.4,<3.5= converted into a pin for this generation.
+=libtorch= renamed to =PyTorch=.
+The meson flags originally set by the feedstock's =build.sh= now represented as =configopts=.
+#+begin_src easyconfig :widget parse
+easyblock = 'MesonNinja'
 
-=lint= and =check= look at the file. =campaign run= calls =eb=.
-Nothing in eb-stack compiles GROMACS.
+name = 'eOn'
+version = '2.16.0'
+toolchain = {'name': 'foss', 'version': '2024a'}
 
-* Why a generator contains a solver
+sources = [
+ {'download_filename': 'v%(version)s.tar.gz', 'filename': SOURCE_TAR_GZ},
+ {'filename': 'rgpot-2.2.1.tar.gz'},
+ {'filename': 'readcon-core-0.13.1.tar.gz'},
+]
 
-Chapter 4's robot is a loop: take whatever is fully resolved, treat
-it as available, search for the rest, repeat. That matches how a
-site builds, one package at a time onto what is already there.
+dependencies = [
+ ('Python', '3.12.3'),
+ ('SciPy-bundle', '2024.05'),
+ ('PyYAML', '6.0.2'),
+ ('Eigen', '3.4.0'),
+ ('xtb', '6.7.1', '', ('gfbf', '2024a')),
+ ('PyTorch', '2.6.0'),
+ ('metatomic-torch', '0.1.15'),
+]
 
-A bump is a different question. Given a recipe written for one
-generation, what should it say on another? The old versions are
-floors that must not be carried, the target generation's modules are
-candidates, and something has to choose a consistent set. That is a
-solver's job. An easyconfig has no place to put a constraint.
+configopts = "-Dbuildtype=release -Dwith_fortran=true -Dwith_cuh2=true "
+configopts += "-Dwith_metatomic=true -Dwith_xtb=true -Dwith_serve=true "
+configopts += "-Dwith_rgpot=true -Dpip_metatomic=false"
+#+end_src
+Three sources are used.
+The =target_directory: subprojects/rgpot= entry became a staged extract in the full file; the widget above keeps the names.
+In the full recipe, =sanity_check_commands= runs =eonclient --version= and =python -c "import eon"=, reflecting the feedstock's =tests:= block translated, not invented.
+A Spack =package.py= file is the other input.
+The paper [[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]] describes that format; a spec is a range, and a concretiser selects one graph.
+The same software is parsed differently.
+=--format spack= specifies the parser.
+The file is Python and is *not* executed; literal =depends_on= and =version= calls are interpreted as syntax.
+#+begin_src python
+class Eon(MesonPackage):
+ homepage = "https://eondocs.org/"
+ url = "https://github.com/TheochemUI/eOn/releases/download/v2.16.0/eon-v2.16.0.tar.xz"
 
-eb-stack states the retarget as constraints and hands them to
-Resolvo. The toolchain hierarchy from
-[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]] is a hard
-constraint. Feasible is not unique, so the first satisfying
-assignment is an arbitrary stack. The generator constrains and
-re-solves for the newest jointly consistent set.
+ version("2.16.0", sha256="3d4da89a393c8821bf370cb97c9d2403718d83f9cbb5e8b918cd90af14ed52dc")
 
-A loop names the one dependency it failed to find. A solver can say
-that no consistent assignment exists at all. Those are different
-questions. The solver is not EasyBuild.
+ depends_on("meson@1.8.0:", type="build")
+ depends_on("python@3.11:", type=("build", "run"))
+ depends_on("py-numpy", type=("build", "run"))
+ depends_on("eigen@3.4:")
+ depends_on("quill@11:")
+ depends_on("readcon-core@0.13.1:")
+ depends_on("highway")
+ depends_on("libinih")
+#+end_src
+=depends_on("eigen@3.4:")= is a range.
+EasyBuild does not support ranges ([[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]).
+The solver selects =Eigen-3.4.0= from the robot tree for that generation.
+A =def patch(self):= that executes sed is not a file.
+It becomes a =judgment= residual.
+The emitted =.eb= does not claim that the sed occurred.
+Inspect exists.
+The queue is visible first.
+Plan then consumes the robot tree only for items already decided.
+=package inspect= uses the same parsers without performing the solve.
+It writes =package.plan.json=.
+It writes a planned SBOM.
+It produces no =.eb=.
+Use it to read residuals.
+Use =package plan= to select non‑blocking items.
+Use =package plan= to emit the file.
+* A bump starts as an easyconfig that already works
+GROMACS 2024.4 builds with =foss/2023b=.
+The file exists.
+The yearly job uses the same software on =foss/2024a=.
+Manual copying of the file and alteration of four version strings creates pins that become undocumented floors.
+#+begin_src ebtranscript :source "workstation, eb-stack 0.2.0, 2026-09-11, tests/repro_fixtures/gromacs plus universe_foss_2024a" :caption "A bump writes one file. EasyBuild has not started."
+$ eb-stack package bump \
+> --source tests/repro_fixtures/gromacs/GROMACS-2024.4-foss-2023b.eb \
+> --toolchain-name foss \
+> --toolchain-version 2024a \
+> --easyconfigs tests/repro_fixtures/universe_foss_2024a \
+> --out-dir /tmp/gromacs-2024a
+wrote /tmp/gromacs-2024a/GROMACS-2024.4-foss-2024a.eb
+#+end_src
+| Parameter | 2023b | 2024a |
+|---+---|---|
+| =toolchain= | =foss/2023b= | =foss/2024a= |
+| =CMake= | 3.27.6 | 3.29.3 |
+| =scikit-build-core= | 0.9.3 | 0.11.1 |
+| =Python= | 3.11.5 | 3.12.3 |
+| =SciPy-bundle= | 2023.11 | 2024.05 |
+| =networkx= | 3.2.1 | 3.4.2 |
+| =mpi4py= | 3.1.5 | 4.0.1 |
 
-* The claim ladder
+The unchanged lines are =name=, =version=, =sources=, =patches=, =checksums=, =configopts=, =exts_list=.
+The application version is 2024.4.
+The tarball has identical bytes.
+Each pin on the toolchain moved together with the toolchain.
+The candidate set is the 2024a robot tree.
+Resolvo chose a single consistent closure.
+#+begin_src easyconfig :widget parse
+name = 'GROMACS'
+version = '2024.4'
+toolchain = {'name': 'foss', 'version': '2024a'}
+toolchainopts = {'openmp': True, 'usempi': True}
 
-Four rungs, and each one names the evidence that establishes it:
+builddependencies = [
+ ('CMake', '3.29.3'),
+ ('scikit-build-core', '0.11.1'),
+]
+dependencies = [
+ ('Python', '3.12.3'),
+ ('SciPy-bundle', '2024.05'),
+ ('networkx', '3.4.2'),
+ ('mpi4py', '4.0.1'),
+]
+#+end_src
+The same command with =--version= and =--source-checksum= is used to increase the *application* version.
+If the checksum is omitted, the tarball name changes.
+The hash becomes stale.
+This is a blocking residual rather than a guessed hash.
+* Two commands, then =eb=
+| Job | Command | Input | Output |
+|---+---|---|---|
+| read a foreign recipe | =package inspect= | =recipe.yaml= / =package.py= | plan + SBOM, no =.eb= |
+| port it | =package plan= | the same, plus a robot tree and a stack policy | plan, lock, =.eb= |
+| retarget a generation | =package bump= | an existing =.eb= plus a robot tree | plan, lock, new =.eb= |
+| build what was written | =campaign run= | the bundle | =eb=, on a named target |
 
-| Claim | Established by |
-|---+---|
-| resolves | a Resolvo lock and an emitted recipe |
-| builds | EasyBuild running that recipe to completion on one named target |
-| binary-verified | the installed tree passing declared verification on that target |
-| eessi-verified | the same, on top of the EESSI compatibility layer |
-
-=package inspect= establishes none of them. =package plan= and
-=package bump= can establish only =resolves=. =campaign run= owns
-=builds= and =binary-verified=, because those need =eb=. It does
-not own =eessi-verified=: that is the EESSI bot, on the EESSI
-sysroot.
-
-Planning may never establish =builds=, however clean the plan
-looks. A build on one target does not establish another, which is
-[[file:06-what-installed-means.org][chapter 6]] turned into a
-refusal. The EESSI rung exists for the same reason: chapter 11's
-stack is a different sysroot, so a green build on an ordinary
-machine is not evidence about it.
-
-#+ATTR_EB: :id EB-Ladder-1 :title Which rung does this reach
+=recipe lint= examines the file.
+=recipe check= examines the file.
+See [[file:34-recipe-format-lint-check.org][Format, lint, and check are three different questions]].
+=campaign run= is the initial command that performs compilation.
+See [[file:36-campaign-findings.org][A campaign finding is a typed failure, not a log]].
+A green plan represents the claim =resolves=.
+It does not represent the claim =builds=.
+#+ATTR_EB: :id EB-Port-1 :title Port, bump, or neither
 #+begin_exercise
-Four things happened, in order. For each, say the highest rung it
-establishes, and for which target.
+Four starting points. For each, name the eb-stack command, or
+say the work is not eb-stack's.
 
-1. =eb-stack package bump= writes a lock and a =.eb= in which every
-   declared constraint is satisfied.
-2. =eb= runs that file to completion on an x86-64 build host and
-   writes a module.
-3. The installed tree passes its declared verification on that host.
-4. The same easyconfig is built by the EESSI bot on fourteen CPU
-   targets and deployed.
-
-Then: which of the four lets you tell a user on an aarch64 login
-node that the software works there?
+1. =fixtures/foreign_ingest/spack_qmcpack/package.py=, no
+ QMCPACK easyconfig in the robot.
+2. =GROMACS-2024.4-foss-2023b.eb=, site moving to =foss/2024a=.
+3. The =.eb= from (1), in a bundle, nobody has run =eb=
+ yet.
+4. A tarball and a README, no conda-forge recipe, no Spack
+ package, no easyconfig.
 
 #+begin_solution
-1 reaches =resolves=, and no further. A lock says the versions are
-mutually consistent against the constraints you declared. It says
-nothing about whether they link. The generator did its job. EasyBuild
-has not started.
+1. =package plan --format spack=. Inspect first if the residuals
+ are unknown. The output is an easyconfig plus a lock.
 
-2 reaches =builds=, for that target only.
+2. =package bump=. The source is already an easyconfig. The
+ robot tree for 2024a is the candidate set.
 
-3 reaches =binary-verified=, for that target only.
+3. =campaign run=, or =eb= on that file. eb-stack has finished
+ the generator's job.
 
-4 reaches =eessi-verified=, and it is the only one of the four
-covering targets you did not run on yourself, because the bot ran
-on each of them.
-
-None of 1, 2 or 3 lets you tell the aarch64 user anything. 4 does,
-because the evidence is fourteen builds rather than an inference
-from one.
+4. [[file:21-writing-one-from-nothing.org][Writing one from nothing]]. There
+ is nothing to parse. The five mandatory parameters are
+ written by hand.
 #+end_solution
 #+end_exercise
 
-* What it does not do
+#+ATTR_EB: :id sources-12 :title Where this chapter comes from :kind sources
+#+begin_detail
+eb-stack 0.2.0 and the HaoZeke/eb-stack fixtures, read
+2026-09-11.
 
-It does not build software. The afterword's list of what EasyBuild
-is for still applies. eb-stack runs before =eb=.
+- conda-forge eOn: =fixtures/foreign_ingest/conda_eon/recipe.yaml=
+- Spack eOn: =fixtures/foreign_ingest/spack_eon/package.py=
+- emitted full product:
+ =fixtures/eon_packaging/easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb=
+- GROMACS bump: =tests/repro_fixtures/gromacs/= against
+ =universe_foss_2024a=. The transcript is a real =bump= on that
+ pair; the pins in the table are the ones the solver wrote.
 
-A solve covers only the universe it is given. A lock against one
-robot tree says nothing about a machine with a different module
-set.
-
-A solver lock is not a compatibility guarantee. Versions that
-satisfy every declared constraint can still fail to link. The
-ladder exists so that gap stays visible.
-
-It is not a second EasyBuild. The browser samples are not a
-reimplementation of the framework in Rust. eb-stack is an updater
-and a generator. The generator exported three tables so the book
-can show a name being encoded.
-
-* The tables this book borrowed
-
-Three of the sample kinds answer in your browser: template
-resolution, the easyblock name, and the toolchain hierarchy. None
-of them needed Resolvo. Each reduces to a table exported from
-eb-stack at book-build time, plus a few lines that apply it. A
-cross-check compares the browser's answers against the binary's.
-
-The parse widget is a reduced reader, not the crate's
-rustpython-parser. Multi-line structures it cannot follow, it
-names. The crate still reaches for the network and the filesystem,
-so it does not compile to WebAssembly yet. When it does, the
-drop-in contract is already in the page.
-
-Chapter 6 is the ladder as an incident. The next chapters are the
-machinery a generated recipe still has to survive: the steps =eb=
-runs, what a build is allowed to see, and what comes out.
+Commands and the inspect/plan/bump split:
+[[https://eb-stack.rgoswami.me][eb-stack.rgoswami.me]] tutorial
+and the =new-package= / =bump-recipe= how-tos.
+#+end_detail
+A full run of inspect, bump, site generation, and upstream PR is [[file:48-seissol-from-spack-to-a-pr.org][SeisSol, from a Spack recipe to a PR]].
+#+begin_keypoints
+- A port reads conda-forge or Spack and writes an easyconfig.
+ =package plan --format conda-forge= or =--format spack=.
+- A bump reads an easyconfig and writes the same software on a
+ new toolchain generation. Application version, sources and
+ patches stay; every pin that lives on the toolchain moves.
+- Ranges become pins. A Spack =eigen@3.4:= is =Eigen-3.4.0= on
+ that generation, or a residual if the robot has no candidate.
+- Nothing in inspect, plan or bump compiles the package.
+ =campaign run= calls =eb=.
+#+end_keypoints

@@ -1,0 +1,186 @@
+#+TITLE: The configuration file is the machine
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What belongs in the test, and what belongs in the configuration?
+- What does the builtin configuration already define?
+- Which environment variables stop a site repeating =-C= and =--prefix=
+ on every invocation?
+#+end_questions
+
+#+begin_objectives
+1. Read a configuration file and name the system, the partitions and
+ the environments it defines.
+2. Say what the builtin configuration already provides, and why a
+ site file does not replace it.
+3. Set the three =RFM_*= variables a site actually needs.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]], for where
+ the partition is consulted.
+#+end_prerequisites
+A ReFrame test specifies the actions to be executed.
+A ReFrame configuration specifies the target environment.
+Combining them is the entire portability problem that a portable test leaves the machine in the config aims to resolve.
+That chapter is the file that separates them.
+The official tutorial demonstrates the division using STREAM on a single-node container and then on a compose-built Slurm cluster, while keeping the test class unchanged.
+EESSI's documentation follows the same approach: define the system configuration and then direct ReFrame to the suite.
+CSCS provides =config/cscs.py= alongside =checks/=, not within it.
+* Three lists
+A configuration is a Python file that assigns =site_configuration=, a dictionary.
+Three keys do most of the work.
+=systems= is a list of machines.
+Each system has a name, a list of hostnames ReFrame matches against =socket.gethostname()=, a modules system (=lmod=, =tmod=, =tmod4=, =nomod=), and a list of *partitions*.
+A partition is a scheduler plus a launcher plus a list of environments.
+=scheduler = 'slurm'= and =launcher = 'srun'= is the common HPC pair.
+=scheduler = 'local'= and =launcher = 'local'= is the laptop pair.
+The partition is what a test's =valid_systems= matches against, as =system:partition=.
+=environments= is a list of programming environments: a compiler and the modules that provide it.
+A compile test is tried once per matching environment.
+A run-only test that sets =valid_prog_environs = ['default']= is saying the environment does not matter, and the configuration still has to define a =default= so the filter has something to match.
+The builtin configuration is always loaded.
+It defines the =generic= system, the =default= partition, the =builtin= environment, and a baseline logging setup.
+A site file *adds* to that; it does not replace it.
+=reframe -l= with no =-C= lists tests against =generic:default+builtin=.
+The STREAM test in a ReFrame test is a class run at all.
+* A file small enough to read
+The documented skeleton of EESSI, reduced to the keys required for this chapter:
+#+begin_src python
+import os
+from eessi.testsuite.common_config import (
+ common_logging_config, common_eessi_init,
+)
+
+site_configuration = {
+ 'systems': [
+ {
+ 'name': 'example',
+ 'descr': 'Example cluster',
+ 'modules_system': 'lmod',
+ 'hostnames': ['*'],
+ 'stagedir': (
+ f'/shared/reframe/{os.environ["USER"]}/stage'
+ ),
+ 'partitions': [
+ {
+ 'name': 'cpu',
+ 'scheduler': 'slurm',
+ 'launcher': 'srun',
+ 'environs': ['default'],
+ 'processor': {
+ 'num_cpus': 128,
+ },
+ 'max_jobs': 8,
+ },
+ ],
+ },
+ ],
+ 'environments': [
+ {
+ 'name': 'default',
+ 'modules': [],
+ },
+ ],
+ 'logging': common_logging_config(),
+}
+#+end_src
+=hostnames = ['*']= matches any host.
+This is required for a shared configuration used from several login nodes.
+A tighter list stops ReFrame from loading this system on a machine it does not describe.
+=stagedir= is the shared filesystem.
+The pipeline has six stages.
+EESSI's comment on the same field is the rule: every node that will run a test has to see this path.
+=$RFM_PREFIX= (below) is the usual way to keep stage, output and perflogs together.
+The configuration still has to name a *shared* prefix, not =/tmp=.
+=processor.num_cpus= is how a portable test learns the node.
+A test that writes =num_tasks = 128= has hardcoded this cluster.
+A test that asks the partition for its CPU count has not.
+A portable test leaves the machine in the config is that hook.
+=max_jobs= is the partition's concurrency cap for the asynchronous policy.
+Eight is a starting number, not a recommendation.
+A site that shares a QoS with users sets this from the QoS, not from a tutorial.
+* Features, extras, and the filter syntax
+Partitions or environments can declare =features=, a list of tags.
+Partitions or environments can declare =extras=, a key/value map.
+Tests request them from =valid_systems=.
+Tests request them from =valid_prog_environs=.
+#+begin_src python
+valid_systems = ['+gpu -login %arch=zen2']
+valid_prog_environs = ['+foss', '+intel']
+#+end_src
+Rewrite the org-mode prose.
+Preserve org markup such as =foo= and [[links]].
+
+=+feat= indicates a required feature.
+=-feat= indicates an excluded feature.
+=%key=val= indicates an additional requirement.
+
+Features combined in a single string are interpreted as AND.
+Features listed in separate entries are interpreted as OR.
+
+Binding a test to =example:cpu= by name continues to function.
+This behavior is precisely what a portable suite aims to avoid.
+* Three environment variables
+EESSI recommends these rather than repeating flags.
+| Variable | Flag it replaces | What it names |
+|---+---|---|
+| =RFM_CONFIG_FILES= | =-C= / =--config-file= | the site configuration |
+| =RFM_CHECK_SEARCH_PATH= | =-c= | where the tests live |
+| =$RFM_PREFIX= | =--prefix= | stage, output, logs, perflogs |
+The dollar on the third is deliberate in EESSI's prose.
+They warn against the command-line =--prefix=.
+The environment variable is set once, in the same place the modules tool is initialised.
+ReFrame 4.3.3 and later, with the common EESSI logging configuration, then writes.
+- The debug log is written at =$RFM_PREFIX/logs/reframe_<date>_<time>.log=. 
+- Stage files are written at =$RFM_PREFIX/stage/<system>/<partition>/<environ>/=. 
+- Output files are written at =$RFM_PREFIX/output/<system>/<partition>/<environ>/=. 
+- Perflogs are written at =$RFM_PREFIX/perflogs/<system>/<partition>/<environ>/=. 
+A site that sets the three variables has a ReFrame invocation that is just =reframe -l= or =reframe -r=.
+This is what a cron job and a human can both remember.
+#+ATTR_EB: :id EB-ReFrame-41-1 :title What belongs where
+#+begin_exercise
+A colleague's STREAM test contains =num_tasks = 128= and
+=valid_systems = ['snellius:cpu']=. The configuration for the
+new machine has a =cpu= partition with =num_cpus: 64=. Which
+two lines move, and which file do they move to?
+#+begin_solution
+=valid_systems= becomes a feature request (or =['*']=, or the
+new system's name) in the *test*
+bound to one cluster. =num_tasks = 128= leaves the test
+entirely: 128 is a fact about Snellius, so it belongs in that
+site's configuration as =processor.num_cpus=, and the test
+reads it from the partition in a hook. Leaving 128 in the test
+on a 64-core node oversubscribes the node; leaving
+=snellius:cpu= in the test means the new machine never
+schedules it.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-41 :title Where this chapter comes from :kind sources
+#+begin_detail
+ReFrame 4.10 tutorial, the configuration section, and the
+[[https://reframe-hpc.readthedocs.io/en/stable/config_reference.html][configuration
+reference]]: systems, partitions, environments, features, extras,
+=max_jobs=. The builtin configuration is always loaded.
+
+EESSI test-suite documentation, fetched 2026-09-11:
+[[https://www.eessi.io/docs/test-suite/installation-configuration/][installation
+and configuration]],
+[[https://www.eessi.io/docs/test-suite/ReFrame-configuration-file/][the
+configuration file]], and the =RFM_*= variables. CSCS's layout
+is =config/cscs.py= plus =checks/= in
+[[https://github.com/eth-cscs/cscs-reframe-tests][eth-cscs/cscs-reframe-tests]].
+#+end_detail
+
+#+begin_keypoints
+- The test describes what to run. The configuration describes
+ where. A number of cores in the test is a number of cores on
+ one machine.
+- The builtin configuration always defines =generic:default= and
+ =builtin=. A site file adds to it.
+- A partition is a scheduler, a launcher and a list of
+ environments. =valid_systems= matches =system:partition=.
+- =RFM_CONFIG_FILES=, =RFM_CHECK_SEARCH_PATH= and =$RFM_PREFIX=
+ are the three variables a site sets once.
+#+end_keypoints

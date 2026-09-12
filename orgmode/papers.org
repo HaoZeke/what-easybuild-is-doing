@@ -1,49 +1,12 @@
 #+TITLE: References
 #+OPTIONS: toc:nil num:nil
-
-Alvarez, Damian, Alan O'Cais, Markus Geimer, and Kenneth Hoste.
-2016. "Scientific software management in real life: deployment
-of EasyBuild on a large scale system." In /HUST 2016/, 31–40.
-IEEE. https://doi.org/10.1109/HUST.2016.009
-
-Blomer, Jakob, Carlos Aguado-Sánchez, Predrag Buncic, and Artem
-Harutyunyan. 2011. "Distributing LHC application software and
-conditions databases using the CernVM file system." /Journal of
-Physics: Conference Series/ 331: 042003.
-https://doi.org/10.1088/1742-6596/331/4/042003
-
-Boissonneault, Maxime, Bart E. Oldeman, and Ryan P. Taylor.
-2019. "Providing a unified software environment for Canada's
-national advanced computing centers." In /PEARC '19/, article
-51. ACM. https://doi.org/10.1145/3332186.3332210
-
-Dröge, Bob, Victor Holanda Rusu, Kenneth Hoste, Caspar van
-Leeuwen, Alan O'Cais, and Thomas Röblitz. 2023. "EESSI: A
-cross-platform ready-to-use optimised scientific software
-stack." /Software: Practice and Experience/ 53 (1): 176–210.
-https://doi.org/10.1002/spe.3075
-
-Geimer, Markus, Kenneth Hoste, and Robert McLay. 2014. "Modern
-scientific software management using EasyBuild and Lmod." In
-/HUST 2014/, 41–51. IEEE. https://doi.org/10.1109/HUST.2014.8
-
-Hoste, Kenneth, Jens Timmerman, Andy Georges, and Stijn De
-Weirdt. 2012. "EasyBuild: Building software with ease." In /2012
-SC Companion/, 572–582. IEEE.
-https://doi.org/10.1109/SC.Companion.2012.81
-
-Smith, Arfon M., Daniel S. Katz, Kyle E. Niemeyer, and FORCE11
-Software Citation Working Group. 2016. "Software citation
-principles." /PeerJ Computer Science/ 2: e86.
-https://doi.org/10.7717/peerj-cs.86
-
-Wilson, Greg, D. A. Aruliah, C. Titus Brown, Neil P. Chue Hong,
-Matt Davis, Richard T. Guy, Steven H. D. Haddock, Kathryn D.
-Huff, Ian M. Mitchell, Mark D. Plumbley, Ben Waugh, Ethan P.
-White, and Paul Wilson. 2014. "Best practices for scientific
-computing." /PLOS Biology/ 12 (1): e1001745.
-https://doi.org/10.1371/journal.pbio.1001745
-
-Wilson, Greg. 2016. "Software Carpentry: lessons learned."
-/F1000Research/ 3: 62.
-https://doi.org/10.12688/f1000research.3-62.v2
+The bibliography is =source/refs.bib=.
+It is exported from the OokCite collection =what-easybuild-is-doing=.
+Chapters cite with =[[cite:key][Author year]]=.
+These citations export as Sphinx =:cite:t:= roles.
+McCalpin (1995) has no DOI.
+The STREAM site is the citation that STREAM itself asks for.
+#+begin_export rst
+.. bibliography::
+ :all:
+#+end_export

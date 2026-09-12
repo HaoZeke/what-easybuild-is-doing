@@ -1,17 +1,12 @@
 #+TITLE: Playground
 #+OPTIONS: toc:nil num:nil
-
-Press Escape on any page and this engine opens in a dock at the
-bottom. This page is the same thing, laid out, so every
-widget in one place. Nothing here compiles. Change a number and watch
-the answer move.
-
-The engine is a table plus a few lines of JavaScript, not EasyBuild
-itself. It will parse an easyconfig, resolve templates, name the
-easyblock, walk a toolchain, invent a module name, lint the obvious
-mistakes, reprint the recipe, and walk a canned robot universe. It
-will not configure, compile, or talk to your site.
-
+Press Escape on any page to open this engine in a dock at the bottom.
+This page presents the same layout, gathering every widget in one place.
+No compilation occurs here.
+Modify a number to see the answer update.
+The engine consists of a table and a few lines of JavaScript, not EasyBuild itself.
+It parses an easyconfig, resolves templates, names the easyblock, walks a toolchain, invents a module name, lints obvious mistakes, reprints the recipe, and traverses a canned robot universe.
+It does not configure, compile, or communicate with your site.
 * Parse
 
 #+begin_src easyconfig :widget parse :hydrate load
@@ -62,20 +57,18 @@ versionsuffix = '-CUDA-12.8.0'
 #+end_src
 
 * Robot walk
-
-A canned universe, not your site. Change Python to =3.11.3= and a
-dependency disappears.
-
+A preconfigured universe, not your own site.
+Switch Python to =3.11.3= and a dependency vanishes.
 #+begin_src easyconfig :widget solve :universe canned-foss-2025a
 name = 'GROMACS'
 version = '2025.2'
 toolchain = {'name': 'foss', 'version': '2025a'}
 dependencies = [
-    ('Python', '3.13.1'),
-    ('FFTW', '3.3.10'),
+ ('Python', '3.13.1'),
+ ('FFTW', '3.3.10'),
 ]
 builddependencies = [
-    ('CMake', '3.31.4'),
+ ('CMake', '3.31.4'),
 ]
 #+end_src
 

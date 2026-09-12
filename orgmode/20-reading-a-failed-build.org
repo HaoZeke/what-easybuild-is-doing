@@ -1,24 +1,23 @@
-#+TITLE: Chapter 20. Reading a failed build
+#+TITLE: Reading a failed build
 
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Read EasyBuild's error block and say which of its six fields to use
-   first.
+ first.
 2. Find the log for a failed run, and search it in the order that finds
-   the cause rather than the fallout.
+ the cause rather than the fallout.
 3. Reproduce a failing command in the environment it failed in.
 #+end_objectives
-
-Everything before this chapter was about what EasyBuild does when it
-works. This is the one that gets used, and it is a reading skill
-rather than a repertoire of fixes.
-
-The material here is a real failure, produced on purpose, small enough to
-run anywhere. A tiny archive, =wobble-1.0.tar.gz=, containing one shell
-script at =wobble-1.0/bin/wobble=. A recipe that installs it with the
-=Tarball= easyblock and then runs it:
-
+Everything before this chapter was about what EasyBuild does when it works.
+This is the one that gets used.
+It is a reading skill rather than a repertoire of fixes.
+The material here is a real failure.
+It was produced on purpose.
+It is small enough to run anywhere.
+A tiny archive, =wobble-1.0.tar.gz=, contains one shell script at =wobble-1.0/bin/wobble=.
+A recipe installs it with the =Tarball= easyblock.
+The recipe then runs it.
 #+begin_src easyconfig :widget parse :fails "on purpose, and working out how is the next block"
 easyblock = 'Tarball'
 
@@ -41,8 +40,8 @@ order: which of the eighteen steps fails, and what the exit code is.
 #+begin_reveal
 =postproc=, and 127.
 
-=postproc= because =postinstallcmds= runs after the install rather than
-during it, so configure, build and install all succeeded. 127 because it
+=postproc=
+during it, so configure, build and install all succeeded. 127
 is the shell's code for a command that is not there: the file being run
 does not exist at the path the easyconfig named.
 
@@ -55,46 +54,40 @@ reading the flag invites and the exit code rules out.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; long scratch paths elided to /scratch" :caption "What EasyBuild says when a shell command fails"
 $ eb wobble-1.0.eb
 ERROR: Shell command failed!
-    full command    ->  /scratch/software/wobble/1.0/bin/wobble --check-licence
-    exit code       ->  127
-    called from     ->  'run_post_install_commands' function in
-                        .../easybuild/framework/easyblock.py (line 3371)
-    working directory ->
-                        /scratch/build/wobble/1.0/system-system/wobble-1.0/bin
-    output (stdout + stderr)  ->
-                        /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/out.txt
-    interactive shell script  ->
-                        /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/cmd.sh
+ full command -> /scratch/software/wobble/1.0/bin/wobble --check-licence
+ exit code -> 127
+ called from -> 'run_post_install_commands' function in
+ .../easybuild/framework/easyblock.py (line 3371)
+ working directory ->
+ /scratch/build/wobble/1.0/system-system/wobble-1.0/bin
+ output (stdout + stderr) ->
+ /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/out.txt
+ interactive shell script ->
+ /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/cmd.sh
 
 ERROR: Installation of wobble-1.0.eb failed: shell command 'wobble ...'
 failed with exit code 127 in postproc step for wobble-1.0.eb
 #+end_src
-
-Six fields. They are not equally useful, and the order to read them in is
-not the order they are printed.
+Six fields are presented.
+They are not equally useful.
+The order to read them is not the order they are printed.
 
 *The exit code, first.* 127 is the shell's code for "command not found".
-Not a licence problem, not a permissions problem: the thing being run is
-not there. A single number has just ruled out most of the search space.
-=126= is "found but not executable", =2= is usually a usage error, and a
-=make= failure is typically =2= with the real cause further up.
+It is not a licence problem nor a permissions problem; the command being run is absent.
+A single number has ruled out most of the search space.
+=126= indicates "found but not executable".
+=2= usually signals a usage error.
+A =make= failure is typically =2= with the real cause further up.
 
-*Then the step.* =in postproc step= says the install already happened.
-Whatever is wrong, it is not in configure, build or install, which is
-where a reader who skipped this line would start looking.
+*Then the step.* =in postproc step= indicates that the install already happened.
+The problem is not in configure, build or install.
 
-*Then the working directory*, and here is the fact that explains this
-failure. The command ran in
-=.../wobble-1.0/bin=, which is one level deeper than the archive's top.
-Nothing in the easyconfig asked for that.
-
+*Then the working directory* The command ran in =.../wobble-1.0/bin=, which is one level deeper than the archive's top.
+Nothing in the easyconfig requested that.
 * Why the start directory moved
-
-EasyBuild does not use the extraction directory as the build directory.
-It looks for the real top of the source tree, and the rule is worth
-knowing exactly, because it is the mechanism behind
-[[file:01-an-easyconfig-is-python.org][chapter 1]]'s failure as well.
-
+EasyBuild does not treat the extraction directory as the build directory.
+It looks for the real top of the source tree.
+The rule is worth knowing exactly.org][An easyconfig is Python]]'s failure.
 #+ATTR_EB: :id start-dir-descent :title How the start directory is guessed :kind reference
 #+begin_detail
 =find_base_dir= in =easybuild/tools/filetools.py=, verified against
@@ -104,15 +97,15 @@ EasyBuild 5.3.1:
 lst = get_local_dirs_purged()
 new_dir = get_cwd()
 while len(lst) == 1:
-    new_dir = os.path.join(get_cwd(), lst[0])
-    if not os.path.isdir(new_dir):
-        break
-    change_dir(new_dir)
-    lst = get_local_dirs_purged()
+ new_dir = os.path.join(get_cwd(), lst[0])
+ if not os.path.isdir(new_dir):
+ break
+ change_dir(new_dir)
+ lst = get_local_dirs_purged()
 #+end_example
-
-It descends *while there is exactly one entry*, skipping dotfiles and a
-directory named =easybuild=. So:
+It descends *while there is exactly one entry*.
+It skips dotfiles and a directory named =easybuild=.
+The following table shows the mapping.
 
 | The archive contains | The start dir becomes |
 |---+---|
@@ -121,16 +114,19 @@ directory named =easybuild=. So:
 | =pkg-1.0/bin/wobble= and nothing else | =pkg-1.0/bin= |
 | two top-level directories | the extraction directory itself |
 
-An explicit =start_dir= is resolved relative to that result rather than
-instead of it, which is why a =start_dir= that was right for a git
-checkout can be wrong for a release tarball of the same software.
-#+end_detail
-
-That rule (see [[dive:start-dir-descent]]) is the whole failure.
-=wobble-1.0= contained exactly one entry, =bin=, which contained exactly
-one entry. So EasyBuild descended twice, =Tarball= copied the contents of
-*that* directory into the install prefix, and the install tree is:
-
+An explicit =start_dir= is resolved relative to that result rather than instead of it.
+A =start_dir= that was right for a git checkout can be wrong for a release tarball of the same software.
+#+end_detail That rule (see [[dive:start-dir-descent]]) represents the entire failure. =wobble-1.0= contained exactly one entry, =bin=. =bin= also contained a single entry. EasyBuild descended twice. =Tarball= copied the contents of *that* directory into the install prefix. The install tree is: #+end_detail =%(installdir)s/bin/wobble= does not exist.
+=%(installdir)s/wobble= does exist.
+Exit 127 was telling the truth.
+There are two ways to fix it.
+They are not equivalent.
+=start_dir = ''= stops the descent.
+=bin/wobble= is where the recipe expects.
+Alternatively, the =postinstallcmds= line is corrected to the path that exists.
+The first changes the layout the module exports.
+That layout is what a user meets.
+It is usually the right one.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "Not the tree the easyconfig assumed"
 $ ls -la ebtest/software/wobble/1.0/
 total 4
@@ -138,16 +134,17 @@ drwxr-xr-x 2 rgoswami rgoswami 60 Sep 10 07:06 .
 drwxr-xr-x 3 rgoswami rgoswami 60 Sep 10 07:06 ..
 -rwxr-xr-x 1 rgoswami rgoswami 26 Sep 10 07:06 wobble
 #+end_src
-
-=%(installdir)s/bin/wobble= does not exist. =%(installdir)s/wobble= does.
+=%(installdir)s/bin/wobble= does not exist.
+=%(installdir)s/wobble= does.
 Exit 127 was telling the truth.
-
-Two ways to fix it, and they are not equivalent. =start_dir = ''= stops
-the descent, so =bin/wobble= is where the recipe expects; or the
-=postinstallcmds= line is corrected to the path that exists. The first
-changes the layout the module exports, which is what a user meets, so it
-is usually the right one.
-
+Two ways to fix it.
+They are not equivalent.
+=start_dir = ''= stops the descent.
+Therefore =bin/wobble= is where the recipe expects.
+Alternatively the =postinstallcmds= line is corrected to the path that exists.
+The first changes the layout the module exports.
+The layout the module exports is what a user meets.
+It is usually the right one.
 #+ATTR_EB: :id EB-Failure-2 :title Read this log fragment
 #+begin_exercise
 A log you have never seen, opened at the end and scrolled up:
@@ -155,83 +152,89 @@ A log you have never seen, opened at the end and scrolled up:
 #+begin_example
 == ... (took 4 min 18 sec)
 == sanity checking...
-  >> file 'lib/libfoo.so' or 'lib64/libfoo.so' found: FAILED
+ >> file 'lib/libfoo.so' or 'lib64/libfoo.so' found: FAILED
 == FAILED: Installation ended unsuccessfully
 #+end_example
-
-Then, 900 lines earlier:
-
+1. Identify the step that failed. 
+2. Identify the steps that then succeeded. 
+The build executed =make= for four minutes and terminated with exit code 0.
+What conclusions can be drawn from that, and what remains uncertain?
+Specify the two subsequent locations to inspect, in sequence, and indicate what each will resolve.
 #+begin_example
-  >> running shell command:
+ >> running shell command:
 	make -j 16
 	[working dir: /scratch/build/foo/1.2/gcc-13.2.0/foo-1.2]
-  >> command completed: exit 0, ran in 4 min 12 sec
+ >> command completed: exit 0, ran in 4 min 12 sec
 #+end_example
+1. Identify the step that failed. 
+1. Identify the steps that succeeded. 
 
-1. Which step failed, and which steps therefore succeeded?
-2. The build ran =make= for four minutes and exited 0. What does that let
-   you rule out, and what does it not?
-3. Name the two places you would look next, in order, and say what each
-   one would settle.
+2. The build ran =make= for four minutes and exited 0. 
+2. This rules out immediate failures in the =make= process. 
+2. This does not rule out later runtime errors. 
 
+3. Name the two places you would look next, in order. 
+3. State what each place would settle.
 #+begin_solution
 1. =sanitycheck= failed, so =configure=, =build= and =install= all
-   succeeded: something was compiled and something was installed. The
-   twelve steps before the check are not suspects.
+ succeeded: something was compiled and something was installed. The
+ twelve steps before the check are not suspects.
 
 2. It rules out a compile failure and a link failure of the thing =make=
-   built. It does not tell you that =make install= put anything where the
-   easyconfig expected, and it does not tell you that what got built is
-   named =libfoo.so=: a library built as =libfoo.so.1.2= with no
-   development symlink passes =make= and fails this check.
+ built. It does not tell you that =make install= put anything where the
+ easyconfig expected, and it does not tell you that what got built is
+ named =libfoo.so=: a library built as =libfoo.so.1.2= with no
+ development symlink passes =make= and fails this check.
 
-3. First the install directory, which is still there, because it settles
-   whether the file exists under another name or in another directory.
-   Then the =install= step's own commands in the log, which settle whether
-   the build system was told a prefix it disagreed with. Nothing in the
-   configure output is worth reading until those two are answered.
+3. First the install directory, which is still there
+ whether the file exists under another name or in another directory.
+ Then the =install= step's own commands in the log, which settle whether
+ the build system was told a prefix it disagreed with. Nothing in the
+ configure output is worth reading until those two are answered.
 #+end_solution
-#+end_exercise
-
-* The log, and how to search it
-
-The error block names the command, the exit code, the cwd, and a
-path to =out.txt=. The output is not inlined. Open that file.
-
-There are two of them, and knowing which one is on the page saves
-confusion.
-
-A *temporary* log per =eb= invocation, announced as =Temporary log file in
-case of crash /tmp/eb-*/easybuild-*.log=, removed when the run succeeds.
-And a log per installation, named from
-=easybuild-%(name)s-%(version)s-%(date)s.%(time)s.log=, which on success
-is copied into =<installdir>/easybuild/= and stays with the software. The
-line at the end of a failed run,
-=Results of the build can be found in the log file(s) ...=, points at the
-second.
-
-=eb --last-log= prints the path to the most recent one. It globs the log
-path, keeps only files owned by your uid, and returns the
-newest by modification time. So on a shared build host it finds *your*
-last log rather than the machine's, and it implies =--terse=, which is
-why =vim $(eb --last-log)= works.
-
-Then the reading order, which is the part people get wrong.
-
-*Start at the end and work upward.* The last error is usually fallout.
-
+#+end_exercise The error block lists the command, the exit code, the cwd, and a path to =out.txt=.
+The output is not inlined.
+Open that file.
+Two logs exist, and identifying which appears on the page prevents confusion.
+A *temporary* log per =eb= invocation is announced as =Temporary log file in case of crash /tmp/eb-*/easybuild-*.log= and is removed when the run succeeds.
+A log per installation is named using =easybuild-%(name)s-%(version)s-%(date)s.%(time)s.log=, and on success it is copied into =<installdir>/easybuild/= where it remains with the software.
+The line at the end of a failed run, =Results of the build can be found in the log file(s)...=, refers to the second log.
+=eb --last-log= prints the path to the most recent log.
+It globs the log path, retains only files owned by the current uid, and returns the newest file by modification time.
+On a shared build host it therefore finds *your* last log rather than the machine's, and it implies =--terse=, which enables =vim $(eb --last-log)= to work.
+The reading order is often misunderstood.
+*Start at the end and work upward.* The last error usually represents fallout.
 *Search for the step markers*, not for the word error.
-=Starting configure step= and
-=Running method configure_step part of step configure= divide the log
-into the eighteen sections from
-[[file:13-how-a-build-executes.org][chapter 13]], and knowing which one
-the environment is in narrows everything.
-
-*Search for a command, not a complaint.* =running shell command= (or
-=INFO running cmd= in older logs) finds every command with its working
-directory and exit code beside it, which is a list of facts. Searching
-for =error= finds a compiler's opinion of a header file.
-
+=Starting configure step= and =Running method configure_step part of step configure= split the log into the eighteen sections described in [[file:13-how-a-build-executes.org][How a build executes]], and knowing the current environment section narrows the search.
+*Search for a command, not a complaint.* =running shell command= (or =INFO running cmd= in older logs) lists every command with its working directory and exit code.
+Those are the facts.
+Searching for =error= yields a compiler's opinion of a header file.
+* The log, and how to search it
+The error block names the command, the exit code, the cwd, and a path to =out.txt=.
+The output is not inlined.
+Open that file.
+There are two of them.
+Knowing which one is on the page saves confusion.
+A *temporary* log per =eb= invocation is announced as =Temporary log file in case of crash /tmp/eb-*/easybuild-*.log=.
+The temporary log is removed when the run succeeds.
+A log per installation is named from =easybuild-%(name)s-%(version)s-%(date)s.%(time)s.log=.
+On success the log is copied into =<installdir>/easybuild/=.
+The log stays with the software.
+The line at the end of a failed run is =Results of the build can be found in the log file(s)...=.
+The line points at the second.
+=eb --last-log= prints the path to the most recent one.
+It globs the log path, keeps only files owned by your uid, and returns the newest by modification time.
+On a shared build host it finds *your* last log rather than the machine's.
+It implies =--terse=.
+=vim $(eb --last-log)= works.
+Then the reading order is the part people get wrong.
+*Start at the end and work upward.* The last error is usually fallout.
+*Search for the step markers*, not for the word error.
+=Starting configure step= and =Running method configure_step part of step configure= divide the log into the eighteen sections from [[file:13-how-a-build-executes.org][How a build executes]].
+Knowing which one the environment is in narrows everything.
+*Search for a command, not a complaint.* =running shell command= (or =INFO running cmd= in older logs) finds every command with its working directory and exit code beside it.
+It is a list of facts.
+Searching for =error= finds a compiler's opinion of a header file.
 #+ATTR_EB: :id log-search-patterns :title Patterns worth searching a build log for :kind reference
 #+begin_detail
 From EasyBuild's own troubleshooting guidance, with what each is good
@@ -254,20 +257,25 @@ the word in every configure script's prose.
 The rule that matters more than the list: *look for the first error, not
 the last*. Later errors are usually consequences.
 #+end_detail
-
+The two paths in the error block form the portion that requires changing habits.
+=out.txt= is the command's own output, complete:
 * Reproducing the failure
-
-The two paths in the error block are the part worth changing your habits
-for. =out.txt= is the command's own output, complete:
-
+The =cmd.sh= script executes in the environment's shell where the command was run.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "out.txt, which is the whole story here"
 $ cat /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/out.txt
 /usr/bin/bash: line 1: /scratch/software/wobble/1.0/bin/wobble:
 No such file or directory
 #+end_src
-
-And =cmd.sh= is a shell in the environment the command ran in:
-
+Executing it launches a shell whose environment originates from the sibling =env.sh=, with the failing command placed as the previous history entry.
+The loop consists of pressing up, editing, running, and repeating, using the environment that the build actually used rather than an approximation.
+This corresponds to [[file:14-the-isolation-policy.org][What a build is allowed to see]].
+The login shell differs from the build's environment.
+A command that succeeds in one and fails in the other provides no output until the environment is identified.
+To examine a failure before it occurs rather than after, =eb --dump-env-script <easyconfig>= creates =<name>.env= in the current directory.
+The file contains the =module load= lines for the toolchain and its dependencies.
+The file also contains the build environment defined by the toolchain object.
+Sourcing that file gives the shell the same environment as the build.
+This topic comprises the entire content of [[file:24-development-environments.org][Standing where the build stood]].
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "The generated cmd.sh, in full"
 $ cat /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/cmd.sh
 #!/usr/bin/env bash
@@ -277,101 +285,98 @@ EB_SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd
 echo "# Shell for the command: '.../bin/wobble --check-licence'"
 echo "# Use command history, exit to stop"
 if [ "$#" -eq 0 ]; then
-  bash --rcfile $EB_SCRIPT_DIR/env.sh -i
+ bash --rcfile $EB_SCRIPT_DIR/env.sh -i
 else
-  BASH_ENV=$EB_SCRIPT_DIR/env.sh bash "$@"
+ BASH_ENV=$EB_SCRIPT_DIR/env.sh bash "$@"
 fi
 #+end_src
-
-Running it opens a shell whose environment came from the
-sibling =env.sh=, with the failing command as the previous history entry.
-So the loop is: press up, edit, run, repeat, in the environment the build
-had rather than in an approximation of it.
-
-That is [[file:14-the-isolation-policy.org][chapter 14]] again: your login shell is not
-the build's environment, and a command that works in one and fails in the
-other reports nothing until the environment is known.
-
-For a failure to inspect *before* it happens, rather than after,
-=eb --dump-env-script <easyconfig>= writes =<name>.env= in the current
-directory: the =module load= lines for the toolchain and its
-dependencies, and the build environment the toolchain object sets. Source
-it and your shell has what the build has. That is
-[[file:24-development-environments.org][chapter 24]]'s whole subject.
-
+Successful installation cleans up its build directory.
+Failed installation does not clean up its build directory.
+This is deliberate.
+The mechanism is the step list.
+=cleanup= is the fourteenth of the eighteen steps.
+A build that fails in =configure= never reaches it, whatever =--cleanup-builddir= says.
+For an autotools build, =config.log= remains in the build directory and contains the actual compiler invocations configure tried and their actual output.
+For CMake, =CMakeFiles/CMakeOutput.log= and =CMakeFiles/CMakeError.log= remain.
+Both logs contain information that the EasyBuild log does not.
+Nobody cleans the tree afterwards.
+A build path filling with failed attempts is a normal way for a shared build host to run out of disk.
+Three options change where a failure happens.
+=--stop=<step>= ends the run cleanly after a named step.
+The run can stop at =configure= and allow inspection of its output.
+=-x=, the extended dry run, walks the whole procedure without performing any actions and reports what it *would* run.
+It ends with =(no ignored errors during dry run)= when nothing went wrong.
+Its limit is exactly the one from An easyconfig is Python.
+It never extracts anything.
+A fault that depends on the contents of an archive is invisible to it.
+This chapter's failure would pass a dry run.
+=--trace= is on by default in EasyBuild 5.
+It causes the run above to print the working directory and the source checksums as it proceeds.
+Turning =--trace= off is possible.
+It is rarely advisable.
 * What is left behind, and what is not
-
-A successful installation cleans up its build directory. A failed one
-does not, and that is deliberate: the wreckage is the evidence.
-
-The mechanism is the step list. =cleanup= is the fourteenth of the
-eighteen steps, so a build that fails in =configure= never reaches it,
-whatever =--cleanup-builddir= says. What remains, for an
-autotools build, is =config.log= in the build directory, which contains
-the actual compiler invocations configure tried and their actual output.
-For CMake it is =CMakeFiles/CMakeOutput.log= and
-=CMakeFiles/CMakeError.log=. Both say things the EasyBuild log does not,
-because they are the build system's own record.
-
-The cost is that nobody cleans the tree afterwards. A build path filling with
-failed attempts is a normal way for a shared build host to run out of
-disk.
-
-Three options change where a failure happens:
-
-=--stop=<step>= ends the run cleanly after a named step, so the run can stop
-at =configure= and go look at what it produced.
-
-=-x=, the extended dry run, walks the whole procedure without doing any
-of it, and reports what it *would* run. It ends with
-=(no ignored errors during dry run)= when nothing went wrong. Its limit
-is exactly the one from chapter 1: it never extracts anything, so a fault
-that depends on the contents of an archive is invisible to it. This
-chapter's failure would pass a dry run.
-
-=--trace= is on by default in EasyBuild 5, and it is the reason the run
-above printed the working directory and the source checksums as it went.
+A successful installation cleans up its build directory.
+A failed one does not.
+That is deliberate: the wreckage is the evidence.
+The mechanism is the step list.
+=cleanup= is the fourteenth of the eighteen steps.
+A build that fails in =configure= never reaches it, whatever =--cleanup-builddir= says.
+What remains, for an autotools build, is =config.log= in the build directory.
+=config.log= contains the actual compiler invocations configure tried and their actual output.
+For CMake it is =CMakeFiles/CMakeOutput.log= and =CMakeFiles/CMakeError.log=.
+Both say things the EasyBuild log does not.
+Nobody cleans the tree afterwards.
+A build path filling with failed attempts is a normal way for a shared build host to run out of disk.
+Three options change where a failure happens: =--stop=<step>= ends the run cleanly after a named step.
+The run can stop at =configure= and go look at what it produced.
+=-x=, the extended dry run, walks the whole procedure without doing any of it.
+It reports what it *would* run.
+It ends with =(no ignored errors during dry run)= when nothing went wrong.
+Its limit is exactly the one from An easyconfig is Python: it never extracts anything.
+A fault that depends on the contents of an archive is invisible to it.
+This chapter's failure would pass a dry run.
+=--trace= is on by default in EasyBuild 5.
+It is the reason the run above printed the working directory and the source checksums as it went.
 Turning it off is possible and rarely wise.
-
 #+ATTR_EB: :id EB-Failure-1 :title Four failures, four first moves
 #+begin_exercise
 For each, say what you read first and what you would rule out with it.
 
 1. =ERROR: Shell command failed!= with =exit code 2= and
-   =in build step=, and the output ends with =make: *** [all] Error 2=.
+ =in build step=, and the output ends with =make: *** [all] Error 2=.
 2. A build that ran for forty minutes and failed in =sanitycheck=, with
-   a missing =libfoo.so=.
+ a missing =libfoo.so=.
 3. =Couldn't find file thing-2.1.tar.gz anywhere, and downloading it
-   didn't work either... Paths attempted (in order): ...=
+ didn't work either... Paths attempted (in order):...=
 4. A build that succeeds on your machine and fails on a colleague's, same
-   easyconfig, same EasyBuild version.
+ easyconfig, same EasyBuild version.
 
 #+begin_solution
 1. The =Error 2= is =make= reporting that a rule failed, not the
-   failure itself. Read =out.txt= and search upward for the *first*
-   =error:=, which is the compiler's. The exit code has told you the
-   build system failed rather than EasyBuild, so nothing in the
-   easyconfig's structure is suspect yet.
+ failure itself. Read =out.txt= and search upward for the *first*
+ =error:=, which is the compiler's. The exit code has told you the
+ build system failed rather than EasyBuild, so nothing in the
+ easyconfig's structure is suspect yet.
 
 2. The step, and then the install tree. Reaching =sanitycheck= means
-   configure, build and install all succeeded, so the software built
-   something and it is not what the recipe said it would be. Compare
-   =sanity_check_paths= against what is actually in the install
-   directory, which is still there. This is
-   [[file:06-what-installed-means.org][chapter 6]]'s check doing its job,
-   and the forty minutes are not wasted: the tree is evidence.
+ configure, build and install all succeeded, so the software built
+ something and it is not what the recipe said it would be. Compare
+ =sanity_check_paths= against what is actually in the install
+ directory, which is still there. This is
+ [[file:06-what-installed-means.org][What "installed" means]]'s check doing its job,
+ and the forty minutes are not wasted: the tree is evidence.
 
 3. The list of attempted paths, in order, which is the whole diagnosis.
-   It shows every local directory searched, then =source_urls=, then
-   EasyBuild's own mirror at =sources.easybuild.io=. If the URL you
-   expected is absent from that list, =source_urls= is wrong; if it is
-   present and failed, the upstream moved.
+ It shows every local directory searched, then =source_urls=, then
+ EasyBuild's own mirror at =sources.easybuild.io=. If the URL you
+ expected is absent from that list, =source_urls= is wrong; if it is
+ present and failed, the upstream moved.
 
 4. Neither log alone. This is a difference in environment or
-   configuration, so start with =eb --show-config= on both and diff it,
-   then compare the loaded modules. Chapter 14's point applies: the
-   environments are constructed, and the two of you constructed
-   different ones.
+ configuration, so start with =eb --show-config= on both and diff it,
+ then compare the loaded modules. What a build is allowed to see's point applies: the
+ environments are constructed, and the two of you constructed
+ different ones.
 #+end_solution
 #+end_exercise
 
@@ -399,13 +404,13 @@ actually returns.
 
 #+begin_keypoints
 - The exit code narrows the search before any log does: 127 is not found,
-  126 is not executable, 2 from =make= means a rule failed and the cause is
-  higher up.
+ 126 is not executable, 2 from =make= means a rule failed and the cause is
+ higher up.
 - The step in the error message rules out every step before it.
 - =find_base_dir= descends while a directory has exactly one entry, so the
-  start directory can differ from the archive's top.
+ start directory can differ from the archive's top.
 - A failed build keeps its build directory, and =config.log= or
-  =CMakeError.log= in it says what the build system actually tried.
+ =CMakeError.log= in it says what the build system actually tried.
 - =cmd.sh= reproduces the failing command in the environment it failed in;
-  =eb -x= cannot see any fault that depends on the contents of an archive.
+ =eb -x= cannot see any fault that depends on the contents of an archive.
 #+end_keypoints

@@ -1,0 +1,142 @@
+#+TITLE: A ReFrame test is a class
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What is the unit of work ReFrame runs?
+- Who decides whether a test passed?
+- What does =valid_systems = ['*']= actually permit?
+#+end_questions
+
+#+begin_objectives
+1. Read a run-only test and say what it will execute, and how it decides
+ it passed.
+2. Say why ReFrame does not look at the exit code.
+3. Name the two constraints every test must declare.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:23-testing.org][Testing, and the four things it can mean]], for the four kinds of testing.
+ This part is the fourth kind, written out.
+#+end_prerequisites
+This file is a regression test.
+It contains twenty‑two lines.
+STREAM is [[cite:mccalpinMemoryBandwidth1995][McCalpin 1995]]: Copy, Scale, Add, Triad, and a checksum line the binary prints when the arrays match.
+Both CSCS's webinar and the official tutorial begin with it.
+#+begin_src python
+import reframe as rfm
+import reframe.utility.sanity as sn
+from reframe.core.builtins import sanity_function, performance_function
+
+@rfm.simple_test
+class stream_test(rfm.RunOnlyRegressionTest):
+ valid_systems = ['*']
+ valid_prog_environs = ['*']
+ executable = 'stream.x'
+
+ @sanity_function
+ def validate(self):
+ return sn.assert_found(r'Solution Validates', self.stdout)
+
+ @performance_function('MB/s')
+ def copy_bw(self):
+ return sn.extractsingle(r'Copy:\s+(\S+)', self.stdout, 1, float)
+
+ @performance_function('MB/s')
+ def triad_bw(self):
+ return sn.extractsingle(r'Triad:\s+(\S+)', self.stdout, 1, float)
+#+end_src
+The file reads as a configuration would: names on the left, values on the right.
+Line five breaks that reading.
+=@rfm.simple_test= is a decorator.
+The class is registered with the framework when the file is imported.
+That registration is what =reframe -c stream.py -l= lists.
+Without the decorator the class is ordinary Python.
+ReFrame never sees it.
+=RunOnlyRegressionTest= is the other claim on that line.
+The compile stage is a no-op.
+The test runs an executable that already exists.
+The next two chapters say what that costs.
+A test that builds and a test that runs a module are two different base classes.
+* Two constraints, then a verdict
+Each test must define =valid_systems= and =valid_prog_environs=.
+These entries are not documentation.
+The framework filters tests using the current system and the current programming environment.
+A test that matches neither is not scheduled.
+=['*']= denotes any system and any environment.
+It is the tutorial's starting point.
+A claim using this placeholder must be narrowed when the test leaves a laptop.
+Each test must also define a validation function decorated =@sanity_function=.
+ReFrame makes no default assumption about test success.
+The exit code is not examined.
+[[cite:karakasisEnablingContinuousTesting2020][Karakasis et al. 2020]] state the design goal as productivity.
+The test writer focuses on logical requirements.
+The framework handles the job script, the scheduler, and the output files.
+The corollary surprises users of =make test=.
+*a process that exits zero and prints nothing has failed*.
+=sn.assert_found= looks in =self.stdout=.
+=self.stdout= is the file containing the job's standard output.
+It is not a live stream.
+The pattern is a regular expression.
+The STREAM binary prints =Solution Validates= when the array checksum matches.
+That string is the entire correctness claim of this test.
+The two =@performance_function= methods are optional.
+They extract figures of merit and give them a unit.
+A performance function is a numeric value with a unit.
+They do not determine test *passed* status.
+A missing =Copy:= line fails the performance phase.
+The sanity phase remains unaffected.
+* What =reframe -c= actually loads
+
+#+begin_example
+reframe -c stream/stream_runonly.py -l
+#+end_example
+Option =-c= specifies the check path, which may be a file or a directory.
+Option =-l= produces a listing.
+Option =-r= executes the check.
+The listing displays a single check, =stream_test=, using the builtin =generic:default+builtin= combination.
+No configuration file is provided.
+The builtin definition always includes that pair.
+The hash following the name (=/2e15a047= in the tutorial's recording) is the test-case identity, comprising class, parameters, partition, and environment.
+This identifier enables rerunning a failed case without rerunning the entire suite.
+#+ATTR_EB: :id EB-ReFrame-39-1 :title What decides a pass
+#+begin_exercise
+The STREAM binary is replaced by one that exits 0 and prints only
+=Copy: 19000.0=. The sanity function is unchanged. Does the test
+pass? Which phase fails, and why is the exit code not the answer?
+#+begin_solution
+It fails in the sanity phase. =assert_found= looks for
+=Solution Validates= in =stdout= and does not find it. The exit code
+is 0 and is never consulted. ReFrame's default is that a test is
+unsuccessful until a sanity function says otherwise; an empty or
+partial log is a failed test, not a quiet success.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-39 :title Where this chapter comes from :kind sources
+#+begin_detail
+The STREAM test is the opening example of the official ReFrame 4
+tutorial
+([[https://reframe-hpc.readthedocs.io/en/stable/tutorial.html][tutorial.html]],
+fetched 2026-09-11) and of the CSCS webinar (Karakasis, 2022). The
+claim that ReFrame does not look at the exit code is from the
+pipeline documentation
+([[https://reframe-hpc.readthedocs.io/en/stable/pipeline.html][pipeline.html]]):
+"ReFrame makes no assumption as of what a successful test is; it does
+not even look into its exit code."
+
+[[cite:karakasisEnablingContinuousTesting2020][Karakasis et al. 2020]]
+state the three design goals (productivity, portability, robustness)
+and the CSCS, NERSC and OSC deployments.
+[[cite:mccalpinMemoryBandwidth1995][McCalpin 1995]] is STREAM.
+#+end_detail
+
+#+begin_keypoints
+- A ReFrame test is a decorated Python class. Without =@rfm.simple_test=
+ the class is never registered.
+- =RunOnlyRegressionTest= skips compile. The executable is assumed to
+ exist.
+- =valid_systems= and =valid_prog_environs= are filters, not comments.
+ =['*']= means any.
+- ReFrame does not look at the exit code. A sanity function is the
+ verdict, and a missing pattern is a failure.
+#+end_keypoints

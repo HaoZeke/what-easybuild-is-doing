@@ -1,0 +1,133 @@
+#+TITLE: Software maps to tests
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What runs when a new module lands in EESSI?
+- How does CSCS lay out a site suite?
+- Which of EESSI's three uses is a pull request, and which is a
+ nightly?
+#+end_questions
+
+#+begin_objectives
+1. Say what a software-to-tests mapping is for, and what a missing
+ entry means the next morning.
+2. Read the CSCS and EESSI directory layouts and say which
+ directory is the machine, which is the tests, and which is CI.
+3. Pick the filter for a contribution check, and the filter for a
+ daily regression, from the same suite.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:23-testing.org][Testing, and the four things it can mean]], for the fourth kind.
+- [[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]],
+ for a test that can run on more than one site.
+#+end_prerequisites
+A portable test that is not listed for its software will not run when the software is merged.
+EESSI provides a mapping file as its answer.
+CSCS provides a directory of checks and a daily invocation as its answer.
+Both implement the same concept: the suite names are collected in one location.
+Which tests a package requires.
+* EESSI: three uses, one suite
+The writing-tests page lists three reasons the suite exists.
+One reason is a contribution.
+New software is being added to EESSI.
+The mapping says which tests now apply.
+The bot runs them on the architecture the build targeted, through =bot/test.sh=.
+Another reason is a nightly.
+The same tests run on a set of clusters, looking for a performance regression.
+A third reason is an end user.
+The end user runs one test or the whole suite to see whether this machine plus this EESSI mount actually runs.
+Those are three filters over one tree, not three suites.
+The =CI= tag from Parameters multiplies the suite, acting as the contribution filter: Crambin, five minutes, eight cores.
+The nightly drops the tag and keeps the HECBioSim ladder.
+The end user passes =--name GROMACS= or does not.
+The mapping lives next to the tests.
+Testing and the four things it can mean already named it: =software_to_tests.yml=.
+Adding GROMACS to the stack without a line in that file causes a green build to ship a module that the suite will not touch.
+The generalisable rule is that a test has a location, and a result without its location is not a result.
+The mapping is that location, written down.
+Available tests in the public suite include GROMACS (six HECBioSim systems, implemented on top of ReFrame's =hpctestlib=), TensorFlow (the multi‑worker Keras tutorial), CP2K, OpenFOAM, and the OSU microbenchmarks.
+Each is a class under =eessi/testsuite/tests/apps/=.
+The mapping connects a module name to those classes.
+* CSCS: config, checks, CI
+The CSCS suite, =eth-cscs/cscs-reframe-tests=, offers the layout cited in the official ReFrame README as the most complete public tree.
+Three directories each carry out a distinct job.
+#+begin_example
+cscs-reframe-tests/
+├── config/ the machine
+├── checks/ the tests
+├── ci/ how the site invokes them
+├── uenv_checks/ the same idea for uenv stacks
+└── portable_tests.md
+#+end_example
+List all information the suite knows about on a CSCS system.
+#+begin_example
+reframe -C cscs-reframe-tests/config/cscs.py \
+ -c cscs-reframe-tests/checks/ -R -l
+#+end_example
+=-C= denotes the configuration file that is the machine.
+=-c= denotes the check path.
+=-R= causes recursion.
+=-l= causes listing.
+The daily run uses the command with =-r= instead of =-l= from =ci/=.
+A site copying this layout does not need EESSI.
+The site must have a configuration file describing its partitions, a directory of tests that do not name those partitions, and a nightly job that runs the listing.
+=portable_tests.md= in that tree defines the written rule for what a check may assume.
+EESSI's mixin implements the same rule, enforced in code.
+* LUMI, CSC, and why this is a part
+The CSC Finland computing‑environment course contains ten topics on using Puhti and Mahti, including modules, batch jobs, Allas, and containers.
+The course is not a ReFrame course.
+LUMI's user documentation covers the same material for that machine.
+The ReFrame course consists of CSCS's webinar, the official tutorial, and EESSI's writing‑tests page.
+These chapters are Part 2 rather than a subsection of Testing, and they represent four meanings: the fourth kind of testing has its own layout, and the centres that run it teach it as an independent course.
+#+ATTR_EB: :id EB-ReFrame-46-1 :title Which filter
+#+begin_exercise
+Three requests. For each, say which invocation, and whether
+the mapping file has to contain the software yet.
+
+1. A pull request adding =GROMACS/2024.4-foss-2023b= to
+ EESSI. The reviewer asks for the five-minute case.
+2. The nightly on a CPU partition, every GROMACS HECBioSim
+ system the suite knows.
+3. A user on a laptop with the EESSI CernVM-FS client,
+ asking whether =mpi4py= imports and reduces.
+#+begin_solution
+1. =reframe --name GROMACS --tag CI -r=, after the mapping
+ names GROMACS. Without the mapping entry the bot has
+ nothing to run, and the PR is a build without the
+ fourth kind of test. The mapping has to contain it
+ *in the same change*.
+
+2. =reframe --name GROMACS -r= on that partition, no =CI=
+ tag. The mapping already contains it; the nightly is
+ not the time to add the line.
+
+3. =reframe --name EESSI_MPI4PY -r= against a configuration
+ that describes the laptop (local scheduler, the EESSI
+ modules system). The mapping is irrelevant to a human
+ who named the test. =find_modules= supplies the module
+ that the client actually mounted.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-46 :title Where this chapter comes from :kind sources
+#+begin_detail
+EESSI test-suite documentation: three uses, available
+tests, =bot/test.sh=, the mapping file named in Testing, and the four things it can mean.
+[[https://github.com/eth-cscs/cscs-reframe-tests][eth-cscs/cscs-reframe-tests]]
+README: =config/=, =checks/=, =ci/=, the listing command.
+CSC Computing Environment self-learning: ten topics, no
+ReFrame. CSCS 2022 ReFrame webinar: the separate course.
+#+end_detail
+
+#+begin_keypoints
+- A mapping file is how a new module inherits tests. A
+ missing line is a silent skip the next morning.
+- EESSI's suite is one tree with three filters:
+ contribution (=CI=), nightly, end user.
+- CSCS lays out =config/=, =checks/=, =ci/=. The machine,
+ the tests, and the invocation stay apart.
+- CSC's computing-environment course is not this course.
+ ReFrame is taught as its own unit, which is why it is
+ a part of this book.
+#+end_keypoints

@@ -4,184 +4,39 @@
 #+begin_export rst
 .. rst-class:: eb-subtitle
 
-An interactive book about EasyBuild: how a recipe is evaluated, how a
-toolchain is a hierarchy, and why the version next to a dependency is
-not a minimum.
+A recipe. A stack. A test.
 #+end_export
+EasyBuild's documentation clearly indicates the required typing.
+This book is the file, the tree, and the run.
+A journey is a how-to path across existing pages.
+#+begin_export rst
+.. rst-class:: eb-map
 
-EasyBuild's documentation is good at what to type. It does not say why
-=SYSTEM= has no quotes, why a toolchain is a hierarchy rather than a
-name, or why a module visible in =module avail= can be invisible to
-the robot. Those three are usually learned by breaking a production
-stack.
-
-This book is the explanation. The samples run in the page. After
-reading it, EasyBuild is one tool among others, not a default.
-
-* Start here
-
-[[file:00-tutorial-read-an-easyconfig.org][Read an easyconfig the way
-EasyBuild does]]. Twenty minutes, and nothing to install.
-
-At the end a reader can predict what EasyBuild will download, name the
-easyblock it will look for, and say which dependencies a toolchain
-permits.
-
-After that, either follow [[file:learning-path.org][the path]], which is
-six levels of about an hour each with the prerequisites named, or pick by
-the task at hand.
-
-| Task | Read |
-|---+---|
-| working out why a build failed | [[file:01-an-easyconfig-is-python.org][chapter 1]], then chapters 5 to 9 |
-| moving a recipe to a newer stack | [[file:03-a-pin-is-for-one-generation.org][chapter 3]] |
-| told a module exists, but it will not load | [[file:04-the-robot.org][chapter 4]] and [[file:06-what-installed-means.org][chapter 6]] |
-| reading a failure whose cause is not in the file | [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]] |
-| starting a job like this one next Monday | [[file:28-your-first-week.org][chapter 28]] |
-| staring at a failed build right now | [[file:20-reading-a-failed-build.org][chapter 20]] |
-| writing a recipe for software that has none | [[file:21-writing-one-from-nothing.org][chapter 21]] |
-| wondering how a stack gets onto a thousand machines | [[file:25-cvmfs-and-the-stratum.org][chapter 25]] |
-| installing software with no admin rights | [[file:10-build-your-own-without-asking.org][chapter 10]] |
-| working on a machine with no stack of its own | [[file:11-eessi-somebody-elses-stack.org][chapter 11]] |
-| adding a package to EESSI | [[file:30-easystack-files.org][chapter 30]] then [[file:31-the-eessi-bot.org][chapter 31]] |
-| putting a site stack next to EESSI | [[file:32-host-injections.org][chapter 32]] |
-| planning a package with eb-stack | [[file:12-eb-stack-updater-and-generator.org][chapter 12]] then [[file:33-inspect-residuals-and-the-plan.org][chapters 33 to 36]] |
-| a site wrap or an EasyBuild 5 lock | [[file:37-wrapping-and-modulerc.org][chapter 37]] and [[file:38-locks-bwrap-python-datasets.org][chapter 38]] |
-| running any of this on your own machine | [[file:24-development-environments.org][chapter 24]] and [[file:26-the-same-stack-somewhere-else.org][chapter 26]] |
-| deciding whether to use EasyBuild at all | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
-
-Reading straight through works too. Chapters 1 to 4 are the mechanisms
-everything else rests on. Chapters 5 to 9 are the parameters that cost
-the most time when misread, each built around a failure that actually
-happened. Chapters 10 to 12 are the ones where something is done.
-Chapters 13 to 19 are the machinery: the steps a build runs, what it is
-allowed to see, and what comes out. Chapters 20 to 24 are the working
-chapters, from reading a failure to writing a recipe, an easyblock and a
-development environment. Chapters 25 and 26 are how a stack reaches a
-machine that never built it. Chapters 30 to 32 are how a package
-enters EESSI and how a site stack is placed next to it. Chapter 27 is
-four failures in full.
-
-* Where this runs
-
-Not only on a supercomputer, and the book is careful about the
-difference.
-
-EasyBuild is a Python package. It installs with =pip= into a virtual
-environment, needs a modules tool and a compiler, and builds software on
-a laptop exactly as it does on a compute node. Several of the recordings
-in this book were made that way, and their provenance says so: the
-failing build in
-[[file:20-reading-a-failed-build.org][chapter 20]] and the checks in
-[[file:21-writing-one-from-nothing.org][chapter 21]] ran on a
-workstation, with no cluster involved.
-
-EESSI goes further. Its own installation instructions cover a laptop, and
-CernVM-FS ships a client profile for exactly that case, so a machine with
-no software stack of its own can mount one and load optimised modules in
-minutes. [[file:26-the-same-stack-somewhere-else.org][Chapter 26]] does
-it on four different kinds of machine.
-
-What changes on a large shared machine is the *consequences*, not the
-mechanism: many users, one tree, a scheduler, several
-microarchitectures, and a rebuild that costs somebody a night. Where a
-chapter is about those consequences it says so. Where it is about the
-mechanism, the mechanism is the same on a local machine, and the same
-commands run there while reading.
-
-* What this book requires
-
-A browser.
-
-EasyBuild's own tutorial opens by asking for Linux, Python, an
-environment modules tool and a working EasyBuild install. That is a
-reasonable ask of someone who has already decided to use EasyBuild,
-and an unreasonable one of someone still deciding whether to.
-
-Every sample here runs in the page. Edit one and the answer changes
-as the sample is typed. Press Escape anywhere and a playground opens:
-the same engine, not limited to the samples printed in the chapter.
-
-Three of the four kinds work off tables exported from eb-stack at build
-time rather than retyped. So a page cannot drift from the framework's
-own data.
-
-A cross-check compares the browser's answers against the binary's on
-every build. A headless browser then checks that every sample on every
-page is live and answering.
-
-The fourth reads an easyconfig into its evaluated model, and it is a
-reduced reader rather than the real parser. It follows single-line
-assignments and *names what it skipped*. Where the real parser is
-needed it says so instead of guessing.
-
-That covers a lot, and not everything. Nothing in a browser can
-configure, compile or link, and nothing here pretends to.
-
-Where a step needs a real toolchain the page shows a recording of a
-real run instead, with where and when it ran printed beside it. That
-turns out to be the right way to teach those steps. The operational
-skill is reading the log rather than watching the progress bar.
-
-* The chapters
-
+- `First recipe <journey-first-recipe.html>`_ - read a file, then the four mechanisms
+- `A build failed <journey-a-build-failed.html>`_ - the log, then the usual causes
+- `Port a package <journey-port.html>`_ - conda-forge or Spack in, an easyconfig out
+- `Write a test <journey-write-a-test.html>`_ - four kinds, then a ReFrame class
+#+end_export
+The same pages are grouped by kind of reading: [[file:part-a-recipe.org][the recipe]], [[file:part-a-stack.org][the stack]], [[file:part-a-test.org][the test]].
+The path, the papers, and how the samples run are [[file:colophon.org][at the back]].
 #+begin_export rst
 .. toctree::
-   :maxdepth: 1
+ :hidden:
+ :maxdepth: 2
 
-   00-tutorial-read-an-easyconfig
-   playground
-   01-an-easyconfig-is-python
-   02-a-toolchain-is-a-hierarchy
-   03-a-pin-is-for-one-generation
-   04-the-robot
-   05-a-versionsuffix-is-part-of-the-name
-   06-what-installed-means
-   07-a-checksum-is-a-claim-about-bytes
-   08-one-easyconfig-many-installs
-   09-a-hook-changes-a-file-you-are-not-reading
-   10-build-your-own-without-asking
-   11-eessi-somebody-elses-stack
-   12-eb-stack-updater-and-generator
-   13-how-a-build-executes
-   14-the-isolation-policy
-   15-build-dependencies-are-not-dependencies
-   16-what-a-toolchain-injects
-   17-patches
-   18-language-ecosystems
-   19-what-a-module-exports
-   20-reading-a-failed-build
-   21-writing-one-from-nothing
-   22-writing-an-easyblock
-   23-testing
-   24-development-environments
-   25-cvmfs-and-the-stratum
-   26-the-same-stack-somewhere-else
-   27-four-things-that-actually-happened
-   28-your-first-week
-   29-extensions
-   30-easystack-files
-   31-the-eessi-bot
-   32-host-injections
-   33-inspect-residuals-and-the-plan
-   34-recipe-format-lint-check
-   35-stack-solve-and-the-diff
-   36-campaign-findings
-   37-wrapping-and-modulerc
-   38-locks-bwrap-python-datasets
-   learning-path
-   glossary
-   keypoints
-   exercises
-   papers
-   afterword-when-easybuild-is-the-wrong-tool
+ journeys
+ journey-first-recipe
+ journey-a-build-failed
+ journey-port
+ journey-write-a-test
+ part-a-recipe
+ part-a-stack
+ part-a-test
+ learning-path
+ glossary
+ keypoints
+ exercises
+ papers
+ colophon
+ afterword-when-easybuild-is-the-wrong-tool
 #+end_export
-
-* Who wrote this
-
-Rohit Goswami, who maintains software stacks on a national machine, runs
-the same tools on a laptop, and wrote
-[[https://eb-stack.rgoswami.me][eb-stack]], the updater and generator
-that emits the =.eb= files EasyBuild then builds. The samples on these
-pages borrow tables from that generator. They are not the generator,
-and they are not EasyBuild.

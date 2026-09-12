@@ -1,70 +1,54 @@
-#+TITLE: Chapter 32. A site stack next to EESSI, not inside it
+#+TITLE: A site stack next to EESSI, not inside it
 #+OPTIONS: toc:nil num:nil
 
 #+begin_questions
 - What does =EESSI_SITE_SOFTWARE_PREFIX= change, and when must it be
-  set?
+ set?
 - When is =host_injections= the right tree, and when is a separate
-  prefix the one the webinar recommends?
+ prefix the one the webinar recommends?
 - What still has to be true of a site OpenMPI for the EESSI stack
-  above it to keep working?
+ above it to keep working?
 #+end_questions
 
 #+begin_objectives
 1. Install one package on top of EESSI into an operator-chosen prefix
-   with =EESSI-extend=, and say why that prefix contains a
-   microarchitecture.
+ with =EESSI-extend=, and say why that prefix contains a
+ microarchitecture.
 2. Tell Approach 1 (shared filesystem) from Approach 2 (site CVMFS
-   plus the bot), and say which extra moving parts the second one
-   adds.
+ plus the bot), and say which extra moving parts the second one
+ adds.
 3. Point NVIDIA drivers, a full CUDA SDK, and an ABI-compatible site
-   MPI at the paths EESSI actually searches.
+ MPI at the paths EESSI actually searches.
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:11-eessi-somebody-elses-stack.org][Chapter 11]]:
-  =EESSI-extend= prefixes, and why a generation gap is a finding.
-- [[file:26-the-same-stack-somewhere-else.org][Chapter 26]]: the
-  variant symlink, and the override variables.
-- [[file:31-the-eessi-bot.org][Chapter 31]]: Approach 2 *is* that
-  bot, pointed at a different repository.
+- [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]]:
+ =EESSI-extend= prefixes, and why a generation gap is a finding.
+- [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]]: the
+ variant symlink, and the override variables.
+- [[file:31-the-eessi-bot.org][The bot is three processes and a comment]]: Approach 2 *is* that
+ bot, pointed at a different repository.
 #+end_prerequisites
-
-EESSI is a shared stack. A site still has software EESSI will not
-ship: a closed-source licence, something that is not on the tree
-yet, something tuned for one fabric. Caspar van Leeuwen and Bob
-Dröge's 1 June 2026 webinar is the working through of that fact.
-The official =host_injections= page is four bullets and a symlink.
-The webinar is two approaches, two live clusters, and the variables
-that make a login session see both trees.
-
+EESSI provides a shared software stack.
+A site can still have software not shipped by EESSI, including a closed‑source licence, software not yet on the tree, and software tuned for a specific fabric.
+A webinar on 1 June 2026 by Caspar van Leeuwen and Bob Dröge addresses that situation.
+The official =host_injections= page lists four bullets and a symlink.
+The webinar describes two approaches, two live clusters, and the variables that make a login session see both trees.
 * Why a site builds at all
-
-Three reasons, from the webinar's motivation slide, and they are
-not the same job.
-
-*Licensed software* cannot go in =software.eessi.io=. It may also
-be limited to a subset of the site's users.
-
-*Software that is not on the tree yet* is a time problem. Waiting
-for the bot on every architecture is the right path into EESSI
-(chapters 30 and 31). It is the wrong path for a group that needs
-the binary this week.
-
-*Custom installations* are the fabric, the licence server, the
-site MPI. Those cannot be expressed as an easyconfig that EESSI
-would accept, because they are not redistributable facts about the
-software. They are facts about the machine.
-
+Three reasons are presented on the webinar's motivation slide; they are not the same job.
+*Licensed software* cannot go in =software.eessi.io=.
+It may also be limited to a subset of the site's users.
+*Software that is not on the tree yet* is a time problem.
+Waiting for the bot on every architecture is the right path into EESSI (chapters 30 and 31).
+It is the wrong path for a group that needs the binary this week.
+*Custom installations* are the fabric, the licence server, the site MPI.
+Those cannot be expressed as an easyconfig that EESSI would accept.
+They are facts about the machine.
 * Approach 1: EESSI-extend into a shared filesystem
-
-The cheap path. No extra CernVM-FS, no bot instance, no object
-store. =EESSI-extend= already knows how to write into an
-architecture-specific prefix and put that prefix on =MODULEPATH=.
-
-The webinar's Hábrók demo, University of Groningen, AlmaLinux 9.8,
-zen3, unprivileged installer account:
-
+The inexpensive approach.
+It requires no additional CernVM-FS, no bot instance, and no object store.
+=EESSI-extend= already knows how to write into an architecture-specific prefix and add that prefix to =MODULEPATH=.
+The webinar includes a Hábrók demo at the University of Groningen using AlmaLinux 9.8 on zen3 with an unprivileged installer account.
 #+begin_example
 export EESSI_SITE_INSTALL=1
 export EESSI_SITE_SOFTWARE_PREFIX=/software
@@ -72,85 +56,66 @@ module load EESSI/2025.06
 module load EESSI-extend
 echo $EESSI_SITE_SOFTWARE_PATH
 # /software/versions/2025.06/software/linux/x86_64/amd/zen3
-eb --show-config   # installpath is that path
+eb --show-config # installpath is that path
 eb cowsay-3.04.eb
 eb attr-2.5.2-GCCcore-14.3.0.eb
 module avail
 # ---- /software/versions/2025.06/software/linux/x86_64/amd/zen3/modules/all ----
-#    attr/2.5.2-GCCcore-14.3.0    cowsay/3.04
+# attr/2.5.2-GCCcore-14.3.0 cowsay/3.04
 #+end_example
+Set =EESSI_SITE_SOFTWARE_PREFIX= *before* the EESSI module loads.
+The module computes =EESSI_SITE_SOFTWARE_PATH= from it.
+Setting the prefix later has no effect.
+That matches the load-time rule for EESSI, somebody else's stack's =EESSI_USER_INSTALL=.
 
-=EESSI_SITE_SOFTWARE_PREFIX= is set *before* the EESSI module
-loads. The module is what computes =EESSI_SITE_SOFTWARE_PATH= from
-it. Setting the prefix afterwards does nothing. That is the same
-load-time rule as chapter 11's =EESSI_USER_INSTALL=.
+Both =EESSI_SITE_INSTALL= and =EESSI_CVMFS_INSTALL= are exclusive of =EESSI_USER_INSTALL= and =EESSI_PROJECT_INSTALL=.
+User and project can be set together; site and CVMFS cannot.
 
-=EESSI_SITE_INSTALL= and =EESSI_CVMFS_INSTALL= are exclusive of
-=EESSI_USER_INSTALL= / =EESSI_PROJECT_INSTALL=. User and project
-may be set together; site and CVMFS may not.
+The webinar repeats the chapter‑11 warning, applied to a site prefix: =EESSI-extend= performs native optimisation and installs into a prefix named for the host architecture.
+The Hábrók zen3 modules remain invisible on a zen4 node until the same =eb= is executed there.
 
-The webinar's warning is the one chapter 11 already spent a page
-on, restated for a site prefix: =EESSI-extend= does native
-optimisation and installs into a prefix that names the host
-architecture. The Hábrók zen3 modules are invisible on a zen4
-node until the same =eb= is run there.
+There are two locations where the prefix can reside.
 
-Two places that prefix can live.
-
-*Option 1*, the variant symlink. =/cvmfs/software.eessi.io/host_injections=
-stores the target =$(EESSI_HOST_INJECTIONS:-/opt/eessi)=. A site
-CernVM-FS config of
-
+*Option 1*, the variant symlink.
+=/cvmfs/software.eessi.io/host_injections= stores the target =$(EESSI_HOST_INJECTIONS:-/opt/eessi)=.
+A site CernVM-FS config of
 #+begin_example
 # /etc/cvmfs/domain.d/eessi.io.local
 EESSI_HOST_INJECTIONS=/shared_fs/path/to/host/injections/
 #+end_example
-
-followed by =cvmfs_config reload= makes that tree behave as if it
-were inside the repository, without writing to the repository and
-without invalidating a signature. Different node types may point
-the symlink at different directories: two GPU partitions with
-drivers in different places need two targets.
-
-*Option 2*, the one the webinar marks recommended: a prefix the
-site owns, =EESSI_SITE_SOFTWARE_PREFIX=/software= or
-=/cvmfs/software.caspar.nl=, which is *not* the variant symlink.
-The EESSI module still prepends the derived
-=EESSI_SITE_SOFTWARE_PATH= to =MODULEPATH=. The bytes live wherever
-the site put them.
-
-The cons of Approach 1 are the ones the webinar lists: the
-procedure is manual, and a shared filesystem is a worse startup
-path than CernVM-FS. For a handful of packages on one cluster it
-is enough.
-
-A container is available when the host is not a safe build
-environment. =eessi_container.sh -b $EESSI_SITE_SOFTWARE_PREFIX=
-then the same four exports and module loads inside.
-
+Running =cvmfs_config reload= makes that tree behave as if it were inside the repository.
+It does not write to the repository.
+It does not invalidate a signature.
+Different node types may point the symlink at different directories.
+Two GPU partitions with drivers in different places need two targets.
+*Option 2* is the one the webinar marks recommended.
+It uses a prefix the site owns, =EESSI_SITE_SOFTWARE_PREFIX=/software= or =/cvmfs/software.caspar.nl=.
+This prefix is *not* the variant symlink.
+The EESSI module still prepends the derived =EESSI_SITE_SOFTWARE_PATH= to =MODULEPATH=.
+The bytes live wherever the site puts them.
+The cons of Approach 1 are the ones the webinar lists.
+The procedure is manual.
+A shared filesystem is a worse startup path than CernVM-FS.
+For a handful of packages on one cluster it is enough.
+A container is available when the host is not a safe build environment.
+Run =eessi_container.sh -b $EESSI_SITE_SOFTWARE_PREFIX= to get the same four exports and module loads inside.
 * Approach 2: the bot, pointed at a site repository
-
-The webinar's second half is chapter 31 aimed at a different
-CernVM-FS name. The goal, quoted:
-
-- Build using dependencies from EESSI
-- in a CVMFS repository of our own
-- with the EESSI build bot
-- using the same build scripts from =software-layer-scripts=
-
-What that adds, from the "what we need" slide: a site Stratum-0
-(and, in production, Stratum-1s and proxies), one bot instance per
-cluster that should build natively, an S3-compatible bucket, a
-GitHub repository whose easystack path is
-
+The webinar's second half covers the bot as three processes and a comment aimed at a different CernVM-FS name.
+The quoted goal is to build using dependencies from EESSI.
+The build occurs in a CVMFS repository of our own.
+The build uses the EESSI build bot.
+The same build scripts from =software-layer-scripts= are used.
+The "what we need" slide adds a site Stratum-0, and in production Stratum-1s and proxies.
+One bot instance per cluster should build natively.
+An S3‑compatible bucket is required.
+A GitHub repository whose easystack path is.
 #+begin_example
 easystacks/<site_cvmfs_repo>/<EESSI_VERSION>/eessi-<EESSI_VERSION>-eb-<eb_version>-<anything>.yml
 #+end_example
-
-and something on the Stratum-0 that ingests tarballs. The demo
-repository is =software.caspar.nl=. The demo pull request adds
-=Biopython-1.86-gfbf-2025b.eb=. After ingest:
-
+The Stratum-0 component ingests tarballs.
+The demo repository is =software.caspar.nl=.
+The demo pull request adds =Biopython-1.86-gfbf-2025b.eb=.
+After ingest:
 #+begin_example
 export EESSI_SITE_SOFTWARE_PREFIX=/cvmfs/software.caspar.nl
 source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
@@ -160,45 +125,31 @@ python -c 'import Bio.motifs; print(Bio.motifs.__path__)'
 which python
 # /cvmfs/software.eessi.io/versions/2025.06/.../Python/3.13.5-...
 #+end_example
-
-The site module, the EESSI interpreter. That is the whole point.
-
-A site ingest does not need =EESSI/staging_bundles=. Caspar's
-=ingest_tarballs.sh= lists the bucket, downloads, optionally
-verifies a signature, calls
-=filesystem-layer/scripts/ingest-tarball.sh=, regenerates nested
-catalogs, remounts. Nested catalogs follow the EESSI
-=.cvmfsdirtab= shape, one catalog per installation, because a
-single catalog of a software tree grows past the 1k–200k item
-rule of thumb.
-
-The Stratum-0 cannot use the automounter: =cvmfs_server= and
-autofs fight. =software.eessi.io= is mounted from =fstab= if the
-ingest script needs EESSI's Lmod to rebuild caches.
-
-Rebuilds on a site repo use the same =rebuilds/= directory as
-chapter 30; the scripts pass =--rebuild=. Removal is a Stratum-0
-transaction and an Lmod cache rebuild, not a bot comment.
-
+The site module is the EESSI interpreter.
+This fulfills the entire purpose.
+A site ingest does not require =EESSI/staging_bundles=.
+=ingest_tarballs.sh= lists the bucket, downloads the contents, optionally verifies a signature, calls =filesystem-layer/scripts/ingest-tarball.sh=, regenerates nested catalogs, and remounts.
+Nested catalogs follow the EESSI =.cvmfsdirtab= pattern.
+Each installation contains one catalog.
+The Stratum-0 cannot employ the automounter.
+=software.eessi.io= is mounted from =fstab= when the ingest script requires EESSI's Lmod to rebuild caches.
+Rebuilds on a site repository use the same =rebuilds/= directory.
+An easystack is the list the bot will build.
+The scripts include the =--rebuild= option.
+Removal is a Stratum-0 transaction and an Lmod cache rebuild, not a bot comment.
 * Drivers, CUDA, and an ABI-compatible MPI
-
-Three things a site puts *into* the injection tree, even when the
-rest of the site stack lives in Approach 1's recommended prefix.
-
-*NVIDIA drivers*, runtime. The driver is tied to the host kernel
-and cannot ship in the repository. For EESSI 2025.06 and later the
-compatibility-layer linker searches
-
+A site adds three items *into* the injection tree, even if the remaining site stack resides in the prefix recommended by Approach 1.
+*NVIDIA drivers*, runtime.
+The driver is bound to the host kernel.
+It cannot be shipped in the repository.
+For EESSI 2025.06 and later the compatibility-layer linker searches
 #+begin_example
 /cvmfs/software.eessi.io/versions/<ver>/compat/<os>/<arch>/lib/nvidia
 #+end_example
-
-which is itself a variant symlink. The CernVM-FS config that aims
-it is =EESSI_NVIDIA_OVERRIDE_DEFAULT=, not
-=EESSI_HOST_INJECTIONS=:
-
+It is a variant symlink itself.
+The CernVM-FS config targeted is =EESSI_NVIDIA_OVERRIDE_DEFAULT=, not =EESSI_HOST_INJECTIONS=.
 #+begin_example
-# /etc/cvmfs/default.local  (or domain.d/eessi.io.local)
+# /etc/cvmfs/default.local (or domain.d/eessi.io.local)
 EESSI_NVIDIA_OVERRIDE_DEFAULT=/opt/eessi/nvidia
 #+end_example
 
@@ -207,98 +158,65 @@ EESSI_NVIDIA_OVERRIDE_DEFAULT=/opt/eessi/nvidia
 #+begin_example
 /cvmfs/software.eessi.io/versions/${EESSI_VERSION}/scripts/gpu_support/nvidia/link_nvidia_host_libraries.sh
 #+end_example
-
-Re-run after every driver update. A per-version override is
-=EESSI_202506_NVIDIA_OVERRIDE= if 2023.06 and 2025.06 should not
-share one symlink set.
-
-For 2023.06 the same script still writes under
-=host_injections=, and =EESSI_HOST_INJECTIONS= is the variable
-that aims it. Mixing the two conventions is how a 2025.06 node
-ends up with a linker search path that points at an empty
-directory.
-
-The official GPU page still says "ROCm support is not yet
-available". The live 2025.06 catalogs already contain =gfx*=
-trees. The page is the thing that is behind.
-
-*A full CUDA SDK*, compile time. The CUDA and cuDNN in the
-repository are runtime-only; the EULA forbids redistributing
-=nvcc=. =install_cuda_and_libraries.sh= installs the missing
-pieces into the injection tree through EasyBuild, un-breaking
-symlinks such as
-
+Re-run after each driver update.
+The per-version override =EESSI_202506_NVIDIA_OVERRIDE= applies when 2023.06 and 2025.06 must not share a symlink set.
+In 2023.06 the same script continues to write under =host_injections=, and =EESSI_HOST_INJECTIONS= designates that location.
+Mixing the two conventions causes a 2025.06 node to obtain a linker search path that points to an empty directory.
+The official GPU page states that "ROCm support is not yet available".
+The live 2025.06 catalogs already include =gfx*= trees.
+The page represents the missing component.
+*A full CUDA SDK*, compile time.
+The CUDA and cuDNN packages in the repository are runtime‑only; the EULA prohibits redistribution of =nvcc=.
+=install_cuda_and_libraries.sh= installs the missing components into the injection tree via EasyBuild, restoring symlinks such as
 #+begin_example
 .../software/CUDA/12.1.1/bin/nvcc ->
-  /cvmfs/software.eessi.io/host_injections/2023.06/software/.../CUDA/12.1.1/bin/nvcc
+ /cvmfs/software.eessi.io/host_injections/2023.06/software/.../CUDA/12.1.1/bin/nvcc
 #+end_example
-
-The installer account is not root. EasyBuild does not run as root unless
-=EASYBUILD_ALLOW_USE_AS_ROOT_AND_ACCEPT_CONSEQUENCES= is set, and
-the GPU page recommends changing ownership of the injection
-directory instead.
-
-*Site MPI.* EESSI's OpenMPI does not know a site fabric. An
-ABI-compatible replacement goes where the RPATH of the EESSI
-binaries already looks. The Slingshot-11 write-up puts OpenMPI
-5.x here, for 2023.06 on Grace:
-
+The installer account is not root.
+EasyBuild does not run as root unless =EASYBUILD_ALLOW_USE_AS_ROOT_AND_ACCEPT_CONSEQUENCES= is set.
+The GPU page recommends changing ownership of the injection directory instead.
+*Site MPI.* EESSI's OpenMPI does not know a site fabric.
+An ABI‑compatible replacement goes where the RPATH of the EESSI binaries already looks.
+The Slingshot-11 write-up puts OpenMPI 5.x here for 2023.06 on Grace:
 #+begin_example
 /cvmfs/software.eessi.io/host_injections/2023.06/software/linux/aarch64/nvidia/grace/rpath_overrides/OpenMPI/system/lib
 #+end_example
-
-The EESSI GROMACS, the EESSI OSU benchmarks, keep their module
-names. The libraries they resolve at runtime are the site's. No
-package above MPI is rebuilt. That only holds if the replacement
-is ABI-compatible with the EESSI OpenMPI the rest of the tree was
-linked against.
-
-Lmod hooks are the other half of fabric tuning: environment
-variables at load time, not a replaced =.so=. EESSI's
-=SitePackage.lua= searches two extra files under
-=host_injections=:
-
+The EESSI GROMACS and the EESSI OSU benchmarks retain their module names.
+The libraries they resolve at runtime are those provided by the site.
+No package above MPI is rebuilt.
+This is true only if the replacement is ABI‑compatible with the EESSI OpenMPI that the rest of the tree was linked against.
+Lmod hooks constitute the other half of fabric tuning: environment variables at load time rather than a replaced =.so=.
+EESSI's =SitePackage.lua= searches for two additional files under =host_injections=:.
 #+begin_example
 $EESSI_CVMFS_REPO/host_injections/$EESSI_VERSION/.lmod/SitePackage.lua
 $EESSI_CVMFS_REPO/host_injections/$EESSI_VERSION/software/$EESSI_OS_TYPE/$EESSI_SOFTWARE_SUBDIR/.lmod/SitePackage.lua
 #+end_example
-
-The first is architecture-independent. The second is not. 2023.06
-ships Lmod 8.7.30, which cannot register two =load= hooks; the
-site file combines =eessi_load_hook= with the site function into
-one registration. 8.7.35 and later can register both.
-
+The initial version is architecture-independent.
+The subsequent version lacks architecture independence.
+Version 2023.06 provides Lmod 8.7.30.
+Lmod 8.7.30 cannot register two =load= hooks.
+The site file merges =eessi_load_hook= with the site function into a single registration.
+Lmod 8.7.35 and newer are able to register both.
 * What a login session has to export
-
-Two patterns from the webinar's last section.
-
-Using *EESSI's* Lmod: a file in =/etc/profile.d= that sets
-=EESSI_SITE_SOFTWARE_PREFIX= and sources
-=/cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash=.
-
-Using the *site's* Lmod, Hábrók's =01-local_lmod.sh=:
-
+The webinar's last section presented two patterns.
+Using *EESSI's* Lmod, a file in =/etc/profile.d= sets =EESSI_SITE_SOFTWARE_PREFIX= and sources =/cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash=.
+Using the *site's* Lmod, Hábrók's =01-local_lmod.sh= is employed.
 #+begin_example
 export EESSI_SITE_SOFTWARE_PREFIX=/software
 export MODULEPATH=/cvmfs/software.eessi.io/init/modules
 export LMOD_CACHED_LOADS=yes
 export LMOD_SHORT_TIME=86400
 #+end_example
-
-and =z01_StdEnv.sh= setting
-=LMOD_SYSTEM_DEFAULT_MODULES=EESSI/2025.06= so a login loads
-EESSI and then sees =/software/versions/2025.06/.../modules/all=
-next to the CernVM-FS tree. =EESSI_MODULE_STICKY= and
-=EESSI_MODULE_FAMILY_NAME= are the other two variables the
-webinar names, for making the EESSI module sticky and for
-coexistence with a second, incompatible site stack.
-
-Licensed software that only some users may run is called out as
-a poor fit for a site CVMFS repo: =CVMFS_CLAIM_OWNERSHIP=no=
-preserves ownership and is not a security boundary (a container
-overrides it). The webinar's alternative is to keep those
-installs on the shared filesystem of Approach 1.
-
+The =z01_StdEnv.sh= sets =LMOD_SYSTEM_DEFAULT_MODULES=EESSI/2025.06=.
+A login loads EESSI and shows =/software/versions/2025.06/.../modules/all= next to the CernVM-FS tree.
+The webinar names =EESSI_MODULE_STICKY= and =EESSI_MODULE_FAMILY_NAME= as the other two variables.
+These variables make the EESSI module sticky.
+They enable coexistence with a second, incompatible site stack.
+Licensed software that only some users may run is identified as a poor fit for a site CVMFS repository.
+The setting =CVMFS_CLAIM_OWNERSHIP=no= preserves ownership.
+It does not constitute a security boundary.
+A container can override it.
+The webinar proposes keeping those installations on the shared filesystem of Approach 1.
 #+ATTR_EB: :id EB-Site-1 :title Which prefix, which variable
 #+begin_exercise
 Four requests. For each, name the approach, the variable that has
@@ -306,41 +224,41 @@ to be set before any module load, and the one check that says the
 result is where it should be.
 
 1. A single extra package, this week, on one zen3 partition, no
-   CernVM-FS admin access.
+ CernVM-FS admin access.
 2. NVIDIA driver libraries on a 2025.06 node after last night's
-   driver update.
+ driver update.
 3. OpenMPI rebuilt against the site Slingshot, consumed by the
-   EESSI GROMACS already on the tree.
+ EESSI GROMACS already on the tree.
 4. Twenty packages, three microarchitectures, a Git history of
-   what was built, same bot comments as EESSI itself.
+ what was built, same bot comments as EESSI itself.
 
 #+begin_solution
 1. Approach 1. =EESSI_SITE_INSTALL=1= and
-   =EESSI_SITE_SOFTWARE_PREFIX= pointing at a writable shared
-   directory, set before =module load EESSI=. Check
-   =$EESSI_SITE_SOFTWARE_PATH= ends in =.../x86_64/amd/zen3= and
-   that =eb --show-config= reports that path as =installpath=.
+ =EESSI_SITE_SOFTWARE_PREFIX= pointing at a writable shared
+ directory, set before =module load EESSI=. Check
+ =$EESSI_SITE_SOFTWARE_PATH= ends in =.../x86_64/amd/zen3= and
+ that =eb --show-config= reports that path as =installpath=.
 
 2. Not a prefix variable. =EESSI_NVIDIA_OVERRIDE_DEFAULT= in the
-   CernVM-FS config, =cvmfs_config reload=, then re-run
-   =link_nvidia_host_libraries.sh=. Check =deviceQuery= from
-   =CUDA-Samples= on *that* node. 2023.06 would have used
-   =EESSI_HOST_INJECTIONS= instead.
+ CernVM-FS config, =cvmfs_config reload=, then re-run
+ =link_nvidia_host_libraries.sh=. Check =deviceQuery= from
+ =CUDA-Samples= on *that* node. 2023.06 would have used
+ =EESSI_HOST_INJECTIONS= instead.
 
 3. The replacement libraries go in
-   =host_injections/<ver>/software/linux/<software_subdir>/rpath_overrides/OpenMPI/system/lib=
-   (the live Slingshot-11 tree is
-   =.../linux/aarch64/nvidia/grace/rpath_overrides/OpenMPI/system/lib=).
-   The check is =ldd= on an EESSI MPI binary, on the compute
-   node, showing the site =.so=, plus an OSU run. ABI
-   compatibility is the constraint; a rebuild of GROMACS is the
-   thing this path exists to avoid.
+ =host_injections/<ver>/software/linux/<software_subdir>/rpath_overrides/OpenMPI/system/lib=
+ (the live Slingshot-11 tree is
+ =.../linux/aarch64/nvidia/grace/rpath_overrides/OpenMPI/system/lib=).
+ The check is =ldd= on an EESSI MPI binary, on the compute
+ node, showing the site =.so=, plus an OSU run. ABI
+ compatibility is the constraint; a rebuild of GROMACS is the
+ thing this path exists to avoid.
 
 4. Approach 2. A site CernVM-FS repo, a bot instance, easystacks
-   under =easystacks/<that.repo>/<ver>/=, =EESSI_SITE_SOFTWARE_PREFIX=
-   set to the repo root on the clients. Check a loaded site
-   module's path is under the site repo while its Python (or
-   MPI, or libc) still resolves under =software.eessi.io=.
+ under =easystacks/<that.repo>/<ver>/=, =EESSI_SITE_SOFTWARE_PREFIX=
+ set to the repo root on the clients. Check a loaded site
+ module's path is under the site repo while its Python (or
+ MPI, or libc) still resolves under =software.eessi.io=.
 #+end_solution
 #+end_exercise
 
@@ -352,36 +270,32 @@ A site config contains only this line, in
 #+begin_example
 EESSI_HOST_INJECTIONS=/shared/eessi-inject
 #+end_example
-
-=link_nvidia_host_libraries.sh= was run last year, against
-2023.06. Users have now switched to =EESSI/2025.06=. CUDA
-applications fail to find =libcuda.so=.
-
-1. Why did this work on 2023.06 and fail on 2025.06?
-2. What is added to the CernVM-FS config, and what is re-run?
-3. Two GPU partitions with drivers in different directories: how
-   many injection trees, and where is the difference expressed?
-
+=link_nvidia_host_libraries.sh= was executed last year targeting 2023.06.
+Users have now switched to =EESSI/2025.06=.
+CUDA applications fail to find =libcuda.so=.
+What caused the success on 2023.06 and the failure on 2025.06?
+Identify the addition to the CernVM-FS config and the component that is re-run.
+Determine the number of injection trees for two GPU partitions with drivers in different directories and the location where the difference is expressed.
 #+begin_solution
 1. 2023.06's linker search path for NVIDIA is under
-   =host_injections=, which =EESSI_HOST_INJECTIONS= aims. 2025.06
-   searches
-   =/cvmfs/software.eessi.io/versions/2025.06/compat/.../lib/nvidia=,
-   a different variant symlink, aimed by
-   =EESSI_NVIDIA_OVERRIDE_DEFAULT=. The old variable still aims
-   the old tree. The new linker is not looking there.
+ =host_injections=, which =EESSI_HOST_INJECTIONS= aims. 2025.06
+ searches
+ =/cvmfs/software.eessi.io/versions/2025.06/compat/.../lib/nvidia=,
+ a different variant symlink, aimed by
+ =EESSI_NVIDIA_OVERRIDE_DEFAULT=. The old variable still aims
+ the old tree. The new linker is not looking there.
 
 2. =EESSI_NVIDIA_OVERRIDE_DEFAULT=/shared/eessi-inject/nvidia=
-   (or a per-version =EESSI_202506_NVIDIA_OVERRIDE=),
-   =cvmfs_config reload software.eessi.io=, then the 2025.06
-   =link_nvidia_host_libraries.sh=. Last year's symlinks are not
-   reused.
+ (or a per-version =EESSI_202506_NVIDIA_OVERRIDE=),
+ =cvmfs_config reload software.eessi.io=, then the 2025.06
+ =link_nvidia_host_libraries.sh=. Last year's symlinks are not
+ reused.
 
 3. One tree per partition. The difference is the CernVM-FS
-   config *on those nodes*, each with its own
-   =EESSI_HOST_INJECTIONS= / =EESSI_NVIDIA_OVERRIDE_DEFAULT=.
-   The repository content is the same; the client-side target is
-   not.
+ config *on those nodes*, each with its own
+ =EESSI_HOST_INJECTIONS= / =EESSI_NVIDIA_OVERRIDE_DEFAULT=.
+ The repository content is the same; the client-side target is
+ not.
 #+end_solution
 #+end_exercise
 
@@ -390,22 +304,22 @@ applications fail to find =libcuda.so=.
 Talks, read 2026-09-11:
 
 - Caspar van Leeuwen, Bob Dröge and Pedro Santos Neves, *Using
-  EESSI as a base for a central software stack*, MultiXscale
-  webinar, 2026-06-01
-  (=EESSI-webinars-spring-2026-EESSI-as-a-base-stack-2026-06-01.pdf=):
-  motivation; Approach 1 Hábrók demo (=EESSI_SITE_INSTALL=,
-  =EESSI_SITE_SOFTWARE_PREFIX=/software=, cowsay/attr);
-  Approach 2 =software.caspar.nl= (Stratum-0, smee, bot,
-  Biopython ingest); licensed software; rebuilds; removal;
-  =/etc/profile.d= Lmod setup; =EESSI_MODULE_STICKY=,
-  =EESSI_MODULE_FAMILY_NAME=.
+ EESSI as a base for a central software stack*, MultiXscale
+ webinar, 2026-06-01
+ (=EESSI-webinars-spring-2026-EESSI-as-a-base-stack-2026-06-01.pdf=):
+ motivation; Approach 1 Hábrók demo (=EESSI_SITE_INSTALL=,
+ =EESSI_SITE_SOFTWARE_PREFIX=/software=, cowsay/attr);
+ Approach 2 =software.caspar.nl= (Stratum-0, smee, bot,
+ Biopython ingest); licensed software; rebuilds; removal;
+ =/etc/profile.d= Lmod setup; =EESSI_MODULE_STICKY=,
+ =EESSI_MODULE_FAMILY_NAME=.
 - Lara Peeters and Kenneth Hoste, *Building software on top of
-  EESSI + contributing*, 2026-05-04: =EESSI_*_INSTALL= table,
-  =eb --show-config= under =EESSI-extend=, =buildenv=.
+ EESSI + contributing*, 2026-05-04: =EESSI_*_INSTALL= table,
+ =eb --show-config= under =EESSI-extend=, =buildenv=.
 - *Site-Specific Tweaks with host_injections*, EESSI Happy Hour,
-  2026-06-08: four-slide pointer at the variant symlink and
-  ABI-compatible MPI. The webinar is the chapter; this is the
-  postcard.
+ 2026-06-08: four-slide pointer at the variant symlink and
+ ABI-compatible MPI. The webinar is the chapter; this is the
+ postcard.
 
 Docs:
 [[https://www.eessi.io/docs/site_specific_config/host_injections/][host
@@ -423,16 +337,16 @@ on EESSI]],
 
 #+begin_keypoints
 - =EESSI_SITE_SOFTWARE_PREFIX= is set before the EESSI module
-  loads. =EESSI-extend= then writes an architecture-specific
-  prefix and puts it on =MODULEPATH=.
+ loads. =EESSI-extend= then writes an architecture-specific
+ prefix and puts it on =MODULEPATH=.
 - Approach 1 is that prefix on a shared filesystem. Approach 2 is
-  the same bot and the same scripts, aimed at a site CernVM-FS
-  repository. The webinar recommends the owned prefix over
-  stuffing everything into the =host_injections= symlink.
+ the same bot and the same scripts, aimed at a site CernVM-FS
+ repository. The webinar recommends the owned prefix over
+ stuffing everything into the =host_injections= symlink.
 - 2025.06 aims NVIDIA driver symlinks with
-  =EESSI_NVIDIA_OVERRIDE_DEFAULT=. 2023.06 used
-  =EESSI_HOST_INJECTIONS=. They are not interchangeable.
+ =EESSI_NVIDIA_OVERRIDE_DEFAULT=. 2023.06 used
+ =EESSI_HOST_INJECTIONS=. They are not interchangeable.
 - A site MPI that is ABI-compatible with EESSI's OpenMPI goes in
-  =rpath_overrides/OpenMPI/system/lib=. The modules above MPI do
-  not get rebuilt.
+ =rpath_overrides/OpenMPI/system/lib=. The modules above MPI do
+ not get rebuilt.
 #+end_keypoints

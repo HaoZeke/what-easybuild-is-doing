@@ -1,14 +1,9 @@
 #+TITLE: Glossary
 
 #+OPTIONS: toc:nil num:nil
-
-Every term here is born once, on this page, and any chapter can open it in
-place. So a reader who meets =versionsuffix= in chapter 8 does not have to
-come here, and a reader who needs the whole vocabulary at once has it.
-
-Definitions are mechanical rather than descriptive: what the thing *is*
-in the code, and what changes if it changes.
-
+Each term appears a single time on this page, and any chapter may reference it in situ.
+Encountering =versionsuffix= in One easyconfig, many installs does not require this page, while a reader requiring the complete vocabulary can obtain it here.
+Definitions are presented mechanically rather than descriptively: they specify what the entity *is* in the code and what alterations occur when it changes.
 * The recipe
 
 #+ATTR_EB: :id term-easyconfig :title easyconfig :kind term :name easyconfig
@@ -23,7 +18,7 @@ It is executed, not parsed as data, which is why an easyconfig can
 compute a value and why a variable EasyBuild does not recognise has to be
 named =local_*=.
 
-[[file:01-an-easyconfig-is-python.org][Chapter 1]].
+[[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
 #+end_detail
 
 #+ATTR_EB: :id term-easyblock :title easyblock :kind term :name easyblock
@@ -40,7 +35,7 @@ software-specific ones. Generic ones carry no =EB_= prefix.
 =NotImplementedError= on the abstract base, so every easyblock supplies
 those three or inherits them.
 
-[[file:22-writing-an-easyblock.org][Chapter 22]].
+[[file:22-writing-an-easyblock.org][Writing an easyblock]].
 #+end_detail
 
 #+ATTR_EB: :id term-toolchain :title toolchain :kind term :name toolchain
@@ -54,19 +49,19 @@ A dependency built with a *subtoolchain* of yours is usable; one built
 with a sibling or a parent is not, and the check fires in the =prepare=
 step before anything is unpacked.
 
-[[file:02-a-toolchain-is-a-hierarchy.org][Chapter 2]].
+[[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]].
 #+end_detail
 
 #+ATTR_EB: :id term-versionsuffix :title versionsuffix :kind term :name versionsuffix
 #+begin_detail
-A string appended to the module's version, making it part of the
+A string appended to the module's version. It is part of the
 installation's identity rather than a label on it.
 =-CUDA-12.9.1= in a module name means the module tree, the install
 directory and the =$EBROOT*= variable all differ from the same software
 without it. Two installations differing only in =versionsuffix= are two
 different installations that can both exist.
 
-[[file:05-a-versionsuffix-is-part-of-the-name.org][Chapter 5]].
+[[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]].
 #+end_detail
 
 #+ATTR_EB: :id term-start-dir :title start_dir :kind term :name start_dir
@@ -80,7 +75,7 @@ So an archive containing only =pkg-1.0/src/= starts in =pkg-1.0/src=,
 and a =start_dir= correct for a git checkout can be silently wrong for a
 release tarball of the same software.
 
-[[file:20-reading-a-failed-build.org][Chapter 20]].
+[[file:20-reading-a-failed-build.org][Reading a failed build]].
 #+end_detail
 
 #+ATTR_EB: :id term-exts-list :title exts_list :kind term :name exts_list
@@ -91,7 +86,7 @@ bare name, a =(name, version)= tuple, or a
 =(name, version, {options})= tuple. Handled by the =extensions= step,
 which is the tenth of the eighteen.
 
-[[file:08-one-easyconfig-many-installs.org][Chapter 8]].
+[[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]].
 #+end_detail
 
 * The run
@@ -107,7 +102,7 @@ In order: =fetch=, =ready=, =extract=, =patch=, =prepare=, =configure=,
 entry when a parameter like =configopts= is a list. Every easyconfig
 parameter belongs to one step, and most error messages name one.
 
-[[file:13-how-a-build-executes.org][Chapter 13]].
+[[file:13-how-a-build-executes.org][How a build executes]].
 #+end_detail
 
 #+ATTR_EB: :id term-robot :title the robot :kind term :name robot
@@ -117,7 +112,7 @@ easyconfig for each unmet dependency by constructing its filename, and
 installs in order. It resolves *exact* versions: a dependency line is a
 pin, not a minimum.
 
-[[file:04-the-robot.org][Chapter 4]].
+[[file:04-the-robot.org][The robot]].
 #+end_detail
 
 #+ATTR_EB: :id term-sanity-check :title sanity check :kind term :name sanity_check
@@ -127,10 +122,10 @@ The step that decides whether an installation exists.
 least one non-empty, and asserts they are there.
 =sanity_check_commands= runs commands, which means the check executes the
 software. An RPATH check runs alongside, exempting =libcuda.so=,
-=libcuda.so.1=, =libnvidia-ml.so= and =libnvidia-ml.so.1= because those
+=libcuda.so.1=, =libnvidia-ml.so= and =libnvidia-ml.so.1=
 belong to the driver.
 
-[[file:06-what-installed-means.org][Chapter 6]].
+[[file:06-what-installed-means.org][What "installed" means]].
 #+end_detail
 
 #+ATTR_EB: :id term-hook :title hook :kind term :name hook
@@ -142,7 +137,7 @@ recipe can be correct and produce something the file did not name, and why
 =eb --show-config= is the first thing to read on somebody else's
 machine.
 
-[[file:09-a-hook-changes-a-file-you-are-not-reading.org][Chapter 9]].
+[[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]].
 #+end_detail
 
 #+ATTR_EB: :id term-optarch :title optarch :kind term :name optarch
@@ -153,7 +148,7 @@ interchangeable between node types and why sites keep one install tree
 per architecture. =toolchainopts = {'optarch': False}= turns it off for
 one package; =--optarch= sets a site-wide baseline.
 
-[[file:16-what-a-toolchain-injects.org][Chapter 16]].
+[[file:16-what-a-toolchain-injects.org][What a toolchain injects]].
 #+end_detail
 
 #+ATTR_EB: :id term-rpath :title RPATH :kind term :name RPATH
@@ -167,7 +162,7 @@ On a heterogeneous system an RPATH containing a per-node symlink such as
 why =ldd= on a login node can report zero missing libraries for a binary
 that is broken on a GPU node.
 
-[[file:27-four-things-that-actually-happened.org][Chapter 27]].
+[[file:27-four-things-that-actually-happened.org][Four things that actually happened]].
 #+end_detail
 
 * What comes out
@@ -183,7 +178,7 @@ It always sets =$EBROOT<NAME>=, =$EBVERSION<NAME>= and
 =$EBDEVEL<NAME>=, with the name uppercased and stripped of
 non-alphanumerics.
 
-[[file:19-what-a-module-exports.org][Chapter 19]].
+[[file:19-what-a-module-exports.org][What a module exports]].
 #+end_detail
 
 #+ATTR_EB: :id term-devel-module :title devel module :kind term :name devel module
@@ -191,11 +186,11 @@ non-alphanumerics.
 A second modulefile, generated for every install, at
 =<installdir>/easybuild/<name>-<version>-easybuild-devel= and named by
 =$EBDEVEL<NAME>=. Loading it reproduces the environment the build had,
-because it records every environment change the build made, including
+Including
 =$PATH= and the modules tool's own bookkeeping variables. It cannot be
 unloaded through =$EBDEVELNAME=.
 
-[[file:24-development-environments.org][Chapter 24]].
+[[file:24-development-environments.org][Standing where the build stood]].
 #+end_detail
 
 #+ATTR_EB: :id term-reprod :title reprod/ :kind term :name reprod
@@ -207,7 +202,7 @@ easyblock that ran*, including component and extension easyblocks. It is
 written before the steps run, and it is what makes an installation
 self-describing a year later.
 
-[[file:24-development-environments.org][Chapter 24]].
+[[file:24-development-environments.org][Standing where the build stood]].
 #+end_detail
 
 #+ATTR_EB: :id term-mns :title module naming scheme :kind term :name module naming scheme
@@ -221,7 +216,7 @@ it.
 
 A site decision made once: changing it renames every module the site has.
 
-[[file:19-what-a-module-exports.org][Chapter 19]].
+[[file:19-what-a-module-exports.org][What a module exports]].
 #+end_detail
 
 * Delivery
@@ -231,9 +226,9 @@ A site decision made once: changing it renames every module the site has.
 A read-only filesystem delivered over plain HTTP, with content-addressed
 immutable objects, SQLite file catalogs, and a signed manifest at the
 root. Files are fetched on demand and cached locally, and the whole tree
-is verifiable from one signature because the catalogs form a Merkle tree.
+is verifiable from one signature.
 
-[[file:25-cvmfs-and-the-stratum.org][Chapter 25]].
+[[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]].
 #+end_detail
 
 #+ATTR_EB: :id term-stratum :title Stratum 0 and Stratum 1 :kind term :name Stratum
@@ -245,7 +240,7 @@ mirroring those objects and the signed manifest, kept current by
 =cvmfs_server snapshot=. Clients talk to Stratum 1s, usually through a
 Squid forward proxy.
 
-[[file:25-cvmfs-and-the-stratum.org][Chapter 25]].
+[[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]].
 #+end_detail
 
 #+ATTR_EB: :id term-variant-symlink :title variant symlink :kind term :name variant symlink
@@ -257,7 +252,7 @@ can point the link elsewhere without invalidating the repository
 signature. EESSI's =host_injections= is stored as
 =$(EESSI_HOST_INJECTIONS:-/opt/eessi)=.
 
-[[file:26-the-same-stack-somewhere-else.org][Chapter 26]].
+[[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
 #+end_detail
 
 #+ATTR_EB: :id term-eessi :title EESSI :kind term :name EESSI
@@ -267,8 +262,8 @@ so the host distribution stops mattering, and an EasyBuild software layer
 built per microarchitecture. The host still provides the kernel, the
 drivers, the filesystem clients and the scheduler.
 
-[[file:11-eessi-somebody-elses-stack.org][Chapter 11]] and
-[[file:26-the-same-stack-somewhere-else.org][chapter 26]].
+[[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] and
+[[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
 #+end_detail
 
 #+ATTR_EB: :id term-archdetect :title archdetect :kind term :name archdetect
@@ -280,5 +275,40 @@ initialisation script takes the first entry that exists on disk. The
 selected value lands in =$EESSI_SOFTWARE_SUBDIR=;
 =$EESSI_CPU_FAMILY= is only =uname -m=.
 
-[[file:26-the-same-stack-somewhere-else.org][Chapter 26]].
+[[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
+#+end_detail
+
+* Testing
+
+#+ATTR_EB: :id term-reframe :title ReFrame :kind term :name ReFrame
+#+begin_detail
+A Python framework for HPC regression and performance tests.
+A test is a decorated class. The configuration file describes
+the machine. The framework generates the job script and runs a
+six-stage pipeline (setup, compile, run, sanity, performance,
+cleanup). It does not look at the process exit code; a sanity
+function is the verdict.
+
+[[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] and
+[[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]].
+#+end_detail
+
+#+ATTR_EB: :id term-reframe-partition :title partition (ReFrame) :kind term :name partition
+#+begin_detail
+A scheduler, a launcher and a list of programming environments
+inside a ReFrame system. =valid_systems= matches
+=system:partition=. Processor counts, features and =max_jobs=
+live here, not in the test.
+
+[[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]].
+#+end_detail
+
+#+ATTR_EB: :id term-eessi-mixin :title EESSI mixin :kind term :name EESSI mixin
+#+begin_detail
+A ReFrame mixin that replaces hardcoded core counts, module
+strings and system names with hooks that read the configuration
+and =find_modules=. A test states =device_type= and
+=compute_unit=; the mixin sets =num_tasks=.
+
+[[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]].
 #+end_detail

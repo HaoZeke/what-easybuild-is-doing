@@ -1,29 +1,24 @@
-#+TITLE: Chapter 16. What a toolchain injects
+#+TITLE: What a toolchain injects
 
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Say which environment variables a toolchain sets during a build, and
-   where they come from.
+ where they come from.
 2. Read a =toolchainopts= dictionary and say what each option changes.
 3. Say what =optarch= does and why it decides where a binary can run.
 #+end_objectives
-
-[[file:02-a-toolchain-is-a-hierarchy.org][Chapter 2]] was about which
-dependencies a toolchain makes visible. This chapter is the other half:
-what it does to the compiler.
-
+[[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] covered the dependencies a toolchain makes visible.
+This chapter addresses the other half: the impact on the compiler.
 * The variables, and where they are not
+[[file:14-the-isolation-policy.org][What a build is allowed to see]] measured the surprising part.
+It is worth restating.
+Loading a toolchain module provides =EBROOTFOSS= and =EBVERSIONFOSS=.
+It does not provide =$CC=.
+EasyBuild's *toolchain object* sets the compiler variables during =prepare= inside the build.
+A =foss= build receives, among others, the following variables:
 
-[[file:14-the-isolation-policy.org][Chapter 14]] measured the surprising
-part, and it is worth restating because everything here follows from it.
-Loading a toolchain module gives =EBROOTFOSS= and =EBVERSIONFOSS=.
-It does not give =$CC=.
-
-The compiler variables are set by EasyBuild's *toolchain object*, during
-=prepare=, inside the build. A =foss= build gets, among others:
-
-| Variable | What it holds |
+| Variable | Contents |
 |---+---|
 | =$CC=, =$CXX=, =$FC=, =$F90= | the compiler drivers |
 | =$MPICC=, =$MPICXX=, =$MPIF90= | the MPI wrappers |
@@ -31,16 +26,12 @@ The compiler variables are set by EasyBuild's *toolchain object*, during
 | =$LDFLAGS=, =$CPPFLAGS= | library and include paths for every dependency |
 | =$LIBBLAS=, =$LIBLAPACK=, =$LIBSCALAPACK=, =$LIBFFT= | the link lines for the numerical libraries |
 
-That last row is the reason a =foss= easyconfig rarely names a BLAS. The
-toolchain knows which BLAS it is, and hands the build a link line for it.
-An easyconfig that hardcodes =-lopenblas= is describing one toolchain and
-will be wrong on the next.
-
-The practical consequence is the one from chapter 14. To reproduce a
-build's environment, loading its toolchain is not enough;
-=eb --dump-env-script= is needed, which is
-[[file:24-development-environments.org][chapter 24]].
-
+The final row explains why a =foss= easyconfig seldom names a BLAS.
+The toolchain identifies the BLAS and supplies the build with its link line.
+An easyconfig that hardcodes =-lopenblas= describes a specific toolchain and will become incorrect for subsequent toolchains.
+The practical consequence matches that described in What a build is allowed to see.
+Reproducing a build's environment requires more than loading its toolchain.
+=eb --dump-env-script= is necessary, as explained in [[file:24-development-environments.org][Standing where the build stood]].
 * toolchainopts is a dictionary of switches
 
 #+begin_src easyconfig :widget parse
@@ -49,94 +40,72 @@ version = '1.0'
 toolchain = {'name': 'foss', 'version': '2025a'}
 toolchainopts = {'usempi': True, 'openmp': True, 'pic': True}
 #+end_src
-
-Each key changes what the toolchain object puts in those variables.
-=foss= in EasyBuild 5.3 accepts about thirty, and the list is:
-
+Each key sets the values that the toolchain object places into those variables.
+=foss= in EasyBuild 5.3 accepts roughly thirty entries.
+The list is:
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The options a foss build accepts, abridged"
 $ eb --avail-toolchain-opts=foss
 Available options for foss toolchain:
-    cstd: Specify C standard (default: None)
-    debug: Keep debug symbols (default: None)
-    extra_cflags: Specify extra CFLAGS options. (default: None)
-    i8: Integers are 8 byte integers (default: False)
-    ieee: Adhere to IEEE-754 rules (default: False)
-    lto: Enable Link Time Optimization (default: False)
-    noopt: Disable compiler optimizations (default: False)
-    openmp: Enable OpenMP (default: False)
-    opt: High compiler optimizations (default: False)
-    optarch: Enable architecture optimizations (default: True)
-    pic: Use PIC (default: False)
-    shared: Build shared library (default: False)
-    static: Build static library (default: False)
-    strict: Strict (highest) precision (default: False)
-    usempi: Use MPI compiler as default compiler (default: False)
-    verbose: Verbose output (default: False)
-    veryloose: Very loose precision (default: False)
+ cstd: Specify C standard (default: None)
+ debug: Keep debug symbols (default: None)
+ extra_cflags: Specify extra CFLAGS options. (default: None)
+ i8: Integers are 8 byte integers (default: False)
+ ieee: Adhere to IEEE-754 rules (default: False)
+ lto: Enable Link Time Optimization (default: False)
+ noopt: Disable compiler optimizations (default: False)
+ openmp: Enable OpenMP (default: False)
+ opt: High compiler optimizations (default: False)
+ optarch: Enable architecture optimizations (default: True)
+ pic: Use PIC (default: False)
+ shared: Build shared library (default: False)
+ static: Build static library (default: False)
+ strict: Strict (highest) precision (default: False)
+ usempi: Use MPI compiler as default compiler (default: False)
+ verbose: Verbose output (default: False)
+ veryloose: Very loose precision (default: False)
 #+end_src
-
-Four of them account for most of what appears in real easyconfigs.
-
-=usempi= makes =$CC= the MPI wrapper rather than the bare compiler. A
-package whose build system does not know about MPI wrappers, and just
-uses =$CC=, gets MPI this way. Reach for it when the software is parallel
-and its configure script has no =--with-mpi=.
-
-=openmp= adds the compiler's OpenMP flag. Needed when the source has
-=#pragma omp= and the build system does not add the flag itself, which is
-more common than it should be.
-
-=pic= adds =-fPIC=. Needed when something links a static library into a
-shared one, and the error without it names a relocation rather
-than anything recognisable.
-
-The precision family, =strict= through =veryloose=, is the one to leave
-alone unless there is a reason. It changes floating-point semantics, which
-changes results. A physics code that specifies =strict= is making a
-claim about its own numerics, and changing it silently changes the
-science.
-
+Four of them cover most of the entries found in real easyconfigs.
+=usempi= sets =$CC= to the MPI wrapper instead of the bare compiler.
+A package whose build system lacks MPI wrapper awareness and uses =$CC= receives MPI through this mechanism.
+Use it for parallel software whose configure script does not provide =--with-mpi=.
+=openmp= adds the compiler's OpenMP flag.
+It is required.
+The source contains =#pragma omp=.
+The build system does not supply the flag.
+=pic= adds =-fPIC=.
+It is required.
+A static library is linked into a shared one.
+The resulting error without it mentions a relocation rather than a recognizable symbol.
+The precision family =strict= through =veryloose= should remain unchanged.
+A specific reason must exist to change it.
+It alters floating-point semantics.
+It changes results.
+A physics code that specifies =strict= asserts a claim about its own numerics.
+Altering it silently modifies the scientific outcome.
 * optarch decides where the binary runs
-
-=optarch= is on by default, and it is the option with the largest
-consequences.
-
-On, the compiler is told to optimise for the microarchitecture it is
-running on: =-march=native= or the toolchain's equivalent. The binary is
-faster and it may use instructions that a different processor in the same
-cluster does not have.
-
-That is the mechanism behind
-[[file:06-what-installed-means.org][chapter 6]]'s per-architecture install
-trees. A site with mixed hardware does not keep separate trees out of
-tidiness; it keeps them because =optarch= produced binaries that are not
-interchangeable.
-
-Two ways a site controls this.
-
-=--optarch= on the command line sets the flag globally. A site can then
-build for a named baseline rather than for whatever node the build landed
-on.
-
-And =toolchainopts = {'optarch': False}= turns it off for one package.
-Reach for that when a package is known to miscompile under aggressive
-optimisation.
-
-An easyconfig that needs =optarch: False= should say why in a comment.
-It is a claim about the software rather than about the site, and the next
-person to read it will otherwise assume it was cargo-culted.
-
+=optarch= is enabled by default and has the greatest impact.
+When enabled, the compiler receives =-march=native= or the toolchain's equivalent to optimise for the current microarchitecture.
+That binary runs faster and may use instructions unavailable on other processors in the same cluster.
+This mechanism underlies [[file:06-what-installed-means.org][What "installed" means]]'s per-architecture install trees.
+A site with mixed hardware maintains separate trees not for tidiness but.
+There are two methods for a site to control this.
+Specifying =--optarch= on the command line sets the flag globally.
+The site can then build for a named baseline instead of the specific node where the build occurs.
+Setting =toolchainopts = {'optarch': False}= disables it for a single package.
+Use this option when a package is known to miscompile under aggressive optimisation.
+An easyconfig requiring =optarch: False= must include an explanatory comment.
+The comment is a claim about the software, not the site, preventing future readers from assuming a cargo‑culted setting.
 #+ATTR_EB: :id EB-Toolchainopts-1 :title Four errors, four options
 #+begin_exercise
 Four build failures, each fixed by one =toolchainopts= key.
 
 1. =undefined reference to `omp_get_num_threads'=
 2. =relocation R_X86_64_32S against `.rodata' can not be used when
-   making a shared object=
+ making a shared object=
 3. =mpi.h: No such file or directory=, from a Makefile that compiles with
-   =$(CC)=
+ =$(CC)=
 4. The build succeeds on the build host and dies with =Illegal
-   instruction= on an older node in the same cluster.
+ instruction= on an older node in the same cluster.
 
 Give the key for each. Then say which of the four is not really a
 toolchain question at all, and what you would rather do about it.
@@ -154,7 +123,7 @@ which is more honest and more work.
 question. Setting =optarch: False= for this package would fix the symptom
 by making the binary slower everywhere, to accommodate a node it was
 never built for. The real answer is the site's: either build per
-architecture, as chapter 6 describes, or set a site-wide =--optarch=
+architecture, as What "installed" means describes, or set a site-wide =--optarch=
 baseline that every node can run. A per-easyconfig fix for a site-wide
 hardware fact is the wrong layer.
 #+end_solution

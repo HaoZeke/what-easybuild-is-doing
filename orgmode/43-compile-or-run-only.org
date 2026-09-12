@@ -1,0 +1,147 @@
+#+TITLE: Compile or run-only
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- When does a test compile, and when does it load a module?
+- What is =valid_prog_environs = ['default']= claiming on a
+ run-only test?
+- Where do the sources live relative to the test file?
+#+end_questions
+
+#+begin_objectives
+1. Choose =RegressionTest= or =RunOnlyRegressionTest= for a given
+ job, and say what the other choice would have done.
+2. Point a compile test at its sources, and a run-only test at an
+ installed module.
+3. Say what =valid_prog_environs= means in each case.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]], for
+ =RunOnlyRegressionTest=.
+- [[file:06-what-installed-means.org][What "installed" means]], for what a
+ module being present actually claims.
+#+end_prerequisites
+Two kinds of work appear in an EasyBuild shop, represented by two base classes.
+A *compile* test builds a binary from source using the current programming environment and then runs it.
+That is =rfm.RegressionTest=.
+The compile stage is performed.
+=valid_prog_environs= lists the compilers with which the test is attempted, and a site defining =gnu= and =intel= receives two test cases from a single class.
+A *run-only* test executes an already existing binary.
+That is =rfm.RunOnlyRegressionTest=.
+The compile stage is omitted.
+=valid_prog_environs = ['default']= is the typical value.
+The environment is not the object under test.
+The object under test is a module specified in =self.modules=.
+EESSI's suite consists almost entirely of the second kind.
+The software is pre‑built by EasyBuild.
+The assessment concerns whether the module can run a known workload on this node.
+CSCS's suite includes both system‑health tests that compile STREAM and OSU and application tests that load a module.
+There is a third class, =CompileOnlyRegressionTest=, whose run stage is omitted.
+It is the appropriate tool for "does this compiler build that file".
+It is not suitable for any task described in this book involving an installed stack.
+* Sources next to the test
+A compile test looks for sources in a directory adjacent to the test file.
+The directory is named =src/= by default (=sourcesdir=).
+The CSCS webinar shows the layout as:
+#+begin_example
+tests/
+├── src/
+│ └── stream.c
+└── stream1.py
+#+end_example
+ReFrame copies =src/= into the stage directory.
+ReFrame performs the build there.
+=sourcepath=, =build_system= and the Make, CMake, Autotools, and Spack backends constitute the How To.
+ExCALIBUR-tests exercises each of them.
+The default configuration performs a single-file compilation using the compiler from the current environment.
+A run-only test may also ship files adjacent to itself via =readonly_files= or by using the same =src/=.
+EESSI's mpi4py test ships =mpi4py_reduce.py= in this manner.
+The script is included in the test while the interpreter and =mpi4py= are provided by the module.
+* Loading a module is the EasyBuild join
+
+#+begin_src python
+@rfm.simple_test
+class GromacsRun(rfm.RunOnlyRegressionTest):
+ valid_systems = ['*']
+ valid_prog_environs = ['default']
+ modules = ['GROMACS/2024.4-foss-2023b']
+ executable = 'gmx'
+ executable_opts = ['--version']
+
+ @sanity_function
+ def validate(self):
+ return sn.assert_found(r'GROMACS version:', self.stdout)
+#+end_src
+The =modules= entry lists module names.
+ReFrame generates a =module load= command in the job script.
+ReFrame uses the modules system specified in the configuration.
+The sanity check matches the *kind* of assertion used by EasyBuild's =sanity_check_commands=.
+The binary launches and outputs its version.
+The check is neither GROMACS's own test suite nor a HECBioSim benchmark.
+Those appear as later tests in Software maps to tests.
+They are mapped to the same software.
+The module name is a pin, as described in [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]].
+=GROMACS/2024.4-foss-2023b= represents one installation.
+A test that hard‑codes this name will not encounter =GROMACS/2024.4-foss-2024a=.
+Parameters multiply the suite's =parameter=.
+A portable test leaves the machine in the config's =find_modules=.
+These illustrate how a suite avoids defining a separate class for each module.
+* What the generated job script actually contains
+For a run‑only test, the script stays brief.
+The tutorial's initial STREAM job contains three lines.
+#+begin_example
+#!/bin/bash
+stream.x
+#+end_example
+Adding a module and a launcher expands the script by those two facts, which ReFrame obtains from the configuration and from =self.modules=, not from the test author writing Slurm directives.
+This is the productivity claim of [[cite:karakasisEnablingContinuousTesting2020][Karakasis et al. 2020]]: the job script is generated, and the test class does not mention =#SBATCH=.
+A compile test's build script is generated in the same manner, from the build system and the current environment.
+The How To for Make and CMake is documented in the official docs; the only fact required here is that compilation occurs in the stage directory, and a failed compilation leaves the stage in place as a failed run does.
+#+ATTR_EB: :id EB-ReFrame-43-1 :title Which base class
+#+begin_exercise
+Four jobs. For each, name the base class, and say what
+=valid_prog_environs= should be.
+
+1. Build =stream.c= with every compiler the site defines, then run
+ it.
+2. =module load GROMACS/2024.4-foss-2023b= and run =gmx mdrun= on
+ Crambin.
+3. Confirm that =mpicc= from the =foss= environment can compile a
+ hello-world, without running the binary.
+4. Run =python3 -c 'import mpi4py'= from every =mpi4py/= module
+ the site has.
+#+begin_solution
+1. =RegressionTest=. =valid_prog_environs= lists those compilers,
+ or =['*']= to take every environment the partition defines.
+2. =RunOnlyRegressionTest=. =['default']=: the environment is not
+ under test, the module is.
+3. =CompileOnlyRegressionTest=. =['foss']=, or the name the
+ configuration uses for that toolchain.
+4. =RunOnlyRegressionTest=. =['default']=. The modules come from a
+ parameter (Parameters multiply the suite), not from the environment list.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-43 :title Where this chapter comes from :kind sources
+#+begin_detail
+ReFrame regression-test API: =RegressionTest=,
+=RunOnlyRegressionTest=, =CompileOnlyRegressionTest=,
+=sourcesdir=, =modules=, =build_system=. The =tests/src/= layout
+is from the CSCS 2022 webinar slides. ExCALIBUR-tests tutorial
+sections 5 and 6 walk Make/CMake/Autotools/Spack and run-only
+tests. EESSI's mpi4py tutorial is the run-only-plus-module
+pattern this chapter uses.
+#+end_detail
+
+#+begin_keypoints
+- =RegressionTest= compiles, then runs. =RunOnlyRegressionTest=
+ runs a binary that already exists. =CompileOnlyRegressionTest=
+ compiles and stops.
+- An EasyBuild shop's application tests are run-only: the module
+ is the thing under test, and =valid_prog_environs = ['default']=.
+- Sources live in =src/= next to the test file and are copied into
+ the stage directory.
+- The job script is generated. The test class does not write
+ =#SBATCH=.
+#+end_keypoints

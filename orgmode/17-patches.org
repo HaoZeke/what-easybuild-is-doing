@@ -1,18 +1,15 @@
-#+TITLE: Chapter 17. Patches, and what a patch is relative to
+#+TITLE: Patches, and what a patch is relative to
 
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Read a =patches= entry, in both its forms, and say where it will be
-   applied from.
+ applied from.
 2. Say what a strip level is and why a patch carries one.
 3. Decide whether a change belongs in a patch or upstream.
 #+end_objectives
-
-A patch is the only place an easyconfig changes the software rather than
-describing it. That makes it the parameter with the most power and the
-one most likely to be wrong in a way nothing notices.
-
+A patch is the only location where an easyconfig modifies the software instead of describing it.
+It is the parameter with the greatest power and the most likely to be incorrect without detection.
 * Two forms
 
 #+begin_src easyconfig :widget parse
@@ -21,100 +18,82 @@ version = '6.5.1'
 toolchain = {'name': 'foss', 'version': '2025a'}
 
 patches = [
-    'VASP6-6.5.1_fix-hdf5-detection.patch',
-    ('extra-makefile.include', '.'),
-    ('vendored-config.h', 'src/config'),
+ 'VASP6-6.5.1_fix-hdf5-detection.patch',
+ ('extra-makefile.include', '.'),
+ ('vendored-config.h', 'src/config'),
 ]
 #+end_src
-
-The first form is a filename. EasyBuild finds it beside the easyconfig,
-verifies its checksum along with the sources, and applies it with =patch=
-inside the unpacked source tree.
-
-The second form is a tuple, and it does something different: it *copies*
-a file into the source tree at the given path. No =patch=, no diff, just
-a file placed where the build expects one. That is how a recipe supplies a whole makefile fragment rather than a
-diff against one. Some packages expect their build
-configuration as a file, and this is how it is handed over.
-
-The second element is not "directory means copy". An integer is a
-strip level. A string plus a name ending in =.patch= is a
-=sourcepath=: apply the diff *in* that subdirectory. A string plus a
-name that is *not* =.patch= is a copy. =('extra-makefile.include',
-'.')= is a copy because of the name, not because of the directory.
-=('foo.patch', 'src')= is not a copy. Either way the file needs a
-checksum, because
-[[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]] applies to
-patches exactly as it does to sources.
-
+The first form is a filename.
+EasyBuild locates it next to the easyconfig.
+EasyBuild checks its checksum together with the sources.
+EasyBuild applies it using =patch= within the unpacked source tree.
+The second form is a tuple.
+The tuple performs a different action.
+It *copies* a file into the source tree at the specified path.
+No =patch= is used.
+No diff is used.
+Only a file is placed where the build expects one.
+This method allows a recipe to provide an entire makefile fragment instead of a diff against one.
+Some packages require their build configuration as a file.
+This method delivers the required file.
+The second element does not imply that a directory means copy.
+An integer denotes a strip level.
+A string combined with a name ending in =.patch= is a =sourcepath=.
+The diff is applied *in* that subdirectory.
+A string combined with a name that is *not* =.patch= indicates a copy.
+=('extra-makefile.include', '.')= is a copy due to the name, not the directory.
+=('foo.patch', 'src')= does not represent a copy.
+In either case the file requires a checksum.
+[[checksum.org][A checksum is a claim about bytes]] applies to patches in the same manner as to sources.
 * The strip level
-
-A diff carries paths, and those paths have a prefix that is not useful:
-
+A diff includes paths.
+Those paths contain a non‑useful prefix.
 #+begin_example
 --- vasp.6.5.1/src/main.F	2025-03-01 10:00:00
 +++ vasp.6.5.1-fixed/src/main.F	2025-03-02 11:00:00
 #+end_example
+=patch -p1= removes a single leading directory component.
+It searches for =src/main.F=.
 
-=patch -p1= drops one leading component, so it looks for =src/main.F=.
-=patch -p0= would look for =vasp.6.5.1/src/main.F=. EasyBuild does not
-default to =-p1=. If no integer is given, =apply_patch=
-guesses the level from the =+++= paths against the unpacked tree.
-=git diff= output is usually applied with =-p1=, and an integer forces the level:
+=patch -p0= searches for =vasp.6.5.1/src/main.F=.
 
+EasyBuild does not automatically use =-p1= as the default.
+
+When no integer is supplied, =apply_patch= infers the strip level from the =+++= paths relative to the unpacked tree.
+
+=git diff= output is typically applied with =-p1=.
+Specifying an integer sets the strip level explicitly:.
 #+begin_example
 patches = [('odd-layout.patch', 2)]
 #+end_example
+That repeats the failure documented in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
 
-That is
-[[file:01-an-easyconfig-is-python.org][chapter 1]]'s failure again. A strip
-level is *relative to the unpacked source tree*. It is exactly the class
-of parameter that describes the shape of the source rather than the
-software. Change from a git checkout to a release tarball and the number
-of leading components changes with it, silently, in the same way
-=start_dir= did.
+The strip level is *relative to the unpacked source tree*.
 
+It is precisely the type of parameter that describes the shape of the source rather than the software.
+
+Switching from a git checkout to a release tarball causes the number of leading components to change silently, in the same way =start_dir= did.
 * Applying cleanly is not the same as applying correctly
-
-=patch= is more helpful than is useful.
-
-=patch= matches on context, not on line numbers. It will apply a hunk
-that has moved, and report the offset. It will apply a hunk with fuzz,
-matching approximately, and report that too. Both are usually right and occasionally catastrophic. A hunk can apply to
-the wrong function, if that function happens to have similar surrounding
-lines.
-
-So a patch that applies with offsets against a new version is not
-evidence that it still does the right thing. It is evidence that =patch=
-found somewhere plausible to put it. After a version bump, a patch that
-still applies deserves the same suspicion as a =start_dir= that still
-parses.
-
+=patch= is more helpful than useful.
+=patch= matches on context, not on line numbers.
+=patch= will apply a hunk that has moved and report the offset.
+=patch= will apply a hunk with fuzz, matching approximately, and report that too.
+Both are usually right and occasionally catastrophic.
+A hunk can apply to the wrong function if that function happens to have similar surrounding lines.
+A patch that applies with offsets against a new version is not evidence that it still does the right thing.
+It is evidence that =patch= found somewhere plausible to put it.
+After a version bump, a patch that still applies deserves the same suspicion as a =start_dir= that still parses.
 The check is to read the patched file, not the patch output.
-
 * When it should not be a patch
-
-A patch is a fork being maintained. Three questions before writing
-one.
-
-*Is it a bug?* Then it belongs upstream, and the patch is what is carried
-while the pull request is open. Say so in the patch's own header, with a
-link, so the next person knows whether to drop it.
-
-*Is it a build-system fact about your site?* Then it probably belongs in
-=configopts= or =preconfigopts= rather than in a diff. A patch that only
-changes a path is a patch that will conflict on every version bump for no
-reason.
-
-*Is it a configuration file the package expects to be written?* Then it is
-the copy form above, and not really a patch.
-
-The one case where a long-lived patch is right is a package whose
-upstream is unresponsive or gone, where the patch is the maintenance. In
-that case the patch should carry a comment saying so, because a patch
-with no explanation is indistinguishable from one somebody forgot to
-remove.
-
+A patch is a maintained fork.
+Consider three questions before creating a patch.
+*Is it a bug?* If so, it belongs upstream, and the patch remains while the pull request is open.
+Indicate this in the patch's header, include a link, and inform the next maintainer whether to drop it.
+*Is it a build-system fact about the site?* It likely belongs in =configopts= or =preconfigopts= instead of a diff.
+A patch that only changes a path will conflict on each version bump without justification.
+*Is it a configuration file the package expects to be written?* It is the copy form above and not truly a patch.
+A long‑lived patch is appropriate for a package whose upstream is unresponsive or absent, serving as its maintenance.
+In that situation, the patch should include a comment explaining this, as an undocumented patch is indistinguishable from one unintentionally retained.
 #+ATTR_EB: :id EB-Patches-1 :title It still applies, and it is still wrong
 #+begin_exercise
 A recipe carries =patches = ['fix-alignment.patch']= and has done for
@@ -126,9 +105,9 @@ output says:
 
 1. What has =patch= told you, and what has it not?
 2. What would you read to find out whether the patch did the right
-   thing?
+ thing?
 3. The patch has no comment and no upstream link. What do you do about
-   that, and what do you write down either way?
+ that, and what do you write down either way?
 
 #+begin_solution
 It has told you that it found a place where the context matched, 87 lines
@@ -148,7 +127,7 @@ pull request, so the next person can answer this question without
 archaeology.
 
 Either way, write the answer in the commit message. A patch that survives
-a bump because somebody checked, and a patch that survives because nobody
+a bump
 looked, are indistinguishable a year later, and only one of them is safe.
 #+end_solution
 #+end_exercise

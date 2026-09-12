@@ -1,4 +1,4 @@
-#+TITLE: Chapter 19. What a module exports
+#+TITLE: What a module exports
 
 #+OPTIONS: toc:nil num:nil
 
@@ -11,23 +11,19 @@
 #+begin_objectives
 1. Read a generated modulefile and say where each line came from.
 2. Name the variables EasyBuild always sets, and use one from an
-   easyconfig.
+ easyconfig.
 3. Say what a module naming scheme changes, and what a hierarchical one
-   does to =MODULEPATH=.
+ does to =MODULEPATH=.
 #+end_objectives
-
-The citable unit is name + version + toolchain + versionsuffix, not
-the easyconfig filename and not "EasyBuild". FORCE11 software citation
-asks for the specific version that ran.
-
-[[file:06-what-installed-means.org][Chapter 6]] said the modulefile is
-the only artifact a user meets, and then did not open one. Here is one.
-
+The citable unit consists of name, version, toolchain, and versionsuffix, not the easyconfig filename nor EasyBuild.
+FORCE11 software citation requires the specific version that was executed.
+[[file:06-what-installed-means.org][What "installed" means]] stated that the modulefile is the only artifact a user encounters, and then did not open one.
+An example is provided.
 * A real modulefile
 
 #+begin_src ebtranscript :source "SURF Snellius, generated modulefile, 2026-09-10, EasyBuild 5.3.1" :caption "QMCPACK 4.4.0, abridged"
 $ sed -n '1,34p' \
->  .../modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua
+> .../modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua
 help([==[
 
 Description
@@ -58,134 +54,123 @@ prepend_path("LD_LIBRARY_PATH", pathJoin(root, "lib"))
 prepend_path("LIBRARY_PATH", pathJoin(root, "lib"))
 prepend_path("PATH", pathJoin(root, "bin"))
 #+end_src
-
-Nobody wrote that file. Every line came from somewhere in the
-easyconfig, and being able to point at the source of each is most of
-what this chapter is for.
-
-=help= and =whatis= come from =description= and =homepage=, which is why
-those parameters exist and why a one-line description is worth writing
-properly: it is what a user sees from =module whatis=.
-
-=conflict("QMCPACK")= comes from the name. Two versions of the same
-software cannot be loaded at once, and the module says so rather than
-letting a user discover it through a strange failure.
-
-Smith, Katz and Niemeyer (2016) require a citation to name the
-/specific/ version and the platform variant. The module's full
-name is that variant: software, version, toolchain, versionsuffix.
+Nobody wrote that file.
+Every line came from somewhere in the easyconfig.
+Being able to point at the source of each is most of what this chapter is for.
+=help= and =whatis= come from =description= and =homepage=.
+Those parameters exist.
+A one-line description is worth writing properly.
+It is what a user sees from =module whatis=.
+=conflict("QMCPACK")= comes from the name.
+Two versions of the same software cannot be loaded at once.
+The module says so rather than letting a user discover it through a strange failure.
+[[cite:smithSoftwareCitationPrinciples2016][Smith, Katz and Niemeyer 2016]] require a citation to name the /specific/ version and the platform variant.
+The module's full name is that variant: software, version, toolchain, versionsuffix.
 A paper that writes "GROMACS" has not cited a module.
-
-=depends_on= is the =dependencies= list from
-[[file:15-build-dependencies-are-not-dependencies.org][chapter 15]],
-resolved to specific modules by the robot. Note it is =depends_on= and
-not =load=: Lmod counts references, so unloading QMCPACK unloads HDF5
-only if nothing else still depends on it.
-
-The =prepend_path= lines are the standard set, added because those
-directories exist in the install. No parameter asked for them.
-
+=depends_on= is the =dependencies= list from [[file:15-build-dependencies-are-not-dependencies.org][Build dependencies are not dependencies]].
+The list is resolved to specific modules by the robot.
+It is =depends_on= and not =load=.
+Lmod counts references.
+Unloading QMCPACK unloads HDF5 only if nothing else still depends on it.
+The =prepend_path= lines are the standard set.
+They were added.
+No parameter asked for them.
 * The variables EasyBuild always sets
+These entries are not shown in the excerpt above.
 
-Not visible in the excerpt above, because they are generated further
-down, but always present:
-
-| Variable | Holds |
+| Variable | Contents |
 |---+---|
 | =$EBROOTQMCPACK= | the install directory |
 | =$EBVERSIONQMCPACK= | the version |
 | =$EBDEVELQMCPACK= | a path to the development-support file |
 
-=convert_name= uppercases, maps =-= to =min=, =+= to =plus=, and
-deletes dots. =code-server= becomes =EBROOTCODEMINSERVER=.
-=netcdf-c= becomes =EBROOTNETCDFMINC=, not =EBROOTNETCDFC=. Same
-=min= idea as the easyblock filename, not a strip of punctuation.
-
-The name the user types is built here. Change the toolchain or the
-suffix and watch the module name and the =.eb= filename move together.
-
+=convert_name= converts characters to uppercase.
+=convert_name= translates =-= to =min=.
+=convert_name= translates =+= to =plus=.
+=convert_name= removes periods.
+=code-server= is transformed into =EBROOTCODEMINSERVER=.
+=netcdf-c= is transformed into =EBROOTNETCDFMINC= rather than =EBROOTNETCDFC=.
+The =min= convention follows the easyblock filename pattern.
+The =min= convention does more than strip punctuation.
+The name entered by the user is constructed at this point.
+Modifying the toolchain changes the module name.
+Modifying the suffix changes the module name.
+Modifying the toolchain changes the =.eb= filename.
+Modifying the suffix changes the =.eb= filename.
 #+begin_src easyconfig :widget modname
 name = 'QMCPACK'
 version = '4.4.0'
 toolchain = {'name': 'foss', 'version': '2025a'}
 versionsuffix = '-HDF5-1.14.6'
 #+end_src
-
-=$EBROOT*= is the one a recipe uses. It is how an easyconfig points at a
-dependency without hardcoding a path, which is
-[[file:13-how-a-build-executes.org][chapter 13]]'s
-=--with-hdf5=$EBROOTHDF5=. The dependency's module was loaded during
-=prepare=, so the variable is set, and the build never needs to know
-where the site puts things.
-
+=$EBROOT*= is used by a recipe.
+It shows how an easyconfig points at a dependency without hardcoding a path, as described in [[file:13-how-a-build-executes.org][How a build executes]]'s =--with-hdf5=$EBROOTHDF5=.
+The dependency's module was loaded during =prepare=.
+The variable is set.
+The build never needs to know where the site puts things.
 * Adding to the module
-
-Four parameters, in rough order of how often they are needed.
-
-=modextravars= sets extra environment variables. A package whose runtime
-needs =FOO_DATA_DIR= pointing inside its own install gets it here.
-
-=modextrapaths= prepends to a path-like variable. This is how a Python
-package adds its own =lib/python3.13/site-packages= to =$PYTHONPATH=, and
-how an R package adds to =$R_LIBS_SITE=.
-
-=modluafooter= appends raw Lua to the modulefile, with =modtclfooter= for
-Tcl. The escape hatch, for something the parameters do not cover. Use it
-knowing it ties the easyconfig to one module syntax.
-
-=modaltsoftname= changes the name the module is filed under while leaving
-the software's own name alone. Rare, and the reason it exists is
-packages whose upstream name is not the name users look for.
-
-A rule about all four: they change what a *user* gets, not what the build
-gets. Setting =modextravars= will not help a build that needs an
-environment variable, because the module is written in the =module= step
-and the build finished several steps earlier.
-
+Four parameters are listed in approximate order of frequency of use.
+=modextravars= defines additional environment variables.
+A package whose runtime requires =FOO_DATA_DIR= located within its own installation receives it via this parameter.
+=modextrapaths= inserts a prefix into a path-like variable.
+This mechanism allows a Python package to add its own =lib/python3.13/site-packages= to =$PYTHONPATH= and an R package to extend =$R_LIBS_SITE=.
+=modluafooter= appends raw Lua code to the modulefile.
+=modtclfooter= performs the same for Tcl.
+It provides an escape hatch for situations not covered by the other parameters.
+Use it with the understanding that it binds the easyconfig to a specific module syntax.
+=modaltsoftname= alters the filename under which the module is stored while preserving the software's original name.
+It is uncommon and exists.
+A rule for all four parameters is that they affect what a *user* receives, not what the build receives.
+Setting =modextravars= does not assist a build that requires an environment variable.
+The module is generated in the =module= step after the build has completed several steps earlier.
 * Naming schemes
+The path in that transcript is =modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua=.
+The =chem= comes from =moduleclass=.
+That is a categorised scheme.
+It is one of several.
 
-The path in that transcript is
-=modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua=, and the =chem= comes
-from =moduleclass=. That is a categorised scheme, and it is one of
-several.
+*Flat* is EasyBuild's default.
+=EasyBuildMNS= is the naming scheme.
+Every module resides in one directory.
+Modules are named =name/version-toolchain-versionsuffix=.
+Everything is visible in =module avail= at once.
+It is simple.
+It produces long lists.
 
-*Flat*, EasyBuild's default, =EasyBuildMNS=: every module in one
-directory, named =name/version-toolchain-versionsuffix=. Everything is
-visible in =module avail= at once. Simple, and long lists.
+*Categorised* uses the same names filed under =moduleclass=.
+Snellius uses this scheme.
 
-*Categorised*: the same names, filed under =moduleclass=. What Snellius
-uses above.
+*Hierarchical* is =HierarchicalMNS=.
+The toolchain moves out of the module name and into the path.
+Loading a compiler changes =MODULEPATH=.
+Only then are the modules built with that compiler visible.
+The hierarchical scheme is worth understanding.
+A site may not use it.
 
-*Hierarchical*, =HierarchicalMNS=: the toolchain moves out of the module
-name and into the path. Loading a compiler changes =MODULEPATH=,
-and only then are the modules built with it visible.
+A module that cannot be seen is not absent.
+It is behind a toolchain that has not been loaded.
+That is [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]'s hierarchy made into directories.
+The advantage is that the module system enforces it.
+Discovery is then a two-step process.
+Users find it baffling until it is explained once.
 
-The hierarchical scheme is worth understanding even if a site does not
-use it, because it changes what =module avail= means. A module that
-cannot be seen is not absent; it is behind a toolchain that has not been
-loaded. That is
-[[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s hierarchy made
-into directories, with the advantage that the module system enforces it
-and the cost that discovery becomes a two-step process users find
-baffling until somebody explains it once.
-
-=--module-naming-scheme= sets it, and it is a site decision made once.
-Changing it later renames every module a site has, so it is not a
-decision anyone revisits casually.
-
+=--module-naming-scheme= sets it.
+It is a site decision made once.
+Changing it later renames every module a site has.
+It is not a decision anyone revisits casually.
 #+ATTR_EB: :id EB-Module-1 :title Where did that line come from
 #+begin_exercise
 Using the modulefile above:
 
 1. A user runs =module whatis QMCPACK/4.4.0-foss-2025a= and gets one
-   line. Which easyconfig parameter produced it?
+ line. Which easyconfig parameter produced it?
 2. They then run =module unload QMCPACK= and find HDF5 still loaded.
-   Is that a bug?
+ Is that a bug?
 3. Your package installs data files in =share/mydata= and its binary
-   needs =$MYPKG_DATA= to find them. Which parameter, and what is the
-   wrong way to do it?
+ needs =$MYPKG_DATA= to find them. Which parameter, and what is the
+ wrong way to do it?
 4. A colleague adds =modextravars = {'CC': 'mpicc'}= so builds against
-   the module pick up MPI. Why will that not do what they expect?
+ the module pick up MPI. Why will that not do what they expect?
 
 #+begin_solution
 1 is =description=, via =whatis=. Which is the argument for writing a
@@ -203,9 +188,9 @@ modules.
 
 4 will set =$CC= for a user who loads the module, and will do nothing
 for a build. A build's environment is constructed in =prepare=, as
-[[file:14-the-isolation-policy.org][chapter 14]] describes, and its =$CC=
+[[file:14-the-isolation-policy.org][What a build is allowed to see]] describes, and its =$CC=
 comes from the toolchain object rather than from any module. Those builds need
 =toolchainopts = {'usempi': True}= in the consuming easyconfig, which is
-[[file:16-what-a-toolchain-injects.org][chapter 16]].
+[[file:16-what-a-toolchain-injects.org][What a toolchain injects]].
 #+end_solution
 #+end_exercise

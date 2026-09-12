@@ -1,0 +1,23 @@
+#+TITLE: Write one
+#+OPTIONS: toc:nil num:nil
+A recipe for software that lacks one.
+A port from conda-forge or Spack.
+A bump to the next generation.
+An EasyBlock when a parameter is insufficient.
+#+begin_export rst
+.. toctree::
+ :maxdepth: 1
+
+ 10-build-your-own-without-asking
+ 12-eb-stack-updater-and-generator
+ 21-writing-one-from-nothing
+ 22-writing-an-easyblock
+ 29-extensions
+ 33-inspect-residuals-and-the-plan
+ 34-recipe-format-lint-check
+ 35-stack-solve-and-the-diff
+ 36-campaign-findings
+ 37-wrapping-and-modulerc
+ 38-locks-bwrap-python-datasets
+ 48-seissol-from-spack-to-a-pr
+#+end_export

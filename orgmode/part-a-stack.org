@@ -1,0 +1,25 @@
+#+TITLE: The stack
+#+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. rst-class:: eb-part-kicker
+
+Part 2
+#+end_export
+A stack is a tree of modules on a machine that may never have built them.
+EESSI is one such tree.
+CernVM-FS is the mechanism by which it arrives.
+A site stack is next to it.
+This part is that arrival: the stratum, the bot, the easystack file, and the host injection.
+[[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] is the first read if the machine has no software of its own.
+#+begin_export rst
+.. toctree::
+ :maxdepth: 1
+
+ 11-eessi-somebody-elses-stack
+ 25-cvmfs-and-the-stratum
+ 26-the-same-stack-somewhere-else
+ 30-easystack-files
+ 31-the-eessi-bot
+ 32-host-injections
+#+end_export

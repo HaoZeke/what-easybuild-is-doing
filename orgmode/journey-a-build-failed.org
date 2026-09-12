@@ -1,0 +1,14 @@
+#+TITLE: Journey: a build failed
+#+OPTIONS: toc:nil num:nil
+The log appears first.
+The parameters that usually caused it follow.
+
+See [[file:20-reading-a-failed-build.org][Reading a failed build]].
+
+See [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]].
+
+See [[file:06-what-installed-means.org][What "installed" means]].
+
+See [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]].
+
+See [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]].

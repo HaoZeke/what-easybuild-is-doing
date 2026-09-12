@@ -1,4 +1,4 @@
-#+TITLE: Chapter 3. A pin is for one generation
+#+TITLE: A pin is for one generation
 #+OPTIONS: toc:nil num:nil
 
 #+begin_questions
@@ -10,9 +10,9 @@
 #+begin_objectives
 1. Say what a version beside a dependency claims, and what it does not.
 2. Say why that claim stops holding the moment the easyconfig moves to
-   another generation.
+ another generation.
 3. Find the real lower bound when there is one, and say where it was
-   found.
+ found.
 #+end_objectives
 
 Here is a dependency list:
@@ -23,77 +23,62 @@ version = '1.0'
 toolchain = {'name': 'foss', 'version': '2025a'}
 
 dependencies = [
-    ('HDF5', '1.14.6'),
-    ('netCDF', '4.9.3'),
+ ('HDF5', '1.14.6'),
+ ('netCDF', '4.9.3'),
 ]
 #+end_src
-
-Almost everyone reads =('HDF5', '1.14.6')= as "needs HDF5, at least
-1.14.6". Every other packaging system they have used works that way.
-=install_requires= in Python takes =>=1.14.6=. Cargo takes =1.14.6=
-and means "compatible with". Conda takes =>=1.14.6,<2=.
-
-EasyBuild has no such syntax: no operator, no range, no caret, no
-tilde. A dependency is a name and a version, and the version is the
-version. That exact module, or the build does not resolve. A site
-wrap or a =ModuleRC= =.modulerc= can answer an old name with a
-newer module; that is [[file:37-wrapping-and-modulerc.org][chapter 37]],
-and it is not a range in this file.
-
-The official common-toolchain table now lists =foss/2026.1= and
-skipped =2024b=. The 2026 maintainer summit voted one common
-generation per year. The pin law does not change: a version beside
-a dependency is still that module, on that generation.
-
-=_parse_dependency= in
-=easybuild/framework/easyconfig/easyconfig.py= says what a dependency is,
-in its docstring:
-
+The tuple =('HDF5', '1.14.6')= is commonly interpreted as requiring HDF5 version 1.14.6 or newer.
+Other packaging systems operate similarly.
+In Python, =install_requires= accepts =>=1.14.6=.
+Cargo interprets =1.14.6= as a compatible version constraint.
+Conda uses =>=1.14.6,<2= as its constraint syntax.
+EasyBuild lacks operators, ranges, carets, and tildes in its syntax.
+A dependency consists solely of a name and a specific version.
+Resolution requires that exact module; otherwise the build fails.
+A site wrap or a =ModuleRC= =.modulerc= can map an old name to a newer module; see [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]], and this does not constitute a range here.
+The official common-toolchain table now includes =foss/2026.1= and omits =2024b=.
+The 2026 maintainer summit decided on a single common generation annually.
+The pin law remains unchanged: a version adjacent to a dependency denotes that specific module and generation.
+The function =_parse_dependency= in =easybuild/framework/easyconfig/easyconfig.py= defines a dependency in its docstring.
 #+begin_quote
 dep can be a dict, a tuple or a list. if it is a tuple or a list the
 attributes are expected to be in the following order: ('name',
 'version', 'versionsuffix', 'toolchain'). of these attributes, 'name'
 and 'version' are mandatory
 #+end_quote
-
-Four positional attributes, two of them required, and the dict it
-produces carries a single =version= string. A comparator has nowhere to
-go. The version can be *templated*, so the literal text in the file may
-read =%(pyshortver)s= rather than a number. A template still resolves to
-one exact version. Nothing in the format expresses a set.
-
+Four positional attributes are defined.
+Two of them are required.
+The resulting dict contains a single =version= string.
+A comparator has no place to operate.
+The version may be *templated*.
+The literal text in the file is =%(pyshortver)s= instead of a numeric value.
+A template still resolves to a single exact version.
+The format does not express a set.
 * Why that is fine, and then why it is not
-
-Within one generation that exactness is the point. A software stack
-built by one organisation for one year should be *reproducible*, and a
-range is the enemy of reproducibility. If =foss-2025a= provides HDF5
-1.14.6, then every package on =foss-2025a= that depends on HDF5 gets 1.14.6,
-and the stack has one HDF5 rather than four. A resolver with ranges
-would give four.
-
-So the exactness earns its place. The trouble starts the moment the
-easyconfig outlives the generation it was written for.
-
+Exactness is required within a single generation.
+A software stack built by one organisation for one year must be *reproducible*.
+A version range undermines reproducibility.
+When =foss-2025a= provides HDF5 1.14.6, every package on =foss-2025a= that depends on HDF5 receives 1.14.6.
+The stack then contains one HDF5 instance instead of four.
+A resolver that allows ranges would produce four instances.
+Exactness justifies its role.
+Problems arise when the easyconfig outlives the generation for which it was written.
 * The thing that breaks
-
-An easyconfig that works on =foss-2025a= is moved to =foss-2024a=,
-maybe because a user is stuck on the older stack, maybe because a
-site is backfilling. The easyconfig says HDF5 1.14.6, and
-=foss-2024a= carried HDF5 1.14.3.
-
-The build fails. Nothing called HDF5 1.14.6 exists in that generation,
-and nothing ever will: generations do not gain new versions
-retroactively.
-
-Now look at what the easyconfig stated. It said "1.14.6". Did
-the software require 1.14.6? Almost certainly not. It required
-something, some feature that landed in some earlier version. 1.14.6 is
-*what that generation happened to contain* when someone wrote the
-easyconfig down. The number records a build environment. It says
-nothing about what the package itself needs.
-
-That is the whole insight, stated flatly:
-
+An easyconfig that works on =foss-2025a= is moved to =foss-2024a=.
+The move may be caused by a user locked onto the older stack or a site performing backfilling.
+The easyconfig specifies HDF5 1.14.6.
+=foss-2024a= provides HDF5 1.14.3.
+The build fails.
+No HDF5 1.14.6 exists in that generation.
+No such version will appear later.
+The content of the easyconfig states "1.14.6".
+The software does not necessarily require 1.14.6.
+That is highly unlikely.
+A required feature was present in an earlier version.
+Version 1.14.6 reflects what that generation contained when the easyconfig was authored.
+The version number records the build environment.
+The version number provides no information about the package's actual requirements.
+This is the core insight.
 #+begin_quote
 A dependency version in an easyconfig is an exact pin for the
 generation the easyconfig was written against. Carried across generations,
@@ -101,47 +86,35 @@ it states a requirement the software never made.
 #+end_quote
 
 * This is why retargeting is not a text edit
-
-The first move that comes to mind, when an easyconfig is needed on
-another generation, is to open it and change =2025a= to =2024a=. Then
-the build fails on HDF5, so 1.14.6 becomes 1.14.3. Then it fails on
-netCDF, so the version =foss-2024a= provides is looked up and written
-in. Twenty minutes later the easyconfig builds and there is no record
-of which of those numbers were requirements and which were incidental.
-
-The right shape is different. Treat the old easyconfig's versions as
-*floors*: evidence about what the package was once seen to work with.
+The first move is to open the easyconfig and replace =2025a= with =2024a=.
+Then the build fails on HDF5, so the version changes from 1.14.6 to 1.14.3.
+Then it fails on netCDF, so the version provided by =foss-2024a= is looked up and inserted.
+Twenty minutes later the easyconfig builds and there is no record of which numbers were requirements and which were incidental.
+The right shape is different.
+Treat the old easyconfig's versions as *floors*: evidence about what the package was once seen to work with.
 The target generation's available modules are the *candidates*.
-Something then has to choose a set of candidates that satisfies the
-floors and stays internally consistent. That is a solver's job, not a
-text editor's.
-
-And the floors themselves only hold within one generation, for the
-reason above. Moving generation, they have to be dropped, and something
-has to decide what the target generation provides instead.
-
+Something then must choose a set of candidates that satisfies the floors and remains internally consistent.
+That is a solver's job, not a text editor's.
+The floors themselves only hold within one generation, for the reason above.
+When moving to a new generation, the floors must be dropped, and something must decide what the target generation provides instead.
 * Where the real lower bound lives
+Dropping the floor is a fallback.
+The answer lies elsewhere.
+If the minimum is needed, it is written down, just not in the easyconfig.
 
-Dropping the floor is a fallback. The answer lies elsewhere: if the
-minimum is needed, it is written down, just not in the easyconfig.
+- The project's own build system says it. 
+- =find_package(HDF5 1.10 REQUIRED)= in CMake is a real lower bound, stated by the people who wrote the software. 
+- So is a =requires-python= or a dependency specifier in =pyproject.toml=. 
 
-- The project's own build system says it. =find_package(HDF5 1.10
-  REQUIRED)= in CMake is a real lower bound, stated by the people who
-  wrote the software. So is a =requires-python= or a dependency
-  specifier in =pyproject.toml=.
-- Other packaging ecosystems record it, because their formats can. A
-  conda-forge recipe or a Spack =package.py= keeps the constraint *and*
-  the condition it applies under, because both formats have somewhere
-  to put it.
+- Other packaging ecosystems record it. 
+- A conda-forge recipe or a Spack =package.py= keeps the constraint *and* the condition it applies under. 
 
-Either of those is evidence. The following is not: "the older
-generation carried an older version, and the build passed". That tells
-that a version was sufficient on one machine on one day. Worth having,
-and a different claim.
+Either of those is evidence.
+The following is not: "the older generation carried an older version, and the build passed".
+That tells that a version was sufficient on one machine on one day.
+It is worth having, and it is a different claim.
 
-When an easyconfig is retargeted and the bound has to be right, the
-commit message should say which of the two the bound came from.
-
+When an easyconfig is retargeted and the bound has to be right, the commit message should say which of the two the bound came from.
 #+ATTR_EB: :id EB-Pin-mcq-1 :title What the second field claims
 #+begin_exercise
 In =dependencies = [('HDF5', '1.14.6')]=, the second field means:
@@ -175,7 +148,7 @@ numbers and the build passes.
 1. What have you established?
 2. What have you not?
 3. Where would you look to find out whether HDF5 1.14.3 is actually
-   enough for this package, and what would count as an answer?
+ enough for this package, and what would count as an answer?
 
 #+begin_solution
 You have established that the package builds against those two versions,
@@ -191,7 +164,7 @@ The real bound is in the project's own build system, or in a packaging
 format that can express a condition. =find_package(HDF5 1.10 REQUIRED)=
 in CMake is an answer. A =requires-python= or a dependency specifier in
 =pyproject.toml= is an answer. A conda-forge recipe or a Spack
-=package.py= is an answer, because both formats have somewhere to put a
+=package.py= is an answer
 constraint.
 
 "The older generation carried an older one and the build passed" is not
@@ -200,41 +173,28 @@ well.
 #+end_solution
 #+end_exercise
 
-* A worked case, because the abstraction is slippery
-
-Take the code-server easyconfig from [[file:01-an-easyconfig-is-python.org][chapter 1]]. It has no dependencies at
-all, which makes it a poor example of pinning. It is a perfect example
-of the *other* half of this problem: what a generation contains.
-
-code-server 4.130.0 is a real, released, upstream easyconfig.
+* A worked case
+Take the code-server easyconfig from [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+It has no dependencies at all.
+It is a poor example of pinning.
+It is a perfect example of the *other* half of this problem: what a generation contains. code-server 4.130.0 is a real, released, upstream easyconfig.
 EasyBuild's own 5.2.0 and 5.2.1 releases carried these versions:
-
 #+begin_example
-4.9.1  4.16.1  4.21.1  4.22.1  4.89.1  4.90.2  4.93.1  4.97.2
-4.100.2  4.103.2  4.104.0  4.104.1  4.104.2  4.104.3  4.105.1
+4.9.1 4.16.1 4.21.1 4.22.1 4.89.1 4.90.2 4.93.1 4.97.2
+4.100.2 4.103.2 4.104.0 4.104.1 4.104.2 4.104.3 4.105.1
 #+end_example
-
-The list stops at 4.105.1. So a site running EasyBuild 5.2 can have a
-perfectly valid easyconfig for 4.130.0 in front of it and still not
-build it. "The easyconfig exists" and "the easyconfig exists in the
-release in use" are different statements, and both held at
-once here.
-
-The same distinction applies to pinning. "HDF5 1.14.6 exists" is
-not "HDF5 1.14.6 exists in =foss-2024a=", and an easyconfig cannot tell
-the difference because it names a version and not a generation.
-
+The list stops at 4.105.1.
+A site running EasyBuild 5.2 can have a perfectly valid easyconfig for 4.130.0 in front of it and still not build it.
+"The easyconfig exists" and "the easyconfig exists in the release in use" are different statements.
+Both statements are held at once here.
+The same distinction applies to pinning.
+"HDF5 1.14.6 exists" is not "HDF5 1.14.6 exists in =foss-2024a=".
+An easyconfig cannot tell the difference.
 * One thing to do differently
-
-Next time an easyconfig moves to another generation, write down in
-the commit message where each changed version came from. The project's
-own build system, another packaging format that can express a
-condition, or the shelf.
-
-The first two are bounds. The third is a build environment that
-happened to be present. The next person to move this file will thank
-the author for saying which is which.
-
-The chapter after this is about the machinery that turns a filename
-into an install plan. Also about what happens when it looks in the
-wrong place.
+When an =easyconfig= moves to a new generation, record the source of each changed version in the commit message.
+Possible sources are the project's own build system, another packaging format that can express a condition, or the shelf.
+The first two entries represent bounds.
+The third entry denotes a build environment that was present.
+The next person moving this file will appreciate the indication of which entry is which.
+The following chapter describes the machinery that converts a filename into an install plan.
+It also explains what occurs when the lookup is performed in the wrong location.

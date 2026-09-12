@@ -1,4 +1,4 @@
-#+TITLE: Chapter 13. How a build executes
+#+TITLE: How a build executes
 
 #+OPTIONS: toc:nil num:nil
 
@@ -10,14 +10,12 @@
 
 #+begin_objectives
 1. Name the steps a build runs through, and say which ones an easyconfig
-   can influence.
+ can influence.
 2. Say which parameter reaches which step.
 3. Stop a build part way, or resume it, on purpose.
 #+end_objectives
-
-The framework prints the list. It does not change between releases of
-the same major version:
-
+The framework outputs the list.
+Its behavior remains unchanged across releases of the same major version:
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The whole sequence, from the framework itself"
 $ python3 -c 'from easybuild.framework.easyblock import EasyBlock
 > for s in EasyBlock.get_steps(): print(s[0])'
@@ -40,20 +38,16 @@ permissions
 package
 testcases
 #+end_src
-
-Eighteen named steps. Not a script, not a dependency graph: a list, run
-in order, the same list for every package. Every parameter belongs to
-one of them, and most errors name one. Hoste, Timmerman, Georges and
-De Weirdt (2012), Figure 4, already had this as fifteen Roman
-numerals (fetch through user test cases). =postiter=,
-=permissions= and =package= are what five major versions added.
-The fallback when no easyblock matches the name is still
-=ConfigureMake=.
-
-Short-term memory holds about seven items (Miller; Carpentries
-instructor training). The eighteen names are three groups of six, not
-one list to memorise.
-
+There are eighteen step names.
+The steps form a list, not a script or a dependency graph.
+The list is executed in order for every package.
+Each parameter belongs to one step.
+Most error messages refer to a specific step.
+Figure 4 in [[cite:hosteEasybuildBuildingSoftware2012][Hoste, Timmerman, Georges and De Weirdt 2012]] presented the same concept as fifteen Roman numerals derived from user test cases.
+=postiter=, =permissions= and =package= were added in five major version updates.
+If no easyblock matches a name, the fallback is =ConfigureMake=.
+Short-term memory can retain roughly seven items ([[cite:millerMagicalNumberSeven1956][Miller 1956]]; [[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]]).
+The eighteen step names are organized into three groups of six rather than a single list.
 #+ATTR_EB: :id EB-Steps-parsons-1 :title Put the first six in order
 #+begin_exercise
 These six steps run first. Restore the order. No extras.
@@ -76,41 +70,51 @@ not under =ready=.
 #+end_exercise
 
 * What each step is for
-
 Read them in three groups.
 
-*Getting the source in place.* =fetch= downloads and verifies, which is
-[[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]]'s subject.
-=ready= is readiness and the build directory. =extract= unpacks,
-=patch= applies patches. =prepare= loads the toolchain and the
-dependency modules. =_verify_toolchain= runs in =prepare=, not in
-=ready=.
+*Getting the source in place.*
 
-By the end of =prepare=, nothing has been compiled and everything has
-been decided. That is why so many failures land in the first twenty
-seconds of a build that was going to take four hours.
+=fetch= downloads and verifies.
+=fetch= verifies which is [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]]'s subject.
 
-*Building.* =configure=, =build=, =test=, =install=. The four steps that
-correspond to what would be typed by hand, and the four an easyconfig
-most often has something to say about.
+=ready= is readiness and the build directory.
 
-*Deciding it worked, and publishing it.* =extensions= installs the
-=exts_list= entries from
-[[file:08-one-easyconfig-many-installs.org][chapter 8]]. =postproc= runs
-=postinstallcmds=. =sanitycheck= is
-[[file:06-what-installed-means.org][chapter 6]]. =cleanup= removes the
-build directory. =module= writes the modulefile. =permissions= fixes the
-mode bits so other people can read what was installed. =package= and
-=testcases= are optional and most sites never use them.
+=extract= unpacks.
+=patch= applies patches.
 
-=postiter= is the odd one out. Some easyblocks run the build steps more
-than once, an iterated build, and =postiter= marks the boundary between
-iterations.
+=prepare= loads the toolchain and the dependency modules.
 
+=_verify_toolchain= runs in =prepare=.
+=_verify_toolchain= does not run in =ready=.
+
+By the end of =prepare=, nothing has been compiled.
+By the end of =prepare=, everything has been decided.
+
+Many failures land in the first twenty seconds of a build that was going to take four hours.
+
+*Building.*
+
+The steps are =configure=, =build=, =test=, =install=.
+These four steps correspond to what would be typed by hand.
+An easyconfig most often has something to say about these four steps.
+
+*Deciding it worked, and publishing it.*
+
+=extensions= installs the =exts_list= entries from [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]].
+=postproc= runs =postinstallcmds=.
+=sanitycheck= is [[file:06-what-installed-means.org][What "installed" means]].
+=cleanup= removes the build directory.
+=module= writes the modulefile.
+=permissions= fixes the mode bits so other people can read what was installed.
+=package= and =testcases= are optional.
+Most sites never use =package= and =testcases=.
+=postiter= is the odd one out.
+Some easyblocks run the build steps more than once.
+This creates an iterated build.
+=postiter= marks the boundary between iterations.
 * The parameters are named after their steps
-
-Once the sequence is known, the parameter names stop looking arbitrary:
-
+The sequence is known.
+The parameter names no longer appear arbitrary.
 #+begin_src easyconfig :widget parse
 name = 'example'
 version = '1.0'
@@ -123,67 +127,49 @@ buildopts = 'all'
 preinstallopts = 'DESTDIR= '
 installopts = 'PREFIX=%(installdir)s'
 #+end_src
-
-Three prefixes, and they mean exactly what they look like. =pre*opts= is
-text prepended to the command. That is why nearly every one of them ends
-in =&&= or a space: the text is glued onto the front of a shell
-command. =*opts= is appended as arguments. Each of the four building
-steps has a matching pair.
-
-The step named in the error is the step whose =pre= and plain options
-are the ones to read.
-
-=$EBROOTHDF5= in that sample is worth noticing. It comes from the HDF5
-module, loaded during =prepare=. Pointing a configure script at a
-dependency that way, rather than at a hardcoded path, is the convention.
-Those variables come from the modulefile. Chapter 19 is the
-modulefile.
-
+Three prefixes exist; each describes its function directly.
+The =pre*opts= text is prepended to the command.
+Most of them terminate with =&&= or a space, attaching the text to the front of a shell command.
+=*opts= is appended as arguments.
+Each of the four building steps has a corresponding pair.
+The step referenced in the error is the one whose =pre= and plain options must be examined.
+=$EBROOTHDF5= in that example is the one to examine.
+It originates from the HDF5 module loaded during =prepare=.
+Pointing a configure script at a dependency via this variable instead of using a hard‑coded path follows the convention.
+Those variables are provided by the modulefile.
+A module exports its modulefile.
 * Where the work happens
-
-Three directories get confused with each other.
-
-The *build directory* is scratch. =buildpath= from
-[[file:10-build-your-own-without-asking.org][chapter 10]], with the
-package name, version and toolchain under it. Sources are unpacked here,
-the compiler runs here, and =cleanup= deletes it. Nothing worth keeping
-lives here.
-
-The *install directory* is the destination, =%(installdir)s= in the
-sample above, and the only path that survives.
-
-=TMPDIR= is where EasyBuild puts its own working files, including the
-log. On a cluster it matters more than it looks. A login node's =/tmp= is
-often small and shared. A build that fills it fails in a way that names
-neither EasyBuild nor your package.
-
-Parallelism is =max_parallel= in the easyconfig, or =--parallel= on the
-command line. EasyBuild passes it to the build tool as =-j=. Some
-packages cannot build in parallel at all. That is why =max_parallel = 1=
-appears in a recipe, and why to leave it alone when it does.
-
+Three directories are often confused with each other.
+The *build directory* is a scratch space.
+=buildpath= from [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]] contains the package name, version and toolchain.
+Sources are unpacked there, the compiler runs there, and =cleanup= deletes it.
+Nothing worth keeping remains there.
+The *install directory* is the destination, =%(installdir)s= in the sample above, and the only path that survives.
+=TMPDIR= is where EasyBuild puts its own working files, including the log.
+On a cluster it matters more than it looks.
+A login node's =/tmp= is often small and shared.
+A build that fills it fails in a way that names neither EasyBuild nor your package.
+Parallelism is =max_parallel= in the easyconfig, or =--parallel= on the command line.
+EasyBuild passes it to the build tool as =-j=.
+Some packages cannot build in parallel at all.
+=max_parallel = 1= appears in a recipe, and it should be left alone when it does.
 * Cutting the sequence short
-
-Four ways, and they are not interchangeable.
-
-=--stop= runs up to a named step and stops. =eb foo.eb --stop=configure=
-leaves an unpacked, patched, configured tree and no compiler
-time spent. That is the fastest way to answer "does the configure line
-work" without waiting for a build.
-
-=--skip-test-step= and =--skip-sanity-check= drop one step. The names say
-which.
-
-=skipsteps= in the easyconfig drops a step permanently, for everyone,
-every time. [[file:05-a-versionsuffix-is-part-of-the-name.org][Chapter
-5]] is a case of somebody using it on =sanitycheck=. It moved a real
-defect from the build host to a user.
-
-=--module-only= runs only the =module= step, against an install already
-there. Useful when a modulefile needs regenerating and the
-software does not, and dangerous for exactly that reason: it writes a
-module for an install nobody re-checked.
-
+Four ways exist.
+They are not interchangeable.
+The =--stop= option runs until a specified step and then stops.
+Running =eb foo.eb --stop=configure= leaves an unpacked, patched, configured tree.
+No compiler time is consumed.
+It provides the fastest method to verify whether the configure line works.
+No waiting for a full build is required.
+The =--skip-test-step= and =--skip-sanity-check= options each omit a single step.
+The option names indicate the omitted step.
+The =skipsteps= setting in the easyconfig permanently removes a step.
+It applies to all users each time.
+The article [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] describes a case where =sanitycheck= was affected.
+It transferred a genuine defect from the build host to the user.
+The =--module-only= option executes solely the =module= step against an existing installation.
+It is useful when a modulefile requires regeneration while the software does not.
+It is hazardous.
 #+ATTR_EB: :id EB-Steps-1 :title Which step, and which parameter
 #+begin_exercise
 Four failures. For each, name the step and the parameter you would read
@@ -191,7 +177,7 @@ first.
 
 1. =Couldn't find file example-1.0.tar.gz anywhere=
 2. =List of toolchain dependency modules and toolchain definition do not
-   match=
+ match=
 3. =configure: error: cannot find HDF5=
 4. =Sanity check failed: no file found at 'bin/example'=
 

@@ -1,0 +1,160 @@
+#+TITLE: The pipeline has six stages
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- In what order do the stages run?
+- Which stages run on the login node, and which on the partition?
+- What does a failure in =run_complete= mean that a failure in =run=
+ does not?
+#+end_questions
+
+#+begin_objectives
+1. Name the six pipeline stages, and say which ones a run-only test
+ actually does work in.
+2. Say where each stage executes: the ReFrame host, or the partition.
+3. Attach a hook to a stage, and say when it runs relative to that
+ stage.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]], for the test
+ class.
+- [[file:13-how-a-build-executes.org][How a build executes]], for the comparison
+ with EasyBuild's eighteen steps.
+#+end_prerequisites
+EasyBuild runs eighteen named steps in order, using the same list for each package.
+ReFrame runs six stages in order, using the same list for each test.
+The stage names come from the pipeline documentation, ReFrame 4.10:
+
+| Stage | What it does |
+|---+---|
+| setup | partition, environment, stage path, job descriptor |
+| compile | copy sources, build. No‑op on a run‑only test |
+| run | write the job script, submit it |
+| sanity | run the sanity function against the output |
+| performance | extract figures of merit, compare to references |
+| cleanup | copy artifacts out, delete the stage directory |
+
+A test that fails in =sanity= has already been compiled and run.
+A test that fails in =setup= has not been compiled or run.
+The failing phase appears in the =FAILURE INFO= block as the first field to read, mirroring EasyBuild's error block naming of a step.
+* Loading is not the pipeline
+Before any stage execution, ReFrame builds each discovered test by importing its file and invoking =__init__=.
+Each test is instantiated regardless of its suitability for the current system.
+After loading, the framework filters tests using system, environment, and command-line criteria, and then *clones* each remaining test for every (partition, environment) combination.
+That clone is the test case.
+The original object is not scheduled for execution.
+Work performed in =__init__= or a post‑init hook executes for tests that will later be skipped, as noted on the pipeline page.
+Expensive setup should be placed in =setup= or a later stage, not during construction.
+=init= does not constitute a pipeline stage.
+Hooks may still attach to it (=@run_after('init')=).
+A portable test leaves the machine in the config and illustrates this pattern.
+* Where each stage runs
+Two execution contexts.
+*ReFrame context* is the process that launched =reframe=.
+It always runs on the local host.
+*partition context* is wherever the partition's scheduler points.
+It may be local or remote.
+
+| Stage | Context |
+|---+---|
+| setup | ReFrame |
+| compile | ReFrame if =build_locally= or =local=, else the partition |
+| run | ReFrame if =local=, else the partition |
+| sanity | ReFrame |
+| performance | ReFrame |
+| cleanup | ReFrame |
+
+Sanity reads files that the run stage wrote on the host after the job finished.
+Performance reads files that the run stage wrote on the host after the job finished.
+A sanity function that tries to open a path that exists only on the compute node will not find it.
+The path must be in the stage directory.
+The stage directory must be shared.
+The EESSI configuration comments state that the stagedir must be a shared directory.
+The stagedir must be available on every node that will run a test.
+Compile and run are asynchronous from version 3.10.
+The stage splits into submit and wait.
+A failure report can name =compile_complete= or =run_complete= instead of =compile= or =run=.
+=run= means the job script was submitted.
+=run_complete= means the job finished.
+The wait returned.
+A test stuck in the queue fails in =run_complete=.
+It does not fail in =run=.
+* Two execution policies
+Serial: each test enters the pipeline only after the preceding test has exited.
+The compile and run stages remain idle for the entire suite.
+
+Asynchronous: multiple tests run concurrently.
+When a test reaches compile or run, ReFrame does not block.
+ReFrame then selects the next case.
+A concurrency limit (=max_jobs= on the partition, =max_local_jobs= on the host) limits the number of jobs submitted.
+This configuration is the default for cluster use.
+A suite of thirty GROMACS cases does not submit thirty jobs simultaneously unless the partition permits it.
+
+The time printed for the run stage reflects ReFrame's time, not the scheduler's.
+It includes queue time.
+It does not represent the binary's runtime.
+* Hooks
+A method decorated with =@run_before('run')= or =@run_after('setup')= executes at that edge.
+The official tutorial and the EESSI mixin place the machine‑dependent numbers in hooks instead of the class body.
+The class body is evaluated at load time before =current_partition= exists.
+#+begin_src python
+@run_after('init')
+def set_modules(self):
+ self.modules = [self.module_name]
+
+@run_before('run')
+def set_tasks_from_partition(self):
+ ncpus = self.current_partition.processor.num_cpus
+ self.num_tasks = ncpus
+ self.num_tasks_per_node = ncpus
+#+end_src
+=current_partition= exists after setup, not at class-body time.
+The first hook can run after =init=.
+The second has to wait: a core count read before setup is a number the configuration has not supplied.
+Cleanup of a successful test is deferred when another test depends on it.
+A failure in cleanup is reported as an error rather than as a test failure.
+#+ATTR_EB: :id EB-ReFrame-40-1 :title Name the failing stage
+#+begin_exercise
+Four reports. For each, name the stage, and say whether the job ran.
+
+1. =pattern 'Solution Validates' not found in 'rfm_job.out'=
+2. =compile_complete=: the build job timed out in the queue
+3. The listing shows the test, the run never starts, and the reason
+ is =valid_systems= did not match
+4. =Copy: 8000 MB/s= against a reference of 30000 with a 20%
+ threshold
+#+begin_solution
+1. Sanity. The job ran; =rfm_job.out= exists. The verdict failed.
+2. =compile_complete=, the wait half of compile. The compile job was
+ submitted and did not finish. The test job was never submitted.
+3. No stage. Filtering happens after load and before any test case
+ is cloned. Nothing ran.
+4. Performance. Sanity passed (or there would be no figure to
+ compare). The job ran; the number is below the threshold.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-40 :title Where this chapter comes from :kind sources
+#+begin_detail
+[[https://reframe-hpc.readthedocs.io/en/stable/pipeline.html][How
+ReFrame Executes Tests]], ReFrame 4.10.3, fetched 2026-09-11: the
+six stages, the load-filter-clone sequence, the two execution
+contexts, serial against asynchronous, and the
+=compile_complete= / =run_complete= split (changed in 3.10.0).
+
+[[cite:karakasisEnablingContinuousTesting2020][Karakasis et al. 2020]],
+figure of the pipeline, and the 5th EasyBuild User Meeting talk
+for the same six names in the EasyBuild-adjacent setting.
+#+end_detail
+
+#+begin_keypoints
+- Six stages, in order: setup, compile, run, sanity, performance,
+ cleanup. A run-only test no-ops compile.
+- Construction is not a stage. =__init__= runs for tests that will be
+ skipped.
+- Sanity and performance run on the ReFrame host, against files the
+ job wrote. The stage directory has to be shared with the nodes.
+- =run= is submit; =run_complete= is wait. A queued job fails in the
+ second.
+#+end_keypoints

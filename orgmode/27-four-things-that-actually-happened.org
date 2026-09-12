@@ -1,4 +1,4 @@
-#+TITLE: Chapter 27. Four things that actually happened
+#+TITLE: Four things that actually happened
 
 #+OPTIONS: toc:nil num:nil
 
@@ -7,174 +7,124 @@
 2. Say, for each, which check would have caught it and why it did not.
 3. Say what a login node can and cannot report about a cluster.
 #+end_objectives
-
-Every case in this book is real, and they have been told one at a time,
-where the mechanism they illustrate belonged. Here they are as history
-instead, in the order they were diagnosed, with the parts that do not fit
-a lesson.
-
-The point of reading them together is that the four failed in four
-different ways and every one of them was green somewhere.
-
+Each case in this book is real.
+Each case was presented one at a time.
+The mechanism is illustrated.
+They are shown as a historical sequence.
+They are ordered by diagnosis.
+They include parts that do not serve as lessons.
+Reading them together demonstrates that the four cases failed in four distinct ways.
+Each case was green in some aspect.
 * The module that was right and the tree that was wrong
-
-=NVHPC/25.11-CUDA-12.9.1= declares CUDA 12.9.1, depends on
-=CUDA/12.9.1=, and on two architectures out of four its unversioned
-=math_libs= and =comm_libs= entries pointed into the CUDA 13.0 tree that
-the same =cuda_multi= tarball carries.
-
-A binary linking cuSPARSE through that toolchain got
-=libcusparse.so.12= out of the 13.0 tree, which needs
-=libnvJitLink.so.13=, which is present only under the 13.0
-redistributable and on nobody's runtime path:
-
+=NVHPC/25.11-CUDA-12.9.1= declares CUDA 12.9.1.
+It depends on =CUDA/12.9.1=.
+On two of four architectures its unversioned =math_libs= and =comm_libs= entries point into the CUDA 13.0 tree provided by the same =cuda_multi= tarball.
+A binary linking cuSPARSE through that toolchain obtains =libcusparse.so.12= from the 13.0 tree.
+It requires =libnvJitLink.so.13=.
+=libnvJitLink.so.13= is available only in the 13.0 redistributable.
+=libnvJitLink.so.13= is absent from any runtime path.
 #+begin_src ebtranscript :source "SURF Snellius, GPU node, reported 2026-09, VASP6 6.5.1 on NVHPC-25.11-CUDA-12.9.1-ACC" :caption "The whole user-visible symptom"
 vasp_std: error while loading shared libraries: libnvJitLink.so.13:
 cannot open shared object file: No such file or directory
 #+end_src
+*It was not a version-detection fault, and the fix everyone reaches for first would have changed nothing.* =EBNVHPCCUDAVER= read =12.9= in the generated modulefiles on all four architectures.
+The easyblock resolved the active CUDA version correctly and patched the installer's own =DESIREDCUDA= with it.
+The installer linked the unversioned entries at the newest CUDA in the tarball regardless.
+Reaching for a version-detection parameter would have set a value that was already correct.
 
-Three things about this one outlast the fix.
+*It was one batch, not a partial rebuild.* The four installs are stamped =16:14=, =16:18=, =16:25= and =17:59= on 2026-01-27.
+Same day, same easyconfig, same run.
+Two of them came out one way and two the other.
 
-*It was not a version-detection fault, and the fix everyone reaches for
-first would have changed nothing.* =EBNVHPCCUDAVER= read =12.9= in the generated
-modulefiles on all four architectures. The easyblock had resolved the
-active CUDA version correctly and patched the installer's own
-=DESIREDCUDA= with it. The installer linked the unversioned entries at
-the newest CUDA in the tarball regardless. Reaching for a
-version-detection parameter would have set, more emphatically, a value
-that was already correct.
+*And the split is not the one a first guess would pick.* AMD-ZEN2 and AMD-ZEN4 were correct; AMD-ZEN4-H100 and INTEL-AVX512 were not.
+INTEL-AVX512 has no GPU in it.
+Any theory of the form "the GPU builds got the newer CUDA" is contradicted by the data.
+[[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] gives the table rather than a summary.
 
-*It was one batch, not a partial rebuild.* The four installs are stamped
-=16:14=, =16:18=, =16:25= and =17:59= on 2026-01-27. Same day, same
-easyconfig, same run. Two of them came out one way and two the other.
-
-*And the split is not the one a first guess would pick.* AMD-ZEN2 and AMD-ZEN4
-were correct; AMD-ZEN4-H100 and INTEL-AVX512 were not. INTEL-AVX512 has
-no GPU in it. Any theory of the form "the GPU builds got the newer CUDA"
-is contradicted by the data, which is why
-[[file:05-a-versionsuffix-is-part-of-the-name.org][chapter 5]] gives the
-table rather than a summary.
-
-The fix set the symlinks in =postinstallcmds=, which runs before the
-sanity check, so the check that had been failing could pass honestly.
-
+The fix set the symlinks in =postinstallcmds=.
+It runs before the sanity check.
+The check that had been failing could pass honestly.
 * The login node that lied, twice
-
-This part cost a day.
-
-=/sw/arch= is a per-node-architecture symlink:
-
+The task took one day.
+=/sw/arch= is a symlink for each node architecture.
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10" :caption "What a login node resolves"
 $ readlink -f /sw/arch
 /gpfs/admin/_hpc/sw/arch/AMD-ZEN2
 #+end_src
-
-The login nodes are AMD-ZEN2, one of the two architectures that came out
-correct. So every check from a login node reported a working module,
-while the reporter on a GPU node had a broken one, from the same module
-name. The problem was declared fixed on that basis. It was not.
-
-Then the second mistake, which is subtler and worth spelling out.
-Pointing directly at the H100 tree with an absolute
-=/gpfs/.../AMD-ZEN4-H100/...= path does not rescue the test, because the
-RPATH baked into that binary contains =/sw/arch/...= entries, and those
-resolve against *the node underfoot*. So =ldd= on the H100
-binary, run from a login node, resolves cuSPARSE out of the ZEN2 tree
-and reports zero missing libraries.
-
-A correct-looking =ldd= on the wrong node is not weak evidence. It is
-evidence for a different question.
-
-The rule that came out of it: *anything about library resolution on a
-heterogeneous system has to be measured on the architecture it will run
-on.* A login node is not a stand-in.
-[[file:06-what-installed-means.org][Chapter 6]] states that as a
-caution; [[file:12-eb-stack-updater-and-generator.org][chapter 12]]'s
-claim ladder turns it into a refusal.
-
-* The check that was switched off because it was working
-
-While the toolchain was broken, the VASP easyconfig built on it carried:
-
+Login nodes run AMD‑ZEN2, one of the two correct architectures.
+Every check from a login node reported a working module, while a check on a GPU node reported a broken module with the same name.
+The problem was declared fixed on that basis.
+It was not fixed.
+The second mistake, subtler and worth spelling out, follows.
+Pointing directly at the H100 tree with an absolute =/gpfs/.../AMD-ZEN4-H100/...= path does not rescue the test...= entries, and those resolve against *the node underfoot*.
+=ldd= on the H100 binary, run from a login node, resolves cuSPARSE out of the ZEN2 tree and reports zero missing libraries.
+A correct‑looking =ldd= on the wrong node is not weak evidence.
+It is evidence for a different question.
+The rule that came out of it: *anything about library resolution on a heterogeneous system has to be measured on the architecture it will run on.* A login node is not a stand‑in.
+[[file:06-what-installed-means.org][What "installed" means]] states that as a caution.
+[[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]'s claim ladder turns it into a refusal.
+* The check that was switched off
+The VASP easyconfig built on the broken toolchain carried:
 #+begin_example
 skipsteps = ['sanitycheck']
 #+end_example
-
-The reasoning was that the sanity check reported a failure the package
-could not fix. Each half of that was true. The check was reporting
-=libnvJitLink.so.13=, the defect was in the toolchain module, and no
-change to the VASP easyconfig could have repaired it.
-
-The conclusion was still wrong, for two reasons that are easy to state
-and were not obvious at the time.
-
-Switching the check off did not make the binary start. It moved the
-discovery from a build host to a user, which is
-[[file:06-what-installed-means.org][chapter 6]]'s whole argument.
-
-And the check was carrying information: *the toolchain module is broken*.
-That is a thing to escalate. A failing check on a package
-that cannot be fixed is a report about something else, and deleting the report
-does not make the something else go away.
-
-There was also a misconception in the way, and it is common enough to
-name. On a GPU package the RPATH check looks like it fails on
-=libcuda.so.1=, which lives with the driver and exists only on GPU
-nodes. It does not: EasyBuild exempts that library by default, along
-with =libcuda.so=, =libnvidia-ml.so= and =libnvidia-ml.so.1=. Anything
-else it reports is a real finding.
-
+The reasoning stated that the sanity check reported a failure the package could not fix.
+Each half of that was true.
+The check was reporting =libnvJitLink.so.13=.
+The defect was in the toolchain module.
+No change to the VASP easyconfig could have repaired it.
+The conclusion was still wrong.
+The next two facts are easy to state.
+They were not obvious at the time.
+Switching the check off did not make the binary start.
+It moved the discovery from a build host to a user.
+This is [[file:06-what-installed-means.org][What "installed" means]]'s whole argument.
+The check was carrying information: *the toolchain module is broken*.
+That is a thing to escalate.
+A failing check on a package that cannot be fixed is a report about something else.
+Deleting the report does not make the something else go away.
+There was also a misconception in the way.
+It is common enough to name.
+On a GPU package the RPATH check looks like it fails on =libcuda.so.1=.
+That library lives with the driver and exists only on GPU nodes.
+EasyBuild exempts that library by default.
+EasyBuild also exempts =libcuda.so=, =libnvidia-ml.so= and =libnvidia-ml.so.1=.
+Anything else it reports is a real finding.
 * The parameter that was right about the old source
-
-=start_dir = 'qmcpack'= had been correct for as long as the recipe built
-from a pinned development commit: EasyBuild archives a git checkout under
-the repository's name, so the sources really were one level down.
-
-The bump to the 4.4.0 release changed the source from a checkout to a
-tarball, which unpacks to =qmcpack-4.4.0/= with the sources at the top.
-The checksum changed with it and got attention, because a checksum
-mismatch stops the build and returns the value it computed.
-=start_dir= did not change, and nothing asked it to.
-
-The result is [[file:01-an-easyconfig-is-python.org][chapter 1]]'s
-transcript: the right URL, a verified checksum, =tar xzf= exit 0,
-patching fine, the toolchain and every build dependency loaded, and then
-a path that does not exist. Every check a person would think to run had
-already passed.
-
-Two things this one taught that the others did not.
-
-A dry run cannot catch it. =eb -x= never extracts anything, so a
-=start_dir= that names a directory the archive does not contain looks
-fine right up to the point where a build extracts the archive. The
-verification run before pushing was structurally incapable of finding
-the fault.
-
-And "the flags are identical" was the wrong comparison. It was true, and
-the source block was what had changed, and =start_dir= is a function of
-the source block. Comparing the parts that stayed the same is how to
-miss a parameter whose meaning depends on a part that did not.
-
+=start_dir = 'qmcpack'= remained correct while the recipe built from a pinned development commit.
+The 4.4.0 release bump switched the source from a checkout to a tarball.
+The tarball extracts to =qmcpack-4.4.0/= with the sources at the top level.
+The checksum changed and attracted attention.
+A checksum mismatch aborts the build and reports the computed value.
+=start_dir= stayed unchanged, and no component requested a modification.
+The outcome matches the transcript in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]: correct URL, verified checksum, =tar xzf= exit 0, successful patching, loaded toolchain and all build dependencies, followed by a nonexistent path.
+All expected checks had already succeeded.
+Two lessons emerged that were absent in earlier cases.
+A dry run fails to detect the issue.
+=eb -x= does not extract anything.
+A =start_dir= that specifies a directory absent from the archive appears valid until the build extracts the archive.
+The verification run prior to pushing was unable to locate the fault.
+The claim that "the flags are identical" constituted an incorrect comparison.
+The flags matched.
+The source block had changed.
+=start_dir= depends on the source block.
+Comparing only unchanged parts can overlook a parameter whose meaning relies on a changed component.
 * What the four have in common
-
-Each one was green somewhere. The NVHPC module was correct on two
-architectures and in its own name. The login-node check passed. The VASP
-build with the sanity check disabled succeeded. The QMCPACK bump had a
-verified checksum.
-
-So the useful question is never "did it pass". It is *what did it pass,
-and where*. That is what
-[[file:12-eb-stack-updater-and-generator.org][chapter 12]]'s ladder is
-bookkeeping for, and all four of these are why somebody bothered to write
-it down.
-
+Each item achieved a green status somewhere.
+The NVHPC module was correct on two architectures and in its own name.
+The login-node check passed.
+The VASP build succeeded with the sanity check disabled.
+The QMCPACK bump included a verified checksum.
+The useful question never asks "did it pass".
+The focus is *what did it pass, and where*.
+That is what [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]'s ladder records, and all four items explain why it was documented.
 #+ATTR_EB: :id EB-History-1 :title Which of the four is this
 #+begin_exercise
 A user reports that a module works on the login node and fails in their
 job. You have not yet looked at anything.
 
 1. Name two of the four cases above that could produce that report, and
-   say what distinguishes them.
+ say what distinguishes them.
 2. What is the first command you run, and on which machine?
 3. Your check on the login node comes back clean. What have you learned?
 
@@ -201,11 +151,11 @@ exactly the inference that cost a day the first time.
 
 #+begin_keypoints
 - Every one of the four was green somewhere, so the question is never "did
-  it pass" but what it passed and where.
+ it pass" but what it passed and where.
 - A symlink such as =/sw/arch= resolves against the node underfoot
-  on, which makes an =ldd= on a login node evidence about the login node.
+ on, which makes an =ldd= on a login node evidence about the login node.
 - A failing check on a package that cannot be fixed is a report about something
-  else; deleting the report does not fix the something else.
+ else; deleting the report does not fix the something else.
 - A parameter whose meaning depends on the shape of the source has to be
-  re-read whenever the source changes.
+ re-read whenever the source changes.
 #+end_keypoints

@@ -1,99 +1,80 @@
-#+TITLE: Chapter 38. Four EasyBuild 5 surfaces the earlier chapters skipped
+#+TITLE: Four EasyBuild 5 surfaces the earlier chapters skipped
 #+OPTIONS: toc:nil num:nil
 
 #+begin_questions
 - What does an EasyBuild install lock prevent, and how is it not a
-  Resolvo lock?
+ Resolvo lock?
 - When does =--bwrap= move bytes, and when does the namespace fail?
 - What does a =Dataset= easyconfig install that a software
-  easyconfig does not?
+ easyconfig does not?
 #+end_questions
 
 #+begin_objectives
 1. Name the directory EasyBuild uses for install locks, and the
-   flag that ignores them.
+ flag that ignores them.
 2. Say what =EBPYTHONPREFIXES= is for, and what a 5.3 entry point
-   changes about a Python module.
+ changes about a Python module.
 3. Install a dataset as a module and depend on it from a software
-   easyconfig, naming the two path variables that keep data off
-   the software prefix.
+ easyconfig, naming the two path variables that keep data off
+ the software prefix.
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:12-eb-stack-updater-and-generator.org][Chapter 12]]:
-  Resolvo locks. This chapter's locks are files on disk during
-  =eb=.
-- [[file:18-language-ecosystems.org][Chapter 18]]: Python
-  extensions. =EBPYTHONPREFIXES= is how a second prefix is
-  visible.
-- [[file:14-the-isolation-policy.org][Chapter 14]]: what a build
-  is allowed to see. =--bwrap= is a later isolation.
+- [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]:
+ Resolvo locks. This chapter's locks are files on disk during
+ =eb=.
+- [[file:18-language-ecosystems.org][Languages that bring their own package manager]]: Python
+ extensions. =EBPYTHONPREFIXES= is how a second prefix is
+ visible.
+- [[file:14-the-isolation-policy.org][What a build is allowed to see]]: what a build
+ is allowed to see. =--bwrap= is a later isolation.
 #+end_prerequisites
-
-Four EasyBuild 5 surfaces belong next to the machinery in chapters
-13 to 19 and were not given a page. They are not eb-stack. They
-are why a campaign finding of class =install= or =runtime= is
-sometimes the framework, not the recipe.
-
+Four EasyBuild 5 surfaces appear beside the machinery in chapters 13-19.
+They lack a page.
+They are not part of eb-stack.
+They explain a campaign finding of class =install= or =runtime=.
+It can represent the framework rather than the recipe.
 * Install locks are not solver locks
-
-Two =eb= processes installing the same easyconfig into the same
-prefix will corrupt the tree. EasyBuild writes a lock file for
-the duration of an installation. =--locks-dir= sets the
-directory; the default is a =.locks= subdirectory of the software
-installation prefix, and the documentation says it should be on a
-shared filesystem. =--ignore-locks= is the escape that two
-operators will reach for and that a site should not leave on.
-
-That lock is a mutex. It names no versions and solves no SAT
-instance. Chapter 12's =locks/default.lock.json= is a Resolvo
-assignment. Mixing the words in a status report is how a
-"lock wait" gets escalated as a solver bug.
-
-=--wait-on-lock-*= controls whether a second process waits or
-errors. The filetools API is =create_lock= / =check_lock= /
-=remove_lock=. A stale lock after a killed =eb= is an operator
-problem on the shared filesystem, not a recipe problem.
-
+Two =eb= processes installing the same easyconfig into the same prefix corrupt the tree.
+EasyBuild writes a lock file for the duration of an installation.
+=--locks-dir= sets the directory.
+The default is a =.locks= subdirectory of the software installation prefix.
+Documentation says the lock directory should be on a shared filesystem.
+=--ignore-locks= is the escape that two operators will reach for.
+A site should not leave =--ignore-locks= on.
+That lock is a mutex.
+It names no versions.
+It solves no SAT instance. eb-stack ports a recipe and bumps one's =locks/default.lock.json= as a Resolvo assignment.
+Mixing the words in a status report escalates a "lock wait" as a solver bug.
+=--wait-on-lock-*= controls whether a second process waits or errors.
+The filetools API is =create_lock=, =check_lock=, =remove_lock=.
+A stale lock after a killed =eb= is an operator problem on the shared filesystem.
+It is not a recipe problem.
 * --bwrap installs to a temporary namespace
-
-=--bwrap= (EasyBuild 5.3, improved in 5.4.0 for read-only
-filesystems and =--subdir-{modules,software}=) builds and
-installs inside a bubblewrap namespace, then moves the result to
-the final prefix. =--bwrap-installpath= is the temporary
-location.
-
-The point is a prefix that other users must not observe
-half-written, and a CernVM-FS or other read-only view that cannot
-be written in place. 5.4.0's overlayfs work is why EESSI-style
-writable-over-read-only installs can use it.
-
-RPATH wrappers still fail if =/tmp= is mounted =noexec=
-(EasyBuild #4910). A =--bwrap= finding that looks like a missing
-linker is often that mount option. Chapter 14's isolation policy
-is the parent; this flag is one implementation.
-
+=--bwrap= (EasyBuild 5.3, improved in 5.4.0 for read‑only filesystems and =--subdir-{modules,software}=) builds and installs within a bubblewrap namespace.
+=--bwrap= then transfers the result to the final prefix.
+=--bwrap-installpath= is the temporary location.
+The goal is a prefix that other users must not see while it is partially written.
+The goal includes a CernVM-FS or similar read‑only view that cannot be written in place.
+The overlayfs work in 5.4.0 enables EESSI‑style writable‑over‑read‑only installations to use this approach.
+RPATH wrappers still fail when =/tmp= is mounted with =noexec= (EasyBuild #4910).
+A =--bwrap= detection that appears as a missing linker is frequently caused by that mount option.
+The isolation policy defines what a build is allowed to see.
+This flag represents one implementation.
 * EBPYTHONPREFIXES and entry points
-
-A Python installation in EasyBuild can see packages in another
-prefix through =EBPYTHONPREFIXES=. That is how a user or site
-prefix on top of EESSI (chapter 11, chapter 32) contributes
-=.so= and =.py= files without rebuilding CPython. It is also how
-a module that only *wraps* a site wheel becomes loadable.
-
-EasyBuild 5.3 added entry-point handling so a console script
-installed into an extension prefix is on =PATH= when the
-extension's module is loaded. A campaign that verifies
-=python -c 'import pkg'= and never runs the console script will
-not see a missing entry point. =binary_verified= in chapter 36
-has to name the command the user will type.
-
+A Python installation in EasyBuild can see packages in another prefix via =EBPYTHONPREFIXES=.
+A user or site prefix on top of EESSI (EESSI, somebody else's stack, A site stack next to EESSI, not inside it) can contribute =.so= and =.py= files without rebuilding CPython.
+A module that only *wraps* a site wheel can become loadable.
+EasyBuild 5.3 added entry-point handling.
+A console script installed into an extension prefix appears on =PATH= when the extension's module is loaded.
+A campaign verifies =python -c 'import pkg'=.
+A campaign that never runs the console script will not encounter a missing entry point.
+=binary_verified= in a campaign finding is a typed failure.
+A log must name the command the user will type.
 * Dataset is a module whose payload is data
-
-EasyBuild 5.1.0 added datasets as modules. Sam Moors' EUM'24
-talk is the origin. The easyconfig uses =data_sources= rather
-than (or in addition to) =sources=:
-
+Datasets are added as modules in EasyBuild 5.1.0.
+The origin is Sam Moors' EUM'24 talk.
+The easyconfig uses =data_sources= instead of, or in addition to, =sources=.
 #+begin_example
 easyblock = 'Dataset'
 
@@ -105,62 +86,57 @@ source_urls = ['https://example.com/data/']
 data_sources = ['example-data-%(version)s.tar.gz']
 checksums = ['d3adb33f...']
 #+end_example
-
-The generic =Dataset= easyblock derives from =Binary=. There is
-no compile. =install_step= extracts into the data prefix.
-=extract_sources= defaults true. =cleanup_data_sources= deletes
-the fetched archives after install. =object_storage_ignore_dirs=
-(5.4.0) lists directories to keep out of object storage; =.=
-means the whole installdir.
-
-Two path variables keep data off the software prefix:
-
+The =Dataset= easyblock inherits from =Binary=.
+No compile step runs.
+The =install_step= extracts into the data prefix.
+The default value of =extract_sources= is true.
+=cleanup_data_sources= deletes fetched archives after install.
+=object_storage_ignore_dirs= (5.4.0) lists directories to keep out of object storage.
+=.= means the whole installdir.
+Two path variables keep data off the software prefix.
 #+begin_example
 export EASYBUILD_SOURCEPATH_DATA=/sources/data
 export EASYBUILD_INSTALLPATH_DATA=/data
 eb RFdiffusion-models-1.1.0.eb
 module load RFdiffusion-models/1.1.0
 #+end_example
-
-If =installpath-data= is unset, =installpath= plus =subdir-data=
-(default =data=) is used. The resulting module can appear in a
-software easyconfig's =dependencies= list. A GROMACS that needs a
-weight file depends on the dataset module the same way it depends
-on FFTW. The robot resolves it. The payload is bytes, not a
-binary.
-
+If =installpath-data= is unset, =installpath= combined with =subdir-data= (default =data=) is used.
+That module may appear in a software easyconfig's =dependencies= list.
+A GROMACS that requires a weight file depends on the dataset module in the same way it depends on FFTW.
+The robot resolves the dependency.
+The payload consists of bytes, not a binary.
 #+ATTR_EB: :id EB-Five-1 :title Which lock, which prefix
 #+begin_exercise
 Four incidents. Name the EasyBuild 5 surface, and the first check.
 
 1. Two =eb= processes on a shared prefix, same easyconfig, one
-   dies with a lock error, the other is still in =install_step=.
+ dies with a lock error, the other is still in =install_step=.
 2. =--bwrap= on a node where =/tmp= is =noexec=; the log talks
-   about RPATH wrappers.
+ about RPATH wrappers.
 3. A user prefix installed with =EESSI-extend=; =import numpy=
-   works from the EESSI CPython; the =f2py= console script is
-   not on =PATH=.
+ works from the EESSI CPython; the =f2py= console script is
+ not on =PATH=.
 4. A two-gigabyte weight tarball landed under
-   =.../software/linux/x86_64/amd/zen3/software/= next to GROMACS.
+ =.../software/linux/x86_64/amd/zen3/software/= next to GROMACS.
 
 #+begin_solution
 1. Install locks. Check =--locks-dir= (default =.locks= under
-   the software prefix) and whether the surviving process holds
-   the mutex. Not a Resolvo lock. Do not pass =--ignore-locks=
-   to "fix" it.
+ the software prefix) and whether the surviving process holds
+ the mutex. Not a Resolvo lock. Do not pass =--ignore-locks=
+ to "fix" it.
 
 2. =--bwrap= plus #4910. Check the =/tmp= mount options. The
-   wrapper binaries need =exec=.
+ wrapper binaries need =exec=.
 
 3. Entry points / =EBPYTHONPREFIXES=. =import= finding the
-   package does not put a console script on =PATH=. Verify the
-   command the user types, not only the import.
+ package does not put a console script on =PATH=. Verify the
+ command the user types, not only the import.
 
 4. A =Dataset= easyconfig was not used, or
-   =EASYBUILD_INSTALLPATH_DATA= was unset and the default
-   =subdir-data= was not what the site expected. Weights are
-   data. They get a data prefix and a module, not a software
-   prefix.
+ =EASYBUILD_INSTALLPATH_DATA= was unset and the default
+ =subdir-data= was not what the site expected. Weights are
+ data. They get a data prefix and a module, not a software
+ prefix.
 #+end_solution
 #+end_exercise
 
@@ -169,27 +145,27 @@ Four incidents. Name the EasyBuild 5 surface, and the first check.
 EasyBuild docs, last update 2026-08-09:
 
 - [[https://docs.easybuild.io/version-specific/eb-help/][=--bwrap=,
-  =--locks-dir=, =--ignore-locks=]]
+ =--locks-dir=, =--ignore-locks=]]
 - [[https://docs.easybuild.io/datasets/][Datasets]] (5.1.0,
-  =data_sources=, =EASYBUILD_SOURCEPATH_DATA=,
-  =EASYBUILD_INSTALLPATH_DATA=)
+ =data_sources=, =EASYBUILD_SOURCEPATH_DATA=,
+ =EASYBUILD_INSTALLPATH_DATA=)
 - [[https://docs.easybuild.io/version-specific/generic-easyblocks/][Dataset]]
-  easyblock (=object_storage_ignore_dirs=, no compile)
+ easyblock (=object_storage_ignore_dirs=, no compile)
 - EasyBuild 5.4.0 notes: =--bwrap= on overlayfs / read-only
-  filesystems (#5173)
+ filesystems (#5173)
 - EasyBuild #4910: RPATH wrappers and =noexec= =/tmp=
 #+end_detail
 
 #+begin_keypoints
 - An install lock is a mutex on a shared prefix. A Resolvo lock
-  is an assignment of versions. They share a word and nothing
-  else.
+ is an assignment of versions. They share a word and nothing
+ else.
 - =--bwrap= installs in a namespace and then moves. =/tmp=
-  =noexec= breaks the RPATH wrappers.
+ =noexec= breaks the RPATH wrappers.
 - =EBPYTHONPREFIXES= makes a second Python prefix visible.
-  Entry points are a 5.3 addition; an import test does not cover
-  them.
+ Entry points are a 5.3 addition; an import test does not cover
+ them.
 - A =Dataset= module is data. =EASYBUILD_INSTALLPATH_DATA= keeps
-  it off the software prefix. Software depends on it like any
-  other module.
+ it off the software prefix. Software depends on it like any
+ other module.
 #+end_keypoints

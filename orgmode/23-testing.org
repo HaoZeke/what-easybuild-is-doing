@@ -1,122 +1,92 @@
-#+TITLE: Chapter 23. Testing, and the four things it can mean
+#+TITLE: Testing, and the four things it can mean
 
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Tell apart the four things called "testing" in an EasyBuild workflow,
-   and say which one catches which failure.
+ and say which one catches which failure.
 2. Run a package's own test suite from an easyconfig, and decide what to
-   do when it fails.
+ do when it fails.
 3. Produce a test report, and say why upstream requires one from a human.
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:06-what-installed-means.org][Chapter 6]], for the sanity check.
-- [[file:13-how-a-build-executes.org][Chapter 13]], for where the =test= and
-  =testcases= steps run.
+- [[file:06-what-installed-means.org][What "installed" means]], for the sanity check.
+- [[file:13-how-a-build-executes.org][How a build executes]], for where the =test= and
+ =testcases= steps run.
 #+end_prerequisites
-
-"Did you test it" is four different questions, and answering the wrong
-one is how a broken module ships. In order of when they happen:
-
-1. The package's own test suite, during the build. The =test= step.
-2. EasyBuild's sanity check, after the install. Chapter 6.
-3. A test report, uploaded, saying a build worked on a real machine.
-4. A portable benchmark or correctness run, later, on hardware that matters
-   about.
-
-None of them subsumes another. A green test suite says the code computes
-what it computes; the sanity check says the installation is usable at
-all; a test report says somebody's machine really did this; a portable
-test says it still works on the node your users are on.
-
+Did you test it comprises four distinct questions.
+Answering the incorrect one leads to a broken module being shipped.
+They occur in the following order:
+1. The package's own test suite runs during the build.
+ This is the =test= step.
+2. EasyBuild's sanity check runs after the install.
+ Refer to What "installed" means.
+3. An uploaded test report states that a build succeeded on a real machine. 
+4. A portable benchmark or correctness run is performed later on relevant hardware. 
+None of these steps subsumes another.
+A green test suite indicates that the code computes as intended.
+The sanity check indicates that the installation is usable.
+A test report indicates that a user's machine successfully executed the build.
+A portable test indicates that the software still works on the node used by users.
 * The package's own tests
-
-Two parameters, and they are not the same one.
-
-=runtest= drives the =test= step, which runs *before* install. On the
-base =EasyBlock= it is a whole command. Under =ConfigureMake=, which is
-what most easyconfigs use, it is appended to =make=, so
-=runtest = 'test'= means =make test=, and the composed command is
-=pretestopts + test_cmd + runtest + testopts= with =test_cmd= defaulting
-to =make=. That difference catches people: the same value means a command
-in one easyblock and an argument in another.
-
-=tests= is a different parameter and a different step. It is a list of
-scripts run in the =testcases= step, at the very end, after the module
-exists, and a script fails by returning non-zero.
-
-Then the three ways a failing test step can go.
-
+Two parameters exist and they are not the same.
+=runtest= drives the =test= step, which runs *before* install.
+On the base =EasyBlock= it is a whole command.
+Under =ConfigureMake=, which is what most easyconfigs use, it is appended to =make=, so =runtest = 'test'= means =make test=, and the composed command is =pretestopts + test_cmd + runtest + testopts= with =test_cmd= defaulting to =make=.
+That difference catches people: the same value means a command in one easyblock and an argument in another.
+=tests= is a different parameter and a different step.
+It is a list of scripts run in the =testcases= step, at the very end, after the module exists, and a script fails by returning non-zero.
+Three ways exist for a failing test step to proceed.
 =--ignore-test-failure= lets the build continue and records the failure.
-The framework wraps the test step precisely so this is possible: a
-failure is routed to =report_test_failure= rather than aborting.
-
+The framework wraps the test step precisely so this is possible: a failure is routed to =report_test_failure= rather than aborting.
 =--skip-test-step= does not run it at all.
-
-=skipsteps = ['test']= in the easyconfig does the same thing
-permanently, for everyone, and that is the one to think twice about.
-[[file:27-four-things-that-actually-happened.org][Chapter 27]]'s third
-case is a =skipsteps= that was defensible and still wrong: the check was
-reporting a real defect somewhere else, and switching it off moved the
-discovery to a user.
-
-So: *a skipped test needs a comment saying why, and
-an ignored test needs somebody to have read the failure.* Both are
-legitimate. Neither is free.
-
+=skipsteps = ['test']= in the easyconfig does the same thing permanently, for everyone, and that is the one to think twice about.
+[[file:27-four-things-that-actually-happened.org][Four things that actually happened]]'s third case is a =skipsteps= that was defensible and still wrong: the check was reporting a real defect somewhere else, and switching it off moved the discovery to a user.
+*a skipped test needs a comment saying why.* *an ignored test needs somebody to have read the failure.* Both are legitimate.
 * The sanity check is a test
-
-It is worth restating here because it is the test that runs on every
-build whether one is written or not.
-=sanity_check_paths= asserts files and directories exist;
-=sanity_check_commands= runs commands, which means the check *executes
-the software*. That is [[file:06-what-installed-means.org][chapter 6]],
-and the only thing to add is the interaction with the options above:
-=--skip-sanity-check= exists, and under =--skip= the sanity check is
-deliberately *not* skipped, because =--skip= is for resuming a partial
-install and resuming past the check would defeat it.
-
-One misconception worth naming, because it makes people disable the
-RPATH check on GPU packages. =libcuda.so.1= lives with the driver and
-exists only on a node with a GPU. EasyBuild knows: it exempts
-=libcuda.so=, =libcuda.so.1=, =libnvidia-ml.so= and =libnvidia-ml.so.1=
-by default. Anything else the check reports is a real finding.
-
+Restating this is important.
+The =sanity_check_paths= assert that files and directories exist.
+The =sanity_check_commands= runs commands.
+The check *executes the software*.
+That is [[file:06-what-installed-means.org][What "installed" means]].
+The only addition is the interaction with the options above.
+The =--skip-sanity-check= exists.
+Under =--skip= the sanity check is deliberately *not* skipped.
+One misconception is that it leads people to disable the RPATH check on GPU packages.
+=libcuda.so.1= lives with the driver.
+=libcuda.so.1= exists only on a node that has a GPU.
+EasyBuild knows that it exempts =libcuda.so=, =libcuda.so.1=, =libnvidia-ml.so=, and =libnvidia-ml.so.1= by default.
+Anything else reported by the check is a real finding.
 * A test report
-
-Upstream's requirements for merging an easyconfig are worth reading as a
-statement about what CI can and cannot do:
-
-- the pull request targets =develop=;
-- CI is green;
-- *a successful test report has been submitted*;
-- a maintainer has approved it;
-- and *the author does not merge their own*.
-
-The third exists because of a limit stated plainly in EasyBuild's own
-documentation: the unit tests "do **not** test the build and
-installation process of particular supported software packages", and for
-easyconfig contributions CI "does **not** include actually building and
-installing software". Upstream CI parses every easyconfig, style-checks
-it, verifies checksums are present, checks that an easyconfig exists for
-every dependency, and checks that no dependency graph has a version
-conflict. It does not build the contributed package.
-
-So the evidence that a build works is a human's, and this is how that
-produce it:
-
+Upstream's requirements for merging an easyconfig describe what CI can and cannot do.
+The pull request targets =develop=.
+CI is green.
+*a successful test report has been submitted*.
+A maintainer has approved it.
+The author does not merge their own.
+The third condition exists.
+Upstream CI parses every easyconfig.
+Upstream CI style‑checks every easyconfig.
+Upstream CI verifies checksums are present.
+Upstream CI checks that an easyconfig exists for every dependency.
+Upstream CI checks that no dependency graph has a version conflict.
+It does not build the contributed package.
+The evidence that a build works is provided by a human.
+This is how it is produced.
 #+begin_example
 eb --from-pr <PR#> --upload-test-report --force --robot
 #+end_example
+The =--upload-test-report= option posts the report as a GitHub gist.
+It requires a token with =gist= permission.
+It adds a summary comment to the pull request.
 
-=--upload-test-report= posts the report as a GitHub gist, which is why
-the token it needs has =gist= permission, and comments on the pull
-request with a summary. =--dump-test-report= writes it locally instead.
-Both imply =--keep-going=, so a run producing a report does not stop at
-the first failure: a report covering nine of ten easyconfigs is more
-useful than a report about one.
+The =--dump-test-report= option writes the report locally.
 
+Both options imply =--keep-going=.
+A run that generates a report continues past the first failure.
+
+A report that covers nine of ten easyconfigs is more useful than one that covers only one.
 #+ATTR_EB: :id test-report-contents :title What a test report contains :kind reference
 #+begin_detail
 Every report carries:
@@ -139,78 +109,62 @@ excluded. The documented value to start from is
 #+begin_example
 export EASYBUILD_TEST_REPORT_ENV_FILTER='^SSH|USER|HOSTNAME|UID|.*COOKIE.*'
 #+end_example
-
-A report is written whether or not one was requested, next to the
-installation log as =<log basename>_test_report.md=. Read one before
-upload your first, because "the full environment of the session" means
-what it says.
-#+end_detail
-
-The contents (see [[dive:test-report-contents]]) are also the reason a
-test report is good evidence: it says which machine, which
-configuration, and which modules, so a reviewer can tell whether your
-success is relevant to their question.
-
+A report is generated regardless of request.
+It is placed beside the installation log as =<log basename>_test_report.md=.
+Read a report before uploading the first one. #+end_detail The contents (see [[dive:test-report-contents]]) enumerate the machine, the configuration, and the modules.
+A test report is evidence.
+A reviewer can tell whether the success applies.
 * Testing on hardware the site does not have
-
-The fourth kind. A build that works on the machine that built it tells
-nothing about the machine the users are on, which is
-[[file:27-four-things-that-actually-happened.org][chapter 27]]'s
-login-node lesson in general form.
-
-EESSI's answer is a portable test suite, =EESSI/test-suite=, written with
-ReFrame, and its structure is the part worth borrowing whether or not the
-use EESSI: tests are mapped to software in
-=tests/eessi_test_mapping/software_to_tests.yml=, so adding software
-declares which tests should now run rather than leaving somebody to
-remember. Their build bot runs them through =bot/test.sh= on the
-architecture the build targeted.
-
-The generalisable rule is small and it is the one this book keeps
-arriving at: *a test has a location, and a result without its location is
-not a result.* A green test on a login node and a green test on the GPU
-node your user submitted to are two different facts, and only one of them
-answers the ticket.
-
+The fourth kind.
+A build that works on the machine that built it tells nothing about the machine the users are on, which is [[file:27-four-things-that-actually-happened.org][Four things that actually happened]]'s login-node lesson in general form.
+EESSI's answer is a portable test suite, =EESSI/test-suite=, written with ReFrame.
+Tests are mapped to software in =tests/eessi_test_mapping/software_to_tests.yml=.
+Adding software declares which tests should now run rather than leaving somebody to remember.
+The build bot runs them through =bot/test.sh= on the architecture the build targeted.
+The rule is small: *a test has a location, and a result without its location is not a result.* A green test on a login node and a green test on the GPU node a user submitted to are two different facts, and only one of them answers the ticket.
+Part 2 of this book is that kind in full: [[file:39-a-reframe-test-is-a-class.org][chapters 39 to 47]].
+A test class, the six-stage pipeline, the configuration file, a performance number, then the portable suite and a failed run.
+CSCS teaches it as a webinar separate from getting started; EESSI walks a job script, a site-specific test, then a mixin.
+The mapping file above is [[file:46-software-maps-to-tests.org][Software maps to tests]].
 #+ATTR_EB: :id EB-Testing-1 :title Four reports, four responses
 #+begin_exercise
 1. A package's =make test= fails on two of 340 tests, in the
-   floating-point comparison of an iterative solver.
+ floating-point comparison of an iterative solver.
 2. The sanity check fails on =lib/libthing.so=, and the install
-   directory contains =lib64/libthing.so=.
+ directory contains =lib64/libthing.so=.
 3. A colleague's pull request has green CI and no test report. They ask
-   you to merge it.
+ you to merge it.
 4. Your build passes everything on the build host. A user reports
-   =Illegal instruction= on an older node.
+ =Illegal instruction= on an older node.
 
 For each: which of the four kinds of testing is involved, and what do you
 do?
 
 #+begin_solution
 1. The package's own test suite. Read the two failures before deciding
-   anything: an iterative solver disagreeing in the last digits across
-   compilers is common and often acceptable, and a wrong answer is not.
-   If they are tolerable, =--ignore-test-failure= for this build and a
-   comment in the easyconfig saying which two and why. Not
-   =skipsteps=, which would hide the other 338.
+ anything: an iterative solver disagreeing in the last digits across
+ compilers is common and often acceptable, and a wrong answer is not.
+ If they are tolerable, =--ignore-test-failure= for this build and a
+ comment in the easyconfig saying which two and why. Not
+ =skipsteps=, which would hide the other 338.
 
 2. The sanity check, and it is correct. The library is in =lib64=, so
-   either the check should say =lib64= or the build should be told to use
-   =lib=. Prefer the second where the build system supports it, because a
-   stack where half the packages use =lib= and half =lib64= is a stack
-   where every consumer easyconfig has to know which.
+ either the check should say =lib64= or the build should be told to use
+ =lib=. Prefer the second where the build system supports it
+ stack where half the packages use =lib= and half =lib64= is a stack
+ where every consumer easyconfig has to know which.
 
 3. Neither of you can merge it: upstream requires a test report and
-   forbids the author merging. What you *can* do is produce the report,
-   with =eb --from-pr <PR#> --upload-test-report --force --robot=, which
-   is the useful half of a review anyway. Then a maintainer merges.
+ forbids the author merging. What you *can* do is produce the report,
+ with =eb --from-pr <PR#> --upload-test-report --force --robot=, which
+ is the useful half of a review anyway. Then a maintainer merges.
 
 4. The fourth kind, and no amount of the first three would have caught
-   it. The binary was compiled for the build host's microarchitecture, so
-   this is [[file:16-what-a-toolchain-injects.org][chapter 16]]'s
-   =optarch=, and the fix is at the site level: build per architecture,
-   or set a baseline every node can run. Testing on the build host was
-   the mistake, not the build.
+ it. The binary was compiled for the build host's microarchitecture, so
+ this is [[file:16-what-a-toolchain-injects.org][What a toolchain injects]]'s
+ =optarch=, and the fix is at the site level: build per architecture,
+ or set a baseline every node can run. Testing on the build host was
+ the mistake, not the build.
 #+end_solution
 #+end_exercise
 
@@ -237,14 +191,14 @@ file it keys tests to software with.
 
 #+begin_keypoints
 - Four different things are called testing: the package's own suite, the
-  sanity check, a test report, and a portable run on hardware that matters
-  about. None of them subsumes another.
+ sanity check, a test report, and a portable run on hardware that matters
+ about. None of them subsumes another.
 - =runtest= is a whole command on the base class and an argument to =make=
-  under =ConfigureMake=.
+ under =ConfigureMake=.
 - =--ignore-test-failure= records a failure, =--skip-test-step= avoids it,
-  and =skipsteps= removes it for everyone.
+ and =skipsteps= removes it for everyone.
 - The RPATH check already exempts =libcuda.so.1= and the other driver
-  libraries, so anything else it reports is real.
+ libraries, so anything else it reports is real.
 - Upstream CI never builds an easyconfig, which is why the evidence is a
-  human's test report and why an author cannot merge their own.
+ human's test report and why an author cannot merge their own.
 #+end_keypoints

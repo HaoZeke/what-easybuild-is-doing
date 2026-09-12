@@ -1,17 +1,16 @@
-#+TITLE: Chapter 8. One easyconfig, many installs
+#+TITLE: One easyconfig, many installs
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Say what =exts_list= installs, and which earlier chapters then apply
-   per entry.
+ per entry.
 2. Say what =%(name)s= means inside an extension's options, and what it
-   does not.
+ does not.
 3. Read a failure inside a bundle back to the entry that caused it.
 #+end_objectives
-
-Every easyconfig so far installed one thing. Here is the shape that
-installs hundreds, and most of a real software stack is made of it:
-
+Every easyconfig up to now installs one component.
+The following template installs hundreds of components.
+It forms the majority of a real software stack.
 #+begin_src easyconfig :widget parse
 easyblock = 'Bundle'
 
@@ -22,56 +21,49 @@ versionsuffix = '-R-%(rver)s'
 toolchain = {'name': 'foss', 'version': '2025a'}
 
 dependencies = [
-    ('R', '4.4.2'),
+ ('R', '4.4.2'),
 ]
 
 exts_defaultclass = 'RPackage'
 exts_filter = ("R -q --no-save", "library(%(ext_name)s)")
 
 exts_default_options = {
-    'source_urls': ['https://cran.r-project.org/src/contrib/'],
-    'source_tmpl': '%(name)s_%(version)s.tar.gz',
+ 'source_urls': ['https://cran.r-project.org/src/contrib/'],
+ 'source_tmpl': '%(name)s_%(version)s.tar.gz',
 }
 
 exts_list = [
-    ('directlabels', '2024.1.21', {
-        'checksums': ['9b2e780410bc7812fe155afba9181653293ca657b0b10e1618242dad4d619775'],
-    }),
-    ('latex2exp', '0.9.6', {
-        'checksums': ['fc03bfa663231b60e1edace7b3001a7eb395b4ca468c6a983673845ddd63cb8a'],
-    }),
+ ('directlabels', '2024.1.21', {
+ 'checksums': ['9b2e780410bc7812fe155afba9181653293ca657b0b10e1618242dad4d619775'],
+ }),
+ ('latex2exp', '0.9.6', {
+ 'checksums': ['fc03bfa663231b60e1edace7b3001a7eb395b4ca468c6a983673845ddd63cb8a'],
+ }),
 ]
 #+end_src
-
-Two extensions here, and a real one of these carries two hundred. Each
-entry is a separate download, a separate build, and a separate check.
-The module at the end is one module.
-
-* The [[file:01-an-easyconfig-is-python.org][chapter 1]] rule inverts here
-
-Start with =easyblock = 'Bundle'=. Chapter 1 said a missing =easyblock=
-line claims a software-specific easyblock exists, and that naming a
-generic one is the only way to get it. This easyconfig names one.
-
-Then look at =exts_defaultclass=. That is the easyblock for the
-extensions, and it is a default: an entry in =exts_list= can override
-it with its own =easyblock= key.
-
-Chapter 1 also said EasyBuild does not guess, and that the two
-parameters which could soften that rule both default to true. There
-was one exception, named and then set aside:
-
+Two extensions are present here.
+A genuine one of them contains two hundred.
+Each entry involves its own download, its own build, and its own check.
+The final module consists of a single module.
+* The [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] rule inverts here
+=easyblock = 'Bundle'= An easyconfig is Python states that a missing =easyblock= line claims a software-specific easyblock exists.
+Naming a generic one is the only way to obtain it.
+This easyconfig names one.
+Then look at =exts_defaultclass=.
+That is the easyblock for the extensions.
+It is a default.
+An entry in =exts_list= can override it with its own =easyblock= key.
+An easyconfig is Python also states that EasyBuild does not guess.
+The two parameters which could soften that rule both default to true.
+There was one exception, named and then set aside:
 #+begin_quote
 The one caller that does pass false is the *extensions* machinery,
 where falling through to a generic extension handler is the right
 behaviour.
 #+end_quote
-
-The extensions machinery is that caller. Extensions get a default
-because they have one, declared right there in =exts_defaultclass=.
-The strictness in chapter 1 exists because a top-level package has no
-equivalent, and an extension does.
-
+The extensions machinery acts as the caller.
+Extensions receive a default.
+The strictness described in An easyconfig is Python arises.
 * Templates rebind inside an entry
 
 Look at =source_tmpl= in =exts_default_options=:
@@ -79,26 +71,17 @@ Look at =source_tmpl= in =exts_default_options=:
 #+begin_example
 'source_tmpl': '%(name)s_%(version)s.tar.gz'
 #+end_example
-
-=%(name)s= here is not =ExampleRSet=, and =%(version)s= is not =1.0=.
-Inside an extension, those templates resolve to the extension's own
-name and version. That one line becomes
-=directlabels_2024.1.21.tar.gz= for the first entry, and
-=latex2exp_0.9.6.tar.gz= for the second.
-
-That rebinding is the reason =exts_default_options= is useful at all.
-One =source_urls=, one =source_tmpl=, two hundred extensions, and no
-repetition, because the templates are evaluated per entry.
-
-It is also a reliable source of confusion, because the two scopes use
-the same spelling. =%(version)s= inside an extension option will not
-reach the *bundle's* version.
-
-Note that =%(ext_name)s= in =exts_filter= is a third thing again, and
-spelled differently on purpose. It exists because the filter is a
-template evaluated once per extension, from the bundle's scope rather
-than the extension's.
-
+=%(name)s= is not =ExampleRSet=.
+=%(version)s= is not =1.0=.
+Within an extension, those templates resolve to that extension's own name and version.
+The line becomes =directlabels_2024.1.21.tar.gz= for the first entry.
+The line becomes =latex2exp_0.9.6.tar.gz= for the second.
+That rebinding makes =exts_default_options= useful.
+A single =source_urls= and a single =source_tmpl= apply to two hundred extensions without repetition.
+Both scopes share the same spelling, causing confusion.
+=%(version)s= inside an extension option does not reach the *bundle's* version.
+=%(ext_name)s= in =exts_filter= is a distinct third element, intentionally spelled differently.
+This occurs.
 #+ATTR_EB: :id EB-Extensions-1 :title Which name is this
 #+begin_exercise
 A bundle is named =ExampleRSet=, version =1.0=, and its
@@ -110,10 +93,10 @@ Its =exts_list= has an entry for =latex2exp= at =0.9.6=.
 
 1. What filename does that entry download?
 2. A colleague asks for the bundle's own version in an extension's option
-   and writes =%(version)s= there. What do they get?
+ and writes =%(version)s= there. What do they get?
 3. They then try =%(ext_version)s= for the extension's version in the
-   bundle's own =versionsuffix=. Why is that a different kind of
-   question?
+ bundle's own =versionsuffix=. Why is that a different kind of
+ question?
 
 #+begin_solution
 =latex2exp_0.9.6.tar.gz=. Inside an entry, those templates bind to the
@@ -124,7 +107,7 @@ They get =0.9.6=, the extension's version, not =1.0=. The rebinding is
 not optional and there is no template inside an entry that reaches back
 out to the bundle. If they need =1.0= there, they have to write it.
 
-The third is different because it asks the bundle to know something about
+The third is different
 one of its extensions, and the bundle is evaluated before any of them.
 =%(ext_name)s= exists for =exts_filter=, which is a template the bundle
 expands once per extension at check time; a =versionsuffix= is resolved
@@ -133,68 +116,40 @@ long before that and has no extension in scope to ask about.
 #+end_exercise
 
 * Chapters 6 and 7 now apply once per extension
-
-=exts_filter= is [[file:06-what-installed-means.org][chapter 6]]'s sanity check, per extension, and it has
-an unusual shape:
-
+The =exts_filter= function is the sanity check for each extension referenced in [[file:06-what-installed-means.org][What "installed" means]].
+It possesses an unusual shape.
 #+begin_example
 ("R -q --no-save", "library(%(ext_name)s)")
 #+end_example
-
-A pair: a command, and standard input to feed it. So the check for
-=directlabels= runs R and asks it to load the library. The Python
-equivalent is =("python -c 'import %(ext_name)s'", '')=, with an empty
-second element because the command needs no input.
-
-That is the strong kind of check from chapter 6, executed rather than
-existence-tested, and a bundle gets it for every extension at once.
-Two hundred extensions, two hundred loads, each one a real
-verification.
-
-And every entry carries its own =checksums=, which is [[file:07-a-checksum-is-a-claim-about-bytes.org][chapter 7]] two
-hundred times over. Each extension has its own bytes, its own source
-URL, and its own opportunity for a checksum that is right about the
-wrong artifact.
-
+A pair is composed of a command and the standard input supplied to it.
+The check for =directlabels= invokes R and requests it to load the library.
+The Python equivalent is =("python -c 'import %(ext_name)s'", '')=, with an empty second element.
+This represents the strong kind of check described in What "installed" means, executed rather than existence‑tested, and a bundle obtains it for every extension at once.
+Two hundred extensions cause two hundred loads, each delivering a real verification.
+Every entry includes its own =checksums=, which is [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] two hundred times over.
+Each extension possesses its own bytes, its own source URL, and its own chance for a checksum that is right about the wrong artifact.
 * What that costs, and why it matters when reading a failure
-
-A bundle is one module and hundreds of builds. The consequences are
-practical.
-
-Two hundred serial downloads and two hundred serial compiles take
-hours. The useful mental model is "running two hundred small builds in
-one process" rather than "installing R packages".
-
-It fails in the middle. When extension 140 of 200 fails, the package
-that was asked for did not fail. One extension did, and the error names
-that one.
-
-Reading that failure is chapter 1's discipline unchanged. The error
-names the consequence, and the question is which entry produced it and
-what that entry declared. The answer is a line in =exts_list=, plus
-whatever =exts_default_options= key it inherited without saying so.
-
-The inheritance is the part worth watching. An entry that fails may
-have declared almost nothing, taking its source URL, its template, and
-its easyblock from three different defaults above it. None of those
-appear in the failure.
-
+Each bundle contains one module and hundreds of builds.
+The implications are practical.
+Two hundred serial downloads and two hundred serial compiles require hours.
+The mental model is "running two hundred small builds in one process" rather than "installing R packages".
+Failures can occur in the middle.
+If extension 140 of 200 fails, the requested package continues.
+One extension fails and the error identifies that extension.
+Reading that failure follows the unchanged discipline of an easyconfig in Python.
+The error states the consequence and the question is which entry produced it and what that entry declared.
+The entry is identified by a line in =exts_list= and any =exts_default_options= key it inherited implicitly.
+The inheritance is the aspect to monitor.
+An entry that fails may declare almost nothing, taking its source URL, its template, and its easyblock from three different defaults above it.
+Those defaults do not appear in the failure.
 * What scales, and what does not
-
-=exts_list= makes one easyconfig install many packages. Three earlier
-chapters then apply per entry rather than per file. Each extension has
-its own sources and checksums, its own easyblock, and its own executing
-check through =exts_filter=.
-
-Two things do not scale with it. Chapter 1's rule inverts, because
-=exts_defaultclass= gives extensions the default a top-level package
-does not get. And the templates rebind: =%(name)s= inside an entry is
-the extension's name. That is what lets one =source_tmpl= serve two
-hundred rows, and why reaching the bundle's own version from there
-fails.
-
-When a bundle fails, it failed at one entry. Read that entry together
-with the defaults above it, because the error names neither.
-
-The next chapter is about hooks: the supported way to change what
-EasyBuild does without editing an easyconfig.
+=exts_list= allows one easyconfig to install several packages.
+The previous three chapters apply per entry instead of per file.
+Each extension specifies its own sources, checksums, easyblock, and runs a check using =exts_filter=.
+Two aspects fail to scale.
+The rule that an easyconfig is Python's is inverted.
+Templates are rebound: =%(name)s= within an entry expands to the extension's name.
+This permits a single =source_tmpl= to produce two hundred rows and makes attempts to retrieve the bundle's own version fail.
+When a bundle fails, the failure appears in a single entry.
+Inspect that entry along with the defaults defined above it.
+The next chapter discusses hooks, the supported way to modify EasyBuild behavior without editing an easyconfig.

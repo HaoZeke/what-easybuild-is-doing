@@ -1,0 +1,38 @@
+#+TITLE: At the back
+#+OPTIONS: toc:nil num:nil
+
+* Where this runs
+EasyBuild is a Python package.
+It installs with =pip= into a virtual environment, needs a modules tool and a compiler, and builds software on a laptop exactly as it does on a compute node.
+The failing build in [[file:20-reading-a-failed-build.org][Reading a failed build]] and the checks in [[file:21-writing-one-from-nothing.org][Writing one from nothing]] ran on a workstation.
+EESSI's installation instructions cover a laptop.
+CernVM-FS ships a client profile for that case.
+[[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] does it on four kinds of machine.
+On a large shared machine the *consequences* change, not the mechanism: many users, one tree, a scheduler, several microarchitectures, and a rebuild that costs somebody a night.
+* What the samples are
+A browser.
+
+Every sample here runs in the page.
+
+Edit one and the answer changes as it is typed.
+
+Press Escape and a playground opens.
+
+Three of the four kinds work off tables exported from eb-stack at build time.
+
+A cross-check compares the browser's answers against the binary on every build.
+
+The fourth reads an easyconfig into its evaluated model.
+
+It is a reduced reader rather than the real parser.
+
+It follows single-line assignments and *names what it skipped*.
+
+Nothing in a browser can configure, compile or link.
+
+Where a step needs a real toolchain the page shows a recording of a real run, with where and when it ran printed beside it.
+* Who wrote this
+Rohit Goswami, who maintains software stacks on a national machine, runs the same tools on a laptop, and wrote [[https://eb-stack.rgoswami.me][eb-stack]], the updater and generator that emits the =.eb= files EasyBuild then builds.
+The samples on these pages borrow tables from that generator.
+They are not the generator.
+They are not EasyBuild.

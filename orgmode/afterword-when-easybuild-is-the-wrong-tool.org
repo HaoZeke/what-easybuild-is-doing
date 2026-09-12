@@ -1,160 +1,116 @@
 #+TITLE: Afterword: when EasyBuild is the wrong tool
 #+OPTIONS: toc:nil num:nil
-
-No widgets in this chapter, and no parameters. It is the one that
-argues against the subject of every other one, because a book that cannot
-say where its subject stops is advertising.
-
+This chapter has no widgets and no parameters.
+It opposes the subject of every other chapter.
 * What EasyBuild is built to be good at
-
-Gather the earlier chapters into one sentence and the design is this.
-
-EasyBuild builds software from source, reproducibly, into a curated
-generation of exact versions. It produces modulefiles for a shared
-system whose users outnumber its maintainers by three or four orders
-of magnitude.
-
-Every part of that carries a cost already met in earlier chapters. Exact pins
-mean a package cannot follow upstream on its own schedule, which is
-[[file:03-a-pin-is-for-one-generation.org][chapter 3]]. A generation means the whole stack moves at once, once a
-year. From-source means a build takes hours, which [[file:08-one-easyconfig-many-installs.org][chapter 8]] puts at a
-few hundred extensions and [[file:10-build-your-own-without-asking.org][chapter 10]] makes your own problem. Modulefiles mean the artifact is an
-environment rather than a directory a user can copy.
-
-Those are good trades for a national supercomputer with thousands of
-users. They are not good trades everywhere, and the rest of this
-chapter is the "not".
-
+EasyBuild builds software from source reproducibly into a curated generation of exact versions.
+EasyBuild produces modulefiles for a shared system whose users outnumber its maintainers by three or four orders of magnitude.
+Exact pins, generation timing, and from‑source build costs are covered respectively in [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]], [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]], and [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
+A generation means the whole stack moves at once typically once a year.
+From‑source builds take hours translating into a few hundred extensions and user‑defined problems.
+Modulefiles make the artifact an environment rather than a copyable directory.
+These trade‑offs suit a national supercomputer serving thousands of users.
+They are unsuitable in many other contexts.
+The remainder of this chapter addresses the drawbacks.
 * When the answer is a different tool for the same job
-
-Three cases, each with a real alternative rather than a complaint.
-
+Three scenarios provide a genuine alternative rather than a complaint.
 ** A Python environment that changes weekly
-
-A researcher needs eleven packages from PyPI, and next week twelve,
-and the week after that a different version of one of them.
-
-Doing that in EasyBuild means an easyconfig per change, a build per
-easyconfig, and a module for each result. The generation the stack is
-pinned to changes annually and the requirement changes weekly, so the
-two never line up.
-
-The right shape is a Python module from EasyBuild, and a virtual
-environment on top of it that the researcher owns. =pip= or =uv= into
-a venv over =module load Python= gives them the weekly cadence and
-keeps the interpreter, the compiler, and the numerical libraries under
-the stack's control. The parts that need reproducibility get it, and
-the parts that need speed get that instead.
-
-The failure mode of doing it all in EasyBuild is not that it does not
-work. It is that a maintainer becomes the bottleneck on somebody
-else's research week.
-
+Eleven packages from PyPI are required, with twelve needed the following week and a different version of one required the week after.
+Using EasyBuild requires an easyconfig for each change, a build for each easyconfig, and a module for each result.
+The stack's generation is pinned to annual changes.
+Requirements change weekly.
+Alignment is prevented.
+The appropriate solution is a Python module provided by EasyBuild combined with a virtual environment owned by the researcher.
+Invoking =pip= or =uv= within a venv after =module load Python= supplies the weekly cadence.
+It retains control of the interpreter, compiler, and numerical libraries within the stack.
+Components needing reproducibility receive it.
+Components needing speed receive performance.
+The failure mode of handling everything within EasyBuild is not lack of functionality.
+A maintainer becomes the bottleneck for another's research week.
 ** Software that arrives as a container
-
-Some vendors distribute a container image and nothing else. No source,
-no configure, and no way to express the contents as an easyconfig
-without misrepresenting them.
-
-Apptainer or a similar runtime is the tool, and a thin module that
-sets up the invocation is a reasonable EasyBuild contribution around
-it. Wrapping the whole image in an easyconfig to make it look like a
-build teaches everyone who reads it afterwards something false.
-
+Some vendors supply only a container image.
+No source code, configure script, or undistorted easyconfig representation exists.
+Apptainer or an equivalent runtime is the tool; a minimal module configuring its invocation forms a valid EasyBuild contribution.
+Wrapping the whole image in an easyconfig to mimic a build misleads later readers.
 ** A stack somebody has already built
-
-Chapter 11 is that case at length: EESSI, an optimised stack built with
-EasyBuild and mounted rather than installed.
-
-Reach for it when the goal is having the software. Reach for EasyBuild
-when the goal is deciding what the software is. That means a version
-nobody else needs, a patch the site carries, a toolchain the users depend
-on.
-
+EESSI, an optimised stack built with EasyBuild and mounted rather than installed, is described in detail by somebody else's stack.
+Use it when the goal is to obtain the software.
+Use EasyBuild when the goal is to determine what the software should be.
+This implies a version that no one else requires, a patch maintained by the site, and a toolchain on which users rely.
 * When another packaging system fits the problem better
+Two systems address a similar problem with different trade‑offs.
+The comparison should be stated precisely.
 
-Two systems solve a similar problem with different trade-offs, and the
-comparison is worth stating precisely rather than tribally.
+*Spack* expresses dependency constraints as ranges and resolves them for each installation ([[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]]).
 
-*Spack* expresses dependency constraints as ranges and resolves them
-per install. =depends_on('hdf5@1.10:')= is a real lower bound, and a
-concretiser picks a version that satisfies every such bound, with
-variants selected at install time.
+The expression =depends_on('hdf5@1.10:')= is a real lower bound.
 
-That is the opposite trade from chapter 3. Spack's format can carry
-the constraint the software actually has, so a package moves across
-environments without editing. In exchange, two installs on one machine
-can legitimately differ, and reproducing a result means recording the
-resolved graph rather than naming a generation.
+A concretiser selects a version that satisfies all such bounds, with variants chosen at install time.
 
-*conda-forge* distributes binaries and solves over a channel, so
-installing is a download and a solve rather than a build. That gets a
-working environment in minutes, identically on a laptop and a cluster.
-In exchange, those binaries are built for portability rather than for
-one machine's instruction set. Exploiting that instruction set is what
-an HPC stack is for.
+That approach contrasts with the trade described in A pin is for one generation.
 
-So the question is not which is best. It is which cost to
-accept:
+Spack's format can retain the constraint that the software actually possesses.
 
-- EasyBuild: exact versions, one stack per generation, tuned builds,
-  hours per package, one generation a year, and a maintainer in the
-  loop.
-- Spack: real version ranges, per-install resolution, tuned builds,
-  hours per package, and a resolved graph that must be captured to
-  reproduce.
-- conda-forge: minutes per environment, identical on a laptop and a
-  cluster, and built for portability rather than for the instruction
-  set already paid for.
+A package to move across environments without modification.
 
-A site running a large machine typically uses more than one of these,
-for different populations of users. That is a sound arrangement rather
-than an admission of defeat.
+Two installations on the same machine may legitimately differ.
 
+Reproducing a result requires recording the resolved graph instead of naming a generation.
+
+*conda-forge* distributes binaries and performs solving over a channel.
+
+Installation is a download and a solve rather than a build.
+
+This yields a working environment in minutes, identical on a laptop and on a cluster.
+
+In return, those binaries are built for portability rather than for a specific machine's instruction set.
+
+Exploiting a specific instruction set is the purpose of an HPC stack.
+
+Thus the question is not which system is best.
+
+It concerns which cost is acceptable.
+
+- EasyBuild provides exact versions, one stack per generation, tuned builds, hours per package, one generation per year, and a maintainer in the loop. 
+
+- Spack offers real version ranges, per‑install resolution, tuned builds, hours per package, and a resolved graph that must be captured to reproduce. 
+
+- conda-forge delivers minutes per environment, identical results on a laptop and a cluster, and binaries built for portability rather than for the instruction set already paid for. 
+
+A site operating a large machine typically employs more than one of these systems for different user populations.
+
+This is a sound arrangement rather than an admission of defeat.
 * The part that transfers
-
-If one thing from this book is taken to a different packaging system,
-take the questions rather than the parameters.
-
-Chapter 1's question is "what does this name imply that the file does
-not say". Every packaging system has an answer, and in most of them
-the answer is longer than a first guess.
-
-Chapter 2's is "what is this dependency allowed to see". Chapter 4's
-is "where is the tool looking, and in what order". Chapter 7's is
-"what exactly does this checksum claim". Chapter 9's is "is the file
-on disk the whole input".
-
-None of those are EasyBuild questions. EasyBuild has particularly
-crisp answers to them, which is why it makes a good subject for
-learning to ask them.
-
+When applying a concept from this book to another packaging system, prioritize the questions over the parameters.
+An =easyconfig= is Python's question "what does this name imply that the file does not say".
+Each packaging system provides an answer, often longer than an initial guess.
+A =toolchain= is a hierarchy's question "what is this dependency allowed to see".
+The robot's question is "where is the tool looking, and in what order".
+A checksum is a claim about bytes's question "what exactly does this checksum claim".
+A hook changes a file you are not reading's question "is the file on disk the whole input".
+None of those constitute EasyBuild questions.
+EasyBuild provides particularly crisp answers.
+EasyBuild is a suitable subject for learning to ask those questions.
 * The end of the book
-
-EasyBuild's design is exact versions, curated generations, from-source
-builds and modulefiles, for a shared machine whose users vastly
-outnumber its maintainers. Every one of those is a trade.
-
-A requirement that changes weekly does not belong in an annual
-generation. Software with no source is a runtime to wrap rather than a
-build to fake. And a stack needed only to *have* already exists.
-
-What survives all of that is a habit of asking what a thing actually
-says.
-
-An easyconfig says less than it appears to, because a name implies an
-easyblock the file never mentions. A toolchain is not a label but the
-top of a computed hierarchy, and it decides what your dependencies are
-even allowed to see. A version beside a dependency is an exact pin for
-one generation and not a minimum. A filename is a query, and the answer
-depends on three lists set in three different places. A checksum is
-about bytes and nothing else. A green build describes one tree on one
-machine.
-
-None of those are EasyBuild questions. EasyBuild is a good place to
-learn them because its answers are unusually crisp, and because it
-says when it does not know. No default easyblock, no version ranges,
-no guessing. A tool that does not guess is showing where the
-uncertainty actually is.
-
-Take that, and the rest is documentation.
+EasyBuild's design provides exact versions, curated generations, from-source builds and modulefiles for a shared machine with many more users than maintainers.
+Each of those elements is a trade.
+A requirement that changes weekly does not belong in an annual generation.
+Software without source is a runtime to wrap rather than a build to fake.
+A stack needed only to *have* already exists.
+What survives all of that is a habit of asking what a thing actually says.
+An easyconfig says less than it appears to.
+A toolchain is not a label but the top of a computed hierarchy.
+A toolchain decides what your dependencies are allowed to see.
+A version beside a dependency is an exact pin for one generation and not a minimum.
+A filename is a query.
+The answer depends on three lists set in three different places.
+A checksum concerns bytes and nothing else.
+A green build describes one tree on one machine.
+None of those are EasyBuild questions.
+EasyBuild is a good place to learn them.
+There is no default EasyBlock.
+There are no version ranges.
+There is no guessing.
+A tool that does not guess shows where the uncertainty actually is.
+Take that.
+The rest is documentation.

@@ -1,71 +1,62 @@
-#+TITLE: Chapter 5. A versionsuffix is part of the name
+#+TITLE: A versionsuffix is part of the name
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Say what a =versionsuffix= does, and what it does not.
 2. Tell a derived suffix from a hand-written one, and say why the format
-   cannot report which is which.
+ cannot report which is which.
 3. Say what a module named for a version does and does not guarantee
-   about the tree under it.
+ about the tree under it.
 #+end_objectives
-
 Here is a module name from a real cluster:
-
 #+begin_example
 NVHPC/25.11-CUDA-12.9.1
 #+end_example
-
-Type the recipe and the default naming scheme builds that string. Edit
-=versionsuffix= and the name moves; the dependency list does not.
-
+Enter the recipe.
+The default naming scheme builds that string.
+Edit =versionsuffix=.
+The name moves.
+The dependency list does not.
 #+begin_src easyconfig :widget modname :hydrate load
 name = 'NVHPC'
 version = '25.11'
 versionsuffix = '-CUDA-12.9.1'
 toolchain = SYSTEM
 #+end_src
-
-Version 25.11 of the NVIDIA HPC SDK (=NVHPC=), and then something
-about CUDA 12.9.1. That second half is a =versionsuffix=. It is the
-easiest parameter in EasyBuild to misread, because it looks like a
-constraint and behaves like a label.
-
+Version 25.11 of the NVIDIA HPC SDK (=NVHPC=) is mentioned.
+It is followed by a reference to CUDA 12.9.1.
+The latter part is a =versionsuffix=.
+This is the most easily misread parameter in EasyBuild.
+It resembles a constraint yet is a label.
 * The suffix and the dependency are two different lines
-
-The easyconfig behind that module says both of these:
-
+The easyconfig behind that module states both of these.
 #+begin_src easyconfig :widget parse
 name = 'NVHPC'
 version = '25.11'
 versionsuffix = '-CUDA-%(cudaver)s'
 
 dependencies = [
-    ('CUDA', '12.9.1'),
-    ('nvidia-compilers', version, versionsuffix),
+ ('CUDA', '12.9.1'),
+ ('nvidia-compilers', version, versionsuffix),
 ]
 #+end_src
-
-Read those two statements as one and the reading will be wrong about what each
-does. The dependency binds: [[file:03-a-pin-is-for-one-generation.org][chapter 3]]'s exact pin, one module, no
-range. The =versionsuffix= reports, and it reports into the module's
-own name.
-
-=%(cudaver)s= is [[file:01-an-easyconfig-is-python.org][chapter 1]]'s templating, resolved from the CUDA
-dependency, so the two are related by derivation. They are not related
-by enforcement. EasyBuild derives the suffix from the dependency once,
-at parse time, and writes the result into a filename. Nothing checks
-afterwards that the name still describes the tree.
-
-Note the third line as well. =nvidia-compilers= takes =versionsuffix=
-as its *own* third positional attribute, which is chapter 3's
-=('name', 'version', 'versionsuffix', 'toolchain')= tuple. A suffix
-travels as data, from one easyconfig into another's dependency list.
-Put it in the fourth slot and EasyBuild will treat it as a toolchain.
-
+Reading those two statements together leads to a mistaken interpretation of each statement's function.
+The dependency binds the exact pin from [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]], one module, with no range.
+The =versionsuffix= reports.
+It reports into the module's own name.
+=%(cudaver)s= is the templating from [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+It is resolved from the CUDA dependency.
+The two are related by derivation.
+They are not related by enforcement.
+EasyBuild derives the suffix from the dependency once, at parse time.
+It writes the result into a filename.
+Nothing checks afterwards that the name still describes the tree.
+The third line also shows that =nvidia-compilers= takes =versionsuffix= as its *own* third positional attribute.
+It is A pin is for one generation's (='name', 'version', 'versionsuffix', 'toolchain'=) tuple.
+A suffix travels as data from one easyconfig into another's dependency list.
+Placing it in the fourth slot causes EasyBuild to treat it as a toolchain.
 * From below, a suffix is not a suffix
-
-Now look at the same toolchain from a package that uses it:
-
+Inspect the identical toolchain used by a package that employs it.
 #+begin_src easyconfig :widget hierarchy
 name = 'VASP6'
 version = '6.5.1'
@@ -73,18 +64,15 @@ versionsuffix = '-ACC'
 
 toolchain = {'name': 'NVHPC', 'version': '25.11-CUDA-12.9.1'}
 #+end_src
-
-The toolchain's version reads =25.11-CUDA-12.9.1=. Not =25.11= with a
-suffix beside it: one string, with the suffix already folded in. That
-is what the consumer sees, and [[file:02-a-toolchain-is-a-hierarchy.org][chapter 2]]'s hierarchy is keyed on
-exactly that string.
-
-So a =versionsuffix= is structural for whoever declares it and opaque
-to whoever depends on it. =NVHPC-25.11-CUDA-12.9.1= and
-=NVHPC-25.11-CUDA-12.8.0= are two unrelated toolchains as far as the
-hierarchy walk is concerned, in the same way that =foss-2025a= and
-=foss-2024a= are.
-
+The toolchain's version reads =25.11-CUDA-12.9.1=.
+It is not =25.11= with a suffix beside it.
+It is a single string with the suffix already folded in.
+That is what the consumer sees.
+The hierarchy in [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] is keyed on exactly that string.
+So a =versionsuffix= is structural for whoever declares it.
+It is opaque to whoever depends on it.
+=NVHPC-25.11-CUDA-12.9.1= and =NVHPC-25.11-CUDA-12.8.0= are two unrelated toolchains as far as the hierarchy walk is concerned.
+The same relationship holds for =foss-2025a= and =foss-2024a=.
 #+ATTR_EB: :id EB-Suffix-1 :title Are these the same toolchain
 #+begin_exercise
 Four module names:
@@ -95,11 +83,11 @@ Four module names:
 : VASP6/6.5.1-NVHPC-25.11-CUDA-12.9.1-ACC
 
 1. A package declares =toolchain = {'name': 'NVHPC', 'version': '25.11-CUDA-12.9.1'}=.
-   Which of the first three satisfies it?
-2. To the hierarchy walk of chapter 2, how many distinct toolchains do
-   the first three names represent?
+ Which of the first three satisfies it?
+2. To the hierarchy walk of A toolchain is a hierarchy, how many distinct toolchains do
+ the first three names represent?
 3. In the fourth name, which part is derived from a dependency and which
-   is a label somebody typed?
+ is a label somebody typed?
 
 #+begin_solution
 Only the first. The toolchain's version is the whole string
@@ -119,93 +107,78 @@ difference between the two.
 #+end_exercise
 
 * The same syntax carries two unrelated meanings
-
-VASP6 in that sample has a =versionsuffix= too, and it says =-ACC=,
-short for OpenACC.
-
-No dependency anywhere derives it. It names a build variant: this
-easyconfig compiles the OpenACC target, and a sibling easyconfig
-compiles the CPU one from the same sources. The suffix exists so both
-can install side by side under one name and version.
-
-Two suffixes, one syntax, and nothing in the format distinguishes
-them. =-CUDA-12.9.1= is derived from a pin and reports it. =-ACC= is a
-human's label for a variant. Read the first pattern onto the second
-and the OpenACC label becomes a dependency on a package. Read the
-second onto the first and =-CUDA-12.9.1= becomes decoration.
-
-The convention is that a derived suffix names the thing it was derived
-from. The convention is also all there is.
-
+VASP6 in that sample has a =versionsuffix= that says =-ACC=, short for OpenACC.
+No dependency anywhere derives it.
+It names a build variant.
+This easyconfig compiles the OpenACC target, and a sibling easyconfig compiles the CPU one from the same sources.
+The suffix exists so both can install side by side under one name and version.
+Two suffixes, one syntax, and nothing in the format distinguishes them.
+=-CUDA-12.9.1= is derived from a pin and reports it.
+=-ACC= is a human's label for a variant.
+Reading the first pattern onto the second makes the OpenACC label a dependency on a package.
+Reading the second onto the first makes =-CUDA-12.9.1= a decoration.
+The convention states that a derived suffix names the thing it was derived from.
+The convention is also all there is.
 * What happens when the name stops being true
-
-A label that nothing enforces can go stale, and the staleness is where
-this parameter costs real time.
-
-The 25.11 tarball is a =cuda_multi= build. It carries CUDA 12.9 and
-CUDA 13.0 in one archive, under versioned directories, with
-unversioned entries beside them. =math_libs/include= and
-=math_libs/lib64= are links, and so are =comm_libs/nccl= and
-=comm_libs/nvshmem=. Whatever those four point at is what a compiler
-and a linker find.
-
-The SDK's own installer decides where they point, and it does not
-reliably follow the version EasyBuild resolved. One install of that
-tarball, on 2026-01-27, covered four architectures:
-
-| Architecture | =math_libs/lib64= points at |
-|---+---|
-| AMD-ZEN2 | 12.9 |
-| AMD-ZEN4 | 12.9 |
-| AMD-ZEN4-H100 | *13.0* |
-| INTEL-AVX512 | *13.0* |
-
-Two of four, and not along any line a guess would pick: INTEL-AVX512 has no
-GPU in it. =EBNVHPCCUDAVER= read 12.9 on all four, so the easyblock had
-resolved the version correctly and the installer had ignored it, on two
-architectures out of four, in one batch.
-
-Nothing about that contradicts the module's name. The name still said
-=-CUDA-12.9.1=, and the dependency still pinned CUDA 12.9.1, and both
-were exactly as written. On two of the four architectures the tree
-underneath them held CUDA 13.0.
-
-The consequence is specific. Anything linking cuSPARSE through that
-toolchain takes =libcusparse.so.12= out of the 13.0 tree, which needs
-=libnvJitLink.so.13=. That library exists only under the 13.0
-redistributable, and nothing puts it on the runtime path. The binary
-links, installs, and then fails to start.
-
+A label without enforcement can become stale.
+This staleness is where the parameter incurs real time cost.
+The 25.11 tarball is a =cuda_multi= build.
+It includes both CUDA 12.9 and CUDA 13.0 in a single archive.
+It is placed in versioned directories alongside unversioned entries.
+=math_libs/include= and =math_libs/lib64= are links.
+=comm_libs/nccl= and =comm_libs/nvshmem= are links.
+The targets of those four links are what a compiler and a linker locate.
+The SDK's installer determines the link destinations.
+It does not consistently follow the version resolved by EasyBuild.
+A single installation of that tarball on 2026-01-27 covered four architectures.
+On AMD-ZEN2, =math_libs/lib64= points at 12.9.
+On AMD-ZEN4, =math_libs/lib64= points at 12.9.
+On AMD-ZEN4-H100, =math_libs/lib64= points at *13.0*.
+On INTEL-AVX512, =math_libs/lib64= points at *13.0*.
+Two of the four architectures do not follow any predictable pattern.
+INTEL-AVX512 lacks a GPU.
+=EBNVHPCCUDAVER= reported 12.9 for all four.
+The easyblock resolved the version correctly.
+The installer ignored it on two of the four architectures in that batch.
+No aspect of this contradicts the module's name.
+The name remained =-CUDA-12.9.1=.
+The dependency remained pinned to CUDA 12.9.1.
+Both matched the specification.
+On two of the four architectures the underlying tree contained CUDA 13.0.
+The consequence is specific.
+Any component linking cuSPARSE via that toolchain extracts =libcusparse.so.12= from the 13.0 tree.
+It requires =libnvJitLink.so.13=.
+That library exists only within the 13.0 redistributable.
+Nothing adds it to the runtime path.
+The binary links.
+The binary installs.
+The binary then fails to start.
 * The check that found it, and the way it nearly did not
-
-EasyBuild has a check for exactly this. It inspects the installed
-binaries against their recorded runtime library search path, the
-RPATH, and reports every library they cannot resolve.
-=libnvJitLink.so.13= is what it reported.
-
-That build carried =skipsteps = ['sanitycheck']= in its easyconfig, on
-the reasoning that the check was producing a failure the package could
-not fix. Each half of that reasoning was true and the conclusion was
-still wrong. The check was reporting a defect in the toolchain module,
-which is worth knowing, and switching it off did not make the binary
-start. It moved the discovery to a user.
-
-The check also had a reputation problem worth clearing up, because it
-is the usual reason people reach for =skipsteps=. On a GPU package the
-check appears to fail on =libcuda.so.1=, which lives with the driver
-and exists only on GPU nodes. It does not: EasyBuild exempts that
-library by default, along with =libcuda.so=, =libnvidia-ml.so= and
-=libnvidia-ml.so.1=. Anything else it reports is a real finding.
-
+EasyBuild provides a check that examines this situation.
+The check inspects installed binaries against their recorded runtime library search path (RPATH).
+The check reports each library it cannot resolve.
+=libnvJitLink.so.13= was reported by the check.
+The build specified =skipsteps = ['sanitycheck']= in its easyconfig.
+The specification was based on the belief that the check produced a failure the package could not fix.
+Both components of that reasoning were true.
+The conclusion remained incorrect.
+The check identified a defect in the toolchain module.
+Disabling the module did not enable the binary to start.
+The responsibility for discovery shifted to the user.
+The check also carries a reputation issue requiring clarification.
+In a GPU package the check appears to fail on =libcuda.so.1=.
+The library resides with the driver and exists only on GPU nodes.
+This is not the case.
+EasyBuild exempts that library by default, together with =libcuda.so=, =libnvidia-ml.so= and =libnvidia-ml.so.1=.
+Any other reported library is a genuine finding.
 * The one-line version
-
-A =versionsuffix= is part of a module's name, and a name is not a
-mechanism. The dependency does the binding; the suffix reports on it
-once, at parse time, and nothing checks it again.
-
-So the test, when a module named for a version behaves as though it
-carried another. Stop reading the name and look at the tree. The sanity
-check is what looks, and that is the argument for leaving it on
-even when it reports somebody else's problem.
-
-Next: what "installed" means, and the two things that decide it.
+A =versionsuffix= forms part of a module's name.
+A name does not constitute a mechanism.
+The dependency performs the binding.
+The suffix reports it once during parse time.
+No further checks occur.
+The test shows that a module named for one version may behave as if it carries another.
+Disregard the name and examine the tree.
+The sanity check is based on appearance.
+It justifies retaining it even when it reports another's problem.
+Next: the definition of "installed" and the two factors that determine it.

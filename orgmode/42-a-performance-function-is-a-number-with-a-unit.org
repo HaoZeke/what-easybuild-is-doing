@@ -1,0 +1,141 @@
+#+TITLE: A performance function is a number with a unit
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- What is the difference between a sanity function and a performance
+ function?
+- Where does a reference value live, and in what units?
+- What does a =P:= line report that a pass/fail does not?
+#+end_questions
+
+#+begin_objectives
+1. Extract a figure of merit from a job's output and give it a unit.
+2. Attach a reference and a threshold per system, and say what a
+ miss means.
+3. Say where the number is logged, and why the log outlives the run.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]], for the
+ STREAM test the numbers come from.
+- [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]], for the
+ performance stage.
+#+end_prerequisites
+Sanity is represented by a yes or a no.
+Performance is defined by a number, a unit, and a comparison.
+The STREAM test in a ReFrame test is a class that already includes both.
+This chapter supplies the number.
+#+begin_src python
+@performance_function('MB/s')
+def copy_bw(self):
+ return sn.extractsingle(r'Copy:\s+(\S+)', self.stdout, 1, float)
+
+@performance_function('MB/s')
+def triad_bw(self):
+ return sn.extractsingle(r'Triad:\s+(\S+)', self.stdout, 1, float)
+#+end_src
+The decorator argument represents the unit.
+The method name denotes the metric.
+The =extractsingle= function extracts group 1 from the first match and converts it to =float=.
+When the line is absent, the performance stage fails.
+This failure differs from a sanity failure.
+The =FAILURE INFO= block reports it.
+A test lacking performance functions requires no work from the performance stage.
+A test containing performance functions but no references still *records* the numbers.
+Recording without comparison allows a site to build the baseline.
+The baseline is used for comparison with the next week's run.
+* References
+Each reference is a tuple for each metric and each system, formatted as =(value, lower_thres, upper_thres, unit)=.
+From version 3.0 onward, the tuple must include the unit.
+The STREAM tutorial assigns these tuples to the test after the functions have been defined:.
+#+begin_src python
+reference = {
+ 'generic:default': {
+ 'copy_bw': (20000, -0.2, 0.2, 'MB/s'),
+ 'triad_bw': (15000, -0.2, 0.2, 'MB/s'),
+ },
+}
+#+end_src
+=-0.2= and =0.2= represent relative thresholds, 20 % below and 20 % above the reference.
+An absolute floor is a number lacking a fractional component.
+The documentation's form should be copied rather than invented.
+A miss causes failure of the performance stage.
+A miss does not cause failure of sanity.
+The binary generated a valid STREAM run.
+The machine performed slower (or faster) than the site expected.
+The key is =system:partition=.
+A reference for =generic:default= does not apply to =example:cpu=.
+A portable suite either places references in the configuration (EESSI's direction).
+A portable suite accepts that the first run on a new partition records rather than judges.
+When the test sets no references, ReFrame 4.9 and later omit the reference tuple from the =P:= line.
+The number remains printed and logged.
+* The =P:= line and the perflog
+A successful performance test produces a separate line for each metric.
+#+begin_example
+P: copy_bw: 19538.4 MB/s (r:0, l:None, u:None)
+P: triad_bw: 14883.4 MB/s (r:0, l:None, u:None)
+#+end_example
+=r= is the reference, =l= and =u= are the thresholds. --performance-report= prints the same facts as a table at the end of the session.
+RFM_PERF_INFO_LEVEL= raises the log level of the =P:= lines if a suite's stdout is too noisy.
+The durable record is the perflog, by default at =perflogs/<system>/<partition>/<testname>.log=, or under =$RFM_PREFIX/perflogs/= when the prefix is set.
+It is a CSV whose columns are configurable.
+A site that graphs STREAM triad over six months reads this file, not the session JSON.
+The session JSON lives under =$HOME/.reframe/reports/=, with =latest.json= pointing at the last run. --restore-session= in Reading a failed ReFrame run reads it.
+Past performance can be queried from the same database and compared to the current run.
+That is a How To in the official docs, not a mechanism this chapter needs.
+* What a number does not say
+The run-stage timer includes queue time.
+The pipeline has six stages.
+A performance function that extracts a runtime from the *application's* output does not.
+STREAM's =Copy:= line is a bandwidth measured by the binary.
+GROMACS's =ns/day= is a throughput measured by the binary.
+Both are independent of job wait time.
+A performance function that returns ReFrame's own elapsed time measures the queue.
+EESSI's rule of thumb for a new test is on the writing-tests page: at least one case tagged =CI= finishes in under five minutes on about eight cores, and no case needs more than about 1 GB per core.
+Those are constraints on the *workload*.
+The tracked number is a number a site can afford to produce daily.
+#+ATTR_EB: :id EB-ReFrame-42-1 :title Sanity or performance
+#+begin_exercise
+Three STREAM outcomes. For each, say which stage fails, or that
+both pass.
+
+1. The output contains =Solution Validates= and =Copy: 5000= against
+ a reference of 20000 ± 20%.
+2. The output contains =Copy: 19000= and does not contain
+ =Solution Validates=.
+3. The output contains both lines, no reference is set, =Copy:= is
+ 19000.
+#+begin_solution
+1. Sanity passes, performance fails. The binary validated the
+ arrays; the bandwidth is outside the threshold.
+2. Sanity fails. Performance is not the headline; the
+ =FAILURE INFO= names =sanity=. A site that only watches
+ perflogs will not see this run
+ the artifacts in the stage directory and does not treat the
+ =Copy:= line as a result.
+3. Both pass. With no reference there is nothing to miss. The
+ number is logged. That is the baseline run.
+#+end_solution
+#+end_exercise
+
+#+ATTR_EB: :id sources-42 :title Where this chapter comes from :kind sources
+#+begin_detail
+ReFrame 4.10 tutorial, "Writing a Performance Test" and the
+STREAM example; the reference-tuple change in 3.0 (unit required)
+and the 4.9 change (no tuple printed when no reference is set).
+Perflog location and =--performance-report= from the same page.
+
+EESSI writing-tests page: the =CI= tag, the five-minute
+lightweight case, and the memory bound.
+#+end_detail
+
+#+begin_keypoints
+- A performance function returns a number and declares a unit. It
+ does not decide correctness; the sanity function does.
+- A reference is =(value, lower, upper, unit)= per
+ =system:partition=. A miss fails the performance stage only.
+- No reference still logs the number. That log is how a baseline
+ is built.
+- Extract the application's own figure of merit. ReFrame's run
+ timer includes the queue.
+#+end_keypoints

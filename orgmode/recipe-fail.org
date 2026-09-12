@@ -1,0 +1,17 @@
+#+TITLE: When it fails
+#+OPTIONS: toc:nil num:nil
+The parameters that cost the most time when misread.
+The log when the file is not the problem.
+#+begin_export rst
+.. toctree::
+ :maxdepth: 1
+
+ 05-a-versionsuffix-is-part-of-the-name
+ 06-what-installed-means
+ 07-a-checksum-is-a-claim-about-bytes
+ 08-one-easyconfig-many-installs
+ 09-a-hook-changes-a-file-you-are-not-reading
+ 20-reading-a-failed-build
+ 27-four-things-that-actually-happened
+ 28-your-first-week
+#+end_export

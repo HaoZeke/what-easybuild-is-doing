@@ -1,0 +1,213 @@
+#+TITLE: SeisSol, from a Spack recipe to a PR
+#+OPTIONS: toc:nil num:nil
+
+#+begin_questions
+- When both a Spack =package.py= and an old easyconfig exist, which
+ eb-stack command is the source of truth for the next file?
+- What names the toolchain generation: the newest common toolchain, or
+ the site stack the module will load?
+- Which two EasyBuild claims look like checksums or sanity and are
+ not, until the named artifact is the one that was hashed or imported?
+#+end_questions
+
+#+begin_objectives
+1. Given a Spack package and an older easyconfig for the same
+ software, name the eb-stack commands that write the next =.eb=,
+ and the command that still has to be =eb=.
+2. Point at the site document that names the generation, and say
+ what a =foss/2026.1= recipe does on a =2025= production stack.
+3. Tell a git-config checksum of the wrong tarball from a Python
+ sanity check that imports the EasyBuild name rather than the
+ module.
+#+end_objectives
+
+#+begin_prerequisites
+- [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]: port versus bump.
+- [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]: a version is a pin.
+- [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]]: the hash names one archive.
+#+end_prerequisites
+SeisSol 1.3.2 is the current tagged release.
+The EasyBuild robot on =develop= had =SeisSol-1.1.4-foss-2023a.eb=.
+Spack had a =package.py= whose newest tagged version was 1.3.1.
+The work that followed is a single case: a port of constraints, a bump of an existing recipe, a generation chosen from a site tree, a site install through the documented wrapper, and an upstream PR.
+Nothing in that sentence compiled the package.
+[[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] already said so.
+This chapter is the file set that came out, and the two defects the first site build found.
+* Both sources, one next file
+=package inspect --format spack= on the Spack recipe writes a plan and an SBOM.
+It does not write a =.eb=.
+The residuals are tight pins that the Spack file states and that SeisSol 1.3.2 CMake does not: =yaml-cpp@0.6.2=, =eigen@3.4.0= exact, =netcdf-c@:4.8.1=.
+The 1.1.4 easyconfig already used netCDF 4.9.2, above that Spack upper bound.
+CMake for 1.3.2 asks for Eigen 3.4 or newer and handles yaml-cpp 0.8.
+The inspect residuals are Spack conservatism, not SeisSol bounds.
+=package bump= on =SeisSol-1.1.4-foss-2023a.eb= rewrites the file EasyBuild already has.
+The companions that exist only on 2023a, =ASAGI-1.0= and =easi-1.3.0=, take the same command.
+PSpaMM has no easyconfig.
+That one is a port: a Python package with a GitHub tag and an entry point =pspamm-generator=.
+#+ATTR_EB: :id EB-SeisSol-1 :title Inspect, bump, or plan
+#+begin_exercise
+For each starting point, name the eb-stack command, or say the
+work is not eb-stack's.
+
+1. =spack/packages/seissol/package.py=, and
+ =SeisSol-1.1.4-foss-2023a.eb= already in the robot.
+2. =easi-1.3.0-foss-2023a.eb=, latest tag =v1.7.0=, ImpalaJIT gone
+ from CMake.
+3. =PSpaMM= 0.3.1 on GitHub, no easyconfig in the robot.
+4. The four =.eb= files, nobody has run =eb= yet.
+
+#+begin_solution
+1. Both. Inspect the Spack file for constraints. Bump the existing
+ easyconfig for the next generation and version. The Spack file
+ is not the file EasyBuild will build.
+2. =package bump --version 1.7.0=. The ImpalaJIT line is a floor
+ the old recipe still carries. It has to be dropped by hand, or
+ the bump searches for ImpalaJIT on the new generation and
+ stops.
+3. =package plan= from the GitHub sources, or a short
+ =PythonPackage= written by hand. There is nothing to bump.
+4. =eb=, or the site wrapper that is =eb= on that machine.
+ =recipe check= is not a build.
+#+end_solution
+#+end_exercise
+
+* The generation is a site fact
+The newest common toolchain on =develop= in September 2026 is =foss/2026.1=.
+A first bump onto that generation resolves.
+It does not load on SURF Snellius.
+The site document is snelnext.
+Production is =module load 2025=.
+=foss/2025a= is the generation the 2025 stack is built from.
+The SURF 2025 buildlist in =easyconfigs-surf= lists that generation dozens of times.
+=eb -S SeisSol= on a 2025 login node returns only =SeisSol-1.1.4-foss-2023a.eb=.
+A =foss/2026.1= recipe on that machine asks the robot for a generation the site has not built.
+=--robot= will try to compile GCC 15 and the rest of 2026.1 beside the production 2025 tree.
+That is not a site consume.
+#+begin_predict
+A login node has just run =module load 2025=.
+Which of these four files can =eblocalinstall= resolve against
+the modules already on the node?
+
+1. =SeisSol-1.3.2-foss-2026.1.eb=
+2. =SeisSol-1.3.2-foss-2025a.eb=
+3. =SeisSol-1.3.2-foss-2025b.eb=
+4. =SeisSol-1.3.2-intel-2025a.eb=
+#+end_predict
+#+begin_reveal
+(2).
+=foss/2025a= is present.
+=2026.1= is not.
+=2025b= exists as a toolchain module in some listings and is not
+the generation the 2025 production recipes use.
+=intel= is documented for local builds by experienced users, not
+the default site stack.
+#+end_reveal
+2025a robot includes Lua 5.4.8 and libxsmm 1.17. easi 1.7.0 provides =lmathx= via Lua 5.4.
+It warns that Lua 5.5 may fail to compile.
+The companion Lua 5.4.8 recipe that a 2026.1 bump would have added is unnecessary on 2025a.
+* The site wrapper is the install
+The EasyBuild tutorial from snelnext loads =eb/<latest>= and installs with =eblocalinstall=.
+A raw =eb= with hand-set =--installpath-software= clashes with the SURF wrappers.
+The wrapper writes:
+#+begin_example
+~/.local/easybuild/RHEL9/2025/software
+~/.local/easybuild/RHEL9/2025/modulefiles
+#+end_example
+The prefix is next to the production 2025 tree.
+=ASAGI/1.0-foss-2025a= resolved CMake 3.31.3, netCDF 4.9.3 and numactl 2.0.19 from the site modules.
+Those pins are the 2025a pins, not values invented for the case.
+* Two defects the first build named
+** The patch that was no longer the patch
+The first =eblocalinstall= failed on ASAGI.
+EasyBuild hashed the file next to the recipe and compared it to =da8c1c8c...=.
+The file on disk hashed to something else.
+A paste through a narrow terminal had wrapped the patch into a different byte string.
+The named checksum was still the official =ASAGI-1.0_fix-level.h.patch= from =develop=.
+The file under that name was not that archive.
+[[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] is this failure, at site scale.
+The repair is a fetch of the upstream patch, not a new hash of the broken file.
+** The import that was the EasyBuild name
+ASAGI then installed.
+PSpaMM failed sanity:
+
+#+begin_src ebtranscript :source "SURF Snellius, rome node, eblocalinstall, 2026-09-11" :caption "Default PythonPackage import"
+ModuleNotFoundError: No module named 'pspamm'
+#+end_src
+The easyconfig is named =PSpaMM=.
+EasyBuild's =PythonPackage= imports =pspamm=.
+The distribution's module is =pypspamm=.
+The console script is =pspamm-generator=.
+The check that failed was the one nobody wrote.
+#+begin_example
+options = {'modulename': 'pypspamm'}
+#+end_example
+That line is the fix.
+A second =eblocalinstall= then completed PSpaMM, easi 1.7.0, and SeisSol 1.3.2.
+=SeisSol_Release_dhsw_6_elastic --help= printed =Show this help message=.
+=HOST_ARCH=hsw= is the CMake default.
+The binary runs on Rome.
+It is not a zen-tuned binary.
+#+ATTR_EB: :id EB-SeisSol-2 :title Which claim failed
+#+begin_exercise
+Three failures. For each, name the claim that was false, and the
+smallest change that makes the claim true.
+
+1. =checksums= lists the hash of a recursive working tree. EasyBuild
+ =git_config= hashes the tarball it packed.
+2. =sanity_check_commands= runs =python -c "import pspamm"= through
+ the default =PythonPackage= import.
+3. The recipe toolchain is =foss/2026.1=. The node has
+ =module load 2025= and =foss/2025a=.
+
+#+begin_solution
+1. The checksum named the wrong archive. Inject with
+ =eb --inject-checksums= on the EasyBuild host, or hash the
+ =git_config= tarball EasyBuild wrote. Do not keep the working-tree
+ hash.
+2. The import name is =pypspamm=. Set
+ =options = {'modulename': 'pypspamm'}=. Leave the
+ =pspamm-generator= sanity command.
+3. The generation is not on the node. Retarget to =foss/2025a=.
+ A 2026.1 recipe is a different consume, not a fix of this one.
+#+end_solution
+#+end_exercise
+
+* What the PR is allowed to say
+=eb --check-contrib= ran on the four files and passed style and SHA256.
+=eb --new-pr= opened [[https://github.com/easybuilders/easybuild-easyconfigs/pull/26851][easybuild-easyconfigs#26851]] from the HaoZeke fork onto =develop=.
+The body contains the generated line, two factual sentences, and the AI disclosure required by policy.
+=resolves= is the SAT of the 2025a robot plus the overlay.
+=builds= is the Snellius =eblocalinstall= of those four files.
+A login-node =--help= provides the sanity the recipe declared.
+It is not a TPV run.
+=eb --from-pr 26851 --robot --force= rebuilt the same four files on a Rome node in 14 minutes 49 seconds, all SUCCESS.
+That is the report referenced in the PR comment.
+#+ATTR_EB: :id sources-48 :title Where this chapter comes from :kind sources
+#+begin_detail
+Public artifacts, read 2026-09-12.
+
+- Spack =seissol= on =spack/spack-packages= develop, newest tag
+ 1.3.1; SeisSol release =v1.3.2=.
+- Robot =develop=: =SeisSol-1.1.4-foss-2023a.eb=,
+ =easi-1.3.0-foss-2023a.eb=, =ASAGI-1.0-foss-2023a.eb=.
+- SURF snelnext EasyBuild tutorial: =eb/<latest>= and
+ =eblocalinstall=. Production stack =2025=.
+- =easyconfigs-surf= 2025 buildlist, =foss-2025a=.
+- PR [[https://github.com/easybuilders/easybuild-easyconfigs/pull/26851][#26851]].
+- Test report gist
+ [[https://gist.github.com/HaoZeke/6249802ef4d091e27a4153381242174f][HaoZeke/6249802ef4d091e27a4153381242174f]].
+
+Commands: [[https://eb-stack.rgoswami.me][eb-stack]] =package inspect= / =package bump=, then
+=eb --check-contrib= and =eb --new-pr=.
+#+end_detail
+
+#+begin_keypoints
+- A Spack recipe and an old easyconfig together are inspect plus
+ bump, not a blank =package plan=.
+- The generation is the one the site module environment already
+ built. Newest-on-develop is a different consume.
+- =eblocalinstall= is the install on Snellius. Raw =eb= with
+ hand-set prefixes is the clash the tutorial names.
+- A checksum names one archive. A PythonPackage import names one
+ module. Neither is the EasyBuild software name.
+#+end_keypoints

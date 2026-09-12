@@ -1,4 +1,4 @@
-#+TITLE: Chapter 2. A toolchain is a hierarchy
+#+TITLE: A toolchain is a hierarchy
 #+OPTIONS: toc:nil num:nil
 
 #+begin_questions
@@ -10,101 +10,87 @@
 #+begin_objectives
 1. Say what a toolchain names, and why it is not a label.
 2. Given a package's toolchain, say which other toolchains its
-   dependencies may have been built with.
+ dependencies may have been built with.
 3. Recognise a =_verify_toolchain= failure as belonging to the toolchain
-   module rather than to your easyconfig.
+ module rather than to your easyconfig.
 #+end_objectives
-
-This line looks like a sticker. It is not.
-
+The line appears to be a sticker.
+It is not.
 #+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'
 version = '4.130.0'
 toolchain = SYSTEM
 #+end_src
-
-=SYSTEM= is the simplest value that line accepts, and almost
-nothing on a real cluster uses it. What appears instead:
-
+=SYSTEM= is the simplest value that line accepts.
+It is rarely used on a real cluster.
+Instead, other values appear:
 #+begin_src easyconfig :widget hierarchy
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
-
-Read as a name, =foss-2025a= looks like a label for "the 2025a
-open-source compiler stack". It is the top of a structure. That
-structure is which versions of which libraries a package on this
-toolchain is allowed to see. Geimer, Hoste and McLay (2014) is
-why the *module* tree has the same shape: a Core compiler extends
-=$MODULEPATH= into a Compiler layer, an MPI extends it again, and
-the user types =WRF/3.5= rather than
-=WRF/3.5-GCC-4.8.2-OpenMPI-1.7.3=. Alvarez, O'Cais, Geimer and
-Hoste (2016) add the layer under the compilers, =GCCcore=, so
+Read as a name, =foss-2025a= resembles a label for "the 2025a open-source compiler stack".
+=foss-2025a= is the top of a structure.
+The structure defines which versions of which libraries a package on this toolchain may see.
+[[cite:geimerModernScientificSoftware2014][Geimer, Hoste and McLay 2014]] explains the *module* tree shape.
+A Core compiler extends =$MODULEPATH= into a Compiler layer.
+An MPI extends the Compiler layer again.
+The user types =WRF/3.5= instead of =WRF/3.5-GCC-4.8.2-OpenMPI-1.7.3=.
+[[cite:alvarezScientificSoftwareManagement2016][Alvarez, O'Cais, Geimer and Hoste 2016]] add a layer under the compilers, =GCCcore=.
 CMake is not rebuilt once per toolchain.
-
-Ask the sample. What that line names is not one toolchain. It is a
-list.
-
+Ask the sample.
+The line does not name a single toolchain.
+The line names a list.
 * The list has an order, and the order does work
-
-The function is =get_toolchain_hierarchy=, in
-=easybuild/framework/easyconfig/easyconfig.py=, and its docstring says
-what it produces:
-
+The function =get_toolchain_hierarchy= is defined in =easybuild/framework/easyconfig/easyconfig.py=.
+The docstring describes its output.
 #+begin_quote
 Determine list of subtoolchains for specified parent toolchain. Result
 starts with the most minimal subtoolchains first, ends with specified
 toolchain.
 #+end_quote
-
-For the =foss= family the members are =GCCcore=, =GCC=, =gompi=,
-=gfbf= and =foss=, each a real toolchain in its own right and each
-installed as a real module. Your package declares the last one and gets
-to depend on things built with any of them.
-
-The order matters and it is not a straight line. =GCCcore= comes before
-=GCC=, which comes before both =gompi= and =gfbf=, which both come
-before =foss=. Those middle two are at the same level: =gompi= is =GCC=
-plus an MPI, =gfbf= is =GCC= plus the numerical libraries, and neither
-is built on the other. So a printed list has to put one of them first,
-and which one carries no meaning. Ask the sample and it says so.
-
-A =foss= package can depend on a =GCCcore= build. A =GCCcore=
-package cannot depend on a =foss= build. Courtesy has nothing to do
-with it. A =GCCcore= package's hierarchy does not contain =foss=, so
-a =foss= dependency is never a candidate. The robot then reports that
-it cannot find something present right there on disk.
-
+Within the =foss= family, the members are =GCCcore=, =GCC=, =gompi=, =gfbf= and =foss=, each representing a distinct toolchain and each provided as a module.
+The package declares the last one and may depend on artifacts built with any of them.
+The ordering is significant and does not follow a simple linear sequence.
+=GCCcore= precedes =GCC=, which precedes both =gompi= and =gfbf=, and both precede =foss=.
+The two middle entries occupy the same hierarchical level: =gompi= equals =GCC= plus MPI, =gfbf= equals =GCC= plus numerical libraries, and neither is built atop the other.
+A displayed list must place one of them first.
+The choice carries no semantic weight.
+The sample demonstrates this behavior.
+A =foss= package may depend on a =GCCcore= build.
+A =GCCcore= package may not depend on a =foss= build.
+Courtesy does not influence this relationship.
+The hierarchy of a =GCCcore= package does not contain =foss=.
+A =foss= dependency is never considered.
+The system reports the inability to locate the required item on disk.
 * The shape is a graph
-
-The =foss= line is a chain, which makes it a bad example for
-understanding what the code does. EasyBuild's own docstring picks a
-harder one, and draws it:
-
+The =foss= line forms a chain.
+It is a poor example for understanding the code's behavior.
+EasyBuild's own docstring selects a more complex example and illustrates it:
 #+begin_example
-        goolfc
-        /     \
-     gompic    golfc(*)
-          \    /   \      (*) optional toolchains, not compulsory
-          gcccuda golf(*)
-              \   /
-               GCC
-              /  |
-      GCCcore(*) |
-              \  |
-             (system)
+ goolfc
+ / \
+ gompic golfc(*)
+ \ / \ (*) optional toolchains, not compulsory
+ gcccuda golf(*)
+ \ /
+ GCC
+ / |
+ GCCcore(*) |
+ \ |
+ (system)
 #+end_example
+Two toolchains reside at the same hierarchical level and share a common ancestor.
+The walk cannot be described as "follow =SUBTOOLCHAIN= upward until it runs out".
 
-Two toolchains are at the same level with a shared ancestor, so the
-walk cannot be "follow =SUBTOOLCHAIN= upward until it runs out". A
-comment in the implementation states it: the search is breadth-first,
-"required to take into account the potential for multiple
-subtoolchains".
+A comment in the implementation notes that the search is breadth‑first.
+The search is required to consider the potential for multiple subtoolchains.
 
-Note the asterisks. =GCCcore= is *optional*. A toolchain class carries
-an =OPTIONAL= attribute, and an optional level counts only when it is
-present. So "the hierarchy of =foss-2025a=" is not a property of the
-string =foss-2025a=; it is a property of what is installed.
+The asterisks indicate that =GCCcore= is *optional*.
 
+A toolchain class includes an =OPTIONAL= attribute.
+An optional level is counted only when present.
+
+The hierarchy of =foss-2025a= is not a property of the literal string =foss-2025a=.
+It reflects the installed configuration.
 #+ATTR_EB: :id EB-Toolchain-1 :title What may this package depend on
 #+begin_exercise
 Ask the sample above for =foss-2025a= and read the members back.
@@ -113,10 +99,10 @@ Now suppose you are writing an easyconfig whose toolchain is
 =GCCcore-14.2.0=.
 
 1. Which of the members it printed could your dependencies have been
-   built with?
+ built with?
 2. Which could they not?
 3. A colleague says "but the =foss= module is right there, I can see it
-   in =module avail=". What has gone wrong with that reasoning?
+ in =module avail=". What has gone wrong with that reasoning?
 
 #+begin_solution
 Your package is on =GCCcore=, so its hierarchy is =system= then
@@ -124,74 +110,55 @@ Your package is on =GCCcore=, so its hierarchy is =system= then
 =gompi=, =gfbf= or =foss= is not a candidate.
 
 The direction is the thing people invert. A =foss= package may depend on
-a =GCCcore= build, because =GCCcore= is in the =foss= hierarchy. A
-=GCCcore= package may not depend on a =foss= build, because =foss= is not
+a =GCCcore= build. A
+=GCCcore= package may not depend on a =foss= build
 in the =GCCcore= one.
 
 Your colleague is reading =module avail=, which lists what is installed.
 The robot is asking a different question: what is installed *and in this
 package's hierarchy*. The module is there. It is not a candidate. The
-error says it cannot be found, because those are two different
+error says it cannot be found
 questions.
 #+end_solution
 #+end_exercise
 
 * The system toolchain is not always in it
-
-The same docstring then qualifies the bottom of the list:
-
+The same docstring subsequently qualifies the bottom of the list.
 #+begin_quote
 The system toolchain is considered the most minimal subtoolchain only
 if the =add_system_to_minimal_toolchains= build option is enabled.
 #+end_quote
-
-That option only changes the walk when a dependency did *not* name a
-toolchain. =('CUDA', '12.9.1', '', SYSTEM)= still finds the SYSTEM
-module, flag or no flag. What the option does not do, off by default,
-is treat a bare =('zlib', '1.3.1')= as "also try SYSTEM". A foss
-package that forgot the fourth field is looking for
-=zlib/1.3.1-foss-…= or a subtoolchain of foss, not =zlib/1.3.1=.
-
+The option only changes the walk when a dependency does not name a toolchain.
+=('CUDA', '12.9.1', '', SYSTEM)= still finds the SYSTEM module, with or without a flag.
+The option does not, by default, treat a bare =('zlib', '1.3.1')= as "also try SYSTEM".
+A foss package that omitted the fourth field looks for =zlib/1.3.1-foss-…= or a foss subtoolchain, not =zlib/1.3.1=.
 * What a toolchain module has to contain
-
-A toolchain occupies a position in a graph. It is also a module, and
-the module has to agree with the class. EasyBuild checks:
-
+A toolchain occupies a graph position.
+It also is a module.
+The module must conform to the class.
+EasyBuild performs checks:
 #+begin_example
 List of toolchain dependency modules and toolchain definition do not match
 (found [...] vs expected {...})
 #+end_example
-
-That comes from =_verify_toolchain= in
-=easybuild/tools/toolchain/toolchain.py=, and it fires in the *prepare*
-step, seconds in, before anything is unpacked. Three properties of that
-check, together, make it unfixable from your easyconfig:
-
-- It reads the *direct* dependencies of the toolchain module, and only
-  those. The call is =dependencies_for(mod_name, ..., depth=0)=. A
-  library that arrives transitively does not count.
-- It matches on module *name*, so versions and versionsuffixes are
-  invisible to it.
-- Elements are dropped from the expected set only when they are
-  optional and absent, and the base =is_required= returns =True= for
-  everything. So a subclass has to opt an element out; nothing opts out
-  by accident.
-
-The failure looks like your package's fault and is not. A framework
-release that renames or splits a toolchain element breaks *every*
-package on that generation at once. No easyconfig parameter reaches the
-check.
-
-EasyBuild 5.2 did exactly this. In toolchains built on the NVIDIA HPC
-SDK (=NVHPC=), the compiler element became a module named
-=nvidia-compilers=. Toolchain modules written before the split still
-expected the old name.
-
-The tell is that the two lists in the error differ by one element. Read
-the lists, not the package. The difference names the element, and
-the fix is a toolchain module that carries it. In practice that means
-moving to a generation whose toolchain modules already do.
-
+The function =_verify_toolchain= in =easybuild/tools/toolchain/toolchain.py= fires in the *prepare* step, seconds after start, before any unpacking.
+Three properties of that check together make it unfixable from an easyconfig.
+It reads only the *direct* dependencies of the toolchain module.
+The call used is =dependencies_for(mod_name,..., depth=0)=.
+A transitively arriving library does not count.
+It matches on module *name*; versions and versionsuffixes are invisible to it.
+Elements are dropped from the expected set only when they are optional and absent, and the base =is_required= returns =True= for all elements.
+A subclass must explicitly opt an element out; no element is omitted accidentally.
+The failure appears to be the package's fault, but it is not.
+A framework release that renames or splits a toolchain element breaks *every* package in that generation simultaneously.
+No easyconfig parameter reaches the check.
+EasyBuild 5.2 performed exactly this scenario.
+In toolchains built on the NVIDIA HPC SDK (=NVHPC=), the compiler element became the module =nvidia-compilers=.
+Toolchain modules written before the split still expect the old name.
+The indicator is that the two lists in the error differ by one element.
+Read the lists, not the package.
+The difference names the element; the fix is a toolchain module that provides it.
+In practice this means moving to a generation whose toolchain modules already include it.
 * The same name can mean two toolchains
 
 =get_toolchain_hierarchy= contains this, in full:
@@ -202,8 +169,7 @@ removed. Both the new and old NVHPC toolchains share the same name, we
 need to selectively filter one out based on the version of the
 toolchain.
 #+end_quote
-
-Two different toolchain classes, one string. The framework disambiguates
-by version number, with a =TODO: delete with EasyBuild 6.0= beside it.
-
-If =foss-2025a= were a label, that code would be unnecessary.
+A single string represents two distinct toolchain classes.
+The framework resolves the ambiguity with the version number.
+A =TODO: delete with EasyBuild 6.0= note is placed beside it.
+If =foss-2025a= acted as a label, the code would be unnecessary.

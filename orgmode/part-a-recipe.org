@@ -1,0 +1,28 @@
+#+TITLE: The recipe
+#+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. rst-class:: eb-part-kicker
+
+Part 1
+#+end_export
+An easyconfig is a file.
+EasyBuild evaluates it, picks an easyblock, resolves a toolchain, and writes a module.
+The file defines what a pin is.
+The file defines what the robot searches.
+The file defines what a sanity check asserts.
+The file defines how a build executes.
+The file defines how a recipe is written when none exists.
+Begin with the [[file:00-tutorial-read-an-easyconfig.org][tutorial]].
+It takes about twenty minutes.
+No installation is required.
+Four entries are presented, not thirty pages at once.
+#+begin_export rst
+.. toctree::
+ :maxdepth: 1
+
+ recipe-read
+ recipe-fail
+ recipe-run
+ recipe-write
+#+end_export

@@ -1,61 +1,42 @@
-#+TITLE: Chapter 28. Your first week on somebody's stack
+#+TITLE: Your first week on somebody's stack
 
 #+OPTIONS: toc:nil num:nil
 
 #+begin_objectives
 1. Take a "bump this package" ticket from the request to a built module,
-   in the order that finds the problems early.
+ in the order that finds the problems early.
 2. Say what your site's pipeline adds on top of =eb=, and find those parts
-   in a repository not seen before.
+ in a repository not seen before.
 3. Diagnose a failure that a build host reports as green.
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:20-reading-a-failed-build.org][Chapter 20]], because two of these
-  three tasks end in a failed build.
-- [[file:03-a-pin-is-for-one-generation.org][Chapter 3]] and
-  [[file:05-a-versionsuffix-is-part-of-the-name.org][chapter 5]], for
-  versions and suffixes.
+- [[file:20-reading-a-failed-build.org][Reading a failed build]]
+ three tasks end in a failed build.
+- [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] and
+ [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]], for
+ versions and suffixes.
 - Read access to whatever repository your site keeps its easyconfigs in.
 #+end_prerequisites
-
-Everything so far has been a mechanism. This chapter is the job.
-
-Three tasks, all real, all of the kind handed to somebody in their first
-month. Each is written as a sequence that can be followed, with the point where
-a first-timer goes wrong marked, because the interesting part of each one
-is not the fix.
-
-* What stands between the operator and eb
-
-Nothing in this chapter is about EasyBuild's defaults, because no site
-runs them. Before the first task, find these five things in your site's
-repository. Every site has them, under different names, and a newcomer who
-finds them in the first hour stops guessing.
-
-*The recipes.* One directory per initial in most site repositories,
-matching upstream's layout, with patches beside the easyconfig that needs
-them.
-
-*The build list.* A file per stack generation naming what gets built, in
-order, one entry per line, often with per-entry flags. A human edits that
-file to schedule a build; the easyconfig alone schedules nothing.
-
-*The pipeline.* Something reads that list and calls =eb= once per entry,
-per architecture, with the site's configuration: install prefix,
-=--optarch=, CUDA compute capabilities, module naming, hooks. Read the
-whole of it once. Every difference between your site and this book's
-transcripts starts there.
-
-*The hooks.* [[file:09-a-hook-changes-a-file-you-are-not-reading.org][Chapter
-9]]'s subject, and the reason a recipe can say one thing and the build do
-another. Find the directory, and find which hook applies to the package
-about to be touched.
-
-*The templates.* Starter easyconfigs, one per easyblock shape. Copy the
-site's template rather than upstream's example, and your first
-contribution comes out looking like everybody else's.
-
+All preceding material is a mechanism.
+This chapter defines the job.
+Three authentic tasks typical of a first month are presented.
+Each is expressed as a followable sequence.
+The error point for a beginner is marked.
+* What is between the operator and eb
+This chapter does not address EasyBuild's defaults.
+Before the first task, locate the five items in the site's repository.
+Each site stores them under different names, and a newcomer who finds them within the first hour stops guessing.
+Most site repositories contain one directory per initial, matching upstream's layout, with patches beside the easyconfig that needs them.
+One file per stack generation lists what gets built, in order, with one entry per line, often including per-entry flags.
+A human edits that file to schedule a build; the easyconfig alone schedules nothing.
+A component reads that list and calls =eb= once per entry, per architecture, using the site's configuration: install prefix, =--optarch=, CUDA compute capabilities, module naming, hooks.
+The entire pipeline is read once.
+All differences between the site and this book's transcripts originate there.
+The hooks are covered in [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]], and they explain why a recipe can state one thing while the build does another.
+Locate the directory and determine which hook applies to the package about to be touched.
+Starter easyconfigs exist, one per easyblock shape.
+Copy the site's template rather than upstream's example, and the first contribution will resemble everyone else's.
 #+ATTR_EB: :id site-questions :title Five questions to answer before your first build :kind reference
 #+begin_detail
 Write the answers down; they are needed all week.
@@ -70,52 +51,32 @@ Write the answers down; they are needed all week.
 
 The last one decides whether a failure tomorrow can be diagnosed. On a
 site that discards build directories nightly,
-[[file:20-reading-a-failed-build.org][chapter 20]]'s advice about
+[[file:20-reading-a-failed-build.org][Reading a failed build]]'s advice about
 =config.log= has a deadline.
 #+end_detail
 
 * Task one: the bump that was verified four ways and still failed
-
-The request: *"this package is pinned to a development commit, because no
-release carried the feature the group needs. Release 4.4.0 has it. Move
-the four recipes onto the release."*
-
-What was done, in order, before anything was built:
-
-1. Four recipes copied and pointed at the release archive.
-2. Four lines added to the current generation's build list.
-3. =eb-stack recipe lint=: clean.
-4. Dependency resolution: clean.
-5. The SHA256 of the release archive, compared against the one written
-   into the recipes: identical.
-6. A diff of build flags, dependencies and sanity checks against the
-   previous version's recipes: identical.
-
-All four builds then failed, before compiling anything:
-
+The request states that this package is pinned to a development commit.
+Release 4.4.0 includes the package.
+The four recipes are moved onto the release.
+Before any build, four recipes are copied and pointed at the release archive.
+Four lines are added to the current generation's build list.
+=eb-stack recipe lint=: clean.
+Dependency resolution: clean.
+The SHA256 of the release archive matches the one written into the recipes.
+A diff of build flags, dependencies and sanity checks against the previous version's recipes shows identical.
+All four builds fail before compiling anything.
 #+begin_example
 Specified start dir /scratch/build/.../qmcpack-4.4.0/qmcpack does not exist
 #+end_example
-
-*Where it went wrong: =start_dir= was carried across.* It had been correct
-for as long as the recipe built from a git commit, because EasyBuild
-archives a clone under the repository's name, so the sources were in
-=qmcpack/=. The release tarball extracts to =qmcpack-4.4.0/= with
-=CMakeLists.txt= at the top, and
-[[file:20-reading-a-failed-build.org][chapter 20]]'s descent rule then
-resolves a relative =start_dir= under that.
-
-The method failure is the more useful half. The verifying diff in step 6
-*deliberately excluded the source block*, on the grounds that the source
-block is the thing meant to change. =start_dir= is not in that block, and
-it is a function of it. So six checks passed, each of them correctly, and
-not one of them could see the fault.
-
-The general form: *a version bump is a change of source, and every
-parameter that describes the shape of the source has to be re-read.*
-=start_dir=, patch strip levels, =sanity_check_paths=, anything holding a
-directory name.
-
+The error stemmed from =start_dir= being carried across.
+The behavior remained correct while the recipe built from a git commit.
+EasyBuild archives a clone under the repository's name, placing the sources in =qmcpack/=.
+The release tarball extracts to =qmcpack-4.4.0/= with =CMakeLists.txt= at the top, and [[file:20-reading-a-failed-build.org][Reading a failed build]]'s descent rule then resolves a relative =start_dir= under that.
+The method failure provides the more useful half.
+The verifying diff in step 6 *deliberately excluded the source block*.
+=start_dir= is not in that block, and it is derived from it. six checks passed, each correctly, and none detected the fault.
+The general form: *a version bump is a change of source, and every parameter that describes the shape of the source must be re-read.* Examples include =start_dir=, patch strip levels, =sanity_check_paths=, and any value holding a directory name.
 #+ATTR_EB: :title Before you look it up
 #+begin_predict
 The version has been bumped, a checksum injected, and the build fails in
@@ -139,74 +100,43 @@ losing: nothing about this failure is stale state.
 #+end_predict
 
 * Task two: the check that was switched off over the defect it found
-
-The request, as it arrived twenty days late: *"the GPU build of this code
-will not start."*
-
+The request arrived twenty days late.
+*"the GPU build of this code will not start."*
 #+begin_example
 vasp_std: error while loading shared libraries: libnvJitLink.so.13:
 cannot open shared object file: No such file or directory
 #+end_example
-
-The whole sequence, because the sequence is the lesson:
-
-1. A production run installs the package on a vendor toolchain. After two
-   hours and sixteen minutes, the RPATH sanity check fails:
-   =Library libnvJitLink.so.13 not found=.
-2. =skipsteps = ['sanitycheck']= goes into the recipe, with a comment
-   naming the newer CUDA tree inside the vendor toolchain. The reasoning:
-   the check reports a defect this package cannot fix.
-3. A second recipe, for another version of the same package on the same
-   toolchain, is added and inherits the =skipsteps=.
-4. Twenty days pass. A user loads the module and gets the loader error
-   above.
-5. =skipsteps= comes out of both recipes.
-6. A root cause is published, and then *retracted*, having been checked
-   from a login node.
-7. The root cause is re-established, on the hardware, and the toolchain's
-   own recipe is fixed: =postinstallcmds= relinking the unversioned
-   =math_libs= and =comm_libs= entries at the CUDA version the module
-   declares.
-8. A temporary =--rebuild= goes on the build-list lines for everything
-   built against the broken toolchain, and comes off once the results are
-   checked on a node of each architecture class.
-
-Three separate mistakes are in that list, and only one of them is the
-symlink.
-
-*Switching the check off moved the discovery to a user.* Step 2's
-reasoning was true in both halves: the check was reporting a real defect,
-and no change to this package could repair it. The conclusion did not
-follow. The check was carrying information about the *toolchain*, and
-deleting the report left the toolchain broken and the package shipping.
-[[file:23-testing.org][Chapter 23]].
-
-*The workaround spread while the defect was hidden.* Step 3 is what a
-skipped check costs beyond one package: the next recipe copied the
-workaround along with everything else, because copying a recipe is how
-recipes get written.
-
-*The retraction is the part to learn from.* Step 6 happened because
-=/sw/arch= resolves to the architecture of the node reading it, and the
-binary's own [[dive:term-rpath]] carries that prefix. So =ldd= on the GPU
-binary, run from a login node, reports zero missing libraries. Pointing at
-the other architecture's tree by its full path does not rescue the test
-either: the RPATH inside the binary still resolves against the node
-the command runs on.
-
-*Where a first-timer goes wrong: they publish step 6.* A clean check is
-persuasive, it is cheap, and on a heterogeneous machine it is evidence
-about the node it ran on and nothing else.
-
-The general form: *a claim about library resolution has to be measured on
-the architecture that will run the binary.* The first command in that
-diagnosis is =readlink -f= on the per-node path, on the node the user's
-job ran on.
-
-And the thing to take from step 8: a rebuild flag added to fix a batch is
-temporary, so it needs a named owner and a date, or it becomes permanent
-and nobody remembers what it was for.
-
+The whole sequence is the lesson.
+A production run installs the package on a vendor toolchain.
+After two hours and sixteen minutes, the RPATH sanity check fails: =Library libnvJitLink.so.13 not found=.
+=skipsteps = ['sanitycheck']= goes into the recipe, with a comment naming the newer CUDA tree inside the vendor toolchain.
+The check reports a defect this package cannot fix.
+A second recipe for another version of the same package on the same toolchain is added and inherits the =skipsteps=.
+Twenty days pass.
+A user loads the module and gets the loader error above.
+=skipsteps= comes out of both recipes.
+A root cause is published and then *retracted*, having been checked from a login node.
+The root cause is re‑established on the hardware and the toolchain's own recipe is fixed: =postinstallcmds= relinking the unversioned =math_libs= and =comm_libs= entries at the CUDA version the module declares.
+A temporary =--rebuild= goes on the build‑list lines for everything built against the broken toolchain and comes off once the results are checked on a node of each architecture class.
+Three separate mistakes are in that list and only one of them is the symlink.
+*Switching the check off moved the discovery to a user.* Step 2's reasoning was true on both counts: the check was reporting a real defect and no change to this package could repair it.
+The conclusion did not follow.
+The check was carrying information about the *toolchain*.
+Deleting the report left the toolchain broken and the package shipping.
+[[file:23-testing.org][Testing, and the four things it can mean]].
+*The workaround spread while the defect was hidden.* Step 3 is what a skipped check costs beyond one package: the next recipe copied the workaround along with everything else.
+*The retraction is the part to learn from.* Step 6 happened.
+=ldd= on the GPU binary, run from a login node, reports zero missing libraries.
+Pointing at the other architecture's tree by its full path does not rescue the test either.
+The RPATH inside the binary still resolves against the node the command runs on.
+*Where a first‑timer goes wrong: they publish step 6.* A clean check is persuasive.
+A clean check is cheap.
+On a heterogeneous machine a clean check is evidence about the node it ran on and nothing else.
+The general form: *a claim about library resolution has to be measured on the architecture that will run the binary*.
+The first command in that diagnosis is =readlink -f= on the per‑node path, on the node the user's job ran on.
+A rebuild flag added to fix a batch is temporary.
+A temporary rebuild flag needs a named owner and a date.
+Without a name and date the flag becomes permanent and nobody remembers what it was for.
 #+ATTR_EB: :id EB-Week-2 :title The commit you would write
 #+begin_exercise
 You have just fixed the toolchain from task two: the unversioned library
@@ -219,97 +149,81 @@ Write the commit message. Specifically decide:
 2. Whether the rebuilt packages need anything, and how you would say so.
 3. What you would say about the twenty days, and to whom.
 4. Which of these belongs in the commit and which belongs somewhere else:
-   the loader error, the architectures affected, how you measured it, the
-   ticket, and the fact that a sanity check had been switched off.
+ the loader error, the architectures affected, how you measured it, the
+ ticket, and the fact that a sanity check had been switched off.
 
 #+begin_solution
 1. What was wrong, in one line a search will find: the unversioned
-   =math_libs= and =comm_libs= entries pointed into the newer CUDA tree
-   the same tarball carries. Then why the fix is where it is:
-   =postinstallcmds= runs before the sanity check, so the check that had
-   been failing can pass honestly.
+ =math_libs= and =comm_libs= entries pointed into the newer CUDA tree
+ the same tarball carries. Then why the fix is where it is:
+ =postinstallcmds= runs before the sanity check, so the check that had
+ been failing can pass honestly.
 
 2. Yes: anything built against the broken toolchain linked the wrong
-   library and has to be rebuilt. Say which packages, and say that the
-   rebuild flag is temporary and who removes it. A temporary flag with no
-   named owner becomes permanent.
+ library and has to be rebuilt. Say which packages, and say that the
+ rebuild flag is temporary and who removes it. A temporary flag with no
+ named owner becomes permanent.
 
 3. That the check had been switched off, that it was reporting this
-   defect, and that the twenty days are the cost of that decision rather
-   than of the defect. It goes to whoever will make the same call next
-   month, which means the commit message and the team's notes, not the
-   ticket. The user gets a working module and a date, not an autopsy.
+ defect, and that the twenty days are the cost of that decision rather
+ than of the defect. It goes to whoever will make the same call next
+ month, which means the commit message and the team's notes, not the
+ ticket. The user gets a working module and a date, not an autopsy.
 
-4. In the commit: the error string, because it is what the next person
-   will search for; the architectures affected, because that is the shape
-   of the bug; how you measured it, in one line, because a claim about
-   library resolution is only as good as the node it was made on. Not in
-   the commit: the ticket reference on its own, which ages out, and the
-   detail of the earlier retracted diagnosis, which belongs in the notes
-   where somebody can read the whole sequence.
+4. In the commit: the error string
+ will search for; the architectures affected
+ of the bug; how you measured it, in one line
+ library resolution is only as good as the node it was made on. Not in
+ the commit: the ticket reference on its own, which ages out, and the
+ detail of the earlier retracted diagnosis, which belongs in the notes
+ where somebody can read the whole sequence.
 #+end_solution
 #+end_exercise
 
 * Task three: a user says a module is broken and the report cannot be reproduced
-
-The request: *"this module works for me and fails for them"*, which is the
-commonest ticket in this job and the one with the most wrong answers.
-
-The sequence is a bisection over the four things that differ:
-
-1. *Which architecture.* Resolve the per-node path on their node and on
-   yours. Different trees mean different installs, and the module name
-   reports nothing.
-2. *Which module.* Have them send =module list= rather than the name they
-   think they loaded. A different generation on =MODULEPATH= is the second
-   most common answer.
-3. *Which environment.* =eb --show-config= on your side, their shell's
-   environment on theirs. A site hook or a user's own =MODULEPATH= is
-   [[file:09-a-hook-changes-a-file-you-are-not-reading.org][chapter 9]].
-4. *Which node.* A GPU library, a filesystem client, a fabric: all
-   host-provided, none in the module.
-   [[file:26-the-same-stack-somewhere-else.org][Chapter 26]]'s last
-   section is this list.
-
-*Where a first-timer goes wrong: they answer the ticket after step 3.*
-
-Three of the four checks pass, the module looks identical, and the
-temptation is to reply that it works. The fourth is where the difference
-tends to be, and a reply that closes a ticket names the node and the
-architecture it was tested on.
-
+The request: *"this module works for me and fails for them"* is the most common ticket in this job.
+It has the most incorrect answers.
+The sequence is a bisection over four differing factors: *Which architecture*.
+Resolve the per-node path on their node and on yours.
+Different trees mean different installs.
+The module name reports nothing.
+*Which module*.
+Have them send =module list= rather than the name they think they loaded.
+A different generation on =MODULEPATH= is the second most common answer.
+*Which environment*.
+=eb --show-config= on your side.
+Their shell's environment on theirs.
+A site hook or a user's own =MODULEPATH= is [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]].
+*Which node*.
+A GPU library, a filesystem client, a fabric: all host-provided, none in the module.
+[[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]]'s last section is this list.
+*Where a first-timer goes wrong: they answer the ticket after step 3*.
+Three of the four checks pass.
+The module looks identical.
+The temptation is to reply that it works.
+The fourth is where the difference tends to be.
+A reply that closes a ticket names the node and the architecture it was tested on.
 ** A pipeline's summary can be empty for two different reasons
-
-One more trap, from a bump that went green on three architecture classes
-and red on one, with the same prebuilt archive.
-
-A pipeline that summarises a run typically fills a field like
-=EasyBuild log:= by grepping its own output for the line =eb= prints at
-the end, =Results of the build can be found in the log file(s)=. =eb=
-prints that line on failed builds too. So an *empty* log field does not
-mean "no information": it means =eb= never got as far as printing it,
-which puts the failure before the easyconfig was processed at all, in the
-fetch phase.
-
-And a field like =Last successful build:= reporting *never* carries no
-signal for a line just added, because it is a search of previous
-runs for that filename and your filename has never appeared.
-
-Read your pipeline's summariser once, and find out which of its fields
-can be empty for a reason other than absence.
-
+One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.
+A pipeline that summarises a run typically fills a field such as =EasyBuild log:= by grepping its own output for the line that =eb= prints at the end, =Results of the build can be found in the log file(s)=.
+=eb= prints that line on failed builds as well.
+An *empty* log field does not indicate "no information".
+It indicates that =eb= never printed the line.
+The failure is before the easyconfig was processed, during the fetch phase.
+A field such as =Last successful build:= reporting *never* provides no signal for a newly added line.
+Examine the pipeline's summariser to determine which fields can be empty for reasons other than absence.
 #+ATTR_EB: :id first-week-habits :title Four habits that shorten the week :kind reference
 #+begin_detail
 1. *State where a result came from.* Every claim about a build
-   carries a machine and an architecture, in the ticket and in the commit
-   message. This book's transcripts do it for the same reason.
+ carries a machine and an architecture, in the ticket and in the commit
+ message. This book's transcripts do it for the same reason.
 2. *Read the archive, not the diff.* A version bump is a change of source.
 3. *Do not switch a check off to make a build pass.* A failing check on a
-   package that cannot be fixed is a report about something else.
-   [[file:23-testing.org][Chapter 23]].
+ package that cannot be fixed is a report about something else.
+ [[file:23-testing.org][Testing, and the four things it can mean]].
 4. *Write the diagnosis down where the next person will look.* The
-   install already carries the easyconfig, the log and =reprod/=; what it
-   does not carry is why that choice was made.
+ install already carries the easyconfig, the log and =reprod/=; what it
+ does not carry is why that choice was made.
 #+end_detail
 
 #+ATTR_EB: :id EB-Week-1 :title Your actual first ticket
@@ -321,44 +235,44 @@ Write the plan before you type anything. Specifically:
 
 1. The first four things you find out, and from where.
 2. Which of the three tasks above this is, and which parts of the other
-   two it also contains.
+ two it also contains.
 3. The two failures you expect, and the check that would catch each one
-   before a user does.
+ before a user does.
 4. What the reply will carry, and what it will omit until
-   you have measured it.
+ you have measured it.
 
 #+begin_solution
 1. Whether upstream has an easyconfig for 6.5.1 at all
-   (=eb --search=); which toolchain the GPU build needs and whether your
-   site has it at this generation; what the site's current version was
-   built with, from the archived easyconfig in its install directory; and
-   whether the licence covers this group, which is the question that
-   blocks everything else and has nothing to do with EasyBuild.
+ (=eb --search=); which toolchain the GPU build needs and whether your
+ site has it at this generation; what the site's current version was
+ built with, from the archived easyconfig in its install directory; and
+ whether the licence covers this group, which is the question that
+ blocks everything else and has nothing to do with EasyBuild.
 
 2. Mostly task two, with task one inside it: a version change *and* a
-   toolchain choice. If the toolchain is new to the site it is also a
-   stack decision, and that is somebody else's call as much as yours.
+ toolchain choice. If the toolchain is new to the site it is also a
+ stack decision, and that is somebody else's call as much as yours.
 
 3. A source-shape failure, caught by listing the archive and re-reading
-   every parameter that names a directory. And an architecture-specific
-   runtime failure, caught only by running the binary on the target
-   hardware; the build host passing tells you about the build host.
+ every parameter that names a directory. And an architecture-specific
+ runtime failure, caught only by running the binary on the target
+ hardware; the build host passing tells you about the build host.
 
 4. The reply says which version, which toolchain, which architectures it
-   was built for, and on which architecture it was actually run. It does
-   not say "it works" on the strength of a login-node check, and it does
-   not promise a date before the toolchain question is settled.
+ was built for, and on which architecture it was actually run. It does
+ not say "it works" on the strength of a login-node check, and it does
+ not promise a date before the toolchain question is settled.
 #+end_solution
 #+end_exercise
 
 #+begin_keypoints
 - A site's pipeline, build lists and hooks are what stand between an
-  easyconfig and a module; find all three before your first build.
+ easyconfig and a module; find all three before your first build.
 - A version bump is a change of source: re-read every parameter that
-  describes the shape of the archive.
+ describes the shape of the archive.
 - A dry run cannot see a fault that depends on the contents of an archive.
 - On a heterogeneous system, measure library resolution on the
-  architecture that will run the binary, not on the one underfoot.
+ architecture that will run the binary, not on the one underfoot.
 - Every claim about a build carries the machine and the architecture it
-  was measured on, or it is not a claim.
+ was measured on, or it is not a claim.
 #+end_keypoints
