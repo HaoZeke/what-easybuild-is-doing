@@ -2,6 +2,28 @@
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+
+   journeys
+   journey-first-recipe
+   journey-a-build-failed
+   journey-port
+   journey-write-a-test
+   part-a-recipe
+   part-a-stack
+   part-a-test
+   learning-path
+   glossary
+   keypoints
+   exercises
+   papers
+   colophon
+   afterword-when-easybuild-is-the-wrong-tool
+#+end_export
+
+#+begin_export rst
 .. rst-class:: eb-subtitle
 
 RecipeReader. StackWalker. ReframeReader.
@@ -48,24 +70,3 @@ The path, the papers, and the sample execution details are [[file:colophon.org][
 - `ReFrame <https://reframe-hpc.readthedocs.io/>`__
 #+end_export
 [fn:ebdocs] https://docs.easybuild.io/
-#+begin_export rst
-.. toctree::
- :hidden:
- :maxdepth: 2
-
- journeys
- journey-first-recipe
- journey-a-build-failed
- journey-port
- journey-write-a-test
- part-a-recipe
- part-a-stack
- part-a-test
- learning-path
- glossary
- keypoints
- exercises
- papers
- colophon
- afterword-when-easybuild-is-the-wrong-tool
-#+end_export

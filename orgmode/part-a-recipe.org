@@ -2,6 +2,16 @@
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   recipe-read
+   recipe-fail
+   recipe-run
+   recipe-write
+#+end_export
+
+#+begin_export rst
 .. rst-class:: eb-part-kicker
 
 RecipeReader
@@ -46,12 +56,3 @@ Four entries are presented instead of thirty pages.
 - `easybuild-easyconfigs <https://github.com/easybuilders/easybuild-easyconfigs>`__
 #+end_export
 [fn:ebdocs] https://docs.easybuild.io/
-#+begin_export rst
-.. toctree::
- :maxdepth: 1
-
- recipe-read
- recipe-fail
- recipe-run
- recipe-write
-#+end_export

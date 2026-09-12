@@ -2,6 +2,22 @@
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   23-testing
+   39-a-reframe-test-is-a-class
+   40-the-pipeline-has-six-stages
+   41-the-configuration-file-is-the-machine
+   42-a-performance-function-is-a-number-with-a-unit
+   43-compile-or-run-only
+   44-parameters-multiply-the-suite
+   45-a-portable-test-leaves-the-machine-in-the-config
+   46-software-maps-to-tests
+   47-reading-a-failed-reframe-run
+#+end_export
+
+#+begin_export rst
 .. rst-class:: eb-part-kicker
 
 ReframeReader
@@ -45,18 +61,3 @@ This step assumes that Testing, and the four things it can mean has already been
 #+end_export
 [fn:reframe] https://reframe-hpc.readthedocs.io/
 [fn:cscs] https://www.cscs.ch/
-#+begin_export rst
-.. toctree::
- :maxdepth: 1
-
- 23-testing
- 39-a-reframe-test-is-a-class
- 40-the-pipeline-has-six-stages
- 41-the-configuration-file-is-the-machine
- 42-a-performance-function-is-a-number-with-a-unit
- 43-compile-or-run-only
- 44-parameters-multiply-the-suite
- 45-a-portable-test-leaves-the-machine-in-the-config
- 46-software-maps-to-tests
- 47-reading-a-failed-reframe-run
-#+end_export

@@ -2,6 +2,18 @@
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   11-eessi-somebody-elses-stack
+   25-cvmfs-and-the-stratum
+   26-the-same-stack-somewhere-else
+   30-easystack-files
+   31-the-eessi-bot
+   32-host-injections
+#+end_export
+
+#+begin_export rst
 .. rst-class:: eb-part-kicker
 
 StackWalker
@@ -42,14 +54,3 @@ This part describes the arrival: the stratum, the bot, the easystack file, and t
 #+end_export
 [fn:eessi] https://www.eessi.io/
 [fn:cvmfs] https://cernvm.cern.ch/fs/
-#+begin_export rst
-.. toctree::
- :maxdepth: 1
-
- 11-eessi-somebody-elses-stack
- 25-cvmfs-and-the-stratum
- 26-the-same-stack-somewhere-else
- 30-easystack-files
- 31-the-eessi-bot
- 32-host-injections
-#+end_export
