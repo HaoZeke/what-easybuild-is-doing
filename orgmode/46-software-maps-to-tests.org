@@ -63,13 +63,13 @@ Those are three filters over one tree, not three suites.
 The =CI= tag from Parameters multiplies the suite, acting as the contribution filter: Crambin, five minutes, eight cores.
 The nightly drops the tag and keeps the HECBioSim ladder.
 The end user passes =--name GROMACS= or does not.
-The mapping lives next to the tests.
+The mapping lives in EESSI/software-layer-scripts, not next to the test classes.
 Testing and the four things it can mean already named it: [[https://github.com/EESSI/software-layer-scripts/blob/main/tests/eessi_test_mapping/software_to_tests.yml][software_to_tests.yml]].
 Adding GROMACS to the stack without a line in that file causes a green build to ship a module that the suite will not touch.
 The generalisable rule is that a test has a location, and a result without its location is not a result.
 The mapping is that location, written down.
 Available tests in the public suite include GROMACS (six HECBioSim systems, implemented on top of ReFrame's =hpctestlib=), TensorFlow (the multi‑worker Keras tutorial), CP2K, OpenFOAM and the OSU microbenchmarks.
-Each is a class under =eessi/testsuite/tests/apps/=.
+Each class lives in [[https://github.com/EESSI/test-suite][EESSI/test-suite]] under =eessi/testsuite/tests/apps/=.
 The mapping connects a module name to those classes.
 * CSCS: config, checks, CI
 The CSCS suite =eth-cscs/cscs-reframe-tests= provides the layout cited in the official ReFrame README, which is the most complete public tree.

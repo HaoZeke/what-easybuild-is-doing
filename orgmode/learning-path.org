@@ -108,7 +108,7 @@ Needs D.
 | [[file:23-testing.org][Testing, and the four things it can mean]] | the four things called testing |
 
 Testing, and the four things it can mean names the fourth kind and stops.
-[[file:part-a-test.org][The test]] is that kind.
+[[file:part-a-test.org][ReframeReader]] is that kind.
 * Level F. Distribute a stack
 
 A completed build prints a single line.

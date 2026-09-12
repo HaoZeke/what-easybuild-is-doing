@@ -81,7 +81,7 @@ An easyconfig that works on =foss-2025a= is moved to =foss-2024a=.
 The move can result from a user locked onto the older stack.
 The move can result from a site performing backfilling.
 The easyconfig specifies HDF5 1.14.6.
-=foss-2024a= provides HDF5 1.14.3.
+=foss-2024a= provides HDF5 1.14.5.
 The build fails.
 No HDF5 1.14.6 exists in that generation.
 No such version will appear later.
@@ -102,7 +102,7 @@ it states a requirement the software never made.
 * This is why retargeting is not a text edit
 The first move is to open the easyconfig and replace =2025a= with =2024a=.
 The build fails on HDF5.
-The version changes from 1.14.6 to 1.14.3.
+The version changes from 1.14.6 to 1.14.5.
 The build then fails on netCDF.
 The version provided by =foss-2024a= is looked up and inserted.
 Twenty minutes later the easyconfig builds.
@@ -162,12 +162,12 @@ two dependencies:
 : ('HDF5', '1.14.6'),
 : ('netCDF', '4.9.3'),
 
-=foss-2024a= carries HDF5 1.14.3 and netCDF 4.9.2. You change both
+=foss-2024a= carries HDF5 1.14.5 and netCDF 4.9.2. You change both
 numbers and the build passes.
 
 1. What have you established?
 2. What have you not?
-3. Where would you look to find out whether HDF5 1.14.3 is actually
+3. Where would you look to find out whether HDF5 1.14.5 is actually
  enough for this package, and what would count as an answer?
 
 #+begin_solution
@@ -175,7 +175,7 @@ You have established that the package builds against those two versions,
 on that machine, on that day. That is a data point and it is worth
 having.
 
-You have not established that 1.14.3 satisfies what the software needs. A
+You have not established that 1.14.5 satisfies what the software needs. A
 passing build is consistent with the requirement being 1.10. It is
 equally consistent with the requirement being 1.14.3 and you having been
 lucky about which symbols the build exercised.
