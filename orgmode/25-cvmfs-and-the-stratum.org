@@ -49,12 +49,12 @@ Transport uses HTTP.
 Any web cache works with this transport.
 Hashes ensure authenticity across untrusted caches.
 Hashes preserve cacheability.
-All commands in this chapter execute on a standard machine lacking a CernVM-FS client.
-All commands in this chapter execute on a standard machine lacking a mount.
-All commands in this chapter execute on a standard machine lacking elevated privileges.
-All commands in this chapter execute on a standard machine lacking a specific account.
+All commands in This page execute on a standard machine lacking a CernVM-FS client.
+All commands in This page execute on a standard machine lacking a mount.
+All commands in This page execute on a standard machine lacking elevated privileges.
+All commands in This page execute on a standard machine lacking a specific account.
 The public EESSI repository responds to plain GET requests.
-This chapter performs verification instead of description.
+This page performs verification instead of description.
 Each numeric value returned originates from the network on 2026-09-10.
 Apply this setting once.
 Subsequent steps follow automatically.
@@ -170,7 +170,7 @@ It was established here by trying both against the live repository.
 The outcomes were a 404 and a 200.
 Treat the suffix as a fact about the deployed format rather than a documented interface.
 Expect regular file objects to have no suffix.
-The =.cvmfsdirtab= fetch later in this chapter relies on that. #+end_detail
+The =.cvmfsdirtab= fetch later in This page relies on that. #+end_detail
 * Inside the catalog
 =md5path_1= and =md5path_2= form the two halves of an MD5, with paths omitted and only their hashes retained.
 Absolute paths are not stored to conserve space.
@@ -348,7 +348,7 @@ Do this one rather than reading it. You need =curl=, =python3= and
  modified file without them noticing?
 
 #+begin_solution
-Steps 1 to 4 are the transcripts in this chapter, against whichever
+Steps 1 to 4 are the transcripts in This page, against whichever
 repository you pick; the numbers will differ and the relationships will
 not. If =sha1sum= disagrees with the object name, you have found either a
 corrupted mirror or a much more interesting problem.
@@ -518,9 +518,9 @@ A site that points =EESSI_HOST_INJECTIONS= somewhere else changes what the symli
 It contains exactly the bytes it was signed with.
 That is the whole trick.
 It is [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
-#+ATTR_EB: :id sources-25 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-25 :title Where This page comes from :kind sources
 #+begin_detail
-Live evidence: every transcript in this chapter was produced on
+Live evidence: every transcript in This page was produced on
 2026-09-10 against =http://s1eessieu1-cvmfs.openhtc.io/cvmfs/software.eessi.io=
 and =http://aws-eu-central-s1.eessi.science/cvmfs/software.eessi.io=, at
 repository revision 23927, with =curl=, =python3= and =sqlite3= and no
@@ -572,7 +572,7 @@ For each, name the layer and the check.
 
 3. Metadata resolved, content did not: the catalog is cached and an object
  fetch or its verification failed. Check the proxy chain, then fetch the
- object by hand the way this chapter does and compare =sha1sum= against
+ object by hand the way This page does and compare =sha1sum= against
  the name.
 
 4. Missing forward proxies, or proxies without =collapsed_forwarding on=.

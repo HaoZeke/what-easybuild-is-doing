@@ -137,7 +137,7 @@ workload in all twelve; the listing still has twelve names.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-44 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-44 :title Where This page comes from :kind sources
 #+begin_detail
 EESSI writing-tests tutorial, the mpi4py example: =parameter=
 against =variable=, the cartesian warning, and hooks after

@@ -77,7 +77,7 @@ ReFrame does not see the class.
 =RunOnlyRegressionTest= is the other claim on that line.
 The compile stage performs no operation.
 The test runs an existing executable.
-The next two chapters describe the associated costs.
+The next two pages describe the associated costs.
 A test that builds and a test that runs a module use different base classes.
 * Two constraints, then a verdict
 Each test must define =valid_systems= and =valid_prog_environs=.
@@ -126,7 +126,7 @@ partial log is a failed test, not a quiet success.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-39 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-39 :title Where This page comes from :kind sources
 #+begin_detail
 The STREAM test is the opening example of the official ReFrame 4
 tutorial

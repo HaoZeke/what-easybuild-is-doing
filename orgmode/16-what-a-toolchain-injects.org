@@ -30,7 +30,7 @@
 3. Say what =optarch= does and why it decides where a binary can run.
 #+end_objectives
 [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] covered the dependencies a toolchain makes visible.
-This chapter addresses the other half: the impact on the compiler.
+This page addresses the other half: the impact on the compiler.
 * The variables, and where they are not
 [[file:14-the-isolation-policy.org][What a build is allowed to see]] measured the surprising part.
 Restating is worthwhile.

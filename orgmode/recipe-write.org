@@ -5,7 +5,7 @@
    :alt: no recipe, then sources, sanity, and a new file
    :class: eb-diagram
 
-   Write one: sources and a sanity check. The rest is the RecipeReader chapters.
+   Write one: sources and a sanity check. The rest is the RecipeReader pages.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-write.svg

@@ -133,7 +133,7 @@ configuration.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-45 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-45 :title Where This page comes from :kind sources
 #+begin_detail
 EESSI
 [[https://www.eessi.io/docs/test-suite/writing-portable-tests/][writing

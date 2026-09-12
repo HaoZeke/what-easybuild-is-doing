@@ -215,5 +215,5 @@ Possible sources include the project's own build system, another packaging forma
 The first two entries represent bounds.
 The third entry denotes a build environment that was present.
 The next person moving this file will appreciate the indication of which entry is which.
-The following chapter describes the machinery that converts a filename into an install plan.
+The following page describes the machinery that converts a filename into an install plan.
 It also explains what occurs when the lookup is performed in the wrong location.

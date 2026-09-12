@@ -44,7 +44,7 @@
 Each ReFrame test defines the actions to be executed.
 Each ReFrame configuration defines the target environment.
 Combining a test and a configuration forms the portability problem that the config aims to resolve.
-The chapter contains the file that separates them.
+The page contains the file that separates them.
 The official tutorial shows the division using STREAM on a single-node container and on a compose-built Slurm cluster, while the test class remains unchanged.
 EESSI's documentation uses the same approach: define the system configuration and then direct ReFrame to the suite.
 CSCS provides =config/cscs.py= alongside =checks/=, not within it.
@@ -66,7 +66,7 @@ A site file *adds* to that; it does not replace it.
 =reframe -l= with no =-C= lists tests against =generic:default+builtin=.
 The STREAM test in a ReFrame test is a class run at all.
 * A file small enough to read
-The documented skeleton of EESSI is reduced to the keys required for this chapter.
+The documented skeleton of EESSI is reduced to the keys required for This page.
 #+begin_src python
 import os
 from eessi.testsuite.common_config import (
@@ -166,7 +166,7 @@ schedules it.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-41 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-41 :title Where This page comes from :kind sources
 #+begin_detail
 ReFrame 4.10 tutorial, the configuration section, and the
 [[https://reframe-hpc.readthedocs.io/en/stable/config_reference.html][configuration

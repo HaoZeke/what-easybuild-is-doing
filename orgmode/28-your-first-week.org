@@ -40,7 +40,7 @@
 - Read access to whatever repository your site keeps its easyconfigs in.
 #+end_prerequisites
 * What is between the operator and eb
-The chapter does not address EasyBuild's defaults.
+The page does not address EasyBuild's defaults.
 Before the first task, locate the five items in the site repository.
 Each site stores them under different names.
 A newcomer who finds them within the first hour stops guessing.

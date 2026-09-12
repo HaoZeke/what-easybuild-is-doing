@@ -148,7 +148,7 @@ Four jobs. For each, name the base class, and say what
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-43 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-43 :title Where This page comes from :kind sources
 #+begin_detail
 ReFrame regression-test API: =RegressionTest=,
 =RunOnlyRegressionTest=, =CompileOnlyRegressionTest=,
@@ -156,7 +156,7 @@ ReFrame regression-test API: =RegressionTest=,
 is from the CSCS 2022 webinar slides. ExCALIBUR-tests tutorial
 sections 5 and 6 walk Make/CMake/Autotools/Spack and run-only
 tests. EESSI's mpi4py tutorial is the run-only-plus-module
-pattern this chapter uses.
+pattern This page uses.
 #+end_detail
 
 #+begin_keypoints

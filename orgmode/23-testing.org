@@ -188,7 +188,7 @@ do?
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-23 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-23 :title Where This page comes from :kind sources
 #+begin_detail
 Upstream documentation, fetched 2026-09-10:
 

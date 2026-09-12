@@ -105,7 +105,7 @@ easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb
 Lock denotes solver assignment.
 Plan includes parsed foreign recipe and residuals; parser‑invented items appear as typed leftovers, not guessed dependencies.
 [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] denotes queue.
-Chapter contains two files for side‑by‑side placement.
+This page contains two files for side‑by‑side placement.
 Emitted recipe claim appears below from same fixture.
 Name and version remain retained.
 =eon= transformed into =eOn=.
@@ -275,7 +275,7 @@ say the work is not eb-stack's.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-12 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-12 :title Where This page comes from :kind sources
 #+begin_detail
 eb-stack 0.2.0 and the HaoZeke/eb-stack fixtures, read
 2026-09-11.

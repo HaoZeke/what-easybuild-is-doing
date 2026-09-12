@@ -6,14 +6,14 @@
    :alt: four recorded events, not a parable
    :class: eb-diagram
 
-   Four things that actually happened. Each one is a chapter already written, on a real log.
+   Four things that actually happened. Each one is a page already written, on a real log.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/27-four-things-that-actually-happened.svg
    :alt: four recorded events
    :class: eb-diagram
 
-   Four things that actually happened. Each one is already a chapter.
+   Four things that actually happened. Each one is already a page.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/27-four-claims.svg

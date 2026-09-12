@@ -75,7 +75,7 @@ The lookup neither resolves nor raises an error, and readers accumulate in an un
 List first.
 Confirm.
 Then use.
-The second concerns the generation question, which determines whether the remainder of this chapter applies.
+The second concerns the generation question, which determines whether the remainder of This page applies.
 * Check the generation before planning anything
 The compatibility layer is behind the newest EasyBuild toolchain generation.
 A version of EESSI includes a specific set of top‑level toolchains.
@@ -241,7 +241,7 @@ The bot builds x86-64 from generic up through Zen and Sapphire Rapids, and build
 Software that works only on the local microarchitecture is not ready, regardless of local green status.
 That matches the distinction of What "installed" means, with a larger set of trees.
 * The three that bite
-The rest of this chapter outlines procedures.
+The rest of This page outlines procedures.
 The three steps require real time.
 The steps must be performed in the given order.
 *List before descending.* A version directory may act as an unpopulated placeholder.

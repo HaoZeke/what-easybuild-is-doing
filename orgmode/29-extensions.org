@@ -41,7 +41,7 @@
 #+end_prerequisites
 An extension is software installed *inside* another installation rather than as a separate module.
 The mechanism consists of the easyconfig parameter =exts_list= and the step =extensions=, the tenth of the eighteen steps.
-A dedicated chapter is required.
+A dedicated page is required.
 It contains parameters and an easyblock.
 The origins of those parameters are not documented in a single location.
 The origins of those parameters are not inferable.
@@ -127,7 +127,7 @@ for key, value in self.options.items():
 Unknown keys are discarded at =debug= level.
 Normal runs produce no warnings, errors, or mentions.
 A misspelled per-extension option in a bundle of two hundred extensions remains invisible unless specifically searched for.
-This invisibility is the single most useful aspect of this chapter.
+This invisibility is the single most useful aspect of This page.
 Alternative parameter names are honoured on input.
 The =install_opts= name works where =installopts= is intended, and real easyconfigs in the upstream repository use it.
 * What an extension does not inherit
@@ -205,7 +205,7 @@ default rather than extending it, so an extension that adds one URL loses
 the others.
 #+end_detail
 
-#+ATTR_EB: :id sources-29 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-29 :title Where This page comes from :kind sources
 #+begin_detail
 Every claim here was read out of EasyBuild 5.3.1 as installed from PyPI
 and checked on 2026-09-10:

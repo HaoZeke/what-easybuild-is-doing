@@ -6,14 +6,14 @@
    :alt: glossary grouped as recipe, run, output, testing
    :class: eb-diagram
 
-   Each term appears once. A chapter points here instead of defining it again.
+   Each term appears once. A page points here instead of defining it again.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/glossary.svg
    :alt: a term names one object
    :class: eb-diagram
 
-   Each term appears once. Chapters point here.
+   Each term appears once. Pages point here.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/glossary-term-object.svg
@@ -22,7 +22,7 @@
 
    A glossary entry is a name for an object the book already used.
 #+end_export
-Each term appears a single time on this page, and any chapter may reference it in situ.
+Each term appears a single time on this page, and any page may reference it in situ.
 Encountering =versionsuffix= in One easyconfig, many installs does not require this page, while a reader requiring the complete vocabulary can obtain it here.
 Definitions are presented mechanically rather than descriptively: they specify what the entity *is* in the code and what alterations occur when it changes.
 * The recipe

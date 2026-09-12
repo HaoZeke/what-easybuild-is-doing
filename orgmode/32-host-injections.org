@@ -61,7 +61,7 @@ They are not the same job.
 *Licensed software* cannot go in =software.eessi.io=.
 It may also be limited to a subset of the site's users.
 *Software that is not on the tree yet* is a time problem.
-Waiting for the bot on every architecture is the right path into EESSI (chapters 30 and 31).
+Waiting for the bot on every architecture is the right path into EESSI (pages 30 and 31).
 It is the wrong path for a group that needs the binary this week.
 *Custom installations* are the fabric, the licence server, the site MPI.
 Those cannot be expressed as an easyconfig that EESSI would accept.
@@ -93,7 +93,7 @@ That matches the load-time rule for EESSI, somebody else's stack's =EESSI_USER_I
 Both =EESSI_SITE_INSTALL= and =EESSI_CVMFS_INSTALL= are exclusive of =EESSI_USER_INSTALL= and =EESSI_PROJECT_INSTALL=.
 User and project can be set together; site and CVMFS cannot.
 
-The webinar repeats the chapter‑11 warning, applied to a site prefix: =EESSI-extend= performs native optimisation and installs into a prefix named for the host architecture.
+The webinar repeats the page‑11 warning, applied to a site prefix: =EESSI-extend= performs native optimisation and installs into a prefix named for the host architecture.
 The Hábrók zen3 modules remain invisible on a zen4 node until the same =eb= is executed there.
 
 There are two locations where the prefix can reside.
@@ -326,7 +326,7 @@ Determine the location where the difference is expressed.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-32 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-32 :title Where This page comes from :kind sources
 #+begin_detail
 Talks, read 2026-09-11:
 
@@ -345,7 +345,7 @@ Talks, read 2026-09-11:
  =eb --show-config= under =EESSI-extend=, =buildenv=.
 - *Site-Specific Tweaks with host_injections*, EESSI Happy Hour,
  2026-06-08: four-slide pointer at the variant symlink and
- ABI-compatible MPI. The webinar is the chapter; this is the
+ ABI-compatible MPI. The webinar is the page; this is the
  postcard.
 
 Docs:

@@ -5,7 +5,7 @@
    :alt: log to start_dir to the pin
    :class: eb-diagram
 
-   A failed build starts at the log, then the chapter that names the cause.
+   A failed build starts at the log, then the page that names the cause.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/journey-fail-pages.svg

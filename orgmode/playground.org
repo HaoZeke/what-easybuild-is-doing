@@ -5,21 +5,21 @@
    :alt: a playground widget talks to the in-page model; reload resets it
    :class: eb-diagram
 
-   The playground is the model without the chapter. Nothing here is installed.
+   The playground is the model without the page. Nothing here is installed.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/playground.svg
    :alt: try, widget, reset
    :class: eb-diagram
 
-   The playground is the in-page model without the chapter.
+   The playground is the in-page model without the page.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/playground-widget-model.svg
    :alt: a playground widget evaluates the model; reset restores it
    :class: eb-diagram
 
-   The playground is the same model the chapters teach, with a reset.
+   The playground is the same model the pages teach, with a reset.
 #+end_export
 
 * Parse

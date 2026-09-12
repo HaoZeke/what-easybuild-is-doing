@@ -20,6 +20,7 @@ jobs:
         with:
           environments: docs
           cache: true
+          locked: false
       - name: Sphinx HTML
         run: |
           pixi run -e docs html || test -f build/html/index.html

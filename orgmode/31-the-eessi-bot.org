@@ -245,7 +245,7 @@ Opening the pull request does not start 1. A green local
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-31 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-31 :title Where This page comes from :kind sources
 #+begin_detail
 [[cite:drogeEessiCrossplatformReadytouse2023][Dröge et al. 2023]]:
 the three-layer design. The bot and the production repository
@@ -273,7 +273,7 @@ Talks:
  =ingest_tarballs.sh= on the Stratum-0.
 - Lara Peeters and Kenneth Hoste, *Building software on top of
  EESSI + contributing*, 2026-05-04: the workflow diagram this
- chapter's pipeline is.
+ page's pipeline is.
 
 Code, read 2026-09-11:
 =EESSI/software-layer/bot/build.sh= and

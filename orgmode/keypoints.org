@@ -3,10 +3,10 @@
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
 .. figure:: _static/diagrams/keypoints-2.svg
-   :alt: each chapter yields a claim and what would falsify it
+   :alt: each page yields a claim and what would falsify it
    :class: eb-diagram
 
-   Keypoints are produced from the chapters. They are claims, not slogans.
+   Keypoints are produced from the pages. They are claims, not slogans.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/keypoints.svg
@@ -22,10 +22,10 @@
 
    What to remember is a claim with a page behind it.
 #+end_export
-Keypoints for each chapter are produced in reading order directly from the chapters instead of manual maintenance.
+Keypoints for each page are produced in reading order directly from the pages instead of manual maintenance.
 The Carpentries refer to this as a digest ([[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]]).
 It has two purposes.
-Before a chapter, it indicates whether the chapter's purpose is already known.
+Before a page, it indicates whether the page's purpose is already known.
 After finishing the book, it provides a page to reread instead of the entire book.
 #+begin_export rst
 .. keypoints-index::

@@ -46,7 +46,7 @@ Dozens of modules appear in a working order.
 Most are never named at the prompt.
 The =-r= caused this.
 It is short for =--robot=.
-This chapter explains its function.
+This page explains its function.
 It also explains its search locations.
 The sample is a toy robot.
 It walks a canned universe shipped with the page.
@@ -197,7 +197,7 @@ EasyBuild 5 dropped the implication that =-D= includes =--robot=.
 =eb pkg.eb -D= dry‑runs only the named file.
 The resolved plan is =eb pkg.eb -Dr=.
 [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]] is the page for that change.
-The recordings in this chapter already pass both letters.
+The recordings in This page already pass both letters.
 =-D= / =--dry-run= already retains every dependency.
 It marks each one =[x]= or =[ ]= once =-r= is also on the command line.
 There is no =eb --retain-all-deps=; that name is an internal argument used by =-D=, =--dep-graph=, and =--check-conflicts=.
@@ -229,7 +229,7 @@ Sibling toolchains convey the same fact one level lower.
 ** And the hierarchy filters the candidates
 The hierarchy from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] determines which items step 3 may locate.
 A candidate is valid only when its toolchain belongs to the package's hierarchy.
-The filter represents the intersection of the two chapters.
+The filter represents the intersection of the two pages.
 The filter generates the most frustrating class of robot failure.
 The module is installed.
 =module avail= lists the module.
@@ -304,5 +304,5 @@ Items present in the current run's list cease to count as available.
 Both a library and its dependents are rebuilt.
 Consult =-D= prior to any non‑trivial build.
 This option uniquely differentiates one installation from ninety.
-The following chapter covers =versionsuffix=.
+The following page covers =versionsuffix=.
 =versionsuffix= appears as a constraint and as a label.

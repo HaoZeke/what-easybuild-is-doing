@@ -41,7 +41,7 @@
 
 #+begin_prerequisites
 - [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]: a
- dependency version is a pin. This chapter is the site-side
+ dependency version is a pin. This page is the site-side
  escape.
 - [[file:04-the-robot.org][The robot]]: =-D= is how a plan is
  read. EasyBuild 5 changed what that flag implies.
@@ -78,7 +78,7 @@ The book separates these two facts intentionally.
 An easyconfig author does not specify a version range.
 A site operator may apply a wrap.
 A pin is for one generation's "no operator, no caret, no tilde" refers to the file.
-This chapter addresses the directory tree from which the file is loaded.
+This page addresses the directory tree from which the file is loaded.
 A wrap that causes a *build* to resolve against a different HDF5 than the pinned version is a finding rather than a convenience.
 That binary has not been tested with that module.
 The per-architecture claim of what "installed" means applies one level higher.
@@ -157,7 +157,7 @@ GROMACS closure. Two commands:
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-37 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-37 :title Where This page comes from :kind sources
 #+begin_detail
 EasyBuild docs, last update 2026-08-09:
 
@@ -169,7 +169,7 @@ EasyBuild docs, last update 2026-08-09:
 - [[https://docs.easybuild.io/extended-dry-run/][Extended dry
  run]]: =-x= is a different command.
 
-A pin is for one generation remains the law of the easyconfig file. This chapter is
+A pin is for one generation remains the law of the easyconfig file. This page is
 the site tree and the 5.0 dry-run change.
 #+end_detail
 

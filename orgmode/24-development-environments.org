@@ -34,7 +34,7 @@
 [[file:14-the-isolation-policy.org][What a build is allowed to see]] measured that loading =foss/2025a= sets =EBROOTFOSS=; =$CC= remains unset.
 EasyBuild constructs the build environment during =prepare=; evaporation at run end is expected.
 Evaporation does not occur.
-The chapter discusses the location of the missing environment.
+The page discusses the location of the missing environment.
 * Look inside the installation first
 Each successful installation includes a rarely opened subdirectory.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; a Tarball install of a one-file test package" :caption "What ends up in <installdir>/easybuild/"
@@ -295,7 +295,7 @@ The configuration appears in [[file:11-eessi-somebody-elses-stack.org][EESSI, so
 =EESSI_EASYBUILD_HOOKS_OVERRIDE= replaces the hooks it uses.
 The replacement alters the hooks that give an EESSI build its EESSI shape.
 Overriding the hooks permits obtaining a non‑EESSI build.
-#+ATTR_EB: :id sources-24 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-24 :title Where This page comes from :kind sources
 #+begin_detail
 Upstream documentation, all fetched 2026-09-10:
 

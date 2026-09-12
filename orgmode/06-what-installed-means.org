@@ -32,7 +32,7 @@ A completed build prints a single line and creates one file.
 The line indicates that the install succeeded.
 The file is a modulefile and is the only component a user ever encounters.
 Neither of these confirms that the software functions correctly.
-The distinction comprises the entirety of this chapter.
+The distinction comprises the entirety of This page.
 The gap between them contains bugs that reach a user bearing the developer's name.
 * Existence is the default claim
 After the install step copies files into place, EasyBuild checks the count.
@@ -190,7 +190,7 @@ Test in a way that the environment cannot answer for.
 A test that can pass for a reason other than the one being tested does not qualify as a test.
 That matches the shape of [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]]'s stale name: an accurate observation carrying a wrong inference.
 * The modulefile is the deliverable
-Chapters 1 through 5 collectively produce a single text file.
+Pages 1 through 5 collectively produce a single text file.
 The parameters of the easyconfig, the derivations of the easyblock, the toolchain hierarchy, the pinned dependency versions, and the suffix incorporated into the name each become part of a modulefile.
 The generated modulefile sets environment variables and declares prerequisites.
 Running =module load= provides the variables without exposing the underlying details.

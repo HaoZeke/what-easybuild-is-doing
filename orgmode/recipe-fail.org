@@ -2,17 +2,17 @@
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-fail-2.svg
-   :alt: a log to a usual cause to the chapter that names it
+   :alt: a log to a usual cause to the page that names it
    :class: eb-diagram
 
-   When it fails: the log, then the chapter that already named that cause.
+   When it fails: the log, then the page that already named that cause.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-fail.svg
    :alt: log to cause to fix
    :class: eb-diagram
 
-   When it fails: the log, then the chapter that named that cause.
+   When it fails: the log, then the page that named that cause.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-fail-causes.svg

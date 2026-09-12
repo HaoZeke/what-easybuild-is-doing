@@ -30,7 +30,7 @@
  the cause rather than the fallout.
 3. Reproduce a failing command in the environment it failed in.
 #+end_objectives
-Everything before this chapter was about what EasyBuild does when it works.
+Everything before This page was about what EasyBuild does when it works.
 This is the one that gets used.
 It is a reading skill rather than a repertoire of fixes.
 The material here is a real failure.
@@ -279,7 +279,7 @@ for:
 | =error:= | a compiler diagnostic, with the colon to exclude prose |
 | =failure= | test-suite reports |
 | =not found= | a missing library or header |
-| =No such file or directory= | a path assumption, like this chapter's |
+| =No such file or directory= | a path assumption, like This page's |
 | =Segmentation fault= | a compiler or a test binary crashing |
 | =bazel= | Bazel's own log, which is elsewhere |
 
@@ -341,7 +341,7 @@ The dry run ends with =(no ignored errors during dry run)= when nothing went wro
 The limit is exactly the one from An easyconfig is Python.
 The dry run never extracts anything.
 A fault that depends on the contents of an archive is invisible to the dry run.
-This chapter's failure would pass a dry run.
+This page's failure would pass a dry run.
 =--trace= is on by default in EasyBuild 5.
 =--trace= causes the run above to print the working directory and the source checksums as it proceeds.
 Turning =--trace= off is possible.
@@ -369,7 +369,7 @@ It ends with =(no ignored errors during dry run)= when nothing went wrong.
 Its limit is exactly the one from An easyconfig is Python.
 It never extracts anything.
 A fault that depends on the contents of an archive is invisible to it.
-This chapter's failure would pass a dry run.
+This page's failure would pass a dry run.
 =--trace= is on by default in EasyBuild 5.
 It is the reason the run above printed the working
 #+ATTR_EB: :id EB-Failure-1 :title Four failures, four first moves
@@ -414,7 +414,7 @@ For each, say what you read first and what you would rule out with it.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-20 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-20 :title Where This page comes from :kind sources
 #+begin_detail
 The failing build, the error block, the log paths, =out.txt= and =cmd.sh=
 were produced on a workstation on 2026-09-10 with EasyBuild 5.3.1

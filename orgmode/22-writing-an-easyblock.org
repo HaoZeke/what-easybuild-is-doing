@@ -35,7 +35,7 @@
 - [[file:13-how-a-build-executes.org][How a build executes]]
  organised around the steps.
 - [[file:21-writing-one-from-nothing.org][Writing one from nothing]]
- in this chapter is whether an easyconfig was enough.
+ in This page is whether an easyconfig was enough.
 - Enough Python to read a class and call a parent method. Nothing more.
 #+end_prerequisites
 An easyblock is Python code executed by EasyBuild.
@@ -232,7 +232,7 @@ instead if not.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-22 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-22 :title Where This page comes from :kind sources
 #+begin_detail
 The counts and the =NotImplementedError= were read out of EasyBuild 5.3.1
 as installed on 2026-09-10: 82 generic classes in 47 modules and 282
@@ -245,7 +245,7 @@ Upstream documentation, fetched 2026-09-10:
 - [[https://docs.easybuild.io/hooks/][hooks]]: the most reliable published enumeration of the steps
 - [[https://docs.easybuild.io/easybuild-v5/run_shell_cmd/][the run_shell_cmd migration]]
 
-One caution repeated in the chapter
+One caution repeated in the page
 implementing-easyblocks page documents the EasyBuild 4 shell API
 (=run_cmd=, =run_cmd_qa=) and imports =LooseVersion= from =distutils=,
 which was removed from Python's standard library in 3.12. The framework's

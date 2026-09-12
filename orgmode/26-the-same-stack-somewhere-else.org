@@ -32,13 +32,13 @@
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]]: this chapter uses the
+- [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]]: This page uses the
  format that one takes apart.
 - A machine that can install a package, or a container runtime, or
  neither and read it as reference.
 #+end_prerequisites
 [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]] dissected a repository.
-The chapter uses that repository on machines lacking their own software stack, such as a laptop, a continuous‑integration runner, a cloud instance, and a cluster with externally managed stack.
+The page uses that repository on machines lacking their own software stack, such as a laptop, a continuous‑integration runner, a cloud instance, and a cluster with externally managed stack.
 The tested claim originates from EESSI: "The host OS still provides a couple of things, like drivers for network and GPU, support for shared filesystems like GPFS and Lustre, a resource manager like Slurm, and so on."
 All of those components are delivered via HTTP.
 * Three layers, and what each one does not do
@@ -324,7 +324,7 @@ An MPI from the repository communicating with a site fabric matches the case [[f
 It is the sole location where "mount it and go" does not cover the entire scenario.
 The 2025.06 tree also carries =lfoss/2025b= (the linear-algebra =foss=).
 The table above lists the documented common toolchains, not every top-level module.
-#+ATTR_EB: :id sources-26 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-26 :title Where This page comes from :kind sources
 #+begin_detail
 EESSI documentation, fetched 2026-09-10:
 

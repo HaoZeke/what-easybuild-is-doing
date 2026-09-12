@@ -5,7 +5,7 @@
    :alt: one easyconfig yields an install per architecture and per extension
    :class: eb-diagram
 
-   One file is many installs. Chapters on pins, checksums, and sanity apply once per extension.
+   One file is many installs. Pages on pins, checksums, and sanity apply once per extension.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/08-one-easyconfig-many-installs.svg
@@ -23,7 +23,7 @@
 #+end_export
 
 #+begin_objectives
-1. Say what =exts_list= installs, and which earlier chapters then apply
+1. Say what =exts_list= installs, and which earlier pages then apply
  per entry.
 2. Say what =%(name)s= means inside an extension's options, and what it
  does not.
@@ -138,7 +138,7 @@ long before that and has no extension in scope to ask about.
 #+end_solution
 #+end_exercise
 
-* Chapters 6 and 7 now apply once per extension
+* Pages 6 and 7 now apply once per extension
 The =exts_filter= function checks each extension referenced in [[file:06-what-installed-means.org][What "installed" means]].
 It has an unusual shape.
 #+begin_example
@@ -170,7 +170,7 @@ It may take its source URL, its template, and its easyblock from three different
 Those defaults do not appear in the failure.
 * What scales, and what does not
 =exts_list= allows one easyconfig to install several packages.
-The previous three chapters apply per entry instead of per file.
+The previous three pages apply per entry instead of per file.
 Each extension specifies its own sources.
 Each extension specifies its own checksums.
 Each extension specifies its own easyblock.
@@ -182,5 +182,5 @@ A single =source_tmpl= can produce two hundred rows.
 Attempts to retrieve the bundle's own version fail.
 When a bundle fails, the failure appears in a single entry.
 Inspect that entry along with the defaults defined above it.
-The next chapter discusses hooks.
+The next page discusses hooks.
 Hooks are the supported way to modify EasyBuild behavior without editing an easyconfig.

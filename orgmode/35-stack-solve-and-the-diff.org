@@ -42,7 +42,7 @@
 - [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]:
  Resolvo as the bump solver.
 - [[file:04-the-robot.org][The robot]]: the robot is a loop. This
- chapter is the other question.
+ page is the other question.
 #+end_prerequisites
 The =package plan= evaluates *one package's* profiles against a robot tree.
 The annual bump of a site stack creates a new question.
@@ -145,7 +145,7 @@ missing a flag.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-35 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-35 :title Where This page comes from :kind sources
 #+begin_detail
 eb-stack, HaoZeke/eb-stack, read 2026-09-11:
 

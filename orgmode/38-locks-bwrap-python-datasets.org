@@ -1,18 +1,18 @@
-#+TITLE: Four EasyBuild 5 surfaces the earlier chapters skipped
+#+TITLE: Four EasyBuild 5 surfaces the earlier pages skipped
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
 .. figure:: _static/diagrams/38-locks-bwrap-python-datasets-2.svg
    :alt: four EasyBuild 5 surfaces: locks, bwrap, Python bindings, datasets
    :class: eb-diagram
 
-   Four surfaces the earlier chapters skipped. Each one is a new object, not a flag on an old one.
+   Four surfaces the earlier pages skipped. Each one is a new object, not a flag on an old one.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/38-locks-bwrap-python-datasets.svg
    :alt: locks, bwrap, Python bindings, datasets
    :class: eb-diagram
 
-   Four EasyBuild 5 surfaces the earlier chapters skipped.
+   Four EasyBuild 5 surfaces the earlier pages skipped.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/38-four-surfaces.svg
@@ -42,7 +42,7 @@
 
 #+begin_prerequisites
 - [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]:
- Resolvo locks. This chapter's locks are files on disk during
+ Resolvo locks. This page's locks are files on disk during
  =eb=.
 - [[file:18-language-ecosystems.org][Languages that bring their own package manager]]: Python
  extensions. =EBPYTHONPREFIXES= is how a second prefix is
@@ -50,7 +50,7 @@
 - [[file:14-the-isolation-policy.org][What a build is allowed to see]]: what a build
  is allowed to see. =--bwrap= is a later isolation.
 #+end_prerequisites
-Four EasyBuild 5 surfaces appear beside the machinery in chapters 13-19.
+Four EasyBuild 5 surfaces appear beside the machinery in pages 13-19.
 They lack a page.
 They are not part of eb-stack.
 They explain a campaign finding of class =install= or =runtime=.
@@ -161,7 +161,7 @@ Four incidents. Name the EasyBuild 5 surface, and the first check.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-38 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-38 :title Where This page comes from :kind sources
 #+begin_detail
 EasyBuild docs, last update 2026-08-09:
 

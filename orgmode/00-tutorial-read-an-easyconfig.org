@@ -137,25 +137,17 @@ Provide a different chain, followed by a refusal indicating which generations th
 A hierarchy reflects what is installed rather than the string.
 The site's answer differs from any of these.
 * What you now know
-Five items are described; the first four match earlier actions.
-An easyconfig contains Python code evaluated in a prepared namespace.
-Unquoted names represent variables supplied by EasyBuild.
-=%(...)s= is Python formatting applied to a dictionary assembled by EasyBuild.
-A value resolves to content not explicitly stated in the file.
-The easyblock is derived by transforming the name.
-A file lacking an easyblock line implicitly refers to an existing easyblock.
-A toolchain defines the top of a hierarchy; the hierarchy determines permissible dependencies.
-The fifth point, observed twice, states that when resolution fails, the tool reports the failure instead of guessing.
-A blank =version=, an unknown generation, or a structure the reader cannot follow each constitutes an unresolved case.
-Each case is reported.
-Many costly errors arise from providing guesses that the tool declined to make.
+- The file is Python. EasyBuild evaluates it in a prepared namespace.
+- Unquoted names are variables that EasyBuild supplied.
+- =%(...)s= is formatting against that namespace, not a second language.
+- A missing =easyblock= line is still an easyblock: the name is transformed.
+- A toolchain is the top of a hierarchy. That hierarchy is the set of legal dependencies.
+- A blank version, an unknown generation, or a chain the page cannot follow is a refusal. EasyBuild reports it. It does not guess.
 * Where to go next
-Pick the guide based on your task.
-To troubleshoot a build failure, see [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] and then chapters 5 to 9 of the parameter section.
-To migrate a recipe to a newer stack, see [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] for the explanation that the version beside a dependency is not a minimum.
-To address a missing module that cannot be loaded, see [[file:04-the-robot.org][The robot]] for the three lists and [[file:06-what-installed-means.org][What "installed" means]] for additional details.
-To install software without admin rights, see [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
-To perform installation on a machine without a stack, see [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] for information on EESSI.
-To decide whether to adopt EasyBuild, see [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterpage]].
-If a straight-through read is preferred, start with [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
-The guide begins with the sample from step 1.
+- A build failed: [[file:journey-a-build-failed.org][A build failed]], then [[file:20-reading-a-failed-build.org][Reading a failed build]].
+- The version next to a dependency is not a minimum: [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]].
+- =module load= cannot find the name: [[file:04-the-robot.org][The robot]], then [[file:06-what-installed-means.org][What "installed" means]].
+- No admin rights: [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
+- No site stack: [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]].
+- Whether EasyBuild is the tool: [[file:afterword-when-easybuild-is-the-wrong-tool.org][When EasyBuild is the wrong tool]].
+- Straight through RecipeReader: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].

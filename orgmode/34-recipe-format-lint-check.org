@@ -125,7 +125,7 @@ say whether it rewrites the =.eb=.
 #+end_solution
 #+end_exercise
 
-#+ATTR_EB: :id sources-34 :title Where this chapter comes from :kind sources
+#+ATTR_EB: :id sources-34 :title Where This page comes from :kind sources
 #+begin_detail
 eb-stack, HaoZeke/eb-stack, read 2026-09-11:
 

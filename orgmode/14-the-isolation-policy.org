@@ -34,7 +34,7 @@
 A build that succeeds on one workstation but fails on another is the most common support case in this domain.
 Nearly every occurrence has a single question.
 Determine what the shell might detect that the build does not, or vice versa.
-The remainder of the chapter describes what a build may observe.
+The remainder of the page describes what a build may observe.
 The explanation is an intentional policy with intentional gaps.
 * The environment is constructed, not inherited
 EasyBuild does not build within the shell's environment.
@@ -158,7 +158,7 @@ same easyconfig. The error is a missing header from a library that is
 not in =dependencies=.
 
 1. What is the most likely difference, and which mechanism from this
- chapter is involved?
+ page is involved?
 2. Whose build is wrong, and why is it the one that succeeded?
 3. What is the fix, and what is the wrong fix that would make the
  symptom go away?
