@@ -136,12 +136,12 @@ The class is the first surface, not the diagnosis.
 eb-stack campaign finding claim \
  --state "$STATE" \
  --id attempt:2:finding:1 \
- --owner omp-worker-1
+ --owner site-maint
 
 eb-stack campaign finding resolve \
  --state "$STATE" \
  --id attempt:2:finding:1 \
- --owner omp-worker-1 \
+ --owner site-maint \
  --action "raised the Slurm memory request" \
  --evidence "target doctor and the isolated command exit successfully" \
  --change ~/.config/eb-stack/site.toml
