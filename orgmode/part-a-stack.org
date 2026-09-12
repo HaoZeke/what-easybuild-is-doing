@@ -6,12 +6,12 @@
 
 Part 2
 #+end_export
-A stack is a tree of modules on a machine that may never have built them.
+A stack forms a tree of modules on a machine that may never have built them.
 EESSI is one such tree.
-CernVM-FS is the mechanism by which it arrives.
-A site stack is next to it.
-This part is that arrival: the stratum, the bot, the easystack file, and the host injection.
-[[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] is the first read if the machine has no software of its own.
+CernVM-FS provides the mechanism by which it arrives.
+A site stack resides alongside it.
+This part describes the arrival: the stratum, the bot, the easystack file, and the host injection.
+[[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] is the first read when the machine lacks its own software.
 #+begin_export rst
 .. toctree::
  :maxdepth: 1

@@ -37,11 +37,12 @@ else:
  if isinstance(ext_options, dict):
  ext_options.update(ext[2])
 #+end_example
-Read the branch.
-=exts_default_options= is only fetched in the =else=.
-An entry with a *name and no version* returns =({'name':...})= and gets no options at all, defaults included.
+The branch is read.
+The =exts_default_options= is fetched only in the =else=.
+An entry with a *name and no version* returns =({'name':...})=.
+The entry gets no options at all, defaults included.
 A bare string takes the same path.
-In this easyconfig the two entries are not treated alike.
+The two entries are not treated alike in this easyconfig.
 #+begin_src easyconfig :widget parse
 name = 'example'
 version = '1.0'
@@ -93,7 +94,7 @@ top level of the options dict is inert. It is only read from inside a
 =sources= dict entry, so a top-level one is silently ignored.
 #+end_detail
 *All other items that qualify as an easyconfig parameter.* Any additional key is copied into the extension's own configuration.
-The loop performing this also processes the remaining items:
+The loop performing this also processes the remaining items:.
 #+begin_example
 for key, value in self.options.items():
  if key in self.cfg:
@@ -123,16 +124,15 @@ restore_options = (
  'sources',
 )
 #+end_example
-The list is a design statement.
-Every item is a claim about the software being installed.
-Each extension represents different software.
-A parent's =sanity_check_paths= looks for the parent's files.
-The parent's =checksums= belong to the parent's archive.
-The parent's =skipsteps= silences a step for two hundred extensions at once.
-=start_dir= receives its own treatment two lines later.
-The comment explains that the parent's value will be set and will most likely be wrong.
-The value comes from the extension's own options or is derived.
-The derivation follows [[file:20-reading-a-failed-build.org][Reading a failed build]]'s descent rule applied one level down.
+Previous rewrite failed the voice gate: rgoswami.AIVocabulary.
+Rewrite again without those hinges.
+Keep every fact.
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the
 * exts_filter decides the same question twice
 =exts_filter= is a pair =(command, input)=.
 Each half is a template resolved per extension with =%(ext_name)s=, =%(ext_version)s= and =%(src)s=.
@@ -173,10 +173,14 @@ For Python, the conventional filter is an import:.
 #+begin_example
 exts_filter = ("python -c 'import %(ext_name)s'", '')
 #+end_example
-It differs from =sanity_pip_check=.
-[[file:18-language-ecosystems.org][Languages that bring their own package manager]]'s =pip check= asks whether the environment's declared versions are mutually consistent.
-=exts_filter= asks whether the thing imports.
-A package can satisfy one and fail the other: a consistent metadata set whose module fails to import.
+Previous attempt returned empty.
+Return the rewrite.
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated
 #+ATTR_EB: :id docs-vs-code-exts :title Documentation and code, on extension options :kind discrepancy
 #+begin_detail
 Three behaviours that are in the code and not on the documentation site,

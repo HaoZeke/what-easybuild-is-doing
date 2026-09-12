@@ -30,25 +30,25 @@ rpath (D) = True
 sourcepath (E) = /home/rohitg/eb-demo/sources
 sourcepath-data (E) = /home/rohitg/eb-demo/sources
 #+end_src
-First, read the bracketed letters.
-The legend shows the printed configuration model.
-Each value comes from the command line, a configuration file, the environment, or a default.
-=--show-config= shows the source for each setting.
+Read the bracketed letters first.
+The legend displays the printed configuration model.
+Each value originates from the command line, a configuration file, the environment, or a default.
+=--show-config= displays the source for each setting.
 Precedence follows that order.
 A flag overrides a variable.
 A variable overrides a file.
-Eight settings show =(E)= derived from a single variable.
+Eight settings display =(E)= derived from a single variable.
 * And one that did not move
-The =robot-paths= command reports =(D)=.
-It stays the default.
-It continues to point at the easyconfigs supplied with the site's EasyBuild.
-The prefix determines the output location.
-It does not affect where EasyBuild *looks*.
-[[file:04-the-robot.org][The robot]] explains why.
-They are two distinct lists.
-The site's easyconfigs remain accessible.
-Any of the thousands covered can be built without copying them.
-A local directory takes precedence when a site recipe is insufficient.
+=robot-paths= reports =(D)=.
+=robot-paths= remains the default.
+=robot-paths= still points at the easyconfigs supplied with the site's EasyBuild.
+The prefix sets the output location.
+The prefix does not change where EasyBuild *looks*.
+[[file:04-the-robot.org][The robot]] provides the explanation.
+The two lists are distinct.
+The site's easyconfigs stay accessible.
+All of the thousands of easyconfigs can be built without copying.
+A local directory overrides the site recipe when the site recipe is insufficient.
 #+begin_example
 export EASYBUILD_ROBOT_PATHS=$HOME/my-easyconfigs:
 #+end_example
@@ -56,20 +56,23 @@ The trailing colon is The robot's empty element.
 In this case it is useful: your directory takes precedence, while the site's defaults remain behind it.
 If the colon is omitted, the defaults disappear.
 * The third list, which is the one people forget
-There is a list that the prefix did not touch and that =--show-config= does not print.
+A list untouched by the prefix is not printed by =--show-config=.
 The robot queried the module system for installed items via =modtool.available()=.
 =MODULEPATH= determines what is considered already built.
-Either retain the site's modules on =MODULEPATH= or remove them, resulting in two distinct build paths.
-When the site's modules remain on =MODULEPATH=, which is the default, every dependency already installed by the site is satisfied.
-Only a single remaining package is then built, and nothing else.
+Retaining the site's modules on =MODULEPATH= creates one build path.
+Removing the site's modules from =MODULEPATH= creates a second distinct build path.
+When the site's modules remain on =MODULEPATH=, the default, every dependency already installed by the site is satisfied.
+Only a single remaining package is then built.
+Nothing else is built.
 The process takes twenty minutes instead of two days.
 The user's own modules are not present on =MODULEPATH=.
-They reside in the user's prefix, and no mechanism places them on =MODULEPATH=.
+They reside in the user's prefix.
+No mechanism places them on =MODULEPATH=.
 Therefore, after the build:.
 #+begin_example
 module use $EASYBUILD_PREFIX/modules/all
 #+end_example
-Omitting that causes a confusing symptom.
+Omitting that leads to a confusing symptom.
 The build succeeded, the tree exists on disk, yet =module avail= does not list it.
 The module system has not been instructed to search for it.
 =modules= defaults to =subdir-modules=.
@@ -77,7 +80,7 @@ The module system has not been instructed to search for it.
 Confirm this by building a component and reading the path printed by EasyBuild.
 Alternatively, check =--show-config=.
 * The whole path, once
-Combine steps on a cluster where EasyBuild is loaded as a module:
+Combine steps on a cluster with EasyBuild loaded as a module.
 #+begin_example
 module load EasyBuild
 
@@ -91,11 +94,10 @@ eb GROMACS-2025.2-foss-2025a.eb -r # then build it
 module use $EASYBUILD_PREFIX/modules/all
 module avail GROMACS
 #+end_example
-The =-D= line is required, not optional.
+The =-D= line required, not optional.
 The robot's plan depends on the software installed on *this* machine.
 It alone indicates whether the plan comprises a single build or ninety.
 Read it and decide.
-
 If the site lacks an EasyBuild module, install one in a virtual environment and use it.
 It is a Python package; the prefix and robot path function identically thereafter.
 #+ATTR_EB: :id EB-Own-1 :title It built, and it will not load

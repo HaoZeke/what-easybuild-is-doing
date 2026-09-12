@@ -16,15 +16,15 @@
  retarget of software it does.
 #+end_objectives
 eb-stack performs two tasks.
-One task is a *port*: input from conda-forge or Spack (or PyPI, CRAN, Cargo) and output of an EasyBuild recipe.
-The other task is a *bump*: an easyconfig written for one toolchain generation rewritten for the next.
+One task is a *port* that takes input from conda-forge, Spack, PyPI, CRAN, or Cargo and produces an EasyBuild recipe.
+The other task is a *bump* that rewrites an easyconfig written for one toolchain generation for the next.
 Neither task invokes =eb=.
 Both generate files that a human then builds.
 [[https://eb-stack.rgoswami.me][eb-stack]] is the tool.
 This chapter describes those two tasks and includes the files on the page.
 * A port starts as someone else's recipe
-The conda-forge feedstock for eOn 2.16.0 resides frozen in eb-stack's fixtures.
-It contains name, version, sources, host dependencies, and tests.
+The conda-forge feedstock for eOn 2.16.0 is frozen in eb-stack's fixtures.
+It includes name, version, sources, host dependencies, and tests.
 It is not an easyconfig.
 #+begin_src yaml
 context:
@@ -56,9 +56,9 @@ requirements:
  - libtorch
  - libmetatomic-torch >=0.1.15,<0.2
 #+end_src
-The command that converts the file to an easyconfig is =package plan=.
-Using =--format conda-forge= selects the parser.
-The option =--stack-policy= is required.
+The command =package plan= converts the file to an easyconfig.
+=--format conda-forge= selects the parser.
+=--stack-policy= is required.
 #+begin_example
 eb-stack package plan \
  --source fixtures/foreign_ingest/conda_eon/recipe.yaml \
@@ -71,24 +71,24 @@ eb-stack package plan \
  --stack-policy site/foss-2024a.toml \
  --out-dir /tmp/eon-from-conda
 #+end_example
-What comes out is a tree, not a speech:
+Please provide the org‑mode prose you would like rewritten.
 #+begin_example
 package.plan.json
 package.sbom.cdx.json
 locks/default.lock.json
 easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb
 #+end_example
-The =.eb= artifact is built by EasyBuild.
-The lock denotes the solver's assignment.
-The plan includes the parsed foreign recipe and residuals; parser‑invented items appear as typed leftovers instead of guessed dependencies.
-[[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] denotes that queue.
-This chapter contains the two files that a reader may place side by side.
-Below appears the emitted recipe claim from the same fixture.
-The name and version remain retained.
+= .eb= artifact built by EasyBuild.
+Lock denotes solver assignment.
+Plan includes parsed foreign recipe and residuals; parser‑invented items appear as typed leftovers, not guessed dependencies.
+[[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] denotes queue.
+Chapter contains two files for side‑by‑side placement.
+Emitted recipe claim appears below from same fixture.
+Name and version remain retained.
 =eon= transformed into =eOn=.
-=eigen >=3.4,<3.5= converted into a pin for this generation.
+=eigen >=3.4,<3.5= converted into pin for this generation.
 =libtorch= renamed to =PyTorch=.
-The meson flags originally set by the feedstock's =build.sh= now represented as =configopts=.
+Meson flags originally set by feedstock's =build.sh= now represented as =configopts=.
 #+begin_src easyconfig :widget parse
 easyblock = 'MesonNinja'
 
@@ -118,9 +118,10 @@ configopts += "-Dwith_rgpot=true -Dpip_metatomic=false"
 #+end_src
 Three sources are used.
 The =target_directory: subprojects/rgpot= entry became a staged extract in the full file; the widget above keeps the names.
-In the full recipe, =sanity_check_commands= runs =eonclient --version= and =python -c "import eon"=, reflecting the feedstock's =tests:= block translated, not invented.
+In the full recipe, =sanity_check_commands= runs =eonclient --version= and =python -c "import eon"=; this mirrors the feedstock's =tests:= block.
 A Spack =package.py= file is the other input.
-The paper [[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]] describes that format; a spec is a range, and a concretiser selects one graph.
+The paper [[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]] describes that format.
+A spec is a range, and a concretiser selects one graph.
 The same software is parsed differently.
 =--format spack= specifies the parser.
 The file is Python and is *not* executed; literal =depends_on= and =version= calls are interpreted as syntax.
@@ -140,7 +141,7 @@ class Eon(MesonPackage):
  depends_on("highway")
  depends_on("libinih")
 #+end_src
-=depends_on("eigen@3.4:")= is a range.
+=depends_on("eigen@3.4:")= defines a range.
 EasyBuild does not support ranges ([[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]).
 The solver selects =Eigen-3.4.0= from the robot tree for that generation.
 A =def patch(self):= that executes sed is not a file.
@@ -180,11 +181,11 @@ wrote /tmp/gromacs-2024a/GROMACS-2024.4-foss-2024a.eb
 | =networkx= | 3.2.1 | 3.4.2 |
 | =mpi4py= | 3.1.5 | 4.0.1 |
 
-The unchanged lines are =name=, =version=, =sources=, =patches=, =checksums=, =configopts=, =exts_list=.
-The application version is 2024.4.
-The tarball has identical bytes.
+Unchanged lines include =name=, =version=, =sources=, =patches=, =checksums=, =configopts=, =exts_list=.
+Application version equals 2024.4.
+Tarball bytes are identical.
 Each pin on the toolchain moved together with the toolchain.
-The candidate set is the 2024a robot tree.
+Candidate set equals the 2024a robot tree.
 Resolvo chose a single consistent closure.
 #+begin_src easyconfig :widget parse
 name = 'GROMACS'
@@ -203,7 +204,7 @@ dependencies = [
  ('mpi4py', '4.0.1'),
 ]
 #+end_src
-The same command with =--version= and =--source-checksum= is used to increase the *application* version.
+Use the same command with =--version= and =--source-checksum= to increase the *application* version.
 If the checksum is omitted, the tarball name changes.
 The hash becomes stale.
 This is a blocking residual rather than a guessed hash.
@@ -268,7 +269,7 @@ Commands and the inspect/plan/bump split:
 [[https://eb-stack.rgoswami.me][eb-stack.rgoswami.me]] tutorial
 and the =new-package= / =bump-recipe= how-tos.
 #+end_detail
-A full run of inspect, bump, site generation, and upstream PR is [[file:48-seissol-from-spack-to-a-pr.org][SeisSol, from a Spack recipe to a PR]].
+The full sequence of inspect, bump, site generation, and upstream PR appears in [[file:48-seissol-from-spack-to-a-pr.org][SeisSol, from a Spack recipe to a PR]].
 #+begin_keypoints
 - A port reads conda-forge or Spack and writes an easyconfig.
  =package plan --format conda-forge= or =--format spack=.

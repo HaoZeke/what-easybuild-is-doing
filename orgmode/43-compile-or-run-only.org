@@ -23,7 +23,7 @@
  module being present actually claims.
 #+end_prerequisites
 Two kinds of work appear in an EasyBuild shop, represented by two base classes.
-A *compile* test builds a binary from source using the current programming environment and then runs it.
+A *compile* test builds a binary from source with the current programming environment and then runs it.
 That is =rfm.RegressionTest=.
 The compile stage is performed.
 =valid_prog_environs= lists the compilers with which the test is attempted, and a site defining =gnu= and =intel= receives two test cases from a single class.
@@ -41,7 +41,7 @@ There is a third class, =CompileOnlyRegressionTest=, whose run stage is omitted.
 It is the appropriate tool for "does this compiler build that file".
 It is not suitable for any task described in this book involving an installed stack.
 * Sources next to the test
-A compile test looks for sources in a directory adjacent to the test file.
+A compile test searches for sources in a directory adjacent to the test file.
 The directory is named =src/= by default (=sourcesdir=).
 The CSCS webinar shows the layout as:
 #+begin_example
@@ -82,22 +82,35 @@ The check is neither GROMACS's own test suite nor a HECBioSim benchmark.
 Those appear as later tests in Software maps to tests.
 They are mapped to the same software.
 The module name is a pin, as described in [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]].
-=GROMACS/2024.4-foss-2023b= represents one installation.
+=GROMACS/2024.4-foss-2023b= is one installation.
 A test that hard‑codes this name will not encounter =GROMACS/2024.4-foss-2024a=.
 Parameters multiply the suite's =parameter=.
 A portable test leaves the machine in the config's =find_modules=.
 These illustrate how a suite avoids defining a separate class for each module.
 * What the generated job script actually contains
-For a run‑only test, the script stays brief.
-The tutorial's initial STREAM job contains three lines.
+Previous attempt returned empty.
+Return the rewrite.
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan
 #+begin_example
 #!/bin/bash
 stream.x
 #+end_example
-Adding a module and a launcher expands the script by those two facts, which ReFrame obtains from the configuration and from =self.modules=, not from the test author writing Slurm directives.
-This is the productivity claim of [[cite:karakasisEnablingContinuousTesting2020][Karakasis et al. 2020]]: the job script is generated, and the test class does not mention =#SBATCH=.
-A compile test's build script is generated in the same manner, from the build system and the current environment.
-The How To for Make and CMake is documented in the official docs; the only fact required here is that compilation occurs in the stage directory, and a failed compilation leaves the stage in place as a failed run does.
+Adding a module and a launcher expands the script by those two facts.
+ReFrame obtains those facts from the configuration and from =self.modules=.
+The test author does not write Slurm directives.
+The productivity claim of [[cite:karakasisEnablingContinuousTesting2020][Karakasis et al. 2020]] states that the job script is generated.
+The test class does not mention =#SBATCH=.
+A compile test's build script is generated in the same manner.
+Generation uses the build system and the current environment.
+The How To for Make and CMake is documented in the official docs.
+Compilation occurs in the stage directory.
+A failed compilation leaves the stage in place as a failed run does.
 #+ATTR_EB: :id EB-ReFrame-43-1 :title Which base class
 #+begin_exercise
 Four jobs. For each, name the base class, and say what

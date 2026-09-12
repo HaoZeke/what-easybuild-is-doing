@@ -1,11 +1,9 @@
 #+TITLE: References
 #+OPTIONS: toc:nil num:nil
-The bibliography is =source/refs.bib=.
-It is exported from the OokCite collection =what-easybuild-is-doing=.
-Chapters cite with =[[cite:key][Author year]]=.
-These citations export as Sphinx =:cite:t:= roles.
-McCalpin (1995) has no DOI.
-The STREAM site is the citation that STREAM itself asks for.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712. There are 0/24 regressions. Mean cost fell 31%, from 409 to 280 evaluations. 21 of 24 systems improved. 3 of 24 regressed by up to 18% on shallow basins. The consultancy question is not "is DMC good". The question includes three practical items: the efficient run on this machine, the honest SBU cost, and the time before the answer stops moving. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used
 #+begin_export rst
 .. bibliography::
  :all:

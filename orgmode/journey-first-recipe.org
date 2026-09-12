@@ -1,5 +1,4 @@
 #+TITLE: Journey: first recipe
 #+OPTIONS: toc:nil num:nil
-Read a file as EasyBuild does.
-Then the four mechanisms that everything else rests on.
-[[file:00-tutorial-read-an-easyconfig.org][Read an easyconfig the way EasyBuild does]] [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] [[file:04-the-robot.org][The robot]]
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST

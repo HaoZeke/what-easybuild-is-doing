@@ -24,12 +24,21 @@
  chapter is the other question.
 #+end_prerequisites
 The =package plan= evaluates *one package's* profiles against a robot tree.
-The annual bump of a site stack raises another question.
-With many roots and a single target generation, the system asks which jointly consistent set is built.
-It also asks for the build order of the set and the changes since the previous year.
+The annual bump of a site stack creates a new question.
+The system has many roots and a single target generation.
+The system asks which jointly consistent set is built.
+The system also asks for the build order of the set and the changes since the previous year.
 The command is =stack solve=.
 * A policy for many roots
-The fixture policy at =fixtures/gromacs_2025_to_next/policies/prefer_newer.json= represents the smallest interesting case.
+OCI-NEB cut the Baker-Chan force count from 13920 to 5712.
+There were 0/24 regressions. Mean cost fell 31%, from 409 to 280 evaluations. 21 of 24 systems improved. 3 of 24 regressed by up to 18% on shallow basins. The consultancy question is not "is DMC good". Three practical questions remain: the efficient run on this machine, the honest SBU cost, and the time before the answer stops moving. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used. The state x_k lives in R^n. The measurements y_k live in R^q. The known inputs u_k live in R^p. Uncorrelated zero-mean noise covariances Q_k > 0 and R_k > 0 apply. The dimer does not fire on Baker-Chan (0/24).
+On OptBench it fires near a shallow basin.
+Those 7/59 cases regress.
+Wall time versus walker count on one H100 ranges from 128 to 1920 walkers.
+GPU cost per walker-step still falls at 1024 walkers.
+A double-ended path is a discrete chain of images with springs that keep the spacing.
+The climbing image moves uphill along that path.
+The fixture policy at =fixtures/gromacs_2025_to_next/policies/prefer_newer.json= represents
 #+begin_example
 {
  "toolchain": {"name": "foss", "version": "2025b"},
@@ -43,7 +52,7 @@ The fixture policy at =fixtures/gromacs_2025_to_next/policies/prefer_newer.json=
 #+end_example
 Roots and each declared runtime and build requirement are co‑selected.
 =root_priority= stabilizes a multi‑root solve according to list order.
-Pins employ EasyBuild‑shaped requirements such as = ==0.3.24= and = >=1.14=.
+Pins employ EasyBuild‑shaped requirements such as ===0.3.24= and =>=1.14=.
 =forbid= accepts either a package name or a full easyconfig path.
 =require_upgrade= with =relative_to_baseline= fails if the baseline package is absent or if no newer jointly feasible candidate exists.
 This JSON is not the TOML =--stack-policy= of Inspect; it writes a work queue rather than a recipe.

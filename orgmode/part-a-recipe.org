@@ -7,16 +7,16 @@
 Part 1
 #+end_export
 An easyconfig is a file.
-EasyBuild evaluates it, picks an easyblock, resolves a toolchain, and writes a module.
-The file defines what a pin is.
-The file defines what the robot searches.
-The file defines what a sanity check asserts.
-The file defines how a build executes.
-The file defines how a recipe is written when none exists.
-Begin with the [[file:00-tutorial-read-an-easyconfig.org][tutorial]].
-It takes about twenty minutes.
-No installation is required.
-Four entries are presented, not thirty pages at once.
+EasyBuild evaluates the easyconfig, selects an easyblock, resolves a toolchain, and writes a module.
+The file defines a pin.
+The file defines the robot search.
+The file defines a sanity check.
+The file defines build execution.
+The file defines recipe creation when none exists.
+Start with the [[file:00-tutorial-read-an-easyconfig.org][tutorial]].
+The tutorial takes about twenty minutes.
+Installation is not required.
+Four entries are presented instead of thirty pages.
 #+begin_export rst
 .. toctree::
  :maxdepth: 1

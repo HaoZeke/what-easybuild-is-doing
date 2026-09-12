@@ -23,11 +23,11 @@
 - [[file:20-reading-a-failed-build.org][Reading a failed build]], for the
  same skill against EasyBuild's error block.
 #+end_prerequisites
-A ReFrame test that fails retains its files.
-A ReFrame test that succeeds copies a few artifacts to the output directory and removes the stage.
-Examining a failure involves inspecting the stage directory identified by the =FAILURE INFO= block.
+Failing ReFrame tests retain their files.
+Successful ReFrame tests copy a few artifacts to the output directory and remove the stage.
+Inspect the stage directory identified by the =FAILURE INFO= block to examine a failure.
 The official tutorial triggers a failure by misspelling the sanity pattern.
-The report is displayed as follows:
+The report displays as follows:
 #+begin_example
 FAILURE INFO for stream_test (run: 1/1)
  * System partition: generic:default
@@ -42,12 +42,12 @@ FAILURE INFO for stream_test (run: 1/1)
 --- rfm_job.out (first 10 lines) ---
 STREAM version $Revision: 5.10 $
 #+end_example
-The first field is =Failing phase=, the same name used by EasyBuild's error block for a step.
-The =sanity= value shows that the job ran and the verdict failed.
-The =run_complete= value shows that the job was submitted and the wait failed.
-The =setup= value shows that nothing ran.
+The first field is =Failing phase=, matching the name used by EasyBuild's error block for a step.
+The =sanity= value indicates the job ran and the verdict failed.
+The =run_complete= value indicates the job was submitted and the wait failed.
+The =setup= value indicates that nothing ran.
 The second field is =Stage directory=.
-All resources used by the test are located there.
+All resources used by the test reside there.
 * Three files in the stage
 
 #+begin_example
@@ -56,36 +56,38 @@ rfm_job.out
 rfm_job.err
 #+end_example
 The file =rfm_job.sh= is the generated job script.
-In the tutorial's initial STREAM test, the script consists of the two lines =#!/bin/bash= and =stream.x=.
-For a run‑only module test, the script contains =module load= followed by the launcher and the executable.
-When an incorrect module is loaded or when =#SBATCH -n= is set to 128 on a 64‑core node, the script reports the issue.
+The tutorial's initial STREAM test script contains the two lines =#!/bin/bash= and =stream.x=.
+A run‑only module test script includes =module load= followed by the launcher and the executable.
+Loading an incorrect module or setting =#SBATCH -n= to 128 on a 64‑core node triggers a script issue report.
 The test class does not report the issue.
 The file =rfm_job.out= corresponds to =self.stdout=.
-After job completion on the ReFrame host, the sanity function and the performance functions read this file.
-A pattern missing from the first ten lines of the =FAILURE INFO= excerpt often appears later in this file or in =rfm_job.err=.
+After job completion on the ReFrame host, the sanity function and the performance functions read =rfm_job.out=.
+A pattern missing from the first ten lines of the =FAILURE INFO= excerpt often appears later in =rfm_job.out= or in =rfm_job.err=.
 Upon success, the three files are moved to =output/<system>/<partition>/<environ>/<test>/= and the stage directory is removed.
-Upon failure, the files remain in place. a site that greps only =output/= for failures finds no results.
+Upon failure, the files remain in place.
+A site that greps only =output/= for failures finds no results.
 * Restore the session, not the suite
 
 #+begin_example
 reframe --restore-session --failed -r
 #+end_example
-The most recent session resides at =$HOME/.reframe/reports/latest.json=.
-The option =--restore-session= reads that file.
-The flag =--failed= selects cases that did not pass.
+Most recent session resides at =$HOME/.reframe/reports/latest.json=.
+Option =--restore-session= reads that file.
+Flag =--failed= selects cases that did not pass.
 Passed dependencies are restored rather than rerun.
-The tutorial's dependency‑chain example reruns =T6= alone after a prior full run.
-The restored parents are not compiled again.
-The =Rerun with= line in =FAILURE INFO= expresses the same concept for a single hash.
-The specification =-n /2e15a047= refers to that test case only, not to every case sharing the class name.
-The option =--keep-stage-files= retains the stage on success as well.
-A later‑restoring session requires the retained stage.
-Without this option, a passed dependency has already been cleaned up.
+Tutorial's dependency‑chain example reruns =T6= alone after prior full run.
+Restored parents are not compiled again.
+=Rerun with= line in =FAILURE INFO= expresses same concept for single hash.
+Specification =-n /2e15a047= refers to that test case only, not to every case sharing class name.
+Option =--keep-stage-files= retains stage on success as well.
+Later‑restoring session requires retained stage.
+Without this option, passed dependency has already been cleaned up.
 It cannot be restored as files.
 * What the phase does not say
-A sanity failure does not constitute a performance regression.
-A performance miss does not constitute a wrong answer.
-A skip from A portable test leaves the machine in the config (missing feature, not enough memory) does not constitute a failure; the listing shows =skipped=.
+A sanity failure is not a performance regression.
+A performance miss is not a wrong answer.
+A skip from a portable test leaves the machine in the config (missing feature, not enough memory) and is not a failure.
+The listing shows =skipped=.
 Treating skips as passes causes a GPU test to appear green on a CPU partition.
 The debug log resides at =$RFM_PREFIX/logs/reframe_<date>_<time>.log=, or at =/tmp/rfm-*.log= when no prefix is set.
 The file records why a test was filtered out before any stage executed.

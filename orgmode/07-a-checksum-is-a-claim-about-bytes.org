@@ -8,7 +8,8 @@
 3. Say which parameters break loudly on a version bump and which break
  quietly.
 #+end_objectives
-The easyconfig in An easyconfig is Python allocates more lines to describing source locations than to any other aspect.
+The easyconfig is Python.
+It allocates more lines to describing source locations than to any other aspect.
 The following excerpt presents that section in isolation.
 #+begin_src easyconfig :widget parse
 name = 'code-server'
@@ -26,7 +27,8 @@ checksums = [
 ]
 #+end_src
 Three parameters exist, each representing a distinct type of statement.
-This chapter discusses the third parameter, which people trust most beyond its literal meaning.
+This chapter discusses the third parameter.
+People trust it most beyond its literal meaning.
 * The list is positional, and then one entry is a dictionary
 The variable =sources= is a list.
 The variable =checksums= is a list.
@@ -51,14 +53,15 @@ The lookup simply fails to find a key for that architecture on the machine that 
 A per-architecture dictionary remains silent about architectures that are not listed.
 * What a checksum can and cannot report
 A checksum verifies the bytes.
-That is its sole purpose.
+Its sole purpose is to verify the bytes.
 It cannot indicate that the archive contains the expected version.
 If upstream re‑tags a release and the archive changes, the checksum fails.
 Information.
 Suppose upstream publishes a *different* archive also labeled 4.130.0 and a checksum is computed for that archive.
 The checksum then passes indefinitely and reports nothing.
 It cannot indicate that the archive matches the layout expected by your easyconfig.
-This mirrors the failure described in An easyconfig is Python, and the two claims merit side‑by‑side comparison.
+This mirrors the failure described in An easyconfig is Python.
+The two claims merit side‑by‑side comparison.
 #+begin_quote
 The checksum verified against the archive.
 The archive did not contain the directory the build expected.
@@ -101,34 +104,37 @@ and copying a value from anywhere else would verify the wrong file.
 #+end_exercise
 
 * Which is why a source change is the dangerous kind
-An easyconfig is a Python file that defines parameters describing the shape of the source.
-It also is a rule for editing.
+An easyconfig is a Python file that defines parameters describing the source shape.
+It also defines a rule for editing.
 Changing the version requires updating the checksum.
 The build stops on a mismatch and returns the computed value.
 Forgetting is not possible.
 The loudness is a property of the parameter, not of any diligence.
 Changing the *kind* of thing being downloaded does not produce loudness.
-The QMCPACK easyconfig, which is a Python easyconfig, was building from a pinned development commit and switched to a release tarball.
+The QMCPACK easyconfig, a Python easyconfig, built from a pinned development commit and switched to a release tarball.
 That change rewrites =sources= and updates the checksum, drawing attention to both.
 All other aspects of the source block also changed without announcement.
 A git checkout is archived under the repository's name.
 The sources were one level down.
 A release tarball unpacks to =name-version/= with sources at the top.
 =start_dir= described the initial arrangement and remained untouched.
-A checksum protects against the wrong bytes.
+A checksum protects against wrong bytes.
 The format does not protect against correctly formed bytes arranged in a different shape.
 * Borrowing a checksum from another packaging system
-Another situation exists where a verified checksum is applied to the wrong archive.
-A single project version may correspond to several legitimate archives.
+Another situation occurs when a verified checksum is applied to the wrong archive.
+A single project version can correspond to several legitimate archives.
 GitHub generates a tarball from a tag.
 The project may also publish a release archive that often contains vendored dependencies or a generated =configure= absent from the tag.
 Both archives correspond to the same version.
-They differ in byte content, yet neither is incorrect.
+The archives differ in byte content.
+Neither archive is incorrect.
 A checksum copied from a conda-forge recipe or a Spack =package.py= can be entirely correct for an archive other than the one listed in =source_urls=.
-The checksum value is correct and the version is correct.
+The checksum value is correct.
+The version is correct.
 The build fails a verification that operates exactly as intended.
 The following rule is narrow and worth preserving.
-A borrowed checksum requires the URL over which it was computed; the version alone is insufficient.
+A borrowed checksum requires the URL over which it was computed.
+The version alone is insufficient.
 Two ecosystems that agree on a version number do not necessarily agree on an artifact.
 * Loud and quiet
 Version bumps are safer than source changes.

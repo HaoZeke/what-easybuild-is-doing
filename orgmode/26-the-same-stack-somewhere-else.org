@@ -17,7 +17,7 @@
  neither and read it as reference.
 #+end_prerequisites
 [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]] dissected a repository.
-The chapter uses that repository on machines without their own software stack, such as a laptop, a continuous‑integration runner, a cloud instance, and a cluster whose stack is managed elsewhere.
+The chapter uses that repository on machines lacking their own software stack, such as a laptop, a continuous‑integration runner, a cloud instance, and a cluster with externally managed stack.
 The tested claim originates from EESSI: "The host OS still provides a couple of things, like drivers for network and GPU, support for shared filesystems like GPFS and Lustre, a resource manager like Slurm, and so on."
 All of those components are delivered via HTTP.
 * Three layers, and what each one does not do
@@ -63,31 +63,35 @@ $ sudo bash -c 'echo "CVMFS_QUOTA_LIMIT=10000" >> /etc/cvmfs/default.local'
 $ sudo cvmfs_config setup
 $ ls /cvmfs/software.eessi.io
 #+end_src
-A single machine is affected by two configuration lines.
-The setting =CVMFS_CLIENT_PROFILE=single= is shipped for "laptops or fewer than 5 machines" and prevents the client from expecting a site proxy.
+Two configuration lines affect a single machine.
+The setting =CVMFS_CLIENT_PROFILE=single= is shipped for "laptops or fewer than 5 machines".
+The setting =CVMFS_CLIENT_PROFILE=single= prevents the client from expecting a site proxy.
 Setting =CVMFS_QUOTA_LIMIT=10000= raises the cache from the default 4000 megabytes.
 The stack is then one =module use= away.
 #+begin_example
 module use /cvmfs/software.eessi.io/init/modules
 module load EESSI/2023.06
 #+end_example
-If Lmod is older than 8.6, unset =MODULEPATH= before sourcing the Lmod init rather than the bash‑only one.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition
 #+begin_example
 unset MODULEPATH
 source /cvmfs/software.eessi.io/versions/2023.06/init/lmod/bash
 #+end_example
-The =init/bash= path is irreversible and works only with bash.
-Do not use it as an alternative that leaves =MODULEPATH= untouched.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier equals the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712. The cut incurred 0/24 regressions. Every number traces to a Snellius job. The index is in the appendix. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used.
 * Route two: no root
 Two mechanisms exist for two different reasons.
 =cvmfsexec= mounts a repository *without* privileges, using user namespaces.
 CernVM-FS documents it as the supported way to do that.
-It is the route for a shared machine where the account is not an administrator.
-The account cannot become one.
-A container is the other.
+The route applies to a shared machine where the account is not an administrator.
+The account cannot become an administrator.
+A container provides the alternative mechanism.
 EESSI publishes the script =eessi_container.sh=, which runs Apptainer or Singularity with the repository mounted inside.
-This is also the route their own build bot takes, which is worth noticing.
-The thing that *builds* the stack runs in a container mounting the stack.
+The route is also used by their own build bot, which is worth noticing.
+The component that *builds* the stack runs in a container mounting the stack.
 * Route three: a runner that exists for ninety seconds
 Continuous integration presents a conflict between "install a software stack" and "the job is already over".
 EESSI provides a solution.
@@ -104,7 +108,7 @@ An operator‑owned runner may still select route one or route two, and the cach
 A fresh runner starts with an empty cache.
 The initial job fetches each required object.
 * How it chooses what to serve
-The component determines whether the stack is fast or merely present.
+The component assesses if the stack is fast or merely present.
 The initialisation script requests an *ordered* list of targets from a detector.
 The script selects the first target that exists on disk.
 #+begin_example
@@ -119,15 +123,18 @@ for arch in "${archs[@]}"; do
 done
 #+end_example
 =eessi_archdetect.sh -a cpupath= produces a colon‑separated list ordered from the most specific to the most generic.
-On an Ice Lake host, according to EESSI's own documentation:
+On an Ice Lake host, EESSI documentation reports the following.
 #+begin_example
 x86_64/intel/icelake:x86_64/intel/cascadelake:x86_64/intel/skylake_avx512:x86_64/intel/haswell:x86_64/generic
 #+end_example
-Hosts without an exact microarchitecture build receive the best *subset* of the instruction set that does have a build, with =x86_64/generic= as the floor.
+Hosts lacking an exact microarchitecture build receive the best *subset* of the instruction set that has a build, with =x86_64/generic= as the floor.
 The fallback policy comprises four lines of shell instead of a resolver.
-Two variables are frequently confused, yet they are distinct.
-=EESSI_CPU_FAMILY= maps directly to the output of =uname -m=, for example =x86_64=, =aarch64=, or =riscv64=.
-=EESSI_SOFTWARE_SUBDIR= represents the microarchitecture, set by the loop above.
+Two variables are frequently confused.
+They are distinct.
+=EESSI_CPU_FAMILY= maps directly to the output of =uname -m=.
+Examples include =x86_64=, =aarch64=, or =riscv64=.
+=EESSI_SOFTWARE_SUBDIR= represents the microarchitecture.
+It is set by the loop above.
 #+ATTR_EB: :id eessi-overrides :title The override variables, and what they do not check :kind reference
 #+begin_detail
 All of these must be set *before* initialisation, from
@@ -171,7 +178,7 @@ export EESSI_USE_ARCHDETECT="${EESSI_USE_ARCHDETECT:=1}"
 export EESSI_USE_ARCHSPEC="${EESSI_USE_ARCHSPEC:=0}"
 #+end_example
 The default selector is =eessi_archdetect.sh=, a shell script that reads =/proc/cpuinfo= against spec files. archspec is off unless explicitly requested. archspec remains the source of the target *names*.
-"The names of these CPU targets correspond to the names used by archspec."
+The names of these CPU targets correspond to the names used by archspec.
 Both statements remain true for the versions read on 2026-09-10.
 A reader debugging target selection needs the script rather than the library.
 #+end_detail #+end_detail
@@ -208,30 +215,33 @@ one node type than on another, with the same module name loaded.
 Point it to a writable location.
 A site obtains a tree that behaves as if it were inside the repository.
 * What a site adds without writing to /cvmfs
-There are three uses.
+Three uses are defined.
 A stack built elsewhere cannot know the uses.
-
-*GPU drivers.* The driver is part of the host kernel and cannot be shipped in a repository.
+*GPU drivers.* The driver belongs to the host kernel and cannot be shipped in a repository.
 The script =link_nvidia_host_libraries.sh= populates the injection tree with links to the host's driver libraries.
 The documentation states: "Re‑run this script each time the NVIDIA GPU drivers on the host system are updated."
 It may expose libraries that are new to the driver version.
-
-*A full CUDA installation.* The CUDA and cuDNN packages in the repository are stripped down to contain only runtime libraries.
+*A full CUDA installation.* The CUDA and cuDNN packages in the repository contain only runtime libraries.
 Compiling CUDA code requires additional components.
 The script =install_cuda_and_libraries.sh= installs those components into the injection tree via EasyBuild.
-
 *Site software and site MPI.* The initialisation script derives the site tree from the stack path using string substitution.
 #+begin_example
 sudo bash -c "echo 'EESSI_HOST_INJECTIONS=/shared_fs/path/to/host/injections/' \
  > /etc/cvmfs/domain.d/eessi.io.local"
 sudo cvmfs_config reload
 #+end_example
-Thus =/cvmfs/software.eessi.io/versions/2023.06/software/linux/x86_64/amd/zen2= has a site twin at =/cvmfs/software.eessi.io/host_injections/2023.06/software/linux/x86_64/amd/zen2=.
-This path appears on =MODULEPATH= together with the mounted one.
-It corresponds to the three lists described in [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
-The site's list resides behind a symlink managed by the site.
+The path =/cvmfs/software.eessi.io/versions/2023.06/software/linux/x86_64/amd/zen2= has a site twin at =/cvmfs/software.eessi.io/host_injections/2023.06/software/linux/x86_64/amd/zen2=.
+
+The path appears on =MODULEPATH= together with the mounted one.
+
+The path corresponds to the three lists described in [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
+
+The site list resides behind a symlink managed by the site.
+
 Per-node-type differences are supported.
+
 The mechanism uses a client-side variable instead of a repository path.
+
 Two GPU node types with drivers in separate locations receive distinct =EESSI_HOST_INJECTIONS= values in their respective CernVM-FS configurations.
 #+begin_example
 site_software_path="${EESSI_SOFTWARE_PATH/versions/host_injections}"
@@ -289,14 +299,14 @@ AMD, x86_64 only. Those counts come from the catalogs rather than from the
 GPU-targets page, so they are what is on the wire today.
 #+end_detail
 Two limits must be stated plainly.
-This needs them.
+These limits are needed.
 The stack is built for a *microarchitecture*.
-The fallback means a host can silently get a more generic build than it deserves.
+The fallback allows a host to receive a more generic build than it deserves.
 Reading =$EESSI_SOFTWARE_SUBDIR= after initialisation is the check.
-It is one line.
+The check consists of one line.
 The host still provides the driver, the network stack, the filesystem client and the scheduler.
-An MPI from the repository talking to a site fabric is exactly the case [[file:32-host-injections.org][A site stack next to EESSI, not inside it]] is for.
-It is the one place where "mount it and go" is not the whole story.
+An MPI from the repository communicating with a site fabric matches the case [[file:32-host-injections.org][A site stack next to EESSI, not inside it]].
+It is the sole location where "mount it and go" does not cover the entire scenario.
 The 2025.06 tree also carries =lfoss/2025b= (the linear-algebra =foss=).
 The table above lists the documented common toolchains, not every top-level module.
 #+ATTR_EB: :id sources-26 :title Where this chapter comes from :kind sources

@@ -22,9 +22,14 @@
 - [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]], for
  the product those hooks run on.
 #+end_prerequisites
-The mpi4py test in Parameters multiply the suite runs on Snellius.
-The suite runs on no other system.
-Three separate reasons cause this.
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712. The cut resulted in 0/24 regressions. Every number traces to a Snellius job. The index is in the appendix. Packing jobs does not save SBU. The bill is the
 #+begin_src python
 valid_systems = ['snellius']
 self.num_tasks_per_node = min(self.num_tasks, 128)
@@ -77,7 +82,7 @@ The test defines a requirement.
 The framework compares the requirement to the partition.
 A mismatch results in a skip rather than a job that OOM‑kills the node.
 * The configuration is now the only machine file
-The configuration file provides the machine's =processor.num_cpus= and =features= values read by these hooks.
+=processor.num_cpus= and =features= values are provided by the configuration file and read by these hooks.
 A site that omits them produces tests that cannot compute a task count.
 Those tests skip or fall back to a conservative option.
 A site that misrepresents the configuration causes tests to follow the same misrepresentation.

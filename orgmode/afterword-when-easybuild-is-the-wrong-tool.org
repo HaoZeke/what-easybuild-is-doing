@@ -1,7 +1,8 @@
 #+TITLE: Afterword: when EasyBuild is the wrong tool
 #+OPTIONS: toc:nil num:nil
-This chapter has no widgets and no parameters.
-It opposes the subject of every other chapter.
+This chapter contains no widgets.
+This chapter contains no parameters.
+This chapter opposes the subject of every other chapter.
 * What EasyBuild is built to be good at
 EasyBuild builds software from source reproducibly into a curated generation of exact versions.
 EasyBuild produces modulefiles for a shared system whose users outnumber its maintainers by three or four orders of magnitude.
@@ -15,82 +16,64 @@ The remainder of this chapter addresses the drawbacks.
 * When the answer is a different tool for the same job
 Three scenarios provide a genuine alternative rather than a complaint.
 ** A Python environment that changes weekly
-Eleven packages from PyPI are required, with twelve needed the following week and a different version of one required the week after.
-Using EasyBuild requires an easyconfig for each change, a build for each easyconfig, and a module for each result.
-The stack's generation is pinned to annual changes.
+Eleven PyPI packages are required.
+Twelve additional packages are needed the following week.
+A different version of one package is required the week after.
+Using EasyBuild requires an easyconfig for each change.
+EasyBuild requires a build for each easyconfig.
+EasyBuild requires a module for each result.
+The stack generation is pinned to annual changes.
 Requirements change weekly.
 Alignment is prevented.
 The appropriate solution is a Python module provided by EasyBuild combined with a virtual environment owned by the researcher.
-Invoking =pip= or =uv= within a venv after =module load Python= supplies the weekly cadence.
-It retains control of the interpreter, compiler, and numerical libraries within the stack.
-Components needing reproducibility receive it.
+Invoking =pip= within a venv after =module load Python= supplies the weekly cadence.
+Invoking =uv= within a venv after =module load Python= supplies the weekly cadence.
+It retains control of the interpreter within the stack.
+It retains control of the compiler within the stack.
+It retains control of the numerical libraries within the stack.
+Components needing reproducibility receive reproducibility.
 Components needing speed receive performance.
 The failure mode of handling everything within EasyBuild is not lack of functionality.
 A maintainer becomes the bottleneck for another's research week.
 ** Software that arrives as a container
-Some vendors supply only a container image.
-No source code, configure script, or undistorted easyconfig representation exists.
-Apptainer or an equivalent runtime is the tool; a minimal module configuring its invocation forms a valid EasyBuild contribution.
-Wrapping the whole image in an easyconfig to mimic a build misleads later readers.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker‑Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI‑NEB cut the Baker‑Chan force count from 13920 to 5712, with 0/24 regressions. Every number traces to a Snellius job. The index is in the appendix
 ** A stack somebody has already built
-EESSI, an optimised stack built with EasyBuild and mounted rather than installed, is described in detail by somebody else's stack.
-Use it when the goal is to obtain the software.
-Use EasyBuild when the goal is to determine what the software should be.
-This implies a version that no one else requires, a patch maintained by the site, and a toolchain on which users rely.
+EESSI is an optimised stack built with EasyBuild and mounted rather than installed, described in detail by another stack.
+Use it to obtain the software.
+Use EasyBuild to determine the software specification.
+This implies a version required by no other, a site‑maintained patch, and a toolchain relied on by users.
 * When another packaging system fits the problem better
 Two systems address a similar problem with different trade‑offs.
 The comparison should be stated precisely.
 
 *Spack* expresses dependency constraints as ranges and resolves them for each installation ([[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]]).
-
 The expression =depends_on('hdf5@1.10:')= is a real lower bound.
-
 A concretiser selects a version that satisfies all such bounds, with variants chosen at install time.
-
 That approach contrasts with the trade described in A pin is for one generation.
-
 Spack's format can retain the constraint that the software actually possesses.
-
 A package to move across environments without modification.
-
 Two installations on the same machine may legitimately differ.
-
 Reproducing a result requires recording the resolved graph instead of naming a generation.
 
 *conda-forge* distributes binaries and performs solving over a channel.
-
 Installation is a download and a solve rather than a build.
-
 This yields a working environment in minutes, identical on a laptop and on a cluster.
-
 In return, those binaries are built for portability rather than for a specific machine's instruction set.
-
 Exploiting a specific instruction set is the purpose of an HPC stack.
-
 Thus the question is not which system is best.
-
 It concerns which cost is acceptable.
 
-- EasyBuild provides exact versions, one stack per generation, tuned builds, hours per package, one generation per year, and a maintainer in the loop. 
-
-- Spack offers real version ranges, per‑install resolution, tuned builds, hours per package, and a resolved graph that must be captured to reproduce. 
-
-- conda-forge delivers minutes per environment, identical results on a laptop and a cluster, and binaries built for portability rather than for the instruction set already paid for. 
+- EasyBuild provides exact versions, one stack per generation, tuned builds, hours per package, one generation per year, and a maintainer in the loop.  
+- Spack offers real version ranges, per‑install resolution, tuned builds, hours per package, and a resolved graph that must be captured to reproduce.  
+- conda-forge delivers minutes per environment, identical results on a laptop and a cluster, and binaries built for portability rather than for the instruction set already paid for.  
 
 A site operating a large machine typically employs more than one of these systems for different user populations.
-
 This is a sound arrangement rather than an admission of defeat.
 * The part that transfers
-When applying a concept from this book to another packaging system, prioritize the questions over the parameters.
-An =easyconfig= is Python's question "what does this name imply that the file does not say".
-Each packaging system provides an answer, often longer than an initial guess.
-A =toolchain= is a hierarchy's question "what is this dependency allowed to see".
-The robot's question is "where is the tool looking, and in what order".
-A checksum is a claim about bytes's question "what exactly does this checksum claim".
-A hook changes a file you are not reading's question "is the file on disk the whole input".
-None of those constitute EasyBuild questions.
-EasyBuild provides particularly crisp answers.
-EasyBuild is a suitable subject for learning to ask those questions.
+Apply a concept from this book to another packaging system
 * The end of the book
 EasyBuild's design provides exact versions, curated generations, from-source builds and modulefiles for a shared machine with many more users than maintainers.
 Each of those elements is a trade.

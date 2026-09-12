@@ -12,8 +12,8 @@ Each case was presented one at a time.
 The mechanism is illustrated.
 They are shown as a historical sequence.
 They are ordered by diagnosis.
-They include parts that do not serve as lessons.
-Reading them together demonstrates that the four cases failed in four distinct ways.
+They include parts that are not lessons.
+Reading them together shows that the four cases failed in four distinct ways.
 Each case was green in some aspect.
 * The module that was right and the tree that was wrong
 =NVHPC/25.11-CUDA-12.9.1= declares CUDA 12.9.1.
@@ -27,16 +27,21 @@ It requires =libnvJitLink.so.13=.
 vasp_std: error while loading shared libraries: libnvJitLink.so.13:
 cannot open shared object file: No such file or directory
 #+end_src
-*It was not a version-detection fault, and the fix everyone reaches for first would have changed nothing.* =EBNVHPCCUDAVER= read =12.9= in the generated modulefiles on all four architectures.
+It was not a version-detection fault.
+The fix everyone reaches for first would have changed nothing.
+=EBNVHPCCUDAVER= read =12.9= in the generated modulefiles on all four architectures.
 The easyblock resolved the active CUDA version correctly and patched the installer's own =DESIREDCUDA= with it.
 The installer linked the unversioned entries at the newest CUDA in the tarball regardless.
 Reaching for a version-detection parameter would have set a value that was already correct.
 
-*It was one batch, not a partial rebuild.* The four installs are stamped =16:14=, =16:18=, =16:25= and =17:59= on 2026-01-27.
+It was one batch, not a partial rebuild.
+The four installs are stamped =16:14=, =16:18=, =16:25= and =17:59= on 2026-01-27.
 Same day, same easyconfig, same run.
 Two of them came out one way and two the other.
 
-*And the split is not the one a first guess would pick.* AMD-ZEN2 and AMD-ZEN4 were correct; AMD-ZEN4-H100 and INTEL-AVX512 were not.
+The split is not the one a first guess would pick.
+AMD-ZEN2 and AMD-ZEN4 were correct.
+AMD-ZEN4-H100 and INTEL-AVX512 were not.
 INTEL-AVX512 has no GPU in it.
 Any theory of the form "the GPU builds got the newer CUDA" is contradicted by the data.
 [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] gives the table rather than a summary.
@@ -45,6 +50,11 @@ The fix set the symlinks in =postinstallcmds=.
 It runs before the sanity check.
 The check that had been failing could pass honestly.
 * The login node that lied, twice
+OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions. Mean cost fell 31%, from 409 to 280 evaluations. 21 of 24 systems improved; 3 of 24 regressed by up to 18% on shallow basins. The consultancy question is not "is DMC good" but three practical ones: the efficient run on this machine, the honest SBU cost, and how long before the answer stops moving. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used. The state x_k lives in R^n, the measurements y_k in R^q, and the known inputs u_k in R^p, with uncorrelated zero-mean noise covariances Q_k > 0 and R_k > 0. The dimer does not fire on Baker-Chan (0/24).
+On OptBench it fires near a shallow basin and those 7/59 cases regress.
+Wall time versus walker count on one H100, 128 to 1920 walkers; GPU cost per walker-step still falling at 1024.
+A double-ended path is a discrete chain of images with springs that keep the spacing.
+The climbing image moves uphill along that path.
 The task took one day.
 =/sw/arch= is a symlink for each node architecture.
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10" :caption "What a login node resolves"
@@ -68,7 +78,7 @@ The VASP easyconfig built on the broken toolchain carried:
 #+begin_example
 skipsteps = ['sanitycheck']
 #+end_example
-The reasoning stated that the sanity check reported a failure the package could not fix.
+The reasoning indicated that the sanity check reported a failure the package could not fix.
 Each half of that was true.
 The check was reporting =libnvJitLink.so.13=.
 The defect was in the toolchain module.
@@ -80,23 +90,23 @@ Switching the check off did not make the binary start.
 It moved the discovery from a build host to a user.
 This is [[file:06-what-installed-means.org][What "installed" means]]'s whole argument.
 The check was carrying information: *the toolchain module is broken*.
-That is a thing to escalate.
+That requires escalation.
 A failing check on a package that cannot be fixed is a report about something else.
 Deleting the report does not make the something else go away.
-There was also a misconception in the way.
-It is common enough to name.
+A misconception also existed in the approach.
+It is common enough to be named.
 On a GPU package the RPATH check looks like it fails on =libcuda.so.1=.
 That library lives with the driver and exists only on GPU nodes.
 EasyBuild exempts that library by default.
 EasyBuild also exempts =libcuda.so=, =libnvidia-ml.so= and =libnvidia-ml.so.1=.
 Anything else it reports is a real finding.
 * The parameter that was right about the old source
-=start_dir = 'qmcpack'= remained correct while the recipe built from a pinned development commit.
+=start_dir = 'qmcpack'= remained correct during the build from a pinned development commit.
 The 4.4.0 release bump switched the source from a checkout to a tarball.
-The tarball extracts to =qmcpack-4.4.0/= with the sources at the top level.
+The tarball extracts to =qmcpack-4.4.0/= with sources at the top level.
 The checksum changed and attracted attention.
 A checksum mismatch aborts the build and reports the computed value.
-=start_dir= stayed unchanged, and no component requested a modification.
+=start_dir= stayed unchanged and no component requested a modification.
 The outcome matches the transcript in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]: correct URL, verified checksum, =tar xzf= exit 0, successful patching, loaded toolchain and all build dependencies, followed by a nonexistent path.
 All expected checks had already succeeded.
 Two lessons emerged that were absent in earlier cases.

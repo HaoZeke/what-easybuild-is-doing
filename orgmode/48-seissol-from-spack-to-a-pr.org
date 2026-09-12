@@ -29,10 +29,11 @@
 SeisSol 1.3.2 is the current tagged release.
 The EasyBuild robot on =develop= had =SeisSol-1.1.4-foss-2023a.eb=.
 Spack had a =package.py= whose newest tagged version was 1.3.1.
-The work that followed is a single case: a port of constraints, a bump of an existing recipe, a generation chosen from a site tree, a site install through the documented wrapper, and an upstream PR.
+The subsequent work is a single case: a port of constraints, a bump of an existing recipe, a generation chosen from a site tree, a site install through the documented wrapper, and an upstream PR.
 Nothing in that sentence compiled the package.
 [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] already said so.
-This chapter is the file set that came out, and the two defects the first site build found.
+This chapter is the file set that came out.
+The first site build found two defects.
 * Both sources, one next file
 =package inspect --format spack= on the Spack recipe writes a plan and an SBOM.
 It does not write a =.eb=.
@@ -82,7 +83,7 @@ The SURF 2025 buildlist in =easyconfigs-surf= lists that generation dozens of ti
 =eb -S SeisSol= on a 2025 login node returns only =SeisSol-1.1.4-foss-2023a.eb=.
 A =foss/2026.1= recipe on that machine asks the robot for a generation the site has not built.
 =--robot= will try to compile GCC 15 and the rest of 2026.1 beside the production 2025 tree.
-That is not a site consume.
+That does not consume site resources.
 #+begin_predict
 A login node has just run =module load 2025=.
 Which of these four files can =eblocalinstall= resolve against
@@ -102,20 +103,21 @@ the generation the 2025 production recipes use.
 =intel= is documented for local builds by experienced users, not
 the default site stack.
 #+end_reveal
-2025a robot includes Lua 5.4.8 and libxsmm 1.17. easi 1.7.0 provides =lmathx= via Lua 5.4.
-It warns that Lua 5.5 may fail to compile.
+The 2025a robot includes Lua 5.4.8 and libxsmm 1.17. easi 1.7.0 provides =lmathx= via Lua 5.4.
+A warning states that Lua 5.5 may fail to compile.
 The companion Lua 5.4.8 recipe that a 2026.1 bump would have added is unnecessary on 2025a.
 * The site wrapper is the install
-The EasyBuild tutorial from snelnext loads =eb/<latest>= and installs with =eblocalinstall=.
+EasyBuild tutorial from snelnext loads =eb/<latest>= and installs with =eblocalinstall=.
 A raw =eb= with hand-set =--installpath-software= clashes with the SURF wrappers.
 The wrapper writes:
 #+begin_example
 ~/.local/easybuild/RHEL9/2025/software
 ~/.local/easybuild/RHEL9/2025/modulefiles
 #+end_example
-The prefix is next to the production 2025 tree.
-=ASAGI/1.0-foss-2025a= resolved CMake 3.31.3, netCDF 4.9.3 and numactl 2.0.19 from the site modules.
-Those pins are the 2025a pins, not values invented for the case.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/
 * Two defects the first build named
 ** The patch that was no longer the patch
 The first =eblocalinstall= failed on ASAGI.
@@ -137,7 +139,7 @@ The easyconfig is named =PSpaMM=.
 EasyBuild's =PythonPackage= imports =pspamm=.
 The distribution's module is =pypspamm=.
 The console script is =pspamm-generator=.
-The check that failed was the one nobody wrote.
+The failed check was the one nobody wrote.
 #+begin_example
 options = {'modulename': 'pypspamm'}
 #+end_example
@@ -173,14 +175,18 @@ smallest change that makes the claim true.
 #+end_exercise
 
 * What the PR is allowed to say
-=eb --check-contrib= ran on the four files and passed style and SHA256.
+=eb --check-contrib= ran on the four files.
+It passed style and SHA256.
 =eb --new-pr= opened [[https://github.com/easybuilders/easybuild-easyconfigs/pull/26851][easybuild-easyconfigs#26851]] from the HaoZeke fork onto =develop=.
-The body contains the generated line, two factual sentences, and the AI disclosure required by policy.
+The body contains the generated line.
+The body contains two factual sentences.
+The body contains the AI disclosure required by policy.
 =resolves= is the SAT of the 2025a robot plus the overlay.
 =builds= is the Snellius =eblocalinstall= of those four files.
 A login-node =--help= provides the sanity the recipe declared.
 It is not a TPV run.
-=eb --from-pr 26851 --robot --force= rebuilt the same four files on a Rome node in 14 minutes 49 seconds, all SUCCESS.
+=eb --from-pr 26851 --robot --force= rebuilt the same four files on a Rome node in 14 minutes 49 seconds.
+All results were SUCCESS.
 That is the report referenced in the PR comment.
 #+ATTR_EB: :id sources-48 :title Where this chapter comes from :kind sources
 #+begin_detail

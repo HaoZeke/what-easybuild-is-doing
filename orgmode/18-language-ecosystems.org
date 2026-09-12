@@ -13,12 +13,12 @@ The steps described in [[file:13-how-a-build-executes.org][How a build executes]
 Other software is written in languages that include their own package managers.
 A package manager provides an additional perspective on which components should be installed.
 EasyBuild's answer is identical for all such cases.
-It precedes the specifics.
+The answer precedes the specifics.
 The language's tool may perform the build.
-It must not perform dependency resolution.
+The tool must not perform dependency resolution.
 * Python
 =PythonPackage= is the easyblock.
-Its defaults follow the policy:.
+Its defaults follow the policy.
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "PythonPackage defaults, abridged from thirty-one"
 $ python3 -c 'from easybuild.easyblocks.generic.pythonpackage \
 > import PythonPackage
@@ -35,12 +35,12 @@ $ python3 -c 'from easybuild.easyblocks.generic.pythonpackage \
  use_pip_for_deps = False
 #+end_src
 Read =use_pip_for_deps = False= first.
-=pip= runs; it is not permitted to work out what else it needs.
+=pip= runs; it cannot determine additional requirements.
 Every dependency is declared in the easyconfig, resolved by the robot from [[file:04-the-robot.org][The robot]], and installed as its own module or its own =exts_list= entry.
 The rest of that list enforces it.
 =download_dep_fail= turns a dependency download into a build failure rather than a quiet success.
 =pip_no_index= forbids the index entirely.
-=pip_ignore_installed= stops pip deciding that something already present is good enough, which would make the build depend on what happened to be there.
+=pip_ignore_installed= stops pip from treating an existing package as sufficient.
 =sanity_pip_check= runs =pip check= at the end.
 It asks pip whether the environment it now sees is internally consistent.
 A declared version set that does not satisfy the packages' own metadata is caught here.
@@ -50,13 +50,12 @@ A wheel's scripts carry a =#!= line pointing at whatever interpreter built them;
 Without that, an installed script runs under the system Python and fails in a way that mentions neither.
 For a set of packages rather than one, =PythonBundle= is the =exts_list= pattern from [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]].
 Two turn up constantly: =SciPy-bundle= and =Python-bundle-PyPI=.
-They exist so the fifty packages everything needs are installed once rather than fifty times.
+They exist to install the fifty required packages once instead of fifty times.
 * R, Perl, Julia, Go, Rust
-Identical structure with distinct identifiers.
-=RPackage= and the =R-bundle-CRAN= collection share this form.
-=PerlModule= and =PerlBundle= follow the same pattern.
-=JuliaPackage= and =JuliaBundle= are analogous.
-=GoPackage= conforms as well.
+The =RPackage= and the =R-bundle-CRAN= collection share this form.
+The =PerlModule= and =PerlBundle= follow the same pattern.
+The =JuliaPackage= and =JuliaBundle= are analogous.
+The =GoPackage= conforms as well.
 Rust is the exception; its defaults explicitly state the policy.
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The Cargo easyblock, in full"
 $ python3 -c 'from easybuild.easyblocks.generic.cargo import Cargo
@@ -93,14 +92,14 @@ None of the three is wrong.
 Choosing the first and not maintaining the lock is wrong.
 Choosing the second while telling people it is reproducible is also wrong.
 * The rule underneath all of it
-An ecosystem fits EasyBuild when its dependency set can be *written down*.
-Python, R, Perl, Rust and Julia can each provide a version list, a lock file, or a =crates= array.
-The language's tool then compiles rather than decides.
-An ecosystem resists EasyBuild when resolution is the job and occurs at install time.
-That is not a judgement about the language.
-It is a statement about the purpose of a stack.
+An ecosystem matches EasyBuild when its dependency set can be *written down*.
+Python, R, Perl, Rust and Julia each can provide a version list, a lock file, or a =crates= array.
+The language's tool then compiles instead of deciding.
+An ecosystem resists EasyBuild when resolution is performed at install time.
+That does not judge the language.
+It states the purpose of a stack.
 Everything in [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] about exact pins applies here, one layer down.
-A package manager that cannot be pinned cannot be part of a pinned stack.
+A package manager that cannot be pinned cannot belong to a pinned stack.
 #+ATTR_EB: :id EB-Languages-1 :title Three requests, three answers
 #+begin_exercise
 Three users ask for software on the same day.

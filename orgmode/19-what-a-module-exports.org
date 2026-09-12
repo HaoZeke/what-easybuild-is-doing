@@ -104,60 +104,55 @@ toolchain = {'name': 'foss', 'version': '2025a'}
 versionsuffix = '-HDF5-1.14.6'
 #+end_src
 =$EBROOT*= is used by a recipe.
-It shows how an easyconfig points at a dependency without hardcoding a path, as described in [[file:13-how-a-build-executes.org][How a build executes]]'s =--with-hdf5=$EBROOTHDF5=.
+An easyconfig points at a dependency without hardcoding a path, as described in [[file:13-how-a-build-executes.org][How a build executes]]'s =--with-hdf5=$EBROOTHDF5=.
 The dependency's module was loaded during =prepare=.
 The variable is set.
 The build never needs to know where the site puts things.
 * Adding to the module
-Four parameters are listed in approximate order of frequency of use.
+Four parameters appear in approximate order of frequency of use.
 =modextravars= defines additional environment variables.
-A package whose runtime requires =FOO_DATA_DIR= located within its own installation receives it via this parameter.
+A package that needs =FOO_DATA_DIR= inside its installation gets it via this parameter.
 =modextrapaths= inserts a prefix into a path-like variable.
-This mechanism allows a Python package to add its own =lib/python3.13/site-packages= to =$PYTHONPATH= and an R package to extend =$R_LIBS_SITE=.
+The mechanism lets a Python package add its =lib/python3.13/site-packages= to =$PYTHONPATH=.
+It lets an R package extend =$R_LIBS_SITE=.
 =modluafooter= appends raw Lua code to the modulefile.
-=modtclfooter= performs the same for Tcl.
-It provides an escape hatch for situations not covered by the other parameters.
-Use it with the understanding that it binds the easyconfig to a specific module syntax.
-=modaltsoftname= alters the filename under which the module is stored while preserving the software's original name.
-It is uncommon and exists.
-A rule for all four parameters is that they affect what a *user* receives, not what the build receives.
-Setting =modextravars= does not assist a build that requires an environment variable.
-The module is generated in the =module= step after the build has completed several steps earlier.
+=modtclfooter= appends raw Tcl code to the modulefile.
+It offers an escape hatch for cases not covered by the other parameters.
+Use it knowing that it binds the easyconfig to a specific module syntax.
+=modaltsoftname= changes the filename used to store the module and keeps the software's original name.
+It is uncommon.
+It exists.
+All four parameters affect what a *user* receives, not what the build receives.
+Setting =modextravars= does not help a build that needs an environment variable.
+The module is generated in the =module= step after the build has completed several earlier steps.
 * Naming schemes
-The path in that transcript is =modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua=.
-The =chem= comes from =moduleclass=.
-That is a categorised scheme.
-It is one of several.
-
+The transcript path equals =modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua=.
+The =chem= identifier originates from =moduleclass=.
+This is a categorised scheme.
+This is one of several schemes.
 *Flat* is EasyBuild's default.
 =EasyBuildMNS= is the naming scheme.
-Every module resides in one directory.
-Modules are named =name/version-toolchain-versionsuffix=.
-Everything is visible in =module avail= at once.
-It is simple.
-It produces long lists.
-
+Every module resides in a single directory.
+Modules follow the name pattern =name/version-toolchain-versionsuffix=.
+All modules appear simultaneously in =module avail=.
+The system is simple.
+The system produces long lists.
 *Categorised* uses the same names filed under =moduleclass=.
 Snellius uses this scheme.
-
 *Hierarchical* is =HierarchicalMNS=.
-The toolchain moves out of the module name and into the path.
+The toolchain moves from the module name into the path.
 Loading a compiler changes =MODULEPATH=.
-Only then are the modules built with that compiler visible.
-The hierarchical scheme is worth understanding.
-A site may not use it.
-
-A module that cannot be seen is not absent.
-It is behind a toolchain that has not been loaded.
-That is [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]'s hierarchy made into directories.
-The advantage is that the module system enforces it.
-Discovery is then a two-step process.
-Users find it baffling until it is explained once.
-
-=--module-naming-scheme= sets it.
-It is a site decision made once.
-Changing it later renames every module a site has.
-It is not a decision anyone revisits casually.
+Modules built with that compiler become visible only after the change.
+Understanding the hierarchical scheme is worthwhile.
+A site may choose not to use it.
+A module that cannot be seen remains present.
+The module lies behind an unloaded toolchain.
+That corresponds to [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]'s hierarchy implemented as directories.
+The module system enforces the hierarchy.
+Discovery then follows a two-step process.
+Users find it baffling until explained once.
+=--module-naming-scheme= sets the scheme.
+The scheme reflects
 #+ATTR_EB: :id EB-Module-1 :title Where did that line come from
 #+begin_exercise
 Using the modulefile above:

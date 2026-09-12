@@ -1,7 +1,7 @@
 #+TITLE: When it fails
 #+OPTIONS: toc:nil num:nil
-The parameters that cost the most time when misread.
-The log when the file is not the problem.
+Parameters that are misread cause the greatest time consumption.
+The log shows that the file is not the problem.
 #+begin_export rst
 .. toctree::
  :maxdepth: 1

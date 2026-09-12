@@ -19,13 +19,17 @@ The command is this:
 #+begin_example
 eb GROMACS-2025.2-foss-2025a.eb -r
 #+end_example
-One file is named and one package is requested.
-Dozens of modules appear in a working order, most never named at the prompt.
+One file is named.
+One package is requested.
+Dozens of modules appear in a working order.
+Most are never named at the prompt.
 The =-r= caused this.
 It is short for =--robot=.
-This chapter explains its function and, more usefully, its search locations.
+This chapter explains its function.
+It also explains its search locations.
 The sample is a toy robot.
-It walks a canned universe shipped with the page, not the site.
+It walks a canned universe shipped with the page.
+It does not walk the site.
 Change Python from =3.13.1= to =3.11.3= to observe a dependency being removed.
 #+begin_src easyconfig :widget solve :hydrate load :universe canned-foss-2025a
 name = 'GROMACS'
@@ -43,8 +47,8 @@ builddependencies = [
 #+end_src
 
 * A filename is a query
-Begin with something smaller than it appears.
-The command passed =GROMACS-2025.2-foss-2025a.eb= contained no path, and the working directory likely did not contain it.
+Begin with a smaller appearance.
+The command passed =GROMACS-2025.2-foss-2025a.eb= contained no path, and the working directory did not contain it.
 That works.
 EasyBuild resolves it against an ordered list of directories, the *robot path*, and resolves every discovered dependency in the same manner.
 No distinction in kind separates "find the requested easyconfig" from "find a dependency of the requested easyconfig".
@@ -60,28 +64,32 @@ The following example shows a legal and common method to set the option:
 #+begin_example
 --robot-paths=/my/site/easyconfigs:
 #+end_example
-The trailing colon is intentional.
-Omitting it inverts the meaning.
-Without the colon, the default robot path is *replaced* by a single directory.
+Trailing colon is intentional.
+Omitting colon inverts meaning.
+Without colon, default robot path is *replaced* by a single directory.
 EasyBuild then finds none of the thousands of easyconfigs it includes.
-With the colon, EasyBuild searches that directory first.
-EasyBuild retains the default paths thereafter.
-The mechanism is neither a special case nor a parsing quirk.
-The option is declared with an action named =add_flex=.
-Its documentation in =easybuild/base/generaloption.py= explains its behavior:
+With colon, EasyBuild searches that directory first.
+EasyBuild retains default paths thereafter.
+Mechanism is neither a special case nor a parsing quirk.
+Option is declared with action named =add_flex=.
+Documentation in =easybuild/base/generaloption.py= explains behavior:
 #+begin_quote
 similar to add / add_first, but replaces the first "empty" element with
 the default
 #+end_quote
-The colon-separated list =/my/site/easyconfigs:= contains two elements; the second element is empty.
+The colon-separated list =/my/site/easyconfigs:= contains two elements.
+The second element is empty.
 =add_flex= inserts the default into the empty element.
 The colon is a *position* rather than punctuation.
 The colon indicates where the defaults should be placed.
 Placing the colon at the front, =:/my/site/easyconfigs=, makes EasyBuild search the site directory last.
-When this behavior becomes visible, the entire option is no longer fiddly.
-The value defines an order, with the blank marking the default's position within it.
-A related detail that resolves ties is that paths supplied to =--robot= are placed ahead of =--robot-paths=.
-The framework states this explicitly, commenting that "paths specified to =--robot= have preference over =--robot-paths=".
+The behavior becomes visible.
+The entire option is no longer fiddly.
+The value defines an order.
+The blank marks the default's position within the order.
+Paths supplied to =--robot= are placed ahead of =--robot-paths=.
+The framework states this explicitly.
+The comment reads "paths specified to =--robot= have preference over =--robot-paths=".
 #+ATTR_EB: :id EB-Robot-1 :title Where do the defaults go
 #+begin_exercise
 Three settings, one of them wrong for almost every purpose:
@@ -116,38 +124,39 @@ fallback rather than an override.
 #+end_exercise
 
 * Why an overlay is the normal case
-A site almost always maintains its own easyconfigs directory before the defaults.
+Sites almost always maintain their own easyconfigs directory before the defaults.
 The reason is [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]'s closing point: an EasyBuild release carries a fixed set of easyconfigs.
 Any easyconfig merged upstream after that release is not included.
 When a site requires a package newer than its EasyBuild, it must have a place for that easyconfig.
-That location is placed first on the robot path.
-That freeze creates two statements that are simultaneously true.
+The location is placed first on the robot path.
+The freeze creates two statements that are simultaneously true.
 Remembering this point is important.
-- the easyconfig exists upstream, merged, on the development branch; 
-- the site cannot build it, and its EasyBuild has never heard of it. 
+- The easyconfig exists upstream, merged, on the development branch.  
+- The site cannot build it, and its EasyBuild has never heard of it.  
 Both statements are true.
 The remedy is not to dispute the first statement.
 Instead, place a copy where the robot looks, or direct the robot to the commit that added it.
 * How it decides an order
-Given the path, the robot returns an executable order.
-Nothing gets built before what it needs.
-It does not compute that from a finished graph.
-The graph is what it is discovering.
+The robot returns an executable order given the path.
+No component is built before its dependencies.
+The order is not computed from a completed graph.
+The graph is discovered during the process.
 =resolve_dependencies= in =easybuild/tools/robot.py= runs a loop.
-That loop's shape explains most of what =--dry-run= prints.
-One pass does this: The robot asks which easyconfigs are *fully resolved*, meaning every dependency they declare is already available.
-Those go onto the end of the order.
-The robot treats what just went onto the order as available.
-By the time it is built it will be available.
-For anything still unresolved, the robot searches the robot path for an easyconfig that provides the missing dependency.
-The robot adds it to the set being resolved.
+The loop's shape explains most of the output of =--dry-run=.
+One pass asks which easyconfigs are *fully resolved*.
+A *fully resolved* easyconfig has every declared dependency already available.
+Those easyconfigs are placed at the end of the order.
+The robot treats newly ordered easyconfigs as available.
+By the time each easyconfig is built it is available.
+For any unresolved dependency, the robot searches the robot path for an easyconfig that provides it.
+The robot adds the found easyconfig to the set being resolved.
 The process repeats.
-Step 3 surprises people.
+Step 3 often surprises users.
 The set of things being resolved *grows* during resolution.
-That is why =--dry-run= lists packages never named and never asked about.
+That explains why =--dry-run= lists packages never named and never queried.
 ** Available means what the module tool says
-Step 1 enables the word =available=.
-The function states directly its source.
+Step 1 enables =available=.
+The function states its source directly.
 #+begin_example
 avail_modules = modtool.available()
 #+end_example
@@ -173,39 +182,39 @@ It marks each one =[x]= or =[ ]= once =-r= is also on the command line.
 There is no =eb --retain-all-deps=; that name is an internal argument used by =-D=, =--dep-graph=, and =--check-conflicts=.
 =-M= / =--missing-modules= prints only the absent set.
 ** What is being rebuilt does not satisfy anything
-A detail in the loop is easy to miss.
-A detail in the loop can save an afternoon.
+Loop details are easy to miss.
+A loop detail can save an afternoon.
 #+begin_example
 being_installed = [p['full_mod_name'] for p in easyconfigs]
 avail_modules = [m for m in avail_modules if m not in being_installed]
 #+end_example
-Anything in this run's own list is *removed* from the available set, even when it is installed.
-Requesting a rebuild of a library and a dependent library causes both to be rebuilt, in that order.
+Anything in this run's own list is *removed* from the available set, even when installed.
+Requesting a rebuild of a library and a dependent library rebuilds both, in that order.
 The old library does not satisfy the dependent.
 A matching escape hatch exists.
 A dependency marked as an external module has no easyconfig.
 The robot does not search for one.
 The module must still be available.
-If it is not, the resolve loop ends with =Missing modules for dependencies marked as external modules=.
+If the module is not available, the resolve loop ends with =Missing modules for dependencies marked as external modules=.
 A site informs the robot about a module EasyBuild did not build.
 The site does not pretend the module exists.
 ** The order is not unique
 Any topological ordering of the discovered graph is valid.
-EasyBuild does not promise a particular one.
+EasyBuild does not promise a particular ordering.
 The list generated by =--dry-run= is an answer rather than the definitive answer.
-Diffing two such lists across versions shows churn that lacks meaning.
-A toolchain is a hierarchy's sibling.
+Diffing two such lists across versions shows churn lacking meaning.
+A toolchain is a sibling of a hierarchy.
 Sibling toolchains convey the same fact one level lower.
 ** And the hierarchy filters the candidates
 The hierarchy from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] determines which items step 3 may locate.
-A candidate is valid only if its toolchain belongs to the package's hierarchy.
-That filter represents the intersection of the two chapters.
-That filter generates the most frustrating class of robot failure.
+A candidate is valid only when its toolchain belongs to the package's hierarchy.
+The filter represents the intersection of the two chapters.
+The filter generates the most frustrating class of robot failure.
 The module is installed.
-=module avail= lists it.
-The robot reports it cannot find it.
-The robot is not lying.
-It reports that nothing *in the package's hierarchy* provides that dependency.
+=module avail= lists the module.
+The robot reports it cannot find the module.
+The robot does not lie.
+The robot reports that nothing *in the package's hierarchy* provides that dependency.
 A module built with a toolchain outside that hierarchy is invisible rather than rejected.
 #+ATTR_EB: :id EB-Robot-2 :title The same command, two different plans
 #+begin_exercise
@@ -239,20 +248,21 @@ machine.
 #+end_exercise
 
 * Ask before the build
-The robot announces its decision but does not perform it.
+The robot announces its decision.
+The robot does not perform it.
 #+begin_example
 eb GROMACS-2025.2-foss-2025a.eb -r -D
 #+end_example
 Option =-D= corresponds to =--dry-run=.
-The resolved list returns with a marker beside each entry indicating whether it is already installed or would be built.
-Read it before each non‑trivial build for a specific reason.
-The command as typed hides the difference between "this will install two things" and "this will install ninety things".
-That difference is comparable to that between a coffee and an afternoon.
-It also provides the fastest way to detect a dependency resolving to an unexpected version.
+The resolved list includes a marker beside each entry showing installed status or build requirement.
+Read the list before each non‑trivial build for a specific reason.
+The typed command hides the difference between installing two items and installing ninety items.
+That difference resembles the gap between a coffee and an afternoon.
+It provides the quickest detection of a dependency resolving to an unexpected version.
 This occurs most often when a site overlay shadows an upstream easyconfig with the same name.
 * Three lists, and a loop
 The robot consults three lists.
-Confusing them causes most errors.
+Confusing them leads to most errors.
 
 | List | Set by | Decides |
 |---+---+---|
@@ -260,7 +270,7 @@ Confusing them causes most errors.
 | =MODULEPATH= | your module system, not EasyBuild | what counts as already built |
 | the toolchain hierarchy | A toolchain is a hierarchy, computed | which found candidates are eligible |
 
-It iterates with a loop instead of performing a graph traversal.
+It iterates with a loop rather than a graph traversal.
 It takes each fully resolved item.
 It marks it as available.
 It searches the path for missing items.
@@ -274,4 +284,4 @@ Both a library and its dependents are rebuilt.
 Consult =-D= prior to any non‑trivial build.
 This option uniquely differentiates one installation from ninety.
 The following chapter covers =versionsuffix=.
-=versionsuffix= appears as a constraint and is a label.
+=versionsuffix= appears as a constraint and as a label.

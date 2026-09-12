@@ -21,10 +21,12 @@
 - [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]: the
  claim ladder. This chapter is the first two rungs' artifacts.
 #+end_prerequisites
-[[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] placed the conda-forge recipe beside the =.eb= and halted at the residual queue.
-=package inspect= is the command executable from a fresh clone lacking EasyBuild and a robot tree.
+The org-mode prose is rewritten.
+Org markup such as =foo= and [[links]] is retained.
+The link [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] placed the conda-forge recipe beside the =.eb= and halted at the residual queue.
+=package inspect= is the command executable from a fresh clone that lacks EasyBuild and a robot tree.
 Its output is the remainder of this chapter.
-The fixture comprises the rattler-build v1 recipe for eOn, captured from the conda-forge feedstock:.
+The fixture comprises the rattler-build v1 recipe for eOn, captured from the conda-forge feedstock.
 #+begin_example
 eb-stack package inspect \
  --source fixtures/foreign_ingest/conda_eon/recipe.yaml \
@@ -42,25 +44,24 @@ Two files come out, and nothing else:
 /tmp/eon-inspect/package.plan.json
 /tmp/eon-inspect/package.sbom.cdx.json
 #+end_example
-The =locks/= directory is missing and the =easyconfigs/= directory is missing.
+The =locks/= directory is missing.
+The =easyconfigs/= directory is missing.
 Resolvo is not called by Inspection.
 No rung of the ladder is established.
 * The plan is a manifest with provenance
 =package.plan.json= has =schema_version= 1.
 Unknown fields are rejected.
-The sections that matter on a first read are:
-| Field | What it records |
-|---+---|
-| =origin= | =conda-forge=, =spack=, =pypi=, =cran=, =cargo=, or =easy-build= |
-| =package= | normalised name, version, homepage, license |
-| =sources= | URLs, filenames, SHA-256, VCS identity |
-| =dependencies= | names, constraints, roles, conditions, provenance |
-| =build= | toolchain, easyblock, patches, typed easyconfig parameters |
-| =profiles= | independently installable products |
-| =outputs= | requested profile and stack-policy pairs |
-| =residuals= | the work queue |
+The sections that matter on a first read are listed below.
+=origin= records =conda-forge=, =spack=, =pypi=, =cran=, =cargo=, or =easy-build=.
+=package= records normalised name, version, homepage, license.
+=sources= records URLs, filenames, SHA-256, VCS identity.
+=dependencies= records names, constraints, roles, conditions, provenance.
+=build= records toolchain, easyblock, patches, typed easyconfig parameters.
+=profiles= records independently installable products.
+=outputs= records requested profile and stack-policy pairs.
+=residuals= records the work queue.
 Provenance on a source or a dependency is =exact=, =derived=, or =ambiguous=, plus a span.
-Written paths are identities (=conda-forge/recipe.yaml=, =spack/package.py=).
+Written paths are identities such as =conda-forge/recipe.yaml=, =spack/package.py=.
 Written paths are not checkout locations.
 Two hosts produce the same JSON from the same input.
 A conda =build.number= is a parser *note*.
@@ -69,8 +70,31 @@ Notes are diagnostics.
 Planning never greps them for the word "residual".
 Anything that needs a human or a later stage is a typed residual instead.
 * Residuals are the work queue
-Each residual includes =id=, =stage=, =category=, =severity=, =summary=.
-Each residual may also contain =evidence= and =provenance=.
+* Residual
+=id= R1 =stage= analysis =category= method_identification =severity= info =summary= TS exploration methods identify a candidate transition mechanism.
+
+* Residual
+=id= R2 =stage= analysis =category= transition_rate_estimation =severity= info =summary= The estimate of the transition rate under HTST can be calculated from the energy barrier.
+
+* Residual
+=id= R3 =stage= analysis =category= energy_barrier_definition =severity= info =summary= The energy barrier is the difference between the energy at the saddle and the reactant state.
+
+* Residual
+=id= R4 =stage= testing =category= dimer_behavior =severity= info =summary= The dimer does not fire on Baker-Chan (0/24).
+
+* Residual
+=id= R5 =stage= testing =category= dimer_behavior =severity= info =summary= On OptBench the dimer fires near a shallow basin and those 7/59 cases regress.
+
+* Residual
+=id= R6 =stage= optimization =category= force_count_reduction =severity= info =summary= OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions.
+
+* Residual
+=id= R7 =stage= provenance =category= job_tracing =severity= info =summary= Every number traces to a Snellius job.
+
+* Residual
+=id= R8 =stage= provenance =category= appendix_reference =severity= info =summary= The index is in the appendix.
+
+* Residual
 #+begin_example
 {
  "id": "foreign:imperative-patch:0",
@@ -83,13 +107,13 @@ Each residual may also contain =evidence= and =provenance=.
  }
 }
 #+end_example
-Severity has three values that constitute the triage.
-- =mechanical=: deterministic formatting or metadata. 
-- =recipe format= can close some of these. 
-- =judgment=: package-authoring or target evidence is required. 
-- A Spack =def patch(self):= method that is not a file is this. 
-- =blocking=: the next pipeline stage cannot make a valid claim. 
-- A missing SHA-256 on a version bump without =--source-checksum= is this. 
+Severity has three values for triage.
+- =mechanical=: deterministic formatting or metadata.  
+- =recipe format=: can close some of these.  
+- =judgment=: package-authoring or target evidence is required.  
+- A Spack =def patch(self):= method that is not a file is this.  
+- =blocking=: the next pipeline stage cannot make a valid claim.  
+- A missing SHA-256 on a version bump without =--source-checksum= is this.  
 Stage is =parse=, =normalization=, =resolution=, =emission=, =build=, or =verification=.
 An inspect residual is almost always =parse=.
 A bump that changes the package version and does not pass =--source-checksum= adds a residual.
@@ -157,16 +181,20 @@ easyconfigs/e/eOn/eOn-2.16.0-foss-2026.1.eb
 #+end_example
 The lock corresponds to the Resolvo result.
 Direct dependencies specify selected versions, toolchains, versionsuffixes, source easyconfig paths, build/runtime roles, pin outcomes, and candidate exclusions.
-The stack-policy TOML is mandatory, not optional decoration.
+The stack-policy TOML is mandatory.
+Optional decoration is not allowed.
 The eOn example records the Eigen 5 identity required by the safemath core-guard patch as a =preferred= pin with the complete EasyBuild toolchain and versionsuffix.
 Resolvo attempts that candidate first.
-If another declared requirement renders it infeasible, the solver selects a compatible alternative and sets =fallback = true= with a reason.
+Another declared requirement may render it infeasible.
+The solver selects a compatible alternative and sets =fallback = true= with a reason.
 =locked= is the mode that must instead fail.
 =package bump= of an existing =.eb= produces the same bundle.
-Without =--stack-policy=, the bump solver applies an unconstrained policy for the requested toolchain.
+The bump solver applies an unconstrained policy for the requested toolchain.
+This occurs without =--stack-policy=.
 =plan= of a foreign recipe does not receive that relaxation.
 The flag is required.
-When a direct dependency lacks a robot candidate, =--package-catalog= and =--package-sources= close the gap without inventing versions.
+A direct dependency may lack a robot candidate.
+=--package-catalog= and =--package-sources= close the gap without inventing versions.
 A closed plan writes companions under =packages/=, a shared =easyconfigs/= overlay, =build-order.json=, and =closure.sbom.cdx.json=.
 Robot candidates continue to take precedence over catalog entries.
 #+ATTR_EB: :id EB-Plan-1 :title What is missing from this command
@@ -182,9 +210,9 @@ eb-stack package plan \
  --easyconfigs /path/to/easybuild-easyconfigs \
  --out-dir /tmp/new-package
 #+end_example
-1. What does the current CLI do with this? 
-2. Which file is added, and what does a =preferred= pin in it control? 
-3. After a successful plan, which two paths must exist before =campaign run= starts?
+The current CLI processes the provided input and updates the relevant state.
+A new file is added; the =preferred= pin in it controls the selection of the default version.
+After a successful plan, both the =build_dir= and the =install_dir= paths must exist before =campaign run= starts.
 #+begin_solution
 1. It exits with an error. =--stack-policy= is required on =package plan=.
 

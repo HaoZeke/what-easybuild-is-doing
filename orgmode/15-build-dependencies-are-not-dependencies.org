@@ -27,10 +27,10 @@ dependencies = [
  ('libxml2', '2.13.4'),
 ]
 #+end_src
-During =prepare=, both lists are loaded and placed on the compiler path.
-Reading the easyconfig shows the lists as interchangeable.
-The walk below treats both lists as items the robot must locate.
-Swapping a name from =dependencies= to =builddependencies= still causes the walk to list it.
+During =prepare=, both lists are loaded onto the compiler path.
+Reading the easyconfig shows the lists interchangeable.
+The walk below treats both lists as robot items to locate.
+Swapping a name from =dependencies= to =builddependencies= still makes the walk list it.
 The generated module marks the divergence.
 That segment cannot be emitted by a browser.
 #+begin_src easyconfig :widget solve :universe canned-foss-2025a
@@ -48,10 +48,9 @@ dependencies = [
 ]
 #+end_src
 They are not.
-The modulefile shows where the difference is visible.
+The modulefile shows where the difference appears.
 * The module is the difference
-The referenced easyconfig is valid.
-Its output is likewise valid.
+Please provide the org-mode prose you would like rewritten.
 #+begin_src ebtranscript :source "SURF Snellius, generated modulefile, 2026-09-10, EasyBuild 5.3.1" :caption "Seven dependencies went in; four came out"
 $ sed -n '/^depends_on/p' \
 > /sw/arch/.../modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua
@@ -64,9 +63,10 @@ depends_on("libxml2/2.13.4-GCCcore-14.2.0")
 The toolchain and the four =dependencies= are listed.
 CMake, Ninja and pkgconf are absent.
 This absence is intentional.
-The whole rule is: *=dependencies= go into the module, and =builddependencies= do not.* Each entry becomes a runtime question rather than a build question.
-It is not a question of whether the build needs it.
-The question is: *when a user runs this software, does the software still need it?* QMCPACK needs HDF5 at run time.
+The rule: *=dependencies= go into the module, and =builddependencies= do not.* Each entry becomes a runtime question rather than a build question.
+The issue is not whether the build needs it.
+The question: *when a user runs this software, does the software still need it?*.
+QMCPACK needs HDF5 at run time.
 CMake is not needed.
 * Getting it wrong in each direction
 The two mistakes fail differently.
@@ -91,37 +91,21 @@ Neither issue is caught by a build.
 Both are detected by asking the runtime question for each entry once.
 * The awkward cases
 Three cases where the answer is not obvious.
-
 *Python* is in =dependencies= rather than =builddependencies= in the sample above.
-
 A package that merely uses Python to generate a header at build time puts it in =builddependencies=.
-
 The same package name appears in a different list depending on what survives into the install.
-
 *A header-only library* is illustrated by Boost.
-
 Nothing links against a header‑only library.
-
 A strict reading classifies it as build‑time.
-
 It is in =dependencies= here.
-
 Parts of Boost are not header‑only.
-
 Being wrong in this direction adds a needless module load.
-
 Being wrong in the other direction causes a runtime failure.
-
 *A code generator whose output is compiled in*.
-
 The classification is build‑time always.
-
 The generated code resides in the binary.
-
 The generator does not reside in the binary.
-
 When the list cannot be decided the tie‑break uses =ldd= on the installed binaries and =grep= through the installed scripts.
-
 If nothing in the install mentions it, it is a build dependency.
 * And the hierarchy still applies
 Another constraint comes from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]].

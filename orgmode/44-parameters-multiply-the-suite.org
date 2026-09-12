@@ -28,15 +28,15 @@ The suite size increases dramatically.
 EESSI's mpi4py tutorial warns that four parameters with (3, 3, 2, 2) values generate 36 tests.
 This count excludes the additional multiplication by partitions and environments.
 * Two knobs
-The =parameter= defines a suite dimension.
+=parameter= defines a suite dimension.
 Each =parameter= value maps to a distinct test case.
-The suite name is set when the suite loads.
-The command line cannot modify the list.
-It may only filter cases using =--name= or =--tag=.
-The =variable= is a field on each case.
-It has a default value.
-It can be overridden on the command line with =-S name=value=.
-It does not cause any multiplication.
+Suite name sets when suite loads.
+Command line cannot modify the list.
+Filtering cases allowed only with =--name= or =--tag=.
+=variable= is a field on each case.
+=variable= has a default value.
+=variable= can be overridden on the command line with =-S name=value=.
+=variable= does not cause any multiplication.
 #+begin_src python
 import reframe as rfm
 import reframe.utility.sanity as sn
@@ -76,13 +76,17 @@ class EESSI_MPI4PY(rfm.RunOnlyRegressionTest):
  )
 #+end_src
 Two modules multiplied by three scales yield six cases on one partition.
-=n_iterations= equals 1000 for all six cases, unless the invocation specifies =-S n_iterations=200=.
-Hooks execute after =init=, which occurs after the product exists.
+=n_iterations= equals 1000 for all six cases.
+The invocation may specify =-S n_iterations=200=.
+Hooks execute after =init=.
+The product exists before =init=.
 =self.module_name= is a single string, not a list.
 =self.scale= is a single integer.
-Module load and task count belong in hooks rather than in the class body.
+Module load belongs in hooks.
+Task count belongs in hooks.
 =num_tasks_per_node = min(self.scale, 128)= remains a number on a single machine.
-A portable test leaves the machine in the config and removes that 128.
+A portable test leaves the machine in the config.
+The test removes that 128.
 * Filtering is not shrinking the definition
 
 #+begin_example
@@ -91,9 +95,9 @@ reframe -n 'EESSI_MPI4PY.*3.1.5' --tag CI -l
 =-n= matches the test‑case name.
 =--tag CI= indicates the five‑minute, few‑core case that EESSI marks for a pull request.
 The other five cases remain.
-They are omitted when the filter excludes them from the run.
+The filter omits them from the run.
 They stay in the class for the next nightly.
-A =parameter= that enumerates every GROMACS HECBioSim system, from Crambin to the 3M‑atom tetramer, is a suite.
+A =parameter= enumerates every GROMACS HECBioSim system, from Crambin to the 3M‑atom tetramer, forming a suite.
 Tagging only Crambin =CI= keeps that suite usable as both a check and a benchmark.
 #+ATTR_EB: :id EB-ReFrame-44-1 :title Count the cases
 #+begin_exercise

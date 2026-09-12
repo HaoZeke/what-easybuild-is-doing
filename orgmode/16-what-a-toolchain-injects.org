@@ -12,9 +12,9 @@
 This chapter addresses the other half: the impact on the compiler.
 * The variables, and where they are not
 [[file:14-the-isolation-policy.org][What a build is allowed to see]] measured the surprising part.
-It is worth restating.
+Restating is worthwhile.
 Loading a toolchain module provides =EBROOTFOSS= and =EBVERSIONFOSS=.
-It does not provide =$CC=.
+=$CC= is not provided.
 EasyBuild's *toolchain object* sets the compiler variables during =prepare= inside the build.
 A =foss= build receives, among others, the following variables:
 

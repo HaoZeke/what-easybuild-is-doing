@@ -8,8 +8,8 @@
 2. Say what a strip level is and why a patch carries one.
 3. Decide whether a change belongs in a patch or upstream.
 #+end_objectives
-A patch is the only location where an easyconfig modifies the software instead of describing it.
-It is the parameter with the greatest power and the most likely to be incorrect without detection.
+A patch is the sole place where an easyconfig changes the software rather than describing it.
+The patch is the parameter with the greatest power and the highest risk of being incorrect without detection.
 * Two forms
 
 #+begin_src easyconfig :widget parse
@@ -52,38 +52,31 @@ Those paths contain a non‑useful prefix.
 --- vasp.6.5.1/src/main.F	2025-03-01 10:00:00
 +++ vasp.6.5.1-fixed/src/main.F	2025-03-02 11:00:00
 #+end_example
-=patch -p1= removes a single leading directory component.
+=patch -p1= removes one leading directory component.
 It searches for =src/main.F=.
-
 =patch -p0= searches for =vasp.6.5.1/src/main.F=.
-
 EasyBuild does not automatically use =-p1= as the default.
-
 When no integer is supplied, =apply_patch= infers the strip level from the =+++= paths relative to the unpacked tree.
-
 =git diff= output is typically applied with =-p1=.
-Specifying an integer sets the strip level explicitly:.
+Specifying an integer sets the strip level explicitly.
 #+begin_example
 patches = [('odd-layout.patch', 2)]
 #+end_example
-That repeats the failure documented in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
-
+The failure documented in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] repeats.
 The strip level is *relative to the unpacked source tree*.
-
-It is precisely the type of parameter that describes the shape of the source rather than the software.
-
-Switching from a git checkout to a release tarball causes the number of leading components to change silently, in the same way =start_dir= did.
+The parameter precisely describes the shape of the source rather than the software.
+Switching from a git checkout to a release tarball changes the number of leading components silently, as =start_dir= did.
 * Applying cleanly is not the same as applying correctly
-=patch= is more helpful than useful.
-=patch= matches on context, not on line numbers.
-=patch= will apply a hunk that has moved and report the offset.
-=patch= will apply a hunk with fuzz, matching approximately, and report that too.
-Both are usually right and occasionally catastrophic.
-A hunk can apply to the wrong function if that function happens to have similar surrounding lines.
-A patch that applies with offsets against a new version is not evidence that it still does the right thing.
-It is evidence that =patch= found somewhere plausible to put it.
-After a version bump, a patch that still applies deserves the same suspicion as a =start_dir= that still parses.
-The check is to read the patched file, not the patch output.
+=patch= provides more help than utility.
+=patch= matches based on context, not line numbers.
+=patch= applies a moved hunk and reports the offset.
+=patch= applies a fuzzy hunk, matches approximately, and reports that too.
+Both are usually correct and occasionally catastrophic.
+A hunk can apply to the wrong function when surrounding lines are similar.
+A patch that applies with offsets against a new version does not prove correctness.
+This indicates that =patch= found a plausible location.
+After a version bump, a patch that still applies raises the same suspicion as a =start_dir= that still parses.
+The check reads the patched file, not the patch output.
 * When it should not be a patch
 A patch is a maintained fork.
 Consider three questions before creating a patch.

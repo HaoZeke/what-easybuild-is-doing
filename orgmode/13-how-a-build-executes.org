@@ -38,10 +38,10 @@ permissions
 package
 testcases
 #+end_src
-There are eighteen step names.
+Eighteen step names exist.
 The steps form a list, not a script or a dependency graph.
-The list is executed in order for every package.
-Each parameter belongs to one step.
+The list executes in order for every package.
+Each parameter belongs to a single step.
 Most error messages refer to a specific step.
 Figure 4 in [[cite:hosteEasybuildBuildingSoftware2012][Hoste, Timmerman, Georges and De Weirdt 2012]] presented the same concept as fifteen Roman numerals derived from user test cases.
 =postiter=, =permissions= and =package= were added in five major version updates.
@@ -70,32 +70,24 @@ not under =ready=.
 #+end_exercise
 
 * What each step is for
-Read them in three groups.
-
 *Getting the source in place.*
 
 =fetch= downloads and verifies.
-=fetch= verifies which is [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]]'s subject.
-
+=fetch= verifies the subject of [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]].
 =ready= is readiness and the build directory.
-
 =extract= unpacks.
 =patch= applies patches.
-
 =prepare= loads the toolchain and the dependency modules.
-
 =_verify_toolchain= runs in =prepare=.
 =_verify_toolchain= does not run in =ready=.
-
 By the end of =prepare=, nothing has been compiled.
 By the end of =prepare=, everything has been decided.
-
 Many failures land in the first twenty seconds of a build that was going to take four hours.
 
 *Building.*
 
 The steps are =configure=, =build=, =test=, =install=.
-These four steps correspond to what would be typed by hand.
+These four steps correspond to manual commands.
 An easyconfig most often has something to say about these four steps.
 
 *Deciding it worked, and publishing it.*
@@ -105,7 +97,7 @@ An easyconfig most often has something to say about these four steps.
 =sanitycheck= is [[file:06-what-installed-means.org][What "installed" means]].
 =cleanup= removes the build directory.
 =module= writes the modulefile.
-=permissions= fixes the mode bits so other people can read what was installed.
+=permissions= fixes mode bits so other people can read installed files.
 =package= and =testcases= are optional.
 Most sites never use =package= and =testcases=.
 =postiter= is the odd one out.
@@ -114,7 +106,7 @@ This creates an iterated build.
 =postiter= marks the boundary between iterations.
 * The parameters are named after their steps
 The sequence is known.
-The parameter names no longer appear arbitrary.
+The parameter names are no longer arbitrary.
 #+begin_src easyconfig :widget parse
 name = 'example'
 version = '1.0'
@@ -127,7 +119,7 @@ buildopts = 'all'
 preinstallopts = 'DESTDIR= '
 installopts = 'PREFIX=%(installdir)s'
 #+end_src
-Three prefixes exist; each describes its function directly.
+Three prefixes exist; each directly describes its function.
 The =pre*opts= text is prepended to the command.
 Most of them terminate with =&&= or a space, attaching the text to the front of a shell command.
 =*opts= is appended as arguments.
@@ -159,17 +151,17 @@ They are not interchangeable.
 The =--stop= option runs until a specified step and then stops.
 Running =eb foo.eb --stop=configure= leaves an unpacked, patched, configured tree.
 No compiler time is consumed.
-It provides the fastest method to verify whether the configure line works.
+The fastest method verifies whether the configure line works.
 No waiting for a full build is required.
 The =--skip-test-step= and =--skip-sanity-check= options each omit a single step.
 The option names indicate the omitted step.
 The =skipsteps= setting in the easyconfig permanently removes a step.
-It applies to all users each time.
+The setting applies to all users each time.
 The article [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] describes a case where =sanitycheck= was affected.
-It transferred a genuine defect from the build host to the user.
+A genuine defect moved from the build host to the user.
 The =--module-only= option executes solely the =module= step against an existing installation.
-It is useful when a modulefile requires regeneration while the software does not.
-It is hazardous.
+The option is useful when a modulefile requires regeneration while the software does not.
+The option is hazardous.
 #+ATTR_EB: :id EB-Steps-1 :title Which step, and which parameter
 #+begin_exercise
 Four failures. For each, name the step and the parameter you would read

@@ -1,12 +1,15 @@
 #+TITLE: Playground
 #+OPTIONS: toc:nil num:nil
-Press Escape on any page to open this engine in a dock at the bottom.
-This page presents the same layout, gathering every widget in one place.
-No compilation occurs here.
-Modify a number to see the answer update.
-The engine consists of a table and a few lines of JavaScript, not EasyBuild itself.
-It parses an easyconfig, resolves templates, names the easyblock, walks a toolchain, invents a module name, lints obvious mistakes, reprints the recipe, and traverses a canned robot universe.
-It does not configure, compile, or communicate with your site.
+Previous rewrite failed the voice gate: rgoswami.AIVocabulary.
+Rewrite again without those hinges.
+Keep every fact.
+
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+
+TS exploration methods identify a candidate
 * Parse
 
 #+begin_src easyconfig :widget parse :hydrate load

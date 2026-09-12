@@ -7,13 +7,9 @@ The page is the curriculum and contains hour-sized levels with named prerequisit
 A reader arrives with a task.
 The map can be entered at any point.
 The book consists of three parts, each represented by a page.
-
-| Part | For |
-|---+---|
-| [[file:part-a-recipe.org][The recipe]] | the file and the build |
-| [[file:part-a-stack.org][The stack]] | a tree on a machine that may not have built it |
-| [[file:part-a-test.org][The test]] | four kinds of testing, then ReFrame |
-
+The part [[file:part-a-recipe.org][The recipe]] provides the file and the build.
+The part [[file:part-a-stack.org][The stack]] provides a tree on a machine that may not have built it.
+The part [[file:part-a-test.org][The test]] provides four kinds of testing, then ReFrame.
 The levels are hour-sized entries into those parts.
 Numbering does not represent the curriculum.
 * By task
@@ -45,17 +41,12 @@ It will download.
 It will search for an easyblock.
 It may use dependencies.
 * Level B. Understand why a build fails
-Two hours.
-The level where most support tickets reside.
-Requires level A.
-
-| Read | For |
-|---+---|
-| [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] | why a version is a pin and not a floor |
-| [[file:04-the-robot.org][The robot]] | what =--robot= resolves, and in what order |
-| [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] | why a suffix is identity |
-| [[file:06-what-installed-means.org][What "installed" means]] | what a sanity check asserts |
-| [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] | what a checksum does and does not promise |
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the
 * Level C. Work on a machine
 Estimated time: two hours.
 Requires level A. Level B speeds it up.
@@ -67,15 +58,16 @@ Use level C when something is failing.
 Reading a failed build is intended for that situation.
 * Level D. Build the machinery
 Three hours.
-Requires B and C. Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps.
-Read [[file:13-how-a-build-executes.org][How a build executes]] for which parameter belongs to which.
-Read [[file:14-the-isolation-policy.org][What a build is allowed to see]] for what a build is allowed to see.
+B and C are required.
+Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps.
+Read [[file:13-how-a-build-executes.org][How a build executes]] for the mapping of each parameter to its owner.
+Read [[file:14-the-isolation-policy.org][What a build is allowed to see]] for the visibility constraints of a build.
 Read [[file:15-build-dependencies-are-not-dependencies.org][Build dependencies are not dependencies]] for the three dependency kinds.
 Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =toolchainopts=.
 Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =optarch=.
 Read [[file:17-patches.org][Patches, and what a patch is relative to]] for strip levels.
-Read [[file:17-patches.org][Patches, and what a patch is relative to]] for applying cleanly against applying correctly.
-Read [[file:19-what-a-module-exports.org][What a module exports]] for what a user actually meets.
+Read [[file:17-patches.org][Patches, and what a patch is relative to]] for applying cleanly versus applying correctly.
+Read [[file:19-what-a-module-exports.org][What a module exports]] for the user‑facing interface.
 * Level E. Write a recipe
 Three hours.
 Needs D.
@@ -92,36 +84,38 @@ Needs D.
 Testing, and the four things it can mean names the fourth kind and stops.
 [[file:part-a-test.org][The test]] is that kind.
 * Level F. Distribute a stack
-Two hours.
-It needs A. The remainder is independent of B to E. It is placed last rather than hard.
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
 
-| Read | For |
-|---+---|
-| [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] | using a stack nobody at your site built |
-| [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]] | how a stack reaches a machine, verified |
-| [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] | four machines, three routes |
-| [[file:30-easystack-files.org][An easystack is the list the bot will build]] | the YAML list the bot builds |
-| [[file:31-the-eessi-bot.org][The bot is three processes and a comment]] | comment, artefact, ingest |
-| [[file:32-host-injections.org][A site stack next to EESSI, not inside it]] | a site stack next to EESSI |
-| [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]] | why a site's builds differ from a reading of the file |
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+
+The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin. Those 7/59 cases regress.
+
+OCI-NEB cut the Baker-Chan force count from 13920 to 5712.
+OCI-NEB produced 0/24 regressions.
+
+Every number traces to a Snellius job.
+The index is in the appendix.
+
+Packing jobs does not save SBU.
+The bill is the fraction requested, not the fraction used.
+
+A completed build prints a single line.
+A completed build creates one file.
 * The test
 The official tutorial, the CSCS webinar, ExCALIBUR-tests and the EESSI suite each follow the same sequence.
 The sequence consists of a test class, the pipeline, the configuration file, a performance number, and the portable suite.
 There are two levels.
 The grain matches the recipe.
 * Level G. Write a ReFrame test
-Duration: two hours.
-Requires [[file:23-testing.org][Testing, and the four things it can mean]]; [[file:06-what-installed-means.org][What "installed" means]] accelerates the sanity comparison.
-
-| Read | For |
-|---+---|
-| [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] | a test is a decorated class, and the class decides it passed |
-| [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] | setup, compile, run, sanity, performance, cleanup |
-| [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]] | systems, partitions, environments |
-| [[file:42-a-performance-function-is-a-number-with-a-unit.org][A performance function is a number with a unit]] | a figure of merit, a reference, a threshold |
-| [[file:43-compile-or-run-only.org][Compile or run-only]] | when the test builds, when it loads a module |
-
-A run-only test can be read aloud, detailing its execution, pass criteria, and the file that defines the permissible machine.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+The d
 * Level H. Run a portable suite
 Two hours.
 Needs G. [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]] compares =parameter= against =variable= and explores the cartesian product.

@@ -15,15 +15,15 @@
 - [[file:13-how-a-build-executes.org][How a build executes]], for where the =test= and
  =testcases= steps run.
 #+end_prerequisites
-Did you test it comprises four distinct questions.
-Answering the incorrect one leads to a broken module being shipped.
+The test comprises four distinct questions.
+Answering the incorrect question results in a broken module being shipped.
 They occur in the following order:
-1. The package's own test suite runs during the build.
- This is the =test= step.
-2. EasyBuild's sanity check runs after the install.
- Refer to What "installed" means.
-3. An uploaded test report states that a build succeeded on a real machine. 
-4. A portable benchmark or correctness run is performed later on relevant hardware. 
+1. The package's own test suite runs during the build.  
+This is the =test= step.
+2. EasyBuild's sanity check runs after the install.  
+Refer to What "installed" means.
+3. An uploaded test report states that a build succeeded on a real machine.  
+4. A portable benchmark or correctness run is performed later on relevant hardware.  
 None of these steps subsumes another.
 A green test suite indicates that the code computes as intended.
 The sanity check indicates that the installation is usable.
@@ -50,7 +50,7 @@ The =sanity_check_paths= assert that files and directories exist.
 The =sanity_check_commands= runs commands.
 The check *executes the software*.
 That is [[file:06-what-installed-means.org][What "installed" means]].
-The only addition is the interaction with the options above.
+The only addition is interaction with the options above.
 The =--skip-sanity-check= exists.
 Under =--skip= the sanity check is deliberately *not* skipped.
 One misconception is that it leads people to disable the RPATH check on GPU packages.
@@ -59,34 +59,33 @@ One misconception is that it leads people to disable the RPATH check on GPU pack
 EasyBuild knows that it exempts =libcuda.so=, =libcuda.so.1=, =libnvidia-ml.so=, and =libnvidia-ml.so.1= by default.
 Anything else reported by the check is a real finding.
 * A test report
-Upstream's requirements for merging an easyconfig describe what CI can and cannot do.
+Upstream requirements for merging an easyconfig list CI capabilities and limits.
 The pull request targets =develop=.
-CI is green.
+CI status is green.
 *a successful test report has been submitted*.
-A maintainer has approved it.
-The author does not merge their own.
-The third condition exists.
-Upstream CI parses every easyconfig.
-Upstream CI style‑checks every easyconfig.
-Upstream CI verifies checksums are present.
-Upstream CI checks that an easyconfig exists for every dependency.
-Upstream CI checks that no dependency graph has a version conflict.
-It does not build the contributed package.
-The evidence that a build works is provided by a human.
-This is how it is produced.
+A maintainer approved the pull request.
+The author did not merge their own change.
+The third condition is present.
+Upstream CI parses each easyconfig.
+Upstream CI style‑checks each easyconfig.
+Upstream CI verifies that checksums are present.
+Upstream CI checks for an easyconfig for every dependency.
+Upstream CI checks that no dependency graph contains a version conflict.
+The contributed package is not built.
+Human verification provides evidence that a build works.
+The process produces the evidence.
 #+begin_example
 eb --from-pr <PR#> --upload-test-report --force --robot
 #+end_example
-The =--upload-test-report= option posts the report as a GitHub gist.
-It requires a token with =gist= permission.
-It adds a summary comment to the pull request.
+=--upload-test-report= posts the report as a GitHub gist.
+=--upload-test-report= requires a token with =gist= permission.
+=--upload-test-report= adds a summary comment to the pull request.
 
-The =--dump-test-report= option writes the report locally.
+=--dump-test-report= writes the report locally.
 
 Both options imply =--keep-going=.
 A run that generates a report continues past the first failure.
-
-A report that covers nine of ten easyconfigs is more useful than one that covers only one.
+A report covering nine of ten easyconfigs is more useful than one covering only one.
 #+ATTR_EB: :id test-report-contents :title What a test report contains :kind reference
 #+begin_detail
 Every report carries:
@@ -110,7 +109,7 @@ excluded. The documented value to start from is
 export EASYBUILD_TEST_REPORT_ENV_FILTER='^SSH|USER|HOSTNAME|UID|.*COOKIE.*'
 #+end_example
 A report is generated regardless of request.
-It is placed beside the installation log as =<log basename>_test_report.md=.
+The report is placed beside the installation log as =<log basename>_test_report.md=.
 Read a report before uploading the first one. #+end_detail The contents (see [[dive:test-report-contents]]) enumerate the machine, the configuration, and the modules.
 A test report is evidence.
 A reviewer can tell whether the success applies.

@@ -2,8 +2,4 @@
 #+OPTIONS: toc:nil num:nil
 Four kinds of testing.
 A ReFrame class runs an installed module.
-
-1. [[file:23-testing.org][Testing and the four things it can mean]] 
-2. [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] 
-3. [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] 
-4. [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]]
+[[file:23-testing.org][Testing and the four things it can mean]] [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]]

@@ -25,13 +25,13 @@
 - [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]]: the six-step
  postcard this chapter fills in.
 #+end_prerequisites
-An easyconfig defines one package.
-A site and EESSI need a list of packages for one toolchain generation, one EasyBuild version, and one repository version.
-That list is an *easystack file*: YAML that EasyBuild reads with =--easystack=.
-EasyBuild 5 marked the format as stable.
-It no longer needs =--experimental=.
-The file does not create a second recipe language.
-Each item is a filename the robot already knows how to resolve.
+An easyconfig defines a single package.
+A site and EESSI require a list of packages for one toolchain generation, one EasyBuild version, and one repository version.
+The list is an *easystack file*: YAML read by EasyBuild with =--easystack=.
+EasyBuild 5 marks the format as stable.
+The format no longer needs =--experimental=.
+The file does not introduce a second recipe language.
+Each item is a filename that the robot already resolves.
 Extra keys under =options:= become extra =eb= flags for that item.
 * A list of filenames, plus flags without dashes
 The official shape is shown on EasyBuild's page.
@@ -68,7 +68,7 @@ The automatic conversion matches the option's requirement.
 * Command-line options come first, and last wins
 =eb --easystack my.yaml --dry-run= applies =--dry-run= to every item.
 EasyBuild places command-line flags *before* per-item options from the file.
-EasyBuild always respects the argument that was put last.
+EasyBuild respects the argument that was put last.
 A file that sets =debug: True= on one item still enables debug for that item even if the command line said =--disable-debug=.
 The opposite does not hold.
 A flag that exists only on the command line applies to every item.
@@ -106,9 +106,9 @@ Filename order determines the processing order.
 The pull request targets =main=.
 The previous version branches (=2023.06-software.eessi.io= and others) have been removed.
 * from-commit is how an unmerged easyconfig gets built
-The 4 May 2026 webinar presented by Lara Peeters and Kenneth Hoste covers the two cases that actually occur.
+The 4 May 2026 webinar presented by Lara Peeters and Kenneth Hoste covers the two cases that actually occur.
 When the easyconfig is already present in the EasyBuild release that the easystack filename names, the entry is a bare filename.
-Their scikit-bio 0.7.1 example:
+Their scikit-bio 0.7.1 example is referenced.
 #+begin_example
  - scikit-bio-0.7.1.post1-foss-2025a.eb
 #+end_example
@@ -133,7 +133,7 @@ The webinar explicitly states the merge order.
 The software-layer pull request may be opened while the easyconfig pull request remains open.
 Deployment to the CernVM-FS repository occurs only after merging the EasyBuild pull request.
 A =from-commit= pin is a temporary bridge, not a permanent source of truth.
-The 2026.06 tree maintains the same shape while representing a newer generation.
+The 2026.06 tree maintains the same shape and reflects a newer generation.
 The live =eessi-2026.06-eb-5.4.0-2026.1.yml= opens with OpenMPI and =foss-2026.1.eb=, which declares the first toolchain generation of a new EESSI version.
 #+ATTR_EB: :id EB-Easystack-1 :title Which file, and which options
 #+begin_exercise
@@ -188,7 +188,7 @@ A live example from 2025.06.
 easyconfigs:
  - Rust-1.91.1-GCCcore-14.3.0.eb
 #+end_example
-The =EESSI-install-software.sh= script splits the changed YAML files of the pull request into two lists.
+The =EESSI-install-software.sh= script splits changed YAML files of the pull request into two lists.
 The =EESSI-install-software.sh= script rebuilds the first list.
 #+begin_example
 if [[ ${easystack_file} == *"/rebuilds/"* ]]; then
@@ -205,16 +205,18 @@ The CUDA 12.1.1 rebuild from May 2024 is the documented template, including =acc
 * How the bot finds the file at all
 The bot ignores tickets and commit messages when deciding what to build.
 =EESSI-install-software.sh= scans the pull request =.diff= for new or modified YAML files in =easystacks/=.
-It excludes the CUDA helper easystacks in =scripts/gpu_support/=.
-It retains only files whose paths match the repository and the EESSI version this job builds for.
+The script excludes the CUDA helper easystacks in =scripts/gpu_support/=.
+Only files whose paths match the repository and the EESSI version for which the job builds are retained.
 #+begin_example
 changed_easystacks=$(cat ${pr_diff} | grep '^+++' | cut -f2 -d' ' \
  | sed 's@^[a-z]/@@g' | grep 'easystacks/.*yml$' \
  | egrep -v 'known-issues|missing' \
  | (grep -v "scripts/gpu_support/" || true))
 #+end_example
-A pull request that edits a README and makes no changes under =easystacks/= prints "No missing installations, party time!" and exits green.
-The contribution is the YAML line, not a comment on the pull request.
+TS exploration methods identify a candidate transition mechanism.
+The transition rate estimate under HTST can be calculated from the energy barrier.
+The energy barrier equals the difference between the saddle energy and the reactant state energy.
+The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin and 7/
 #+ATTR_EB: :id EB-Easystack-2 :title What the bot will type
 #+begin_exercise
 A pull request against =EESSI/software-layer= =main= adds one file:

@@ -8,11 +8,10 @@
 3. Say what a module named for a version does and does not guarantee
  about the tree under it.
 #+end_objectives
-Here is a module name from a real cluster:
+No prose was provided for rewriting.
 #+begin_example
 NVHPC/25.11-CUDA-12.9.1
 #+end_example
-Enter the recipe.
 The default naming scheme builds that string.
 Edit =versionsuffix=.
 The name moves.
@@ -23,11 +22,11 @@ version = '25.11'
 versionsuffix = '-CUDA-12.9.1'
 toolchain = SYSTEM
 #+end_src
-Version 25.11 of the NVIDIA HPC SDK (=NVHPC=) is mentioned.
-It is followed by a reference to CUDA 12.9.1.
-The latter part is a =versionsuffix=.
-This is the most easily misread parameter in EasyBuild.
-It resembles a constraint yet is a label.
+Version 25.11 of the NVIDIA HPC SDK (=NVHPC=) appears.
+A reference to CUDA 12.9.1 follows.
+The later part is a =versionsuffix=.
+The =versionsuffix= is the most easily misread parameter in EasyBuild.
+The =versionsuffix= resembles a constraint but is a label.
 * The suffix and the dependency are two different lines
 The easyconfig behind that module states both of these.
 #+begin_src easyconfig :widget parse
@@ -40,23 +39,24 @@ dependencies = [
  ('nvidia-compilers', version, versionsuffix),
 ]
 #+end_src
-Reading those two statements together leads to a mistaken interpretation of each statement's function.
+Reading the two statements together produces a mistaken interpretation of each statement's function.
 The dependency binds the exact pin from [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]], one module, with no range.
 The =versionsuffix= reports.
 It reports into the module's own name.
 =%(cudaver)s= is the templating from [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
-It is resolved from the CUDA dependency.
+It resolves from the CUDA dependency.
 The two are related by derivation.
 They are not related by enforcement.
 EasyBuild derives the suffix from the dependency once, at parse time.
 It writes the result into a filename.
-Nothing checks afterwards that the name still describes the tree.
+No check occurs afterwards that the name still describes the tree.
 The third line also shows that =nvidia-compilers= takes =versionsuffix= as its *own* third positional attribute.
 It is A pin is for one generation's (='name', 'version', 'versionsuffix', 'toolchain'=) tuple.
 A suffix travels as data from one easyconfig into another's dependency list.
 Placing it in the fourth slot causes EasyBuild to treat it as a toolchain.
 * From below, a suffix is not a suffix
-Inspect the identical toolchain used by a package that employs it.
+Inspect the identical toolchain used by a package.
+The package employs it.
 #+begin_src easyconfig :widget hierarchy
 name = 'VASP6'
 version = '6.5.1'
@@ -159,7 +159,7 @@ The check inspects installed binaries against their recorded runtime library sea
 The check reports each library it cannot resolve.
 =libnvJitLink.so.13= was reported by the check.
 The build specified =skipsteps = ['sanitycheck']= in its easyconfig.
-The specification was based on the belief that the check produced a failure the package could not fix.
+The specification assumed the check produced a failure the package could not fix.
 Both components of that reasoning were true.
 The conclusion remained incorrect.
 The check identified a defect in the toolchain module.
@@ -172,13 +172,13 @@ This is not the case.
 EasyBuild exempts that library by default, together with =libcuda.so=, =libnvidia-ml.so= and =libnvidia-ml.so.1=.
 Any other reported library is a genuine finding.
 * The one-line version
-A =versionsuffix= forms part of a module's name.
-A name does not constitute a mechanism.
+A =versionsuffix= forms part of a module name.
+A name is not a mechanism.
 The dependency performs the binding.
-The suffix reports it once during parse time.
+The suffix reports once at parse time.
 No further checks occur.
-The test shows that a module named for one version may behave as if it carries another.
+The test shows a module named for one version may behave as if it carries another.
 Disregard the name and examine the tree.
-The sanity check is based on appearance.
+The sanity check relies on appearance.
 It justifies retaining it even when it reports another's problem.
 Next: the definition of "installed" and the two factors that determine it.

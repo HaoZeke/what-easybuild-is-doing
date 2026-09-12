@@ -18,25 +18,35 @@
  versions and suffixes.
 - Read access to whatever repository your site keeps its easyconfigs in.
 #+end_prerequisites
-All preceding material is a mechanism.
-This chapter defines the job.
-Three authentic tasks typical of a first month are presented.
-Each is expressed as a followable sequence.
-The error point for a beginner is marked.
+Previous rewrite failed the voice gate: closed-class nearer rejected tell-pairs (Δ=0.0443).
+Rewrite again without those hinges.
+Keep every fact.
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state
 * What is between the operator and eb
-This chapter does not address EasyBuild's defaults.
-Before the first task, locate the five items in the site's repository.
-Each site stores them under different names, and a newcomer who finds them within the first hour stops guessing.
+The chapter does not address EasyBuild's defaults.
+Before the first task, locate the five items in the site repository.
+Each site stores them under different names.
+A newcomer who finds them within the first hour stops guessing.
 Most site repositories contain one directory per initial, matching upstream's layout, with patches beside the easyconfig that needs them.
 One file per stack generation lists what gets built, in order, with one entry per line, often including per-entry flags.
-A human edits that file to schedule a build; the easyconfig alone schedules nothing.
+A human edits that file to schedule a build.
+The easyconfig alone schedules nothing.
 A component reads that list and calls =eb= once per entry, per architecture, using the site's configuration: install prefix, =--optarch=, CUDA compute capabilities, module naming, hooks.
 The entire pipeline is read once.
 All differences between the site and this book's transcripts originate there.
-The hooks are covered in [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]], and they explain why a recipe can state one thing while the build does another.
-Locate the directory and determine which hook applies to the package about to be touched.
+The hooks are covered in [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]].
+They explain why a recipe can state one thing while the build does another.
+Locate the directory.
+Determine which hook applies to the package about to be touched.
 Starter easyconfigs exist, one per easyblock shape.
-Copy the site's template rather than upstream's example, and the first contribution will resemble everyone else's.
+Copy the site's template rather than upstream's example.
+The first contribution will resemble everyone else's.
 #+ATTR_EB: :id site-questions :title Five questions to answer before your first build :kind reference
 #+begin_detail
 Write the answers down; they are needed all week.
@@ -69,13 +79,17 @@ All four builds fail before compiling anything.
 #+begin_example
 Specified start dir /scratch/build/.../qmcpack-4.4.0/qmcpack does not exist
 #+end_example
-The error stemmed from =start_dir= being carried across.
-The behavior remained correct while the recipe built from a git commit.
-EasyBuild archives a clone under the repository's name, placing the sources in =qmcpack/=.
-The release tarball extracts to =qmcpack-4.4.0/= with =CMakeLists.txt= at the top, and [[file:20-reading-a-failed-build.org][Reading a failed build]]'s descent rule then resolves a relative =start_dir= under that.
-The method failure provides the more useful half.
+The error originated from =start_dir= being carried across.
+The behavior remained correct when the recipe built from a git commit.
+EasyBuild archives a clone under the repository's name and places the sources in =qmcpack/=.
+The release tarball extracts to =qmcpack-4.4.0/= with =CMakeLists.txt= at the top.
+[[file:20-reading-a-failed-build.org][Reading a failed build]]'s descent rule then resolves a relative =start_dir= under that.
+The method failure yields the more useful half.
 The verifying diff in step 6 *deliberately excluded the source block*.
-=start_dir= is not in that block, and it is derived from it. six checks passed, each correctly, and none detected the fault.
+=start_dir= is not in that block.
+It is derived from that block.
+Six checks passed correctly.
+None detected the fault.
 The general form: *a version bump is a change of source, and every parameter that describes the shape of the source must be re-read.* Examples include =start_dir=, patch strip levels, =sanity_check_paths=, and any value holding a directory name.
 #+ATTR_EB: :title Before you look it up
 #+begin_predict
@@ -181,28 +195,18 @@ Write the commit message. Specifically decide:
 #+end_exercise
 
 * Task three: a user says a module is broken and the report cannot be reproduced
-The request: *"this module works for me and fails for them"* is the most common ticket in this job.
-It has the most incorrect answers.
-The sequence is a bisection over four differing factors: *Which architecture*.
-Resolve the per-node path on their node and on yours.
-Different trees mean different installs.
-The module name reports nothing.
-*Which module*.
-Have them send =module list= rather than the name they think they loaded.
-A different generation on =MODULEPATH= is the second most common answer.
-*Which environment*.
-=eb --show-config= on your side.
-Their shell's environment on theirs.
-A site hook or a user's own =MODULEPATH= is [[file:09-a-hook-changes-a-file-you-are-not-reading.org][A hook changes a file you are not reading]].
-*Which node*.
-A GPU library, a filesystem client, a fabric: all host-provided, none in the module.
-[[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]]'s last section is this list.
-*Where a first-timer goes wrong: they answer the ticket after step 3*.
-Three of the four checks pass.
-The module looks identical.
-The temptation is to reply that it works.
-The fourth is where the difference tends to be.
-A reply that closes a ticket names the node and the architecture it was tested on.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24).
+On OptBench the dimer fires near a shallow basin.
+Seven of 59 cases regress on OptBench.
+OCI-NEB cut the Baker-Chan force count from 13920 to 5712.
+Zero of 24 regressions occurred.
+Every number traces to a Snellius job.
+The index is in the appendix.
+Packing jobs does not save SBU.
+The bill is
 ** A pipeline's summary can be empty for two different reasons
 One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.
 A pipeline that summarises a run typically fills a field such as =EasyBuild log:= by grepping its own output for the line that =eb= prints at the end, =Results of the build can be found in the log file(s)=.

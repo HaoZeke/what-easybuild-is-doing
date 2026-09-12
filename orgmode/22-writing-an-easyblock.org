@@ -18,8 +18,8 @@
 - Enough Python to read a class and call a parent method. Nothing more.
 #+end_prerequisites
 An easyblock is Python code executed by EasyBuild.
-It is the most powerful element in this book.
-It is the one most frequently used prematurely.
+The most powerful element in this book is an easyblock.
+The element most frequently used prematurely is an easyblock.
 * The decision, before the code
 EasyBuild 5.3.1 provides 82 generic easyblock classes across 47 modules and 282 software‑specific classes.
 The generic classes exist.
@@ -74,7 +74,7 @@ The =easyblock= easyconfig parameter overrides the whole computation.
 With no such parameter, the class name is derived from =name=, which is
 why renaming software renames the easyblock it looks for.
 #+end_detail
-That encoding (see [[dive:easyblock-naming]]) is solved by the widget in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+The widget in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] solves that encoding (see [[dive:easyblock-naming]]).
 The book contains one.
 * The methods that actually get overridden
 
@@ -118,71 +118,59 @@ class EB_example(ConfigureMake):
  self.cfg.update('configopts', '--enable-widgets')
  super(EB_example, self).configure_step()
 #+end_example
-Four things in that are the whole idiom.
-
-*=self.cfg[...]= is the easyconfig.*
-
-Every parameter is readable.
-
+Four things make up the idiom.
+*=self.cfg[...]= is the easyconfig.* Each parameter is readable.
 =self.cfg.update= appends to a string or list parameter rather than replacing it.
-
-This matters when the easyconfig also sets it.
-
-=self.name=, =self.version=, =self.toolchain= and =self.all_dependencies= are shortcuts to the ones used constantly.
-
-*extra_options= is how a parameter is born.*
-
-A =@staticmethod= returns a dict of =name: [default, help, category]=.
-
-The dict is merged with the parent's.
-
+This matters when the easyconfig also sets the parameter.
+=self.name=, =self.version=, =self.toolchain= and =self.all_dependencies= are shortcuts to frequently used values.
+*extra_options= is how a parameter is born.* A =@staticmethod= returns a dict of =name: [default, help, category]=.
+The dict merges with the parent's.
 The category is =CUSTOM= for an optional parameter.
-
 The category is =MANDATORY= for a parameter the easyconfig must set.
-
-Once declared, it is a real parameter.
-
+After declaration, it becomes a real parameter.
 =eb -a -e EB_example= lists it.
-
 An easyconfig that misspells it gets the unknown-parameter warning from [[file:21-writing-one-from-nothing.org][Writing one from nothing]].
-
-*Call the parent, and know where.*
-
-=super().configure_step()= last means run the subclass preparation, then configure normally.
-
-First means configure, then fix up what it produced.
-
-Getting that order wrong produces a build that works on your machine.
-
-The same build fails on a clean one.
-
-*Use =setvar=, not =os.environ=.*
-
-EasyBuild tracks environment changes.
-
+*Call the parent, and know where.* =super().configure_step()= last runs the subclass preparation, then configures normally.
+First configures, then fixes the produced output.
+Wrong order produces a build that works on the local machine.
+The same build fails on a clean machine.
+*Use =setvar=, not =os.environ=.* EasyBuild tracks environment changes.
 They can be logged and reported under [[file:20-reading-a-failed-build.org][Reading a failed build]]'s extended dry run.
-
 A direct write
 * Loading one without installing it
-An easyblock can be tried without being installed into EasyBuild.
+Try an easyblock without installing into EasyBuild.
 #+begin_example
 eb example-1.0.eb --include-easyblocks=$HOME/myeb/*.py
 #+end_example
-=--include-easyblocks= accepts a comma‑separated list of paths, which may be absolute, relative, or globbed, and expects generic easyblocks in a subdirectory named =generic=.
-The option builds a temporary directory with the correct Python package layout, symlinks the modules into it, and places that directory first on the Python search path, thereby defining precedence.
-An included easyblock overrides the shipped one, which is desirable for testing but must not remain in a site configuration.
-=eb --list-easyblocks=detailed= reports the exact file that was loaded, including its path.
+=--include-easyblocks= accepts a comma‑separated list of paths.
+Paths may be absolute, relative, or globbed.
+It expects generic easyblocks in a subdirectory named =generic=.
+
+The option builds a temporary directory with the correct Python package layout.
+It symlinks the modules into that directory.
+It places the directory first on the Python search path.
+This establishes precedence.
+
+An included easyblock overrides the shipped one.
+This is desirable for testing.
+It must not remain in a site configuration.
+
+=eb --list-easyblocks=detailed= reports the exact file that was loaded.
+The report includes its path.
+
 This check is useful when an easyblock seems ineffective.
+
 The mutually exclusive options =--include-easyblocks-from-pr= and =--include-easyblocks-from-commit= provide the same functionality for upstream work in progress.
 * Testing it without building anything
 The documented order is effective.
-*=eb -x=*, the extended dry run, traverses the entire procedure and reports the actions each step *would* perform, including commands and environment changes.
-It concludes with =(no ignored errors during dry run)= when no errors occur, and that line is the indicator to look for instead of the absence of a traceback.
-*=eb --module-only --force=*, jumps directly to the module step and creates the modulefile.
+*=eb -x=* performs an extended dry run that traverses the entire procedure and reports the actions each step would perform, including commands and environment changes.
+When no errors occur, the run concludes with =(no ignored errors during dry run)=.
+That line is the indicator to look for instead of the absence of a traceback.
+*=eb --module-only --force=* jumps directly to the module step and creates the modulefile.
 The easyblock's exports become readable before any compilation.
-A trap of the second command is that under =--module-only=, most =*_step= methods are skipped.
-An easyblock whose =configure_step= sets =self.foo= and whose =sanity_check_step= reads it will encounter =None=.
-The fix provides a helper method invoked by both steps, preventing state from being carried between steps.
+Under =--module-only=, most =*_step= methods are skipped, which is a trap of the second command.
+An easyblock whose =configure_step= sets =self.foo= and whose =sanity_check_step= reads it encounters =None=.
+The fix provides a helper method invoked by both steps and stops state from being carried between steps.
 A real build follows, then [[file:23-testing.org][Testing, and the four things it can mean]].
 #+ATTR_EB: :id EB-Easyblock-1 :title Four requests, and only one of them is code
 #+begin_exercise

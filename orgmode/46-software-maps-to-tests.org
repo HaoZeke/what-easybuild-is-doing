@@ -22,11 +22,12 @@
 - [[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]],
  for a test that can run on more than one site.
 #+end_prerequisites
-A portable test that is not listed for its software will not run when the software is merged.
+Portable tests not listed for their software do not run when the software is merged.
 EESSI provides a mapping file as its answer.
 CSCS provides a directory of checks and a daily invocation as its answer.
-Both implement the same concept: the suite names are collected in one location.
-Which tests a package requires.
+Both implement the same concept.
+The suite names are collected in one location.
+The collection determines which tests a package requires.
 * EESSI: three uses, one suite
 The writing-tests page lists three reasons the suite exists.
 One reason is a contribution.
@@ -50,8 +51,8 @@ Available tests in the public suite include GROMACS (six HECBioSim systems, impl
 Each is a class under =eessi/testsuite/tests/apps/=.
 The mapping connects a module name to those classes.
 * CSCS: config, checks, CI
-The CSCS suite, =eth-cscs/cscs-reframe-tests=, offers the layout cited in the official ReFrame README as the most complete public tree.
-Three directories each carry out a distinct job.
+The CSCS suite =eth-cscs/cscs-reframe-tests= provides the layout cited in the official ReFrame README, which is the most complete public tree.
+Three directories each execute a distinct job.
 #+begin_example
 cscs-reframe-tests/
 ├── config/ the machine

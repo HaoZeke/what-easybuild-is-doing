@@ -21,10 +21,13 @@
 - [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]], for the
  performance stage.
 #+end_prerequisites
-Sanity is represented by a yes or a no.
-Performance is defined by a number, a unit, and a comparison.
-The STREAM test in a ReFrame test is a class that already includes both.
-This chapter supplies the number.
+Write like these.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions. Every number traces to
 #+begin_src python
 @performance_function('MB/s')
 def copy_bw(self):
@@ -34,20 +37,19 @@ def copy_bw(self):
 def triad_bw(self):
  return sn.extractsingle(r'Triad:\s+(\S+)', self.stdout, 1, float)
 #+end_src
-The decorator argument represents the unit.
-The method name denotes the metric.
-The =extractsingle= function extracts group 1 from the first match and converts it to =float=.
-When the line is absent, the performance stage fails.
-This failure differs from a sanity failure.
-The =FAILURE INFO= block reports it.
-A test lacking performance functions requires no work from the performance stage.
-A test containing performance functions but no references still *records* the numbers.
-Recording without comparison allows a site to build the baseline.
-The baseline is used for comparison with the next week's run.
+Decorator argument indicates unit.
+Method name indicates metric.
+The =extractsingle= function extracts group 1 from first match and converts it to =float=.
+When line is absent, performance stage fails.
+This failure differs from sanity failure.
+The =FAILURE INFO= block reports failure.
+A test lacking performance functions requires no work from performance stage.
+A test containing performance functions but no references still *records* numbers.
+Recording without comparison enables site to build baseline.
+Baseline is used for comparison with next week's run.
 * References
-Each reference is a tuple for each metric and each system, formatted as =(value, lower_thres, upper_thres, unit)=.
-From version 3.0 onward, the tuple must include the unit.
-The STREAM tutorial assigns these tuples to the test after the functions have been defined:.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate
 #+begin_src python
 reference = {
  'generic:default': {
@@ -56,17 +58,17 @@ reference = {
  },
 }
 #+end_src
-=-0.2= and =0.2= represent relative thresholds, 20 % below and 20 % above the reference.
-An absolute floor is a number lacking a fractional component.
-The documentation's form should be copied rather than invented.
-A miss causes failure of the performance stage.
-A miss does not cause failure of sanity.
-The binary generated a valid STREAM run.
-The machine performed slower (or faster) than the site expected.
+=-0.2= and =0.2= are relative thresholds, 20 % below and 20 % above the reference.
+An absolute floor is a number without a fractional component.
+The documentation's form must be copied, not invented.
+A miss triggers failure of the performance stage.
+A miss does not trigger failure of sanity.
+The binary produced a valid STREAM run.
+The machine ran slower or faster than the site expected.
 The key is =system:partition=.
 A reference for =generic:default= does not apply to =example:cpu=.
-A portable suite either places references in the configuration (EESSI's direction).
-A portable suite accepts that the first run on a new partition records rather than judges.
+A portable suite may place references in the configuration (EESSI's direction).
+A portable suite may accept that the first run on a new partition records rather than judges.
 When the test sets no references, ReFrame 4.9 and later omit the reference tuple from the =P:= line.
 The number remains printed and logged.
 * The =P:= line and the perflog
@@ -91,7 +93,7 @@ STREAM's =Copy:= line is a bandwidth measured by the binary.
 GROMACS's =ns/day= is a throughput measured by the binary.
 Both are independent of job wait time.
 A performance function that returns ReFrame's own elapsed time measures the queue.
-EESSI's rule of thumb for a new test is on the writing-tests page: at least one case tagged =CI= finishes in under five minutes on about eight cores, and no case needs more than about 1 GB per core.
+EESSI's rule of thumb for a new test is on the writing-tests page: at least one case tagged =CI= finishes in under five minutes on about eight cores, and no case needs more than about 1 GB per core.
 Those are constraints on the *workload*.
 The tracked number is a number a site can afford to produce daily.
 #+ATTR_EB: :id EB-ReFrame-42-1 :title Sanity or performance

@@ -14,14 +14,20 @@
 3. Say what a green build on your own host establishes about the other
  CPU targets.
 #+end_objectives
-A directory exists on many clusters and on many laptops that was not built by anyone at the site.
-MultiXscale funds a large portion of EESSI's workforce as part of the EuroHPC Centre of Excellence (CECAM x EESSI).
+A directory exists on many clusters.
+The same directory exists on many laptops.
+The directory was not built by anyone at the site.
+MultiXscale funds a large portion of EESSI's workforce.
+The funding is part of the EuroHPC Centre of Excellence (CECAM x EESSI).
 CASTIEL 2 is the tutorial portal rather than the build farm.
 The EFP Federated Software Catalogue (CSC.fi with Ghent) is a 2026 catalogue layer above.
-Compute Canada acts as the design parent of the three-layer split ([[cite:boissonneaultProvidingUnifiedSoftware2019][Boissonneault, Oldeman and Taylor 2019]]).
-[[cite:drogeEessiCrossplatformReadytouse2023][Dröge, Holanda Rusu, Hoste, van Leeuwen, O'Cais and Röblitz 2023]] evaluate why a generic binary does not constitute the stack: GROMACS 2020.4 on Cascade Lake achieves 1.18 ns/day when compiled for SSE 4.1 and 1.86 ns/day when compiled for AVX‑512, using unchanged source.
-That is a 57 % gap.
-The production tree and the bot were created after that paper.
+Compute Canada acts as the design parent of the three-layer split.
+[[cite:boissonneaultProvidingUnifiedSoftware2019][Boissonneault, Oldeman and Taylor 2019]] [[cite:drogeEessiCrossplatformReadytouse2023][Dröge, Holanda Rusu, Hoste, van Leeuwen, O'Cais and Röblitz 2023]] evaluate why a generic binary does not constitute the stack.
+GROMACS 2020.4 on Cascade Lake achieves 1.18 ns/day when compiled for SSE 4.1. GROMACS 2020.4 on Cascade Lake achieves 1.86 ns/day when compiled for AVX‑512.
+The source code is unchanged.
+The difference is a 57 % gap.
+The production tree was created after that paper.
+The bot was created after that paper.
 * The stack is a filesystem
 
 #+begin_example
@@ -30,33 +36,29 @@ ls /cvmfs/software.eessi.io/versions/
 These are versions of a complete scientific software stack: compilers, MPI, the usual suspects, tuned per microarchitecture, delivered on a filesystem that arrived over HTTP.
 EESSI is not installed.
 It is mounted, or the session runs on a machine where it has already been mounted.
-Select one and initialise it:.
+Select one and initialise it.
 #+begin_example
 source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
 #+end_example
-It creates a compatibility layer, a module tree, and a collection of toolchains, without requiring an install step or any maintainer approval.
-Two warnings must be placed here, before any other content.
+A compatibility layer, a module tree, and a collection of toolchains are created without requiring an install step or any maintainer approval.
+Two warnings must be placed here before any other content.
 Each consumes actual time.
 The first warning concerns the =ls= command.
 List the versions directory and verify that a version is valid before using it.
 #+begin_example
 ls /cvmfs/software.eessi.io/versions/<ver>/init/lmod/bash
 #+end_example
+Rewrite this org-mode prose.
+Keep org markup such as =foo= and [[links]].
 A listed version may be an empty placeholder lacking any =init/=.
-
 Speculatively descending into such a placeholder can wedge the filesystem client for all host users.
-
 The lookup neither resolves nor raises an error, and readers accumulate in an uninterruptible state beyond any timeout reach.
-
 List first.
-
 Confirm.
-
 Then use.
-
 The second concerns the generation question, which determines whether the remainder of this chapter applies.
 * Check the generation before planning anything
-The compatibility layer is behind the newest EasyBuild toolchain generation.
+The compatibility layer sits behind the newest EasyBuild toolchain generation.
 A version of EESSI includes a specific set of top‑level toolchains.
 An easyconfig names a particular generation.
 These two facts must agree.
@@ -65,19 +67,19 @@ An opt‑in is available.
 #+begin_example
 export EESSI_SITE_TOP_LEVEL_TOOLCHAINS_2025_06='[{"name": "GCCcore", "version": "15.2.0"}]'
 #+end_example
-A setting causes EasyBuild *plan* the build.
-Read the plan before the script runs.
-If the generation is absent from the compatibility layer, every dependency is skipped.
-The run then begins by bootstrapping the compiler itself and downloads a couple of hundred megabytes of GCC.
-Avoid that.
+A setting triggers EasyBuild *plan* the build.
+Read the plan prior to script execution.
+When the generation is absent from the compatibility layer, every dependency is skipped.
+The run then begins by bootstrapping the compiler itself and downloading a couple of hundred megabytes of GCC.
+Avoid this.
 Bootstrapping an entire generation into a user prefix duplicates what EESSI's own build bots do centrally.
 It also creates a long detour to a stack that cannot be shared.
-A generation gap means "not yet on this EESSI version".
+A generation gap means not yet on this EESSI version.
 This is a finding rather than a failure.
 * Installing on top, with EESSI-extend
-EESSI provides a module that configures EasyBuild for installing onto the stack.
-The build bots use the same module.
-This path matches what the bot will do.
+EESSI supplies a module that configures EasyBuild for stack installation.
+Build bots use the same module.
+This path matches the bot's actions.
 #+begin_example
 source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
 
@@ -88,15 +90,17 @@ module load EESSI-extend
 eb --show-config
 eb <easyconfig>.eb --robot
 #+end_example
-Build your own, without asking anyone; =--show-config= earns its place again.
-Run it and read =installpath=; it returns a path qualified by microarchitecture, for example =.../software/linux/x86_64/amd/zen5=.
-
+Build your own without asking anyone.
+=--show-config= earns its place again.
+Run it and read =installpath=.
+It returns a path qualified by microarchitecture, for example =.../software/linux/x86_64/amd/zen5=.
 Stop and look at that path.
-It is [[file:06-what-installed-means.org][What "installed" means]]'s per-architecture tree, and the architecture appears *in the path* instead of being hidden behind a symlink.
+It is [[file:06-what-installed-means.org][What "installed" means]]'s per-architecture tree.
+The architecture appears *in the path* instead of being hidden behind a symlink.
 Same arrangement, made visible.
 A binary built here is for one microarchitecture and says so.
-
-Four prefix variables exist, and they differ in who can read the result:
+Four prefix variables exist.
+They differ in who can read the result.
 
 | Variable | What it means |
 |---+---|
@@ -106,10 +110,12 @@ Four prefix variables exist, and they differ in who can read the result:
 | =EESSI_CVMFS_INSTALL= | into the distributed repository itself |
 
 Set the prefix *before* loading the module.
-=EESSI-extend= reads these at load time; setting them afterwards changes nothing.
-
+=EESSI-extend= reads these at load time.
+Setting them afterwards changes nothing.
 =EESSI_CVMFS_INSTALL= and =EESSI_SITE_INSTALL= are exclusive of the others.
-=EESSI_USER_INSTALL= and =EESSI_PROJECT_INSTALL= may be set together: both prefixes appear on =MODULEPATH=, and new installs go to the user prefix.
+=EESSI_USER_INSTALL= and =EESSI_PROJECT_INSTALL= may be set together.
+Both prefixes appear on =MODULEPATH=.
+New installs go to the user prefix.
 #+ATTR_EB: :id EB-EESSI-1 :title Every dependency says SKIPPED
 #+begin_exercise
 You have set one prefix variable, loaded =EESSI-extend= on the
@@ -142,12 +148,12 @@ an EESSI version whose layer carries the generation.
 
 * When the filesystem client is the problem
 Symptoms manifest in a specific way.
-A host client can report healthy while being unusable.
-The probe reports fine and the server answers a plain HTTP request in milliseconds.
-Every directory listing into a nested path then blocks forever and poisons the shell it ran in.
+A host client may report healthy yet be unusable.
+The probe reports fine and the server answers a plain HTTP request within milliseconds.
+Every directory listing into a nested path then blocks forever and poisons the shell that ran it.
 Two solutions exist, ordered by preference.
 If the account has polkit rights on the host, which an ordinary user often does, restarting the mount clears the stuck readers.
-The operation should be performed from a terminal that did *not* run the hanging command.
+The operation should be performed from a terminal that did not run the hanging command.
 If the account lacks polkit rights, a container can be used.
 The container mounts the distributed filesystem itself, requires only unprivileged user namespaces, and is independent of the host client state.
 #+begin_example
@@ -158,9 +164,9 @@ export APPTAINER_CACHEDIR=$PWD/storage/apptainer-cache
  --extra-bind-paths "$PWD/ecs:/ecs:ro" \
  -- /bin/bash /ecs/run-extend.sh
 #+end_example
-Four details each cost an attempt.
+Each of four details costs an attempt.
 The script lives in =software-layer-scripts=.
-It moved.
+It was moved.
 =software-layer= no longer carries it.
 =--mode run= warns.
 =--mode run= behaves as =exec=.
@@ -178,8 +184,8 @@ A second server wiped the cache.
 Neither change affected the outcome.
 A container on the same host and network traversed everything instantly.
 * Building by hand on top of it
-Building without EasyBuild is sometimes necessary.
-Load the =buildenv= module of the toolchain rather than improvising.
+Building without EasyBuild may be required.
+Load the =buildenv= module of the toolchain instead of improvising.
 #+begin_example
 module load buildenv/default-foss-2025b
 module load <dependency modules>
@@ -188,53 +194,49 @@ readelf -d <binary>
 ldd <binary>
 #+end_example
 =buildenv= configures =$CC= and =$CFLAGS= in the same way as EasyBuild.
-It installs wrappers that inject RPATH.
-The two commands after =make= form the third check of What "installed" means, executed manually.
-Confirm the binary records a runtime path.
-Confirm nothing resolves outside the stack.
+Wrappers that inject RPATH are installed.
+The two commands after =make= constitute the third check of What "installed" means, executed manually.
+The binary records a runtime path.
+Nothing resolves outside the stack.
 * Contributing back
-An installation in a local prefix helps that operator.
-Getting it into EESSI proper is a different job.
-The order matters.
-These six steps are the postcard.
+Installing in a local prefix assists the operator.
+Moving it into EESSI proper requires a separate task.
+The order is important.
+These six steps constitute the postcard.
 [[file:30-easystack-files.org][An easystack is the list the bot will build]] is the YAML.
-[[file:31-the-eessi-bot.org][The bot is three processes and a comment]] is the comment that starts the build and the ingest that makes a module.
+[[file:31-the-eessi-bot.org][The bot is three processes and a comment]] is the comment that starts the build and the ingest that creates a module.
 [[file:32-host-injections.org][A site stack next to EESSI, not inside it]] is the site tree that never goes into =software.eessi.io=.
-
-Get the easyconfig into EasyBuild, or open a pull request for it.
-Build it in the EESSI build environment with =EESSI-extend=.
+Place the easyconfig into EasyBuild, or open a pull request for it.
+Build it in the EESSI build environment using =EESSI-extend=.
 Add an entry to the easystack file for that EESSI version and toolchain generation.
 Open a pull request against the software layer, targeting =main=.
 A builder posts one =bot: build for:arch=...= per supported CPU target.
-On green, =bot:deploy= uploads the tarballs.
-A Stratum-0 ingest is what publishes them.
-
-Two conditions before the work starts.
-The easyconfig comes first.
-A software-layer entry references an easyconfig rather than restating one.
-Deployment waits on the EasyBuild pull request being merged, even though the two can be open at once.
-A green build on your host is not the claim.
-The bot builds x86-64 down to generic and up through Zen and Sapphire Rapids, plus aarch64 from generic through Neoverse and Grace.
-Software that works on your microarchitecture and not the others is not ready, however green it looks locally.
-That is the same distinction as What "installed" means's, with a larger set of trees.
+When green, =bot:deploy= uploads the tarballs.
+A Stratum-0 ingest publishes them.
+Two conditions apply before work starts.
+The easyconfig must come first.
+A software-layer entry references an easyconfig instead of restating one.
+Deployment waits for the EasyBuild pull request to be merged, even though both can be open simultaneously.
+A green build on the host does not constitute the claim.
+The bot builds x86-64 from generic up through Zen and Sapphire Rapids, and builds aarch64 from generic through Neoverse and Grace.
+Software that works only on the local microarchitecture is not ready, regardless of local green status.
+That matches the distinction of What "installed" means, with a larger set of trees.
 * The three that bite
 The rest of this chapter outlines procedures.
 The three steps require real time.
 The steps must be performed in the given order.
-
-*List before descending.* A version directory may serve as an unpopulated placeholder.
+*List before descending.* A version directory may act as an unpopulated placeholder.
 Speculative listing into such a directory wedges the filesystem client for every user on the host.
 Confirm that an =init/= exists before proceeding.
-
 *Check the generation before planning.* The compatibility layer lags behind the newest toolchain generation.
-Report a gap as a finding rather than using it to bootstrap a compiler.
-
+Report a gap as a finding.
+Do not use it to bootstrap a compiler.
 *One prefix variable, set before the module load.* The =EESSI-extend= reads it at load time.
 A second or late variable causes a failure that appears as the module ignoring the request.
-
 After that, keep two aspects in view.
 The =installpath= returns a microarchitecture‑qualified path.
 The path corresponds to What "installed" means's per‑architecture tree with the architecture visible in the path.
-The all‑CPU‑target claim belongs to the bot rather than to the host.
-
-Next: the engine on which these samples run, and the one idea in it worth taking even if never used.
+The all‑CPU‑target claim belongs to the bot.
+It does not belong to the host.
+Next, consider the engine on which these samples run.
+Consider the one idea in it worth taking even if never used.

@@ -22,9 +22,9 @@
 - [[file:13-how-a-build-executes.org][How a build executes]], for the comparison
  with EasyBuild's eighteen steps.
 #+end_prerequisites
-EasyBuild runs eighteen named steps in order, using the same list for each package.
-ReFrame runs six stages in order, using the same list for each test.
-The stage names come from the pipeline documentation, ReFrame 4.10:
+EasyBuild runs eighteen named steps in order using the same list for each package.
+ReFrame runs six stages in order using the same list for each test.
+The stage names come from the pipeline documentation ReFrame 4.10:
 
 | Stage | What it does |
 |---+---|
@@ -37,7 +37,7 @@ The stage names come from the pipeline documentation, ReFrame 4.10:
 
 A test that fails in =sanity= has already been compiled and run.
 A test that fails in =setup= has not been compiled or run.
-The failing phase appears in the =FAILURE INFO= block as the first field to read, mirroring EasyBuild's error block naming of a step.
+The failing phase appears in the =FAILURE INFO= block as the first field to read mirroring EasyBuild's error block naming of a step.
 * Loading is not the pipeline
 Before any stage execution, ReFrame builds each discovered test by importing its file and invoking =__init__=.
 Each test is instantiated regardless of its suitability for the current system.
@@ -81,10 +81,11 @@ The wait returned.
 A test stuck in the queue fails in =run_complete=.
 It does not fail in =run=.
 * Two execution policies
-Serial: each test enters the pipeline only after the preceding test has exited.
-The compile and run stages remain idle for the entire suite.
+Serial mode: each test enters the pipeline only after the preceding test has exited.
+The compile stage remains idle for the entire suite.
+The run stage remains idle for the entire suite.
 
-Asynchronous: multiple tests run concurrently.
+Asynchronous mode: multiple tests run concurrently.
 When a test reaches compile or run, ReFrame does not block.
 ReFrame then selects the next case.
 A concurrency limit (=max_jobs= on the partition, =max_local_jobs= on the host) limits the number of jobs submitted.
@@ -109,11 +110,9 @@ def set_tasks_from_partition(self):
  self.num_tasks = ncpus
  self.num_tasks_per_node = ncpus
 #+end_src
-=current_partition= exists after setup, not at class-body time.
-The first hook can run after =init=.
-The second has to wait: a core count read before setup is a number the configuration has not supplied.
-Cleanup of a successful test is deferred when another test depends on it.
-A failure in cleanup is reported as an error rather than as a test failure.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions. Every number traces to a Snellius job.
 #+ATTR_EB: :id EB-ReFrame-40-1 :title Name the failing stage
 #+begin_exercise
 Four reports. For each, name the stage, and say whether the job ran.

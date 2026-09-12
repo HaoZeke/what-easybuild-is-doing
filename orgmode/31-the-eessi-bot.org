@@ -26,13 +26,16 @@
  Stratum-0 transaction, not a =cp= into =/cvmfs=.
 #+end_prerequisites
 All installations in =software.eessi.io= were constructed by the EESSI build-and-deploy bot.
-The 22 June 2026 Happy Hour reports roughly 30 000 installations, dating from autumn 2023.
+The 22 June 2026 Happy Hour reports roughly 30 000 installations, dating from autumn 2023.
 Contributors are not required to have an account on each CPU target.
 A pull request to =EESSI/software-layer= together with a comment is the complete interface.
 The procedure is described as *semi-automatic*.
 The term is load‑bearing.
-The 1 December 2025 design session enumerated ten goals on slides 3 and 4; goal 4 reads "Avoid wasting scarce build resources".
-The quoted human‑trigger sentence represents the *Build/Deploy/Ingest Strategy* decision (PDF page 12), not a numbered goal: "as much as possible automatic but human involvement required to trigger certain actions (build, transfer, ingest)".
+The 1 December 2025 design session enumerated ten goals on slides 3 and 4.
+Goal 4 reads "Avoid wasting scarce build resources".
+The quoted human‑trigger sentence represents the *Build/Deploy/Ingest Strategy* decision (PDF page 12).
+The sentence is not a numbered goal.
+The quoted text states "as much as possible automatic but human involvement required to trigger certain actions (build, transfer, ingest)".
 A comment initiates a build.
 A label initiates a deploy.
 A merge in a private staging repository initiates an ingest.
@@ -40,29 +43,29 @@ No element in that chain activates.
 MultiXscale, the EuroHPC Centre of Excellence that funds most of the EESSI workforce, explains the existence of the Happy Hours and the webinars.
 CASTIEL2 is the tutorial portal, not the build farm.
 * Three processes, one GitHub App
-A bot instance is a GitHub App.
-It is written in Python and Bash.
-It is configured from an =.ini= file.
-It is installed on at least =software-layer=, =software-layer-scripts=, and =compatibility-layer=.
-Caspar van Leeuwen's 1 June 2026 webinar begins in the same manner as a site.
-The three processes match those run by EESSI.
-*Smee* is the webhook relay.
-GitHub is unable to reach a login node.
-An =smee.io= (or site‑hosted smee) channel provides the webhook URL for the GitHub App.
-A smee client on the login node forwards events to =127.0.0.1:3000=.
+Bot instance equals GitHub App.
+Bot instance written in Python and Bash.
+Bot instance configured from =.ini= file.
+Bot instance installed on =software-layer=, =software-layer-scripts=, and =compatibility-layer=.
+Caspar van Leeuwen's 1 June 2026 webinar begins like a site.
+Three processes match those run by EESSI.
+*Smee* provides webhook relay.
+GitHub cannot reach a login node.
+=smee.io= (or site‑hosted smee) channel provides webhook URL for GitHub App.
+Smee client on login node forwards events to =127.0.0.1:3000=.
 #+begin_example
 singularity run smee-client_latest.sif --url http://smee.example/CHANNEL
 # Forwarding ... to http://127.0.0.1:3000/
 #+end_example
-The *event handler* is the process listening on that port.
+The *event handler* listens on that port.
 =./event_handler.sh= prints "app is listening on port 3000".
 Most GitHub events are ignored.
 A comment whose line matches =^bot:[ ]?(.*)$= is not ignored.
 The addition of a =bot:deploy= label is also not ignored.
-The *job manager* is a cron-style loop, started with =./job_manager.sh=.
+The *job manager* runs a cron-style loop, started with =./job_manager.sh=.
 It releases held Slurm jobs, watches them, and writes =SUCCESS= or =FAILURE= back on the pull request from =bot/check-result.sh=.
 The 22 June 2026 revisit lists those three as a shortcoming of the current bot, together with =.ini= config, Slurm-only, GitHub-only, a fixed build-check-test-check pipeline, and no status page.
-They are also the architecture that is running today.
+They also form the architecture that runs today.
 The rewrite ("CPU") does not build =software.eessi.io=.
 Interaction is a GitHub App that reads structured commands in comments and labels, not a CI workflow file, not an external CLI.
 The execution backend is an HPC cluster, one bot instance per site.
@@ -179,16 +182,16 @@ Reproducing a failure locally is the same chain: container, prefix, =configure_e
 Reading a failed build's log-reading applies once that job has failed.
 The debugging-failed-builds page is the operator's version of the same walk.
 * From artefact to module
-A green job does not constitute a module.
-The job manager comment displays the tarball contents.
-A user with deploy permission adds the =bot:deploy= label.
-On =software-layer= the event handler executes =eessi-upload-to-staging=, which places the tarball and a metadata file into an S3 bucket.
+Green jobs do not constitute modules.
+The job manager comment displays tarball contents.
+Users with deploy permission add the =bot:deploy= label.
+The event handler on =software-layer= executes =eessi-upload-to-staging= and places the tarball and a metadata file into an S3 bucket.
 A cron job on the CernVM-FS Stratum-0 creates a pull request in the private =EESSI/staging_bundles= repository.
 Merging that pull request performs the ingest.
-A tarball that should not be included remains undeleted; its =TaskState= changes from =APPROVED= to =REJECTED=.
-The CI for the software-layer pull request starts with a red status.
-After ingest, re‑executing that workflow changes the status to green and the pull request is merged.
-A site that follows Caspar's webinar omits =staging_bundles=.
+Tarballs that should not be included remain undeleted; their =TaskState= changes from =APPROVED= to =REJECTED=.
+The CI for the =software-layer= pull request starts with a red status.
+Re‑executing the workflow after ingest changes the status to green and merges the pull request.
+Sites that follow Caspar's webinar omit =staging_bundles=.
 A script on the site Stratum-0 lists the bucket, downloads objects, optionally verifies a signature, calls =filesystem-layer/scripts/ingest-tarball.sh=, updates Lmod caches, and moves the tarball for single ingestion.
 The demo concludes with =module load Biopython/1.86-gfbf-2025b= resolving under =/cvmfs/software.caspar.nl/versions/2025.06/...= while =python= continues to be provided by =software.eessi.io=.
 Approach 2 targets EESSI's dependencies, the site's CVMFS repository, the same bot, and the same scripts.

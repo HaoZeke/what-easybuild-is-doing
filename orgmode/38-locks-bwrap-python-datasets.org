@@ -62,8 +62,8 @@ A =--bwrap= detection that appears as a missing linker is frequently caused by t
 The isolation policy defines what a build is allowed to see.
 This flag represents one implementation.
 * EBPYTHONPREFIXES and entry points
-A Python installation in EasyBuild can see packages in another prefix via =EBPYTHONPREFIXES=.
-A user or site prefix on top of EESSI (EESSI, somebody else's stack, A site stack next to EESSI, not inside it) can contribute =.so= and =.py= files without rebuilding CPython.
+EasyBuild allows a Python installation to see packages in another prefix via =EBPYTHONPREFIXES=.
+A user or site prefix on top of EESSI can contribute =.so= and =.py= files without rebuilding CPython.
 A module that only *wraps* a site wheel can become loadable.
 EasyBuild 5.3 added entry-point handling.
 A console script installed into an extension prefix appears on =PATH= when the extension's module is loaded.
@@ -90,9 +90,9 @@ The =Dataset= easyblock inherits from =Binary=.
 No compile step runs.
 The =install_step= extracts into the data prefix.
 The default value of =extract_sources= is true.
-=cleanup_data_sources= deletes fetched archives after install.
-=object_storage_ignore_dirs= (5.4.0) lists directories to keep out of object storage.
-=.= means the whole installdir.
+The =cleanup_data_sources= deletes fetched archives after install.
+The =object_storage_ignore_dirs= (5.4.0) lists directories to keep out of object storage.
+The =.= denotes the whole installdir.
 Two path variables keep data off the software prefix.
 #+begin_example
 export EASYBUILD_SOURCEPATH_DATA=/sources/data
@@ -100,8 +100,8 @@ export EASYBUILD_INSTALLPATH_DATA=/data
 eb RFdiffusion-models-1.1.0.eb
 module load RFdiffusion-models/1.1.0
 #+end_example
-If =installpath-data= is unset, =installpath= combined with =subdir-data= (default =data=) is used.
-That module may appear in a software easyconfig's =dependencies= list.
+When =installpath-data= is unset, =installpath= combined with =subdir-data= (default =data=) is used.
+The module may appear in a software easyconfig's =dependencies= list.
 A GROMACS that requires a weight file depends on the dataset module in the same way it depends on FFTW.
 The robot resolves the dependency.
 The payload consists of bytes, not a binary.

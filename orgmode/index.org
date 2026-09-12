@@ -6,7 +6,7 @@
 
 A recipe. A stack. A test.
 #+end_export
-EasyBuild's documentation clearly indicates the required typing.
+EasyBuild documentation indicates the required typing.
 This book is the file, the tree, and the run.
 A journey is a how-to path across existing pages.
 #+begin_export rst
@@ -17,8 +17,8 @@ A journey is a how-to path across existing pages.
 - `Port a package <journey-port.html>`_ - conda-forge or Spack in, an easyconfig out
 - `Write a test <journey-write-a-test.html>`_ - four kinds, then a ReFrame class
 #+end_export
-The same pages are grouped by kind of reading: [[file:part-a-recipe.org][the recipe]], [[file:part-a-stack.org][the stack]], [[file:part-a-test.org][the test]].
-The path, the papers, and how the samples run are [[file:colophon.org][at the back]].
+Pages are grouped by reading type: [[file:part-a-recipe.org][the recipe]], [[file:part-a-stack.org][the stack]], [[file:part-a-test.org][the test]].
+The path, the papers, and the sample execution details are [[file:colophon.org][at the back]].
 #+begin_export rst
 .. toctree::
  :hidden:

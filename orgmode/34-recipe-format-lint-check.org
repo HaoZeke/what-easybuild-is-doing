@@ -36,11 +36,8 @@ eb-stack recipe check \
  --easyconfigs /tmp/eb-stack/overlay \
  --easyconfigs "$BUNDLE/easyconfigs"
 #+end_example
-eb-stack ports a recipe.
-It bumps one named =lint=.
-It bumps one named =check=.
-It skips =format=.
-The three are not aliases.
+eb-stack ports a recipe. eb-stack bumps the =lint= component. eb-stack bumps the =check= component. eb-stack skips the =format= component.
+The three components are not aliases.
 * Format rewrites physical lines
 The =recipe format= performs deterministic physical‑line wrapping.
 It is the entire contract.
@@ -50,19 +47,18 @@ eb-stack recipe format RECIPE.eb
 eb-stack recipe format RECIPE.eb --dry-run
 eb-stack recipe format RECIPE.eb --out FORMATTED.eb
 #+end_example
-If =--out= is omitted, the file is rewritten in place.
-When =--dry-run= is used, the wrapping is printed and the file remains unchanged.
-E501 in EasyBuild style represents the line‑length warning that this command aims to resolve.
-The =mechanical= residual of Inspect writes a work queue, not a recipe, and the residual is "the emitter wrapped a list past the column".
-It does not correspond to =eb --check-style=.
-It does not reflect an opinion about =configopts=.
+Omit =--out= to rewrite the file in place.
+Use =--dry-run= to print the wrapping while leaving the file unchanged.
+E501 in EasyBuild style indicates the line‑length warning that this command resolves.
+The =mechanical= residual of Inspect writes a work queue, not a recipe; the residual is "the emitter wrapped a list past the column".
+The output does not correspond to =eb --check-style=.
+The output does not reflect an opinion about =configopts=.
 A format run that changes a checksum or a patch order is a bug in the formatter, not a feature.
 * Lint reports; it does not repair
-The =recipe lint= command traverses the same E501 surface and produces findings.
-No files are modified.
-A single invocation may receive multiple files.
-A clean lint result is not a packaging gate.
-The report shows if =format= has remaining actions or none.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) is calculated from the energy barrier, the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24).
+On OptBench it fires near a shallow basin and those 7
 * Check is the robot question
 The =recipe check= opens other files.
 #+begin_example

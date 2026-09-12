@@ -25,13 +25,13 @@
 - [[file:04-the-robot.org][The robot]]: =-D= is how a plan is
  read. EasyBuild 5 changed what that flag implies.
 #+end_prerequisites
-A pin is for one generation.
-It remains applicable to an easyconfig.
+A pin covers one generation.
+It stays applicable to an easyconfig.
 =dependencies= list does not contain =>=1.14.6=.
 The site already provides HDF5 1.14.6.
 Many recipes require 1.14.5.
 Rebuilding those recipes is the honest pin.
-An alternative approach is wrapping.
+An alternative approach uses wrapping.
 Wrapping resides *outside* the requesting recipe.
 * ModuleRC writes a.modulerc and nothing else
 The generic =ModuleRC= easyblock inherits from =EasyBlock=.
@@ -40,14 +40,14 @@ It writes a software-specific =.modulerc=.
 #+begin_example
 module load HDF5/1.14.5-gompi-2025a
 #+end_example
-Loads HDF5 1.14.6 when the site declares the newer module as a compatible replacement.
-The extra parameter is =check_version=, default =True=: the requested version must be a *prefix* of the dependency version.
+HDF5 1.14.6 loads when the site declares the newer module as a compatible replacement.
+The extra parameter is =check_version=, default =True=; the requested version must be a *prefix* of the dependency version.
 Version 1.14.5 may wrap 1.14.5.1.
 Version 1.14.5 may not wrap 1.15.0 under the default check.
-This does not constitute a range in the asking recipe.
+This does not create a range in the asking recipe.
 The asking recipe still names 1.14.5.
 The site's module tree responds with a different module.
-The robot, resolving a *build*, still looks for an easyconfig of the pinned version unless wrapping-dependencies is also configured for the build.
+The robot resolving a *build* still looks for an easyconfig of the pinned version unless wrapping-dependencies is also configured for the build.
 * wrapping-dependencies is a configuration, not a syntax
 The =wrapping-dependencies= setting in EasyBuild lists installations that may satisfy a request for an older version at *runtime*.
 It also applies at resolve time when configured.
@@ -60,7 +60,7 @@ A pin is for one generation's "no operator, no caret, no tilde" refers to the fi
 This chapter addresses the directory tree from which the file is loaded.
 A wrap that causes a *build* to resolve against a different HDF5 than the pinned version is a finding rather than a convenience.
 That binary has not been tested with that module.
-What "installed" means's per-architecture claim applies one level higher.
+The per-architecture claim of what "installed" means applies one level higher.
 A wrap is a distinct installation.
 #+ATTR_EB: :id EB-Wrap-1 :title Pin, wrap, or rebuild
 #+begin_exercise
@@ -104,12 +104,12 @@ Dependencies are not walked unless =-r= is also passed:
 eb GROMACS-2025.2-foss-2025a.eb -Dr
 #+end_example
 The robot's recordings already use =-r -D=.
-Explain why both letters appear.
-A reader who omits =-r=.
+Both letters appear to request recursive operation (=‑r=) and debug output (=‑D=).
+A reader who omits =-r= will not obtain recursive behavior.
 The other dry‑run is =--extended-dry-run= / =-x=.
 It prints the build procedure.
 It is not a substitute for =-Dr=.
-The printed procedure may differ from the real run whenever an easyblock branches on files that a dry‑run never unpacks.
+The printed procedure may differ from the real run whenever an EasyBlock branches on files that a dry‑run never unpacks.
 #+ATTR_EB: :id EB-Dry-1 :title What -D prints
 #+begin_exercise
 EasyBuild 5.4.0, a robot tree that contains the full foss-2025a

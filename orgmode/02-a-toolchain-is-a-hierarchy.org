@@ -22,21 +22,21 @@ version = '4.130.0'
 toolchain = SYSTEM
 #+end_src
 =SYSTEM= is the simplest value that line accepts.
-It is rarely used on a real cluster.
-Instead, other values appear:
+Real clusters rarely use =SYSTEM=.
+Other values appear instead.
 #+begin_src easyconfig :widget hierarchy
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
-Read as a name, =foss-2025a= resembles a label for "the 2025a open-source compiler stack".
-=foss-2025a= is the top of a structure.
+=foss-2025a= resembles a label for the 2025a open-source compiler stack.
+=foss-2025a= forms the top of a structure.
 The structure defines which versions of which libraries a package on this toolchain may see.
 [[cite:geimerModernScientificSoftware2014][Geimer, Hoste and McLay 2014]] explains the *module* tree shape.
 A Core compiler extends =$MODULEPATH= into a Compiler layer.
 An MPI extends the Compiler layer again.
 The user types =WRF/3.5= instead of =WRF/3.5-GCC-4.8.2-OpenMPI-1.7.3=.
 [[cite:alvarezScientificSoftwareManagement2016][Alvarez, O'Cais, Geimer and Hoste 2016]] add a layer under the compilers, =GCCcore=.
-CMake is not rebuilt once per toolchain.
-Ask the sample.
+CMake does not rebuild once per toolchain.
+Query the sample.
 The line does not name a single toolchain.
 The line names a list.
 * The list has an order, and the order does work
@@ -47,7 +47,8 @@ Determine list of subtoolchains for specified parent toolchain. Result
 starts with the most minimal subtoolchains first, ends with specified
 toolchain.
 #+end_quote
-Within the =foss= family, the members are =GCCcore=, =GCC=, =gompi=, =gfbf= and =foss=, each representing a distinct toolchain and each provided as a module.
+Within the =foss= family, the members are =GCCcore=, =GCC=, =gompi=, =gfbf= and =foss=.
+Each member is a distinct toolchain and is provided as a module.
 The package declares the last one and may depend on artifacts built with any of them.
 The ordering is significant and does not follow a simple linear sequence.
 =GCCcore= precedes =GCC=, which precedes both =gompi= and =gfbf=, and both precede =foss=.
@@ -63,8 +64,8 @@ A =foss= dependency is never considered.
 The system reports the inability to locate the required item on disk.
 * The shape is a graph
 The =foss= line forms a chain.
-It is a poor example for understanding the code's behavior.
-EasyBuild's own docstring selects a more complex example and illustrates it:
+The example is poor for understanding the code's behavior.
+EasyBuild's own docstring selects a more complex example and illustrates it.
 #+begin_example
  goolfc
  / \
@@ -80,15 +81,11 @@ EasyBuild's own docstring selects a more complex example and illustrates it:
 #+end_example
 Two toolchains reside at the same hierarchical level and share a common ancestor.
 The walk cannot be described as "follow =SUBTOOLCHAIN= upward until it runs out".
-
 A comment in the implementation notes that the search is breadth‑first.
-The search is required to consider the potential for multiple subtoolchains.
-
+The search must consider the potential for multiple subtoolchains.
 The asterisks indicate that =GCCcore= is *optional*.
-
 A toolchain class includes an =OPTIONAL= attribute.
 An optional level is counted only when present.
-
 The hierarchy of =foss-2025a= is not a property of the literal string =foss-2025a=.
 It reflects the installed configuration.
 #+ATTR_EB: :id EB-Toolchain-1 :title What may this package depend on
@@ -123,18 +120,18 @@ questions.
 #+end_exercise
 
 * The system toolchain is not always in it
-The same docstring subsequently qualifies the bottom of the list.
+Please provide the org‑mode prose you would like rewritten.
 #+begin_quote
 The system toolchain is considered the most minimal subtoolchain only
 if the =add_system_to_minimal_toolchains= build option is enabled.
 #+end_quote
-The option only changes the walk when a dependency does not name a toolchain.
-=('CUDA', '12.9.1', '', SYSTEM)= still finds the SYSTEM module, with or without a flag.
-The option does not, by default, treat a bare =('zlib', '1.3.1')= as "also try SYSTEM".
+The option changes the walk only when a dependency does not name a toolchain.
+=('CUDA', '12.9.1', '', SYSTEM)= still finds the SYSTEM module with or without a flag.
+By default the option does not treat a bare =('zlib', '1.3.1')= as also try SYSTEM.
 A foss package that omitted the fourth field looks for =zlib/1.3.1-foss-…= or a foss subtoolchain, not =zlib/1.3.1=.
 * What a toolchain module has to contain
 A toolchain occupies a graph position.
-It also is a module.
+The toolchain also is a module.
 The module must conform to the class.
 EasyBuild performs checks:
 #+begin_example
@@ -169,7 +166,7 @@ removed. Both the new and old NVHPC toolchains share the same name, we
 need to selectively filter one out based on the version of the
 toolchain.
 #+end_quote
-A single string represents two distinct toolchain classes.
-The framework resolves the ambiguity with the version number.
-A =TODO: delete with EasyBuild 6.0= note is placed beside it.
-If =foss-2025a= acted as a label, the code would be unnecessary.
+One string encodes two different toolchain classes.
+The system removes the ambiguity using the version number.
+A =TODO: delete with EasyBuild 6.0= note appears beside it.
+When =foss-2025a= is used as a label, the code becomes unnecessary.

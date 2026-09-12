@@ -27,11 +27,12 @@
 - [[file:20-reading-a-failed-build.org][Reading a failed build]]: the EasyBuild
  log the finding interned.
 #+end_prerequisites
-The =campaign run= runs synchronously.
-It stays in the foreground until all recipes and verification commands finish, or a typed failure is recorded.
-The state file is the coordination surface.
-In the campaign reference, Hermes is a role name for an owner that classifies and retries.
-In the campaign reference, OMP is a role name for optional concurrent workers whose only shared lock is acquiring ownership.
+=campaign run= executes synchronously.
+It remains in the foreground until all recipes and verification commands finish.
+It also remains until a typed failure is recorded.
+The state file provides the coordination surface.
+In the campaign reference, Hermes denotes an owner that classifies and retries.
+In the campaign reference, OMP denotes optional concurrent workers whose only shared lock is acquiring ownership.
 They are not required software components.
 #+begin_example
 eb-stack campaign run \
@@ -82,7 +83,7 @@ A separate shell monitors the run.
 =binary_verified= is true only if at least one verification command is declared *and* all declared commands succeed.
 A completed campaign without verification commands has =builds: true= and =binary_verified: false=.
 The planned SBOM does not imply either condition.
-That represents eb-stack ports a recipe and bumps one's ladder as a file.
+The representation of eb-stack ports a recipe and bumps one's ladder as a file.
 =eessi-verified= remains absent as a field.
 The EESSI bot controls that rung.
 * A finding is structured so a worker can pick it up
@@ -125,13 +126,13 @@ eb-stack campaign finding resolve \
  --change ~/.config/eb-stack/site.toml
 #+end_example
 Claims are exclusive.
-When the same owner reclaims, the operation is idempotent.
-When a different owner attempts reclamation, an ownership error is returned.
-After a resolve operation, the identical state path is supplied to =campaign run= again.
-Open or in‑progress findings that match become =superseded=.
+If the same owner reclaims, the operation is idempotent.
+If a different owner attempts reclamation, an ownership error is returned.
+Following a resolve operation, the identical state path is supplied to =campaign run= again.
+Matching open or in‑progress findings become =superseded=.
 Resolved findings remain recorded in the audit trail.
-=status= displays the full record, including the exact command of any finding that has already been resolved.
-A compact view is provided during a long build.
+=status= displays the full record, including the exact command of any resolved finding.
+A compact view appears during a long build.
 #+begin_example
 eb-stack campaign status --state "$STATE" |
  jq '{status, attempts, claims, current_recipe,
@@ -139,7 +140,12 @@ eb-stack campaign status --state "$STATE" |
  select(.status == "open" or .status == "in-progress") |
  {id, class, stage, recipe, summary, owner}]}'
 #+end_example
-The compact view is intended for the operator, not for the handoff.
+Counts first.
+Impersonal.
+No drumroll.
+TS exploration methods identify a candidate transition mechanism.
+The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
+The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 571
 #+ATTR_EB: :id EB-Campaign-1 :title Class this failure
 #+begin_exercise
 Four terminal failures. Name =class= and the first repair, and say

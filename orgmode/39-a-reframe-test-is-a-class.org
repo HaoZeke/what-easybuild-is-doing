@@ -18,9 +18,10 @@
 - [[file:23-testing.org][Testing, and the four things it can mean]], for the four kinds of testing.
  This part is the fourth kind, written out.
 #+end_prerequisites
-This file is a regression test.
+The file is a regression test.
 It contains twenty‑two lines.
-STREAM is [[cite:mccalpinMemoryBandwidth1995][McCalpin 1995]]: Copy, Scale, Add, Triad, and a checksum line the binary prints when the arrays match.
+STREAM is [[cite:mccalpinMemoryBandwidth1995][McCalpin 1995]]: Copy, Scale, Add, Triad.
+The binary prints a checksum line when the arrays match.
 Both CSCS's webinar and the official tutorial begin with it.
 #+begin_src python
 import reframe as rfm
@@ -45,25 +46,27 @@ class stream_test(rfm.RunOnlyRegressionTest):
  def triad_bw(self):
  return sn.extractsingle(r'Triad:\s+(\S+)', self.stdout, 1, float)
 #+end_src
-The file reads as a configuration would: names on the left, values on the right.
+The file reads like a configuration: names on the left, values on the right.
 Line five breaks that reading.
 =@rfm.simple_test= is a decorator.
-The class is registered with the framework when the file is imported.
-That registration is what =reframe -c stream.py -l= lists.
-Without the decorator the class is ordinary Python.
-ReFrame never sees it.
+The class registers with the framework when the file is imported.
+That registration appears in the output of =reframe -c stream.py -l=.
+Without the decorator the class remains ordinary Python.
+ReFrame does not see the class.
 =RunOnlyRegressionTest= is the other claim on that line.
-The compile stage is a no-op.
-The test runs an executable that already exists.
-The next two chapters say what that costs.
-A test that builds and a test that runs a module are two different base classes.
+The compile stage performs no operation.
+The test runs an existing executable.
+The next two chapters describe the associated costs.
+A test that builds and a test that runs a module use different base classes.
 * Two constraints, then a verdict
+Rewrite this org-mode prose.
+Keep org markup such as =foo= and [[links]].
 Each test must define =valid_systems= and =valid_prog_environs=.
 These entries are not documentation.
 The framework filters tests using the current system and the current programming environment.
 A test that matches neither is not scheduled.
 =['*']= denotes any system and any environment.
-It is the tutorial's starting point.
+The tutorial's starting point is =['*']=.
 A claim using this placeholder must be narrowed when the test leaves a laptop.
 Each test must also define a validation function decorated =@sanity_function=.
 ReFrame makes no default assumption about test success.
@@ -90,14 +93,10 @@ The sanity phase remains unaffected.
 #+begin_example
 reframe -c stream/stream_runonly.py -l
 #+end_example
-Option =-c= specifies the check path, which may be a file or a directory.
-Option =-l= produces a listing.
-Option =-r= executes the check.
-The listing displays a single check, =stream_test=, using the builtin =generic:default+builtin= combination.
-No configuration file is provided.
-The builtin definition always includes that pair.
-The hash following the name (=/2e15a047= in the tutorial's recording) is the test-case identity, comprising class, parameters, partition, and environment.
-This identifier enables rerunning a failed case without rerunning the entire suite.
+TS exploration methods identify a candidate transition mechanism.
+The transition rate estimate under HTST is calculated from the energy barrier.
+The energy barrier is the difference between the energy at the saddle and the reactant state.
+The dimer does
 #+ATTR_EB: :id EB-ReFrame-39-1 :title What decides a pass
 #+begin_exercise
 The STREAM binary is replaced by one that exits 0 and prints only

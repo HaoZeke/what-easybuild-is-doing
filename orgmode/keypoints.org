@@ -1,10 +1,10 @@
 #+TITLE: What to remember
 
 #+OPTIONS: toc:nil num:nil
-Keypoints for each chapter are produced in reading order directly from the chapters rather than being manually maintained.
+Keypoints for each chapter are produced in reading order directly from the chapters instead of manual maintenance.
 The Carpentries refer to this as a digest ([[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]]).
-It serves two purposes.
-Before a chapter, it shows whether the chapter's purpose is already known.
+It has two purposes.
+Before a chapter, it indicates whether the chapter's purpose is already known.
 After finishing the book, it provides a page to reread instead of the entire book.
 #+begin_export rst
 .. keypoints-index::

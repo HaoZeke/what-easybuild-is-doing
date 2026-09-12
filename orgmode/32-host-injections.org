@@ -30,12 +30,13 @@
  bot, pointed at a different repository.
 #+end_prerequisites
 EESSI provides a shared software stack.
-A site can still have software not shipped by EESSI, including a closed‑source licence, software not yet on the tree, and software tuned for a specific fabric.
+A site may have software not shipped by EESSI, including a closed‑source licence, software not yet on the tree, and software tuned for a specific fabric.
 A webinar on 1 June 2026 by Caspar van Leeuwen and Bob Dröge addresses that situation.
 The official =host_injections= page lists four bullets and a symlink.
-The webinar describes two approaches, two live clusters, and the variables that make a login session see both trees.
+The webinar describes two approaches, two live clusters, and the variables that enable a login session to see both trees.
 * Why a site builds at all
-Three reasons are presented on the webinar's motivation slide; they are not the same job.
+Three reasons appear on the webinar's motivation slide.
+They are not the same job.
 *Licensed software* cannot go in =software.eessi.io=.
 It may also be limited to a subset of the site's users.
 *Software that is not on the tree yet* is a time problem.
@@ -105,8 +106,8 @@ The quoted goal is to build using dependencies from EESSI.
 The build occurs in a CVMFS repository of our own.
 The build uses the EESSI build bot.
 The same build scripts from =software-layer-scripts= are used.
-The "what we need" slide adds a site Stratum-0, and in production Stratum-1s and proxies.
-One bot instance per cluster should build natively.
+The "what we need" slide adds a site Stratum-0 and, in production, Stratum-1s and proxies.
+One bot instance per cluster builds natively.
 An S3‑compatible bucket is required.
 A GitHub repository whose easystack path is.
 #+begin_example
@@ -126,7 +127,7 @@ which python
 # /cvmfs/software.eessi.io/versions/2025.06/.../Python/3.13.5-...
 #+end_example
 The site module is the EESSI interpreter.
-This fulfills the entire purpose.
+It fulfills the entire purpose.
 A site ingest does not require =EESSI/staging_bundles=.
 =ingest_tarballs.sh= lists the bucket, downloads the contents, optionally verifies a signature, calls =filesystem-layer/scripts/ingest-tarball.sh=, regenerates nested catalogs, and remounts.
 Nested catalogs follow the EESSI =.cvmfsdirtab= pattern.
@@ -138,11 +139,11 @@ An easystack is the list the bot will build.
 The scripts include the =--rebuild= option.
 Removal is a Stratum-0 transaction and an Lmod cache rebuild, not a bot comment.
 * Drivers, CUDA, and an ABI-compatible MPI
-A site adds three items *into* the injection tree, even if the remaining site stack resides in the prefix recommended by Approach 1.
-*NVIDIA drivers*, runtime.
+Three items are added *into* the injection tree by a site, even if the remaining site stack resides in the prefix recommended by Approach 1.
+The runtime includes *NVIDIA drivers*.
 The driver is bound to the host kernel.
 It cannot be shipped in the repository.
-For EESSI 2025.06 and later the compatibility-layer linker searches
+For EESSI 2025.06 and later the compatibility‑layer linker searches.
 #+begin_example
 /cvmfs/software.eessi.io/versions/<ver>/compat/<os>/<arch>/lib/nvidia
 #+end_example
@@ -173,11 +174,11 @@ The CUDA and cuDNN packages in the repository are runtime‑only; the EULA prohi
  /cvmfs/software.eessi.io/host_injections/2023.06/software/.../CUDA/12.1.1/bin/nvcc
 #+end_example
 The installer account is not root.
-EasyBuild does not run as root unless =EASYBUILD_ALLOW_USE_AS_ROOT_AND_ACCEPT_CONSEQUENCES= is set.
-The GPU page recommends changing ownership of the injection directory instead.
+EasyBuild runs as non-root unless =EASYBUILD_ALLOW_USE_AS_ROOT_AND_ACCEPT_CONSEQUENCES= is set.
+The GPU page recommends changing ownership of the injection directory.
 *Site MPI.* EESSI's OpenMPI does not know a site fabric.
-An ABI‑compatible replacement goes where the RPATH of the EESSI binaries already looks.
-The Slingshot-11 write-up puts OpenMPI 5.x here for 2023.06 on Grace:
+An ABI‑compatible replacement is placed where the RPATH of the EESSI binaries already points.
+The Slingshot-11 write-up places OpenMPI 5.x for 2023.06 on Grace:
 #+begin_example
 /cvmfs/software.eessi.io/host_injections/2023.06/software/linux/aarch64/nvidia/grace/rpath_overrides/OpenMPI/system/lib
 #+end_example
@@ -199,8 +200,11 @@ The site file merges =eessi_load_hook= with the site function into a single regi
 Lmod 8.7.35 and newer are able to register both.
 * What a login session has to export
 The webinar's last section presented two patterns.
-Using *EESSI's* Lmod, a file in =/etc/profile.d= sets =EESSI_SITE_SOFTWARE_PREFIX= and sources =/cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash=.
-Using the *site's* Lmod, Hábrók's =01-local_lmod.sh= is employed.
+The first pattern uses *EESSI's* Lmod.
+A file in =/etc/profile.d= sets =EESSI_SITE_SOFTWARE_PREFIX=.
+The same file sources =/cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash=.
+The second pattern uses the *site's* Lmod.
+Hábrók's =01-local_lmod.sh= is employed.
 #+begin_example
 export EESSI_SITE_SOFTWARE_PREFIX=/software
 export MODULEPATH=/cvmfs/software.eessi.io/init/modules
@@ -214,9 +218,9 @@ These variables make the EESSI module sticky.
 They enable coexistence with a second, incompatible site stack.
 Licensed software that only some users may run is identified as a poor fit for a site CVMFS repository.
 The setting =CVMFS_CLAIM_OWNERSHIP=no= preserves ownership.
-It does not constitute a security boundary.
+It is not a security boundary.
 A container can override it.
-The webinar proposes keeping those installations on the shared filesystem of Approach 1.
+The webinar proposes keeping those installations on the shared filesystem of Approach 1.
 #+ATTR_EB: :id EB-Site-1 :title Which prefix, which variable
 #+begin_exercise
 Four requests. For each, name the approach, the variable that has
@@ -270,12 +274,14 @@ A site config contains only this line, in
 #+begin_example
 EESSI_HOST_INJECTIONS=/shared/eessi-inject
 #+end_example
-=link_nvidia_host_libraries.sh= was executed last year targeting 2023.06.
-Users have now switched to =EESSI/2025.06=.
-CUDA applications fail to find =libcuda.so=.
-What caused the success on 2023.06 and the failure on 2025.06?
-Identify the addition to the CernVM-FS config and the component that is re-run.
-Determine the number of injection trees for two GPU partitions with drivers in different directories and the location where the difference is expressed.
+=link_nvidia_host_libraries.sh= executed last year targeting 2023.06.
+Users switched to =EESSI/2025.06=.
+CUDA applications fail to locate =libcuda.so=.
+Identify the cause of the success on 2023.06 and the failure on 2025.06.
+Identify the addition to the CernVM-FS config.
+Identify the component that is re‑run.
+Determine the number of injection trees for two GPU partitions with drivers in different directories.
+Determine the location where the difference is expressed.
 #+begin_solution
 1. 2023.06's linker search path for NVIDIA is under
  =host_injections=, which =EESSI_HOST_INJECTIONS= aims. 2025.06
