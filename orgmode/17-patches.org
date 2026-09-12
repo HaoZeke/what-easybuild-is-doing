@@ -145,3 +145,9 @@ a bump
 looked, are indistinguishable a year later, and only one of them is safe.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- A patch is a claim about a file at a path inside the unpacked archive.
+- The search is for a name, not for a hunk. A moved file is a missed patch.
+- The level is how many path components to strip, not a quality score.
+#+end_keypoints

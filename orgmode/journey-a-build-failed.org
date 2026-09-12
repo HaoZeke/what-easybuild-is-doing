@@ -1,5 +1,17 @@
 #+TITLE: Journey: a build failed
 #+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   20-reading-a-failed-build
+   05-a-versionsuffix-is-part-of-the-name
+   06-what-installed-means
+   07-a-checksum-is-a-claim-about-bytes
+   09-a-hook-changes-a-file-you-are-not-reading
+#+end_export
+
 #+begin_export rst
 .. figure:: _static/diagrams/journey-a-build-failed.svg
    :alt: log to start_dir to the pin

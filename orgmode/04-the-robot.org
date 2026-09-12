@@ -305,3 +305,9 @@ Consult =-D= prior to any non‑trivial build.
 This option uniquely differentiates one installation from ninety.
 The following page covers =versionsuffix=.
 =versionsuffix= appears as a constraint and as a label.
+
+#+begin_keypoints
+- A filename is a query against the robot path.
+- EasyBuild 5: =-D= does not imply =-r=. The plan is =-Dr=.
+- =resolve_dependencies= discovers the graph while it walks; it does not sort a finished graph.
+#+end_keypoints

@@ -227,3 +227,9 @@ A test that your own shell can satisfy is not a test.
 The modulefile at the end of all this is the only artifact a user meets.
 It is generated from every inference in this book.
 It can be accurate about a tree that does not work.
+
+#+begin_keypoints
+- A completed build prints a line and writes a modulefile. Neither proves the software runs.
+- =sanity_check_paths= is a count of files, not a test of behaviour.
+- The gap between those two claims is where user-facing bugs live.
+#+end_keypoints

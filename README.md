@@ -1,4 +1,4 @@
-# What EasyBuild Is Doing
+# The file, the tree, and the run
 
 An interactive book about what EasyBuild actually does, for people who
 can read code and have not installed EasyBuild.

@@ -156,7 +156,7 @@ same failure mode and the same silence.
 #+end_exercise
 
 * Hooks and overlays solve different problems
-The robot's robot path and the hooks described in This page are the two methods a site uses to alter EasyBuild's behaviour.
+The robot's robot path and the hooks described in this page are the two methods a site uses to alter EasyBuild's behaviour.
 They are not interchangeable.
 An overlay modifies *which* easyconfig is discovered.
 An overlay is appropriate when the site requires a different file, such as a newer version, a local patch, or a variant not provided upstream.
@@ -182,3 +182,9 @@ The subsequent three pages cover the actual implementation steps.
 Install into a prefix owned by the operator.
 Apply it atop EESSI.
 Examine how the engine behind these examples determines its established state.
+
+#+begin_keypoints
+- A hook runs in the site's EasyBuild process, not in the easyconfig you opened.
+- The robot path and hooks are the two ways a site changes behaviour without editing upstream files.
+- A hook that is not in the log is still what ran.
+#+end_keypoints

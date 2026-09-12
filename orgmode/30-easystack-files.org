@@ -44,7 +44,7 @@
 - [[file:04-the-robot.org][The robot]]: =--robot= is what the bot adds
  around a new-install easystack.
 - [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]]: the six-step
- postcard This page fills in.
+ postcard this page fills in.
 #+end_prerequisites
 An easyconfig defines a single package.
 A site and EESSI require a list of packages for one toolchain generation, one EasyBuild version, and one repository version.

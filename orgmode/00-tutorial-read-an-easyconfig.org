@@ -151,3 +151,10 @@ A hierarchy reflects what is installed rather than the string.
 - No site stack: [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]].
 - Whether EasyBuild is the tool: [[file:afterword-when-easybuild-is-the-wrong-tool.org][Afterword: when EasyBuild is the wrong tool]].
 - Straight through RecipeReader: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+
+#+begin_keypoints
+- The file is Python. EasyBuild evaluates it in a prepared namespace.
+- A missing =version= stops the parse. A missing =sources= line is legal and useless.
+- A missing =easyblock= line is still an easyblock: the name is transformed.
+- A toolchain is the top of a hierarchy. That hierarchy is the set of legal dependencies.
+#+end_keypoints

@@ -156,7 +156,7 @@ Four jobs. For each, name the base class, and say what
 is from the CSCS 2022 webinar slides. [[https://github.com/ukri-excalibur/excalibur-tests][ExCALIBUR-tests tutorial]]
 sections 5 and 6 walk Make/CMake/Autotools/Spack and run-only
 tests. [[https://www.eessi.io/docs/test-suite/writing-portable-tests/][EESSI's mpi4py tutorial]] is the run-only-plus-module
-pattern This page uses.
+pattern this page uses.
 #+end_detail
 
 #+begin_keypoints

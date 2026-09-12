@@ -156,3 +156,9 @@ if neither, with the trade stated plainly: the third option is theirs to
 maintain and it is available today.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- A language ecosystem is a second package manager living inside an easyconfig.
+- =exts_list= is how that manager's packages become EasyBuild extensions.
+- An ecosystem with no easyblock is a residual, not a guess.
+#+end_keypoints

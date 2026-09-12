@@ -1,5 +1,16 @@
 #+TITLE: Journey: write a test
 #+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   23-testing
+   39-a-reframe-test-is-a-class
+   40-the-pipeline-has-six-stages
+   41-the-configuration-file-is-the-machine
+#+end_export
+
 #+begin_export rst
 .. figure:: _static/diagrams/journey-write-a-test-2.svg
    :alt: four kinds of testing, then a ReFrame class, then a run

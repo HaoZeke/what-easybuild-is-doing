@@ -103,8 +103,8 @@ A test stuck in the queue fails in =run_complete=.
 It does not fail in =run=.
 * Two execution policies
 Serial mode: each test enters the pipeline only after the preceding test has exited.
-The compile stage remains idle for the entire suite.
-The run stage remains idle for the entire suite.
+Compile and run still execute for every test.
+The wait is between tests, not an idle compile or run stage.
 
 Asynchronous mode: multiple tests run concurrently.
 When a test reaches compile or run, ReFrame does not block.

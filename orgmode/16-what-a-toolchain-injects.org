@@ -149,3 +149,9 @@ baseline that every node can run. A per-easyconfig fix for a site-wide
 hardware fact is the wrong layer.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- Loading a toolchain module does not set =$CC= or =$LIBBLAS=.
+- Those variables exist only inside a build, from the toolchain class and =toolchainopts=.
+- Debugging by loading =foss= and re-running the failing command misses that injection.
+#+end_keypoints

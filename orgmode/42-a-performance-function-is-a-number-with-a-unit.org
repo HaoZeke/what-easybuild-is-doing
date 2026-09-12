@@ -96,7 +96,7 @@ It is a CSV whose columns are configurable.
 A site that graphs STREAM triad over six months reads this file, not the session JSON.
 The session JSON lives under =$HOME/.reframe/reports/=, with =latest.json= pointing at the last run. --restore-session= in Reading a failed ReFrame run reads it.
 Past performance can be queried from the same database and compared to the current run.
-That is a How To in the official docs, not a mechanism This page needs.
+That is a How To in the official docs, not a mechanism this page needs.
 * What a number does not say
 The run-stage timer includes queue time.
 The pipeline has six stages.

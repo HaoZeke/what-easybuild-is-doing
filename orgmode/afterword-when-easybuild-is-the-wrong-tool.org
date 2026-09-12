@@ -33,7 +33,7 @@ From‑source builds take hours translating into a few hundred extensions and us
 Modulefiles make the artifact an environment rather than a copyable directory.
 These trade‑offs suit a national supercomputer serving thousands of users.
 They are unsuitable in many other contexts.
-The remainder of This page addresses the drawbacks.
+The remainder of this page addresses the drawbacks.
 * When the answer is a different tool for the same job
 Three scenarios provide a genuine alternative rather than a complaint.
 ** A Python environment that changes weekly

@@ -30,7 +30,7 @@
  the cause rather than the fallout.
 3. Reproduce a failing command in the environment it failed in.
 #+end_objectives
-Everything before This page was about what EasyBuild does when it works.
+Everything before this page was about what EasyBuild does when it works.
 This is the one that gets used.
 It is a reading skill rather than a repertoire of fixes.
 The material here is a real failure.
@@ -279,7 +279,7 @@ for:
 | =error:= | a compiler diagnostic, with the colon to exclude prose |
 | =failure= | test-suite reports |
 | =not found= | a missing library or header |
-| =No such file or directory= | a path assumption, like This page's |
+| =No such file or directory= | a path assumption, like this page's |
 | =Segmentation fault= | a compiler or a test binary crashing |
 | =bazel= | Bazel's own log, which is elsewhere |
 

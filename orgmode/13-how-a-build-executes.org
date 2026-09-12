@@ -222,3 +222,9 @@ argument for using it while iterating on a new easyconfig: three of the
 four most common failures happen before any compiler runs.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- The step in the error message rules out every step before it.
+- Toolchain mismatch is =prepare=, via =_verify_toolchain=, not =ready=.
+- =fetch= reads templated =sources=. The name that failed may not be the text in the file.
+#+end_keypoints

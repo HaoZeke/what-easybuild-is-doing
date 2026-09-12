@@ -1,4 +1,4 @@
-#+TITLE: What EasyBuild Is Doing
+#+TITLE: The file, the tree, and the run
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
@@ -7,10 +7,6 @@
    :maxdepth: 2
 
    journeys
-   journey-first-recipe
-   journey-a-build-failed
-   journey-port
-   journey-write-a-test
    part-a-recipe
    part-a-stack
    part-a-test
@@ -35,7 +31,7 @@ RecipeReader. StackWalker. ReframeReader.
 
    A journey is a how-to path across pages that already exist. The same page can sit on more than one path.
 #+end_export
-EasyBuild documentation indicates the required typing.[fn:ebdocs]
+EasyBuild installs scientific software from a recipe file.[fn:ebdocs]
 This book is the file, the tree, and the run.
 A journey is a how-to path across existing pages.
 #+begin_export rst

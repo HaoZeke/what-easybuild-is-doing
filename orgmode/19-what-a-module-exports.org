@@ -77,7 +77,7 @@ prepend_path("PATH", pathJoin(root, "bin"))
 #+end_src
 Nobody wrote that file.
 Every line came from somewhere in the easyconfig.
-Being able to point at the source of each is most of what This page is for.
+Being able to point at the source of each is most of what this page is for.
 =help= and =whatis= come from =description= and =homepage=.
 Those parameters exist.
 A one-line description is worth writing properly.
@@ -210,3 +210,9 @@ comes from the toolchain object rather than from any module. Those builds need
 [[file:16-what-a-toolchain-injects.org][What a toolchain injects]].
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- The modulefile is what a user loads. The easyconfig is how it was built.
+- =modextravars= and =modluafooter= write into that modulefile.
+- =depends_on= names another module, not a version range.
+#+end_keypoints

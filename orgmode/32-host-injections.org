@@ -109,7 +109,9 @@ Running =cvmfs_config reload= makes that tree behave as if it were inside the re
 It does not write to the repository.
 It does not invalidate a signature.
 Different node types may point the symlink at different directories.
-Two GPU partitions with drivers in different places need two targets.
+Two GPU partitions with drivers in different places need two
+=EESSI_NVIDIA_OVERRIDE_DEFAULT= targets in 2025.06, not two
+=EESSI_HOST_INJECTIONS= values.
 *Option 2* is the one the webinar marks recommended.
 It uses a prefix the site owns, =EESSI_SITE_SOFTWARE_PREFIX=/software= or =/cvmfs/software.caspar.nl=.
 This prefix is *not* the variant symlink.

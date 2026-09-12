@@ -194,3 +194,9 @@ Disregard the name and examine the tree.
 The sanity check relies on appearance.
 It justifies retaining it even when it reports another's problem.
 Next: the definition of "installed" and the two factors that determine it.
+
+#+begin_keypoints
+- A =versionsuffix= is part of the module name, not a binding mechanism.
+- The dependency does the binding. The suffix reports it once at parse time.
+- The RPATH check already exempts the NVIDIA driver libraries.
+#+end_keypoints

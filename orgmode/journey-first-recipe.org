@@ -21,6 +21,17 @@
 
    The first-recipe journey reads a file the way EasyBuild does, then the four mechanisms.
 #+end_export
+#+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   00-tutorial-read-an-easyconfig
+   01-an-easyconfig-is-python
+   02-a-toolchain-is-a-hierarchy
+   03-a-pin-is-for-one-generation
+   04-the-robot
+#+end_export
+
 Read a file as EasyBuild does.
 Then the four mechanisms that everything else rests on.
 

@@ -32,7 +32,7 @@
 #+end_objectives
 
 #+begin_prerequisites
-- [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]]: This page uses the
+- [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]]: this page uses the
  format that one takes apart.
 - A machine that can install a package, or a container runtime, or
  neither and read it as reference.
@@ -257,7 +257,10 @@ Per-node-type differences are supported.
 
 The mechanism uses a client-side variable instead of a repository path.
 
-Two GPU node types with drivers in separate locations receive distinct =EESSI_HOST_INJECTIONS= values in their respective CernVM-FS configurations.
+Two GPU node types with drivers in separate locations receive
+distinct =EESSI_NVIDIA_OVERRIDE_DEFAULT= values in 2025.06.
+=EESSI_HOST_INJECTIONS= still aims the site software tree, not
+the NVIDIA compat symlink.
 #+begin_example
 site_software_path="${EESSI_SOFTWARE_PATH/versions/host_injections}"
 export EESSI_SITE_MODULEPATH="${site_software_path}/modules/all"

@@ -38,7 +38,8 @@ The remainder of the page describes what a build may observe.
 The explanation is an intentional policy with intentional gaps.
 * The environment is constructed, not inherited
 EasyBuild does not build within the shell's environment.
-During =prepare=, EasyBuild unloads previously loaded modules.
+During =prepare=, EasyBuild warns about previously loaded modules
+by default. It does not unload them.
 During =prepare=, EasyBuild loads the toolchain module and the dependency modules from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]'s hierarchy.
 During =prepare=, EasyBuild sets the compiler variables itself.
 The final step often surprises users.
@@ -173,7 +174,8 @@ The build that succeeded is the wrong one. It depends on something the
 easyconfig does not state, so it is not reproducible: it works in that
 shell, on that day, and will fail for the next person and for the same
 person after a system change. The desk's failure is the correct
-behaviour, and it is the whole reason =module purge= is there.
+behaviour, and it is the whole reason =detect_loaded_modules=
+defaults to =warn=.
 
 The fix is to add the library to =dependencies=, so =prepare= loads it
 and the build finds it through something written down.
@@ -184,3 +186,9 @@ Both make the symptom go away and leave the easyconfig still lying about
 what it needs.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- EasyBuild does not build in the shell's environment.
+- =detect_loaded_modules= defaults to =warn=. =ModulesTool.load= is called with =purge= False.
+- =module purge= is not the isolation mechanism, and it is documented as broken on Cray.
+#+end_keypoints

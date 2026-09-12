@@ -1,5 +1,16 @@
 #+TITLE: Journeys
 #+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   journey-first-recipe
+   journey-a-build-failed
+   journey-port
+   journey-write-a-test
+#+end_export
+
 #+begin_export rst
 .. figure:: _static/diagrams/journeys-2.svg
    :alt: four sibling journeys, not a sequence

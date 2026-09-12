@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("_ext"))
 
 # -- Project information -----------------------------------------------------
 
-project = "What EasyBuild Is Doing"
+project = "The file, the tree, and the run"
 author = "Rohit Goswami"
 copyright = "2026, Rohit Goswami"
 release = "0.1.0"
@@ -56,8 +56,6 @@ highlight_language = "none"
 
 nitpicky = True
 
-graphviz_output_format = "svg"
-
 # -- HTML --------------------------------------------------------------------
 
 html_theme = "shibuya"
@@ -75,6 +73,8 @@ html_js_files = [
     "https://cdn.tailwindcss.com",
     ("eb-annotate.js", {"defer": "defer"}),
     ("vangrail-kernel.js", {"defer": "defer"}),
+    "hypothesis-config.js",
+    ("https://hypothes.is/embed.js", {"async": "async"}),
 ]
 html_title = project
 html_copy_source = False

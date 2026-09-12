@@ -66,7 +66,7 @@ A site file *adds* to that; it does not replace it.
 =reframe -l= with no =-C= lists tests against =generic:default+builtin=.
 STREAM is a class on the tutorial page. It still needs a configuration file before it runs.
 * A file small enough to read
-The documented skeleton of EESSI is reduced to the keys required for This page.
+The documented skeleton of EESSI is reduced to the keys required for this page.
 #+begin_src python
 import os
 from eessi.testsuite.common_config import (

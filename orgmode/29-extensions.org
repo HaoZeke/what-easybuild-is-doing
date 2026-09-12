@@ -127,7 +127,7 @@ for key, value in self.options.items():
 Unknown keys are discarded at =debug= level.
 Normal runs produce no warnings, errors, or mentions.
 A misspelled per-extension option in a bundle of two hundred extensions remains invisible unless specifically searched for.
-This invisibility is the single most useful aspect of This page.
+This invisibility is the single most useful aspect of this page.
 Alternative parameter names are honoured on input.
 The =install_opts= name works where =installopts= is intended, and real easyconfigs in the upstream repository use it.
 * What an extension does not inherit

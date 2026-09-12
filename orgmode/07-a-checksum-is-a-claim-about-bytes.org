@@ -174,3 +174,9 @@ An easyconfig is Python's failure got past a verification working perfectly.
 Next: =exts_list=.
 One easyconfig installs hundreds of packages.
 Each row above applies to each of them.
+
+#+begin_keypoints
+- A checksum names bytes, not a version and not an architecture.
+- A dict maps resolved filenames to checksums. The keys are names, not =amd64=.
+- A tuple is logical OR: either archive satisfies the check.
+#+end_keypoints

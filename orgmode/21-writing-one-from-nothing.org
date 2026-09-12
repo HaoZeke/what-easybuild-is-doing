@@ -44,7 +44,7 @@ $ eb -S 'qmcpack.*foss-2025a'
 Shared path prefixes collapse to =$CFGS1=.
 The approach fits when the answer comprises forty files.
 When a result returns, the most economical correct action typically copies it and modifies the version.
-The subject matches [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] rather than This page.
+The subject matches [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] rather than this page.
 When a conda‑forge recipe or a Spack package is available, the generator path follows [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]'s =package plan=.
 [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] is also relevant.
 The page provides the hand‑written file for cases where neither a robot hit nor a foreign recipe initiates the process.

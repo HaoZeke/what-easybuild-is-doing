@@ -164,3 +164,9 @@ A module located in the prefix belongs to the user.
 If it breaks after a system change, no one else will notice.
 The same prefix functions with the site's EasyBuild and, when mounted, with EESSI.
 If the robot lacks a recipe, generate or bump a =.eb= file; still execute =eb=.
+
+#+begin_keypoints
+- Three lists decide what EasyBuild will find: robot path, source path, install path.
+- A local prefix does not need a site admin. It does need those three lists set once.
+- =--dry-run= first. Then build.
+#+end_keypoints

@@ -174,3 +174,9 @@ point: the lists are a claim about the finished thing, and the finished
 thing can be asked.
 #+end_solution
 #+end_exercise
+
+#+begin_keypoints
+- =builddependencies= are not in the module. =dependencies= are.
+- Python can sit in both lists. The runtime one wins after the build is gone.
+- Confirm the claim by reading the install, not only the easyconfig.
+#+end_keypoints

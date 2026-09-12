@@ -300,7 +300,8 @@ failed builds]].
 - =software-layer/bot/build.sh= pins a
  =software-layer-scripts= commit and execs *that* [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]].
  The job's =.diff= is what selects the easystack files.
-- A green job produces a signed tarball. =bot:deploy= uploads it.
+- A green job produces a tarball. Signing is a detached =.sig= at
+ deploy, and it is optional. =bot:deploy= uploads it.
  A Stratum-0 ingest is what makes a module. Three human
  permissions stand on that path.
 #+end_keypoints

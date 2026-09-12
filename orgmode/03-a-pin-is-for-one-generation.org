@@ -146,8 +146,9 @@ In =dependencies = [('HDF5', '1.14.6')]=, the second field means:
 #+begin_solution
 3. The field is a pin for this generation. EasyBuild does not treat
 it as a minimum (1), a preference (2), or a statement about the
-upstream authors (4). 1 is the most common wrong model: it is how
-conda and Spack read a version. 2 is how a solver with a range
+upstream authors (4). 1 is the most common wrong model: a pip
+specifier or a Spack =@1.14.6:= range. Spack =@1.14.6= is the
+closed range =@1.14.6:1.14.6=. 2 is how a solver with a range
 would read it. 4 is what a =required_version= in the package's own
 docs would say, and that is a different document.
 #+end_solution
@@ -216,3 +217,9 @@ The third entry denotes a build environment that was present.
 The next person moving this file will appreciate the indication of which entry is which.
 The following page describes the machinery that converts a filename into an install plan.
 It also explains what occurs when the lookup is performed in the wrong location.
+
+#+begin_keypoints
+- A version beside a dependency is a pin for one generation, not a minimum.
+- Spack =@1.14.6= is the closed range =@1.14.6:1.14.6=. Or-newer is =@1.14.6:=.
+- The same number on another generation is a different module.
+#+end_keypoints

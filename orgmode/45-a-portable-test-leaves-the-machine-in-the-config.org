@@ -64,8 +64,8 @@ The configuration retains the node.
 #+begin_src python
 @rfm.simple_test
 class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
- device_type = DEVICE_TYPES[CPU]
- compute_unit = COMPUTE_UNIT[CPU]
+ device_type = DEVICE_TYPES.CPU
+ compute_unit = COMPUTE_UNITS.CPU
  module_name = parameter(find_modules('mpi4py'))
  n_iterations = variable(int, value=1000)
  executable = 'python3'
@@ -76,7 +76,8 @@ class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
  return self.num_tasks_per_node * 100 + 250
 #+end_src
 =EESSI_Mixin= provides hooks that read the partition.
-The expression "One full node" corresponds to =compute_unit = COMPUTE_UNIT[CPU]=.
+=compute_unit = COMPUTE_UNITS.CPU= is one task per core.
+A full node is a =SCALES= value, not that assignment.
 The hook assigns =num_tasks= from =processor.num_cpus= in the configuration.
 A node with 64 cores receives 64 tasks.
 A node with 128 cores receives 128 tasks.

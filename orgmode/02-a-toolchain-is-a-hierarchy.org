@@ -191,3 +191,9 @@ One string encodes two different toolchain classes.
 The system removes the ambiguity using the version number.
 A =TODO: delete with EasyBuild 6.0= note appears beside it.
 When =foss-2025a= is used as a label, the code becomes unnecessary.
+
+#+begin_keypoints
+- A toolchain is a list with an order, not a label.
+- =get_toolchain_hierarchy= names the legal dependency toolchains.
+- =_verify_toolchain= runs in =prepare=, before any unpack.
+#+end_keypoints

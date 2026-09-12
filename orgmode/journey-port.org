@@ -1,5 +1,16 @@
 #+TITLE: Journey: port a package
 #+OPTIONS: toc:nil num:nil
+
+#+begin_export rst
+.. toctree::
+   :maxdepth: 1
+
+   12-eb-stack-updater-and-generator
+   33-inspect-residuals-and-the-plan
+   21-writing-one-from-nothing
+   48-seissol-from-spack-to-a-pr
+#+end_export
+
 #+begin_export rst
 .. figure:: _static/diagrams/journey-port-2.svg
    :alt: conda-forge or Spack through eb-stack to an easyconfig

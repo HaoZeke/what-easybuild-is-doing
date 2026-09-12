@@ -40,11 +40,11 @@
 
 #+begin_prerequisites
 - [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]: the
- claim ladder. This page is the first two rungs' artifacts.
+ claim ladder. this page is the first two rungs' artifacts.
 #+end_prerequisites
 The link [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] placed the conda-forge recipe beside the =.eb= and halted at the residual queue.
 =package inspect= is the command executable from a fresh clone that lacks EasyBuild and a robot tree.
-Its output is the remainder of This page.
+Its output is the remainder of this page.
 The fixture comprises the rattler-build v1 recipe for eOn, captured from the conda-forge feedstock.
 #+begin_example
 eb-stack package inspect \

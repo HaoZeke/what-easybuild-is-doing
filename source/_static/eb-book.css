@@ -857,13 +857,34 @@ main.sy-main {
   padding-right: 2rem;
 }
 
-article.yue {
-  --eb-measure: 72ch;
-}
+
 
 .sy-head {
   border-bottom: 1px solid var(--eb-rule) !important;
   box-shadow: none !important;
+}
+
+@media (max-width: 767.98px) {
+  .sy-head-inner {
+    flex-wrap: wrap;
+  }
+  .sy-head-nav {
+    display: flex !important;
+    flex: 1 1 100%;
+    order: 5;
+    width: 100%;
+  }
+  .sy-head-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    padding: 0.35rem 0 0.15rem;
+    margin: 0;
+    list-style: none;
+  }
+  .js-menu {
+    display: none !important;
+  }
 }
 
 .sy-head a,

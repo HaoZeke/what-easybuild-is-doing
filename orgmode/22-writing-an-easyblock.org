@@ -35,7 +35,7 @@
 - [[file:13-how-a-build-executes.org][How a build executes]]
  organised around the steps.
 - [[file:21-writing-one-from-nothing.org][Writing one from nothing]]
- in This page is whether an easyconfig was enough.
+ in this page is whether an easyconfig was enough.
 - Enough Python to read a class and call a parent method. Nothing more.
 #+end_prerequisites
 An easyblock is Python code executed by EasyBuild.
