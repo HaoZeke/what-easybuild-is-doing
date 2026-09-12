@@ -39,8 +39,8 @@
  the command that still has to be =eb=.
 2. Read a parent bump that exits 1 and say what =companion== and
  =re_run== mean, and when the overlay is done.
-3. Point at the site document that names the generation, and say
- what a =foss/2026.1= recipe does on a =2025= production stack.
+3. Name the generation the production stack already built, and say
+ what a =foss/2026.1= recipe does on that stack.
 4. Tell a git-config checksum of the wrong tarball from a Python
  sanity check that imports the EasyBuild name rather than the
  module.
@@ -122,15 +122,11 @@ work is not eb-stack's.
 * The generation is a site fact
 The newest common toolchain on =develop= in September 2026 is =foss/2026.1=.
 A first bump onto that generation resolves.
-It does not load on SURF Snellius.
-The site document is snelnext.
-Production is =module load 2025=.
-=foss/2025a= is the generation the 2025 stack is built from.
-The SURF 2025 buildlist in =easyconfigs-surf= lists that generation dozens of times.
-=eb -S SeisSol= on a 2025 login node returns only [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]].
-A =foss/2026.1= recipe on that machine asks the robot for a generation the site has not built.
-=--robot= will try to compile GCC 15 and the rest of 2026.1 beside the production 2025 tree.
-That does not consume site resources.
+It does not load on a node whose production stack is =2025=.
+=foss/2025a= is the generation that stack is built from.
+=eb -S SeisSol= on that login node returns only [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]].
+A =foss/2026.1= recipe asks the robot for a generation the site has not built.
+=--robot= will try to compile GCC 15 and the rest of 2026.1 beside the 2025 tree.
 #+begin_predict
 A login node has just run =module load 2025=.
 Which of these four files can =eblocalinstall= resolve against
@@ -154,13 +150,9 @@ The 2025a robot includes Lua 5.4.8 and libxsmm 1.17. easi 1.7.0 provides =lmathx
 A warning states that Lua 5.5 may fail to compile.
 The companion Lua 5.4.8 recipe that a 2026.1 bump would have added is unnecessary on 2025a.
 * The site wrapper is the install
-EasyBuild tutorial from snelnext loads =eb/<latest>= and installs with =eblocalinstall=.
-A raw =eb= with hand-set =--installpath-software= clashes with the SURF wrappers.
-The wrapper writes:
-#+begin_example
-~/.local/easybuild/RHEL9/2025/software
-~/.local/easybuild/RHEL9/2025/modulefiles
-#+end_example
+The site loads =eb/<latest>= and installs with its wrapper, not a raw
+=eb= plus hand-set =--installpath-software=.
+The wrapper writes software and modulefiles under the 2025 prefix.
 * Two defects the first build named
 ** The patch that was no longer the patch
 The first =eblocalinstall= failed on ASAGI.
@@ -175,7 +167,7 @@ The repair is a fetch of the upstream patch, not a new hash of the broken file.
 ASAGI then installed.
 PSpaMM failed sanity:
 
-#+begin_src ebtranscript :source "SURF Snellius, rome node, eblocalinstall, 2026-09-11" :caption "Default PythonPackage import"
+#+begin_src ebtranscript :source "site login node, 2026-09-11" :caption "Default PythonPackage import"
 ModuleNotFoundError: No module named 'pspamm'
 #+end_src
 The easyconfig is named =PSpaMM=.
@@ -194,7 +186,7 @@ A second =eblocalinstall= then completed PSpaMM, easi 1.7.0, and SeisSol 1.3.2.
 The recipe stores it as =local_host_arch=, with =local_order= and =local_equations=.
 =local_binary= and =configopts= are formatted from those three names.
 A site that retargets the arch edits one assignment.
-The binary runs on Rome.
+The binary runs on the login node.
 It is not a zen-tuned binary.
 #+ATTR_EB: :id EB-SeisSol-2 :title Which claim failed
 #+begin_exercise
@@ -231,10 +223,10 @@ It passed style and SHA256.
 =eb --new-pr= opened [[https://github.com/easybuilders/easybuild-easyconfigs/pull/26851][easybuild-easyconfigs#26851]] from the HaoZeke fork onto =develop=.
 The body names the four files and the Lua 5.4 bound on easi 1.7.0.
 =resolves= is the SAT of the 2025a robot plus the overlay.
-=builds= is the Snellius =eblocalinstall= of those four files.
+=builds= is the site wrapper install of those four files.
 A login-node =--help= provides the sanity the recipe declared.
 It is not a TPV run.
-=eb --from-pr 26851 --robot --force= rebuilt the same four files on a Rome node in 14 minutes 49 seconds.
+=eb --from-pr 26851 --robot --force= rebuilt the same four files in 14 minutes 49 seconds.
 All results were SUCCESS.
 That is the report referenced in the PR comment.
 #+ATTR_EB: :id sources-48 :title Where this page comes from :kind sources
@@ -245,9 +237,7 @@ Public artifacts, read 2026-09-12.
  1.3.1; SeisSol release =v1.3.2=.
 - Robot =develop=: [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]],
  [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/e/easi/easi-1.3.0-foss-2023a.eb][easi-1.3.0-foss-2023a.eb]], [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/a/ASAGI/ASAGI-1.0-foss-2023a.eb][ASAGI-1.0-foss-2023a.eb]].
-- SURF snelnext EasyBuild tutorial: =eb/<latest>= and
- =eblocalinstall=. Production stack =2025=.
-- =easyconfigs-surf= 2025 buildlist, =foss-2025a=.
+- Production stack =2025=, generation =foss-2025a=.
 - PR [[https://github.com/easybuilders/easybuild-easyconfigs/pull/26851][#26851]].
 - Test report gist
  [[https://gist.github.com/HaoZeke/6249802ef4d091e27a4153381242174f][HaoZeke/6249802ef4d091e27a4153381242174f]].
@@ -266,8 +256,8 @@ Commands: [[https://eb-stack.rgoswami.me][eb-stack]] parent =package bump=, then
  package-config, not in a hand edit.
 - The generation is the one the site module environment already
  built. Newest-on-develop is a different consume.
-- =eblocalinstall= is the install on Snellius. Raw =eb= with
- hand-set prefixes is the clash the tutorial names.
+- The site wrapper is the install. Raw =eb= with hand-set prefixes
+ is a different consume.
 - A checksum names one archive. A PythonPackage import names one
  module. Neither is the EasyBuild software name.
 #+end_keypoints
