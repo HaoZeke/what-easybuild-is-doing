@@ -44,7 +44,7 @@ A string combined with a name that is *not* =.patch= indicates a copy.
 =('extra-makefile.include', '.')= is a copy due to the name, not the directory.
 =('foo.patch', 'src')= does not represent a copy.
 In either case the file requires a checksum.
-[[checksum.org][A checksum is a claim about bytes]] applies to patches in the same manner as to sources.
+[[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] applies to patches in the same manner as to sources.
 * The strip level
 A diff includes paths.
 Those paths contain a non‑useful prefix.

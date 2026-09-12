@@ -86,7 +86,7 @@ Nothing in the easyconfig requested that.
 * Why the start directory moved
 EasyBuild does not treat the extraction directory as the build directory.
 It looks for the real top of the source tree.
-The rule is worth knowing [[exactly.org][An easyconfig is Python]]'s failure.
+The rule is worth knowing [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]'s failure.
 #+ATTR_EB: :id start-dir-descent :title How the start directory is guessed :kind reference
 #+begin_detail
 =find_base_dir= in =easybuild/tools/filetools.py=, verified against
