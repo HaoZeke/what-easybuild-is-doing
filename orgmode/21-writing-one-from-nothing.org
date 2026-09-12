@@ -224,7 +224,7 @@ A is one SHA256 for one file, recognised as SHA256 by its length.
 
 B is a *tuple*, which means logical OR: either archive satisfies the
 check. It exists for an upstream that re-cut a release without changing
-the version, and it is the one to question
+the version, and it is the form to question. "Either of these
 archives is fine" is a claim somebody has to have actually checked byte
 for byte. Ask which two archives, and why they are equivalent.
 

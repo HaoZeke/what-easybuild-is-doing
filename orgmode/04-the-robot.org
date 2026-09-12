@@ -197,7 +197,6 @@ EasyBuild 5 dropped the implication that =-D= includes =--robot=.
 =eb pkg.eb -D= dry‑runs only the named file.
 The resolved plan is =eb pkg.eb -Dr=.
 [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]] is the page for that change.
-The recordings in This page already pass both letters.
 =-D= / =--dry-run= already retains every dependency.
 It marks each one =[x]= or =[ ]= once =-r= is also on the command line.
 There is no =eb --retain-all-deps=; that name is an internal argument used by =-D=, =--dep-graph=, and =--check-conflicts=.

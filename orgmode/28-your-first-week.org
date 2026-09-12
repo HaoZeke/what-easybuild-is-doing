@@ -207,7 +207,7 @@ Write the commit message. Specifically decide:
 
 * Task three: a user says a module is broken and the report cannot be reproduced
 Zero of 24 regressions occurred.
-The bill is
+The pipeline still billed a full hour.
 ** A pipeline's summary can be empty for two different reasons
 One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.
 A pipeline that summarises a run typically fills a field such as =EasyBuild log:= by grepping its own output for the line that =eb= prints at the end, =Results of the build can be found in the log file(s)=.

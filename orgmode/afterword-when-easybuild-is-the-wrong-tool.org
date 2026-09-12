@@ -92,7 +92,9 @@ It concerns which cost is acceptable.
 A site operating a large machine typically employs more than one of these systems for different user populations.
 This is a sound arrangement rather than an admission of defeat.
 * The part that transfers
-Apply a concept from this book to another packaging system
+A pin, a checksum, and a module name are claims. The same
+questions apply to a Spack spec, a conda pin, and a container
+tag: what object, which bytes, which environment.
 * The end of the book
 EasyBuild's design provides exact versions, curated generations, from-source builds and modulefiles for a shared machine with many more users than maintainers.
 Each of those elements is a trade.

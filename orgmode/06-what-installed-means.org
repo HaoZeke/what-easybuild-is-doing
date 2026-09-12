@@ -32,7 +32,7 @@ A completed build prints a single line and creates one file.
 The line indicates that the install succeeded.
 The file is a modulefile and is the only component a user ever encounters.
 Neither of these confirms that the software functions correctly.
-The distinction comprises the entirety of This page.
+That gap is the subject.
 The gap between them contains bugs that reach a user bearing the developer's name.
 * Existence is the default claim
 After the install step copies files into place, EasyBuild checks the count.

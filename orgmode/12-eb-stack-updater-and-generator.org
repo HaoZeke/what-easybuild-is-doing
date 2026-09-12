@@ -101,7 +101,7 @@ package.sbom.cdx.json
 locks/default.lock.json
 easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb
 #+end_example
-= .eb= artifact built by EasyBuild.
+The =.eb= is an emitted recipe, not an artifact EasyBuild compiled.
 Lock denotes solver assignment.
 Plan includes parsed foreign recipe and residuals; parser‑invented items appear as typed leftovers, not guessed dependencies.
 [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] denotes queue.

@@ -64,7 +64,7 @@ The builtin configuration is always loaded.
 It defines the =generic= system, the =default= partition, the =builtin= environment, and a baseline logging setup.
 A site file *adds* to that; it does not replace it.
 =reframe -l= with no =-C= lists tests against =generic:default+builtin=.
-The STREAM test in a ReFrame test is a class run at all.
+STREAM is a class on the tutorial page. It still needs a configuration file before it runs.
 * A file small enough to read
 The documented skeleton of EESSI is reduced to the keys required for This page.
 #+begin_src python

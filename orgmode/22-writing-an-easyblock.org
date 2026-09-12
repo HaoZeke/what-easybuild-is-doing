@@ -143,7 +143,7 @@ Four things make up the idiom.
 =self.cfg.update= appends to a string or list parameter rather than replacing it.
 This matters when the easyconfig also sets the parameter.
 =self.name=, =self.version=, =self.toolchain= and =self.all_dependencies= are shortcuts to frequently used values.
-*extra_options= is how a parameter is born.* A =@staticmethod= returns a dict of =name: [default, help, category]=.
+*=extra_options= is how a parameter is born.* A =@staticmethod= returns a dict of =name: [default, help, category]=.
 The dict merges with the parent's.
 The category is =CUSTOM= for an optional parameter.
 The category is =MANDATORY= for a parameter the easyconfig must set.
@@ -156,7 +156,7 @@ Wrong order produces a build that works on the local machine.
 The same build fails on a clean machine.
 *Use =setvar=, not =os.environ=.* EasyBuild tracks environment changes.
 They can be logged and reported under [[file:20-reading-a-failed-build.org][Reading a failed build]]'s extended dry run.
-A direct write
+A direct write to =os.environ= is invisible to the dry run.
 * Loading one without installing it
 Try an easyblock without installing into EasyBuild.
 #+begin_example

@@ -115,8 +115,7 @@ own base64 bookkeeping.
 So a devel module is a faithful record rather than a curated one, and
 loading it into a working shell is a decision rather than a habit.
 #+end_reveal
-#+end_predict The fourth artifact is a modulefile.
-It resolves which files a build may access.
+#+end_predict
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; system toolchain, so the compiler variables are the host's" :caption "The generated devel module, first lines"
 $ head -3 ebtest/software/wobble/1.0/easybuild/wobble-1.0-easybuild-devel
 setenv("CC", "gcc")

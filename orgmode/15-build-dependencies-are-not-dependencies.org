@@ -154,13 +154,12 @@ Put each in a list. Then say what single command on the finished install
 would confirm you got HDF5 right, and what would confirm Python.
 
 #+begin_solution
-=builddependencies=: CMake, Catch2, pkgconf. Catch2
-during the build and are not installed; if the easyconfig installed the
+=builddependencies=: CMake, Catch2, pkgconf. Catch2 is used
+during the build and is not installed; if the easyconfig installed the
 test binary for users to run, the answer would change.
 
 =dependencies=: HDF5, Python. Python is in both roles and the runtime one
-wins
-build is long gone.
+wins. The build-time Python is long gone.
 
 For HDF5: =ldd= on the installed binaries, looking for
 =libhdf5.so=. If the binary links it, the module must declare it.

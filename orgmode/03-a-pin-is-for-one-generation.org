@@ -183,8 +183,7 @@ The real bound is in the project's own build system, or in a packaging
 format that can express a condition. =find_package(HDF5 1.10 REQUIRED)=
 in CMake is an answer. A =requires-python= or a dependency specifier in
 =pyproject.toml= is an answer. A conda-forge recipe or a Spack
-=package.py= is an answer
-constraint.
+=package.py= is an answer.
 
 "The older generation carried an older one and the build passed" is not
 an answer to that question, though it answers a different one perfectly

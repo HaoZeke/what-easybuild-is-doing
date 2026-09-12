@@ -202,9 +202,9 @@ and roughly how much compiler time would that have saved?
 =sources= is templated, so the name that failed may not be the text in
 the file.
 
-2 is =ready=, and it is not about your package: the toolchain module's
-direct dependencies do not match what its class expects. No parameter of
-yours reaches that check.
+2 is =prepare=. =_verify_toolchain= raises "List of toolchain
+dependency modules and toolchain definition do not match" there,
+not under =ready=. No parameter of yours reaches that check.
 
 3 is =configure=. Read =configopts= and =preconfigopts=. The usual cause
 is a dependency that is not in =dependencies=, so =prepare= never loaded

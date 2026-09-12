@@ -60,7 +60,7 @@ That element is a dictionary rather than a string.
 The dictionary maps filenames to checksums.
 The dictionary contains two entries for the single source.
 Both facts are required to interpret the structure.
-The dictionary exists.org][An easyconfig is Python]].
+The dictionary exists. [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
 The single line can resolve to different filenames on x86-64 and on aarch64.
 One source line therefore yields two possible files.
 The dictionary indicates which checksum belongs to each file.

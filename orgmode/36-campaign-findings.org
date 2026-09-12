@@ -52,8 +52,8 @@
 It remains in the foreground until all recipes and verification commands finish.
 It also remains until a typed failure is recorded.
 The state file provides the coordination surface.
-In the campaign reference, Hermes denotes an owner that classifies and retries.
-In the campaign reference, OMP denotes optional concurrent workers whose only shared lock is acquiring ownership.
+The campaign reference names an owner that classifies and retries.
+It also names optional concurrent workers whose only shared lock is acquiring ownership.
 They are not required software components.
 #+begin_example
 eb-stack campaign run \

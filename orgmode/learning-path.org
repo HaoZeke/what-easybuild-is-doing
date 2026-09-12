@@ -119,7 +119,8 @@ The sequence consists of a test class, the pipeline, the configuration file, a p
 There are two levels.
 The grain matches the recipe.
 * Level G. Write a ReFrame test
-The d
+A decorated class, a sanity function, and a configuration file.
+Two hours.
 * Level H. Run a portable suite
 Two hours.
 Needs G. [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]] compares =parameter= against =variable= and explores the cartesian product.
