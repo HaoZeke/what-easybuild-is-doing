@@ -47,8 +47,8 @@
 - [[file:18-language-ecosystems.org][Languages that bring their own package manager]]: Python
  extensions. =EBPYTHONPREFIXES= is how a second prefix is
  visible.
-- [[file:14-the-isolation-policy.org][What a build is allowed to see]]: what a build
- is allowed to see. =--bwrap= is a later isolation.
+- [[file:14-the-isolation-policy.org][The isolation policy]]: the
+ build's environment. =--bwrap= is a later isolation.
 #+end_prerequisites
 Four EasyBuild 5 surfaces appear beside the machinery in pages 13-19.
 They lack a page.
@@ -80,7 +80,7 @@ The goal includes a CernVM-FS or similar read‑only view that cannot be written
 The overlayfs work in 5.4.0 enables EESSI‑style writable‑over‑read‑only installations to use this approach.
 RPATH wrappers still fail when =/tmp= is mounted with =noexec= (EasyBuild #4910).
 A =--bwrap= detection that appears as a missing linker is frequently caused by that mount option.
-The isolation policy defines what a build is allowed to see.
+The isolation policy defines the build's environment.
 This flag represents one implementation.
 * EBPYTHONPREFIXES and entry points
 EasyBuild allows a Python installation to see packages in another prefix via =EBPYTHONPREFIXES=.

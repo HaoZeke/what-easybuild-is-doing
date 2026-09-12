@@ -31,7 +31,7 @@
 3. Choose between a devel module, a dumped script, a =BuildEnv= module
  and a container, on stated grounds.
 #+end_objectives
-[[file:14-the-isolation-policy.org][What a build is allowed to see]] measured that loading =foss/2025a= sets =EBROOTFOSS=; =$CC= remains unset.
+[[file:14-the-isolation-policy.org][The isolation policy]] measured that loading =foss/2025a= sets =EBROOTFOSS=; =$CC= remains unset.
 EasyBuild constructs the build environment during =prepare=; evaporation at run end is expected.
 Evaporation does not occur.
 The page discusses the location of the missing environment.
@@ -233,7 +233,7 @@ these, and which artifact answers it:
 
 3. =reprod/<ec>.env=, which is the environment script, or the devel module,
  which records what the build's environment actually became. Both are on
- disk. Loading the toolchain module would not tell you, for What a build is allowed to see's
+ disk. Loading the toolchain module would not tell you, for the isolation policy's
  reason.
 
 4. Probably not, and the artifacts say why rather than hiding it.

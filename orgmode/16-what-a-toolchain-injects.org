@@ -32,7 +32,7 @@
 [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] covered the dependencies a toolchain makes visible.
 This page addresses the other half: the impact on the compiler.
 * The variables, and where they are not
-[[file:14-the-isolation-policy.org][What a build is allowed to see]] measured the surprising part.
+[[file:14-the-isolation-policy.org][The isolation policy]] measured the surprising part.
 Restating is worthwhile.
 Loading a toolchain module provides =EBROOTFOSS= and =EBVERSIONFOSS=.
 =$CC= is not provided.
@@ -50,7 +50,7 @@ A =foss= build receives, among others, the following variables:
 The final row explains why a =foss= easyconfig seldom names a BLAS.
 The toolchain identifies the BLAS and supplies the build with its link line.
 An easyconfig that hardcodes =-lopenblas= describes a specific toolchain and will become incorrect for subsequent toolchains.
-The practical consequence matches that described in What a build is allowed to see.
+The practical consequence matches that described in the isolation policy.
 Reproducing a build's environment requires more than loading its toolchain.
 =eb --dump-env-script= is necessary, as explained in [[file:24-development-environments.org][Standing where the build stood]].
 * toolchainopts is a dictionary of switches

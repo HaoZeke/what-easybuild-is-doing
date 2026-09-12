@@ -204,7 +204,7 @@ modules.
 
 4 will set =$CC= for a user who loads the module, and will do nothing
 for a build. A build's environment is constructed in =prepare=, as
-[[file:14-the-isolation-policy.org][What a build is allowed to see]] describes, and its =$CC=
+[[file:14-the-isolation-policy.org][The isolation policy]] describes, and its =$CC=
 comes from the toolchain object rather than from any module. Those builds need
 =toolchainopts = {'usempi': True}= in the consuming easyconfig, which is
 [[file:16-what-a-toolchain-injects.org][What a toolchain injects]].

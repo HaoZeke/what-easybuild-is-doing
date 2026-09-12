@@ -21,7 +21,7 @@
 
    How it runs is two commands. A dry-run is not an install.
 #+end_export
-Eighteen steps describe what a build is allowed to see and what a module exports.
+Eighteen steps describe the isolation policy and what a module exports.
 The machinery exists.
 #+begin_export rst
 .. toctree::

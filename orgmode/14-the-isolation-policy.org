@@ -1,4 +1,4 @@
-#+TITLE: What a build is allowed to see
+#+TITLE: The isolation policy
 
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst

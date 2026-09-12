@@ -213,7 +213,7 @@ smallest change that makes the claim true.
 #+end_solution
 #+end_exercise
 
-* What the PR is allowed to say
+* The overlay the PR names
 The overlay is four files on the 2025 generation.
 
 - ASAGI 1.0, easi 1.7.0, PSpaMM 0.3.1 on =gfbf-2025a=, SeisSol 1.3.2.

@@ -87,7 +87,7 @@ Three hours.
 B and C are required.
 Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps.
 Read [[file:13-how-a-build-executes.org][How a build executes]] for the mapping of each parameter to its owner.
-Read [[file:14-the-isolation-policy.org][What a build is allowed to see]] for the visibility constraints of a build.
+Read [[file:14-the-isolation-policy.org][The isolation policy]] for the visibility constraints of a build.
 Read [[file:15-build-dependencies-are-not-dependencies.org][Build dependencies are not dependencies]] for the three dependency kinds.
 Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =toolchainopts=.
 Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =optarch=.
