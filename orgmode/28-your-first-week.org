@@ -21,7 +21,6 @@
 Previous rewrite failed the voice gate: closed-class nearer rejected tell-pairs (Δ=0.0443).
 Rewrite again without those hinges.
 Keep every fact.
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.

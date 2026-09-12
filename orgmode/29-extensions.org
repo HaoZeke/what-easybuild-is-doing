@@ -127,7 +127,6 @@ restore_options = (
 Previous rewrite failed the voice gate: rgoswami.AIVocabulary.
 Rewrite again without those hinges.
 Keep every fact.
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.
@@ -175,7 +174,6 @@ exts_filter = ("python -c 'import %(ext_name)s'", '')
 #+end_example
 Previous attempt returned empty.
 Return the rewrite.
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.

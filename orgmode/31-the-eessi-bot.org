@@ -75,8 +75,6 @@ The bot defines an interface.
 The *target repository* owns =bot/build.sh= and =bot/test.sh=.
 Builds run in a container so =/cvmfs= is writable, the view inside is controlled, and a machine that does not mount EESSI natively can still build.
 * The comment language
-Rewrite the org-mode prose.
-Preserve org markup such as =foo= and [[links]].
 Instructions start with =bot:=.
 =bot: help= and =bot: show_config= do not initiate work.
 The command that initiates work is from bot 0.9.0:.

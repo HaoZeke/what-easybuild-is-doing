@@ -22,7 +22,6 @@
 - [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]], for
  the product those hooks run on.
 #+end_prerequisites
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.

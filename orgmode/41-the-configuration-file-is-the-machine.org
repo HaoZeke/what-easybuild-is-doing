@@ -109,7 +109,6 @@ Tests request them from =valid_prog_environs=.
 valid_systems = ['+gpu -login %arch=zen2']
 valid_prog_environs = ['+foss', '+intel']
 #+end_src
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.

@@ -48,8 +48,6 @@ List the versions directory and verify that a version is valid before using it.
 #+begin_example
 ls /cvmfs/software.eessi.io/versions/<ver>/init/lmod/bash
 #+end_example
-Rewrite this org-mode prose.
-Keep org markup such as =foo= and [[links]].
 A listed version may be an empty placeholder lacking any =init/=.
 Speculatively descending into such a placeholder can wedge the filesystem client for all host users.
 The lookup neither resolves nor raises an error, and readers accumulate in an uninterruptible state beyond any timeout reach.

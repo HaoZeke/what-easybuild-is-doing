@@ -90,7 +90,6 @@ These illustrate how a suite avoids defining a separate class for each module.
 * What the generated job script actually contains
 Previous attempt returned empty.
 Return the rewrite.
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.

@@ -59,8 +59,6 @@ The test runs an existing executable.
 The next two chapters describe the associated costs.
 A test that builds and a test that runs a module use different base classes.
 * Two constraints, then a verdict
-Rewrite this org-mode prose.
-Keep org markup such as =foo= and [[links]].
 Each test must define =valid_systems= and =valid_prog_environs=.
 These entries are not documentation.
 The framework filters tests using the current system and the current programming environment.

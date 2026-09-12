@@ -21,7 +21,6 @@
 - [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]], for the
  performance stage.
 #+end_prerequisites
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.

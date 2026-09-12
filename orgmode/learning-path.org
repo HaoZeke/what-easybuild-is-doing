@@ -41,7 +41,6 @@ It will download.
 It will search for an easyblock.
 It may use dependencies.
 * Level B. Understand why a build fails
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.
@@ -84,7 +83,6 @@ Needs D.
 Testing, and the four things it can mean names the fourth kind and stops.
 [[file:part-a-test.org][The test]] is that kind.
 * Level F. Distribute a stack
-Write like these.
 Counts first.
 Impersonal.
 No drumroll.
