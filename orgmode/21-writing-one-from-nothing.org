@@ -136,7 +136,6 @@ A =None= entry skips verification for that file, and
 =--enforce-checksums= turns that skip back into an error, which is what a
 site building a shared stack needs set.
 #+end_detail
-Rewrite the org-mode prose.
 The grammar (see [[dive:checksum-grammar]]) is most important for reading another's easyconfig.
 The written form does not indicate whether two checksums represent either or both.
 * The two checks before a recipe leaves the machine

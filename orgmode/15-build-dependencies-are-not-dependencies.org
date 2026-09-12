@@ -50,7 +50,6 @@ dependencies = [
 They are not.
 The modulefile shows where the difference appears.
 * The module is the difference
-Please provide the org-mode prose you would like rewritten.
 #+begin_src ebtranscript :source "SURF Snellius, generated modulefile, 2026-09-10, EasyBuild 5.3.1" :caption "Seven dependencies went in; four came out"
 $ sed -n '/^depends_on/p' \
 > /sw/arch/.../modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua
