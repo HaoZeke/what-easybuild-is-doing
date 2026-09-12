@@ -15,6 +15,7 @@ sphinx = ">=9,<10"
 shibuya = ">=2025.12.13,<2026"
 sphinx-copybutton = "*"
 sphinx-design = "*"
+sphinxcontrib-bibtex = "*"
 
 [feature.docs.tasks]
 engine-data = { cmd = "bash scripts/gen-engine-data.sh", description = "export the engine tables (name encoding, templates, hierarchies) from eb-stack" }
