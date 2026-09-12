@@ -1,19 +1,26 @@
 #+TITLE: Build dependencies are not dependencies
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  builddeps --> compile
-deps --> module
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/15-build-dependencies-are-not-dependencies-2.svg
+   :alt: builddependencies feed compile; dependencies feed the module
+   :class: eb-diagram
+
+   Two lists, almost the same syntax. Only dependencies appear in the generated module.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/15-build-dependencies-are-not-dependencies.svg
-   :alt: two lists
+   :alt: builddependencies at compile time; dependencies in the module
    :class: eb-diagram
 
-   two lists.
+   Two lists. Mixing them ships CMake to users or hides HDF5 from them.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/15-two-lists-fate.svg
+   :alt: builddependencies end at compile; dependencies remain on load
+   :class: eb-diagram
+
+   Two lists. A builddependency is gone after install. A dependency is what the module still needs.
 #+end_export
 
 #+begin_objectives

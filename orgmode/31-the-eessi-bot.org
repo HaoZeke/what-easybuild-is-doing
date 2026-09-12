@@ -1,17 +1,25 @@
 #+TITLE: The bot is three processes and a comment
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  comment --> bot: build --> artifact
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/31-the-eessi-bot-2.svg
+   :alt: a comment starts three processes; a tarball still has to be ingested
+   :class: eb-diagram
+
+   The bot is three processes and a comment. A green job is not a module on a login node until ingest.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/31-the-eessi-bot.svg
-   :alt: bot
+   :alt: a PR comment starts a build; ingest is later
    :class: eb-diagram
 
-   bot.
+   A bot: build comment starts a job. A module on a login node is a later process.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/31-three-processes.svg
+   :alt: comment to bot process to arch worker to artifact
+   :class: eb-diagram
+
+   The bot is three processes and a comment. A human trigger is a comment, not a login on the build node.
 #+end_export
 
 #+begin_questions

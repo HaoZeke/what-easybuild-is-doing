@@ -1,17 +1,25 @@
 #+TITLE: A hook changes a file you are not reading
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  easyconfig --> hook --> written file
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/09-a-hook-changes-a-file-you-are-not-reading-2.svg
+   :alt: a hook rewrites the file after the easyconfig is read; an overlay is a different lever
+   :class: eb-diagram
+
+   A hook changes a file that is not the one on the page. It starts with a guard. An overlay is a different tool.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/09-a-hook-changes-a-file-you-are-not-reading.svg
-   :alt: hooks
+   :alt: easyconfig through a hook to the written file
    :class: eb-diagram
 
-   hooks.
+   A hook runs on a file the reader is not looking at. The easyconfig on the page is not the last word.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/09-hook-on-stage.svg
+   :alt: pre-hook, stage, post-hook
+   :class: eb-diagram
+
+   A hook runs on a stage. The easyconfig on the page is not the file the hook rewrites.
 #+end_export
 
 #+begin_objectives

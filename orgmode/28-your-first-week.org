@@ -1,18 +1,26 @@
 #+TITLE: Your first week on somebody's stack
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  read --> build --> module --> ticket
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/28-your-first-week-2.svg
+   :alt: avail, load, then extend the stack rather than replace it
+   :class: eb-diagram
+
+   The first week is reading the tree that is already there. Extend it. Do not fork it.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/28-your-first-week.svg
-   :alt: first week
+   :alt: read the tree, then extend it
    :class: eb-diagram
 
-   first week.
+   The first week is somebody else's stack. Extend it. Do not replace it.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/28-first-week-path.svg
+   :alt: site docs, then avail, then one package, then a ticket
+   :class: eb-diagram
+
+   The first week is a path through somebody else's stack, not a rewrite of it.
 #+end_export
 
 #+begin_objectives
@@ -31,15 +39,6 @@ flowchart LR
  versions and suffixes.
 - Read access to whatever repository your site keeps its easyconfigs in.
 #+end_prerequisites
-Previous rewrite failed the voice gate: closed-class nearer rejected tell-pairs (Δ=0.0443).
-Rewrite again without those hinges.
-Keep every fact.
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state
 * What is between the operator and eb
 The chapter does not address EasyBuild's defaults.
 Before the first task, locate the five items in the site repository.
@@ -207,17 +206,7 @@ Write the commit message. Specifically decide:
 #+end_exercise
 
 * Task three: a user says a module is broken and the report cannot be reproduced
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24).
-On OptBench the dimer fires near a shallow basin.
-Seven of 59 cases regress on OptBench.
-OCI-NEB cut the Baker-Chan force count from 13920 to 5712.
 Zero of 24 regressions occurred.
-Every number traces to a Snellius job.
-The index is in the appendix.
-Packing jobs does not save SBU.
 The bill is
 ** A pipeline's summary can be empty for two different reasons
 One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.

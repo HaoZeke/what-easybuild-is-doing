@@ -1,17 +1,25 @@
 #+TITLE: At the back
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  samples --> citations --> build
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/colophon-2.svg
+   :alt: samples and citations sit behind the book build
+   :class: eb-diagram
+
+   The colophon names where this runs, what the samples are, and who wrote it.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/colophon.svg
-   :alt: colophon
+   :alt: samples, citations, build
    :class: eb-diagram
 
-   colophon.
+   Where this runs, what the samples are, who wrote it.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/colophon-where-it-runs.svg
+   :alt: samples and citations feed the build at the back
+   :class: eb-diagram
+
+   The colophon is where the book runs, what the samples are, and who wrote it.
 #+end_export
 
 * Where this runs

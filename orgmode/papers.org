@@ -1,22 +1,26 @@
 #+TITLE: References
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  cite --> bib --> page
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/papers-2.svg
+   :alt: a page cite resolves through the bibliography to a paper
+   :class: eb-diagram
+
+   References are a bibliography. They are not a reading log.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/papers.svg
-   :alt: papers
+   :alt: cite to bibliography to page
    :class: eb-diagram
 
-   papers.
+   References are a bibliography.
 #+end_export
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712. There are 0/24 regressions. Mean cost fell 31%, from 409 to 280 evaluations. 21 of 24 systems improved. 3 of 24 regressed by up to 18% on shallow basins. The consultancy question is not "is DMC good". The question includes three practical items: the efficient run on this machine, the honest SBU cost, and the time before the answer stops moving. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used
+#+begin_export rst
+.. figure:: _static/diagrams/papers-cite-on-page.svg
+   :alt: a paper is cited on the page that uses it
+   :class: eb-diagram
+
+   References are the papers the pages opened, not a reading log.
+#+end_export
 #+begin_export rst
 .. bibliography::
  :all:

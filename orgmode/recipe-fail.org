@@ -1,17 +1,25 @@
 #+TITLE: When it fails
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  log --> cause --> fix
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-fail-2.svg
+   :alt: a log to a usual cause to the chapter that names it
+   :class: eb-diagram
+
+   When it fails: the log, then the chapter that already named that cause.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-fail.svg
-   :alt: recipe fail
+   :alt: log to cause to fix
    :class: eb-diagram
 
-   recipe fail.
+   When it fails: the log, then the chapter that named that cause.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-fail-causes.svg
+   :alt: usual fail causes: pin, versionsuffix, isolation, checksum
+   :class: eb-diagram
+
+   When it fails, the log names a stage. The usual causes are a pin, a suffix, isolation, or bytes.
 #+end_export
 Parameters that are misread cause the greatest time consumption.
 The log shows that the file is not the problem.

@@ -1,10 +1,11 @@
 #+TITLE: A toolchain is a hierarchy
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  system --> GCCcore --> GCC --> foss
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/02-a-toolchain-is-a-hierarchy-2.svg
+   :alt: a foss-2025a package may depend on each toolchain below it
+   :class: eb-diagram
+
+   A package on foss may depend on anything below foss in the same generation. It may not depend across generations.
 #+end_export
 
 #+begin_questions
@@ -41,6 +42,13 @@ toolchain = {'name': 'foss', 'version': '2025a'}
    :class: eb-diagram
 
    foss-2025a hierarchy. A package on foss may depend on anything below it in this walk.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/02-modulepath-layers.svg
+   :alt: Core under Compiler under MPI under foss
+   :class: eb-diagram
+
+   A toolchain names a modulepath walk. foss may depend on anything below it, including system.
 #+end_export
 The structure defines which versions of which libraries a package on this toolchain may see.
 [[cite:geimerModernScientificSoftware2014][Geimer, Hoste and McLay 2014]] explains the *module* tree shape.
@@ -133,7 +141,7 @@ questions.
 #+end_exercise
 
 * The system toolchain is not always in it
-Please provide the org‑mode prose you would like rewritten.
+The same docstring subsequently qualifies the bottom of the list.
 #+begin_quote
 The system toolchain is considered the most minimal subtoolchain only
 if the =add_system_to_minimal_toolchains= build option is enabled.

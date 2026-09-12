@@ -1,18 +1,5 @@
 #+TITLE: RecipeReader
 #+OPTIONS: toc:nil num:nil
-#+begin_export rst
-.. figure:: _static/illustrations/recipe-reader.jpg
-   :alt: RecipeReader plate
-   :class: eb-diagram
-
-   RecipeReader.
-#+end_export
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  file --> evaluate --> module
-</pre>
-#+end_export
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker
@@ -38,6 +25,13 @@ The file defines recipe creation when none exists.
    :class: eb-diagram
 
    RecipeReader: the file becomes a module.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/part-recipe-mechanisms.svg
+   :alt: RecipeReader: pin, robot, sanity, execute, write
+   :class: eb-diagram
+
+   RecipeReader is the file becoming a module. These are the mechanisms the file defines.
 #+end_export
 Start with the [[file:00-tutorial-read-an-easyconfig.org][tutorial]].
 The tutorial takes about twenty minutes.

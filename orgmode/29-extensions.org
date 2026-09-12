@@ -1,18 +1,26 @@
 #+TITLE: Extensions, and what an entry in exts_list inherits
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  exts_list --> bundle --> one module
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/29-extensions-2.svg
+   :alt: exts_list entry: name, version; optional sources and checksums
+   :class: eb-diagram
+
+   An exts_list entry inherits the parent easyconfig. Templates rebind inside the entry.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/29-extensions.svg
-   :alt: extensions
+   :alt: parent easyconfig to exts_list entries
    :class: eb-diagram
 
-   extensions.
+   An extension inherits the parent. Templates rebind inside the entry.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/29-ext-inherits-parent.svg
+   :alt: an extension inherits the parent toolchain and lands in one module
+   :class: eb-diagram
+
+   An exts_list entry does not pick a toolchain. It inherits the parent's and installs into that module.
 #+end_export
 
 #+begin_objectives
@@ -137,14 +145,6 @@ restore_options = (
  'sources',
 )
 #+end_example
-Previous rewrite failed the voice gate: rgoswami.AIVocabulary.
-Rewrite again without those hinges.
-Keep every fact.
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the
 * exts_filter decides the same question twice
 =exts_filter= is a pair =(command, input)=.
 Each half is a template resolved per extension with =%(ext_name)s=, =%(ext_version)s= and =%(src)s=.
@@ -187,11 +187,6 @@ exts_filter = ("python -c 'import %(ext_name)s'", '')
 #+end_example
 Previous attempt returned empty.
 Return the rewrite.
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated
 #+ATTR_EB: :id docs-vs-code-exts :title Documentation and code, on extension options :kind discrepancy
 #+begin_detail
 Three behaviours that are in the code and not on the documentation site,

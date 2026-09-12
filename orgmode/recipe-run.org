@@ -1,17 +1,25 @@
 #+TITLE: How it runs
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  eb --> log --> module
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-run-2.svg
+   :alt: eighteen steps, then isolation, then what the module exports
+   :class: eb-diagram
+
+   How it runs: the steps, what the build may see, and what the module then exports.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-run.svg
-   :alt: recipe run
+   :alt: eb to log to module
    :class: eb-diagram
 
-   recipe run.
+   How it runs: eb, the log, the module.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-run-dry-vs-install.svg
+   :alt: dry-run prints the plan; install writes the module
+   :class: eb-diagram
+
+   How it runs is two commands. A dry-run is not an install.
 #+end_export
 Eighteen steps describe what a build is allowed to see and what a module exports.
 The machinery exists.

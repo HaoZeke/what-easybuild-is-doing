@@ -1,18 +1,26 @@
 #+TITLE: Testing, and the four things it can mean
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  smoke --> sanity --> unit --> ReFrame
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/23-testing-2.svg
+   :alt: four distinct questions: suite, sanity, report, ReFrame
+   :class: eb-diagram
+
+   Four things are called testing. None of them substitutes for another.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/23-testing.svg
-   :alt: four kinds
+   :alt: four kinds of testing, not one pipeline
    :class: eb-diagram
 
-   four kinds.
+   Testing names four questions. A green suite is not a sanity check, a report, or a ReFrame run.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/23-four-test-meanings.svg
+   :alt: smoke, sanity, unit, and ReFrame are four different objects
+   :class: eb-diagram
+
+   Testing names four objects. Only ReFrame is a class that runs on a partition.
 #+end_export
 
 #+begin_objectives

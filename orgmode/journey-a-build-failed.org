@@ -1,24 +1,18 @@
 #+TITLE: Journey: a build failed
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
-.. figure:: _static/illustrations/failed-build.jpg
-   :alt: failed build plate
+.. figure:: _static/diagrams/journey-a-build-failed.svg
+   :alt: log to start_dir to the pin
    :class: eb-diagram
 
-   A failed build is a missing path and a pin.
-#+end_export
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  log --> start_dir --> pin
-</pre>
+   A failed build starts at the log, then the chapter that names the cause.
 #+end_export
 #+begin_export rst
-.. figure:: _static/diagrams/journey-a-build-failed.svg
-   :alt: journey fail
+.. figure:: _static/diagrams/journey-fail-pages.svg
+   :alt: failed-build journey through the log, versionsuffix, and installed
    :class: eb-diagram
 
-   journey fail.
+   The failed-build journey is the log, then the parameters that usually caused it.
 #+end_export
 The log appears first.
 The parameters that usually caused it follow.

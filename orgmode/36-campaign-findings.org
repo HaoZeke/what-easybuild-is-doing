@@ -1,17 +1,25 @@
 #+TITLE: A campaign finding is a typed failure, not a log
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  plan --> build --> finding
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/36-campaign-findings-2.svg
+   :alt: a campaign finding is a typed failure, not the raw log
+   :class: eb-diagram
+
+   A finding is a typed failure. The log is evidence. They are not the same object.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/36-campaign-findings.svg
-   :alt: campaign
+   :alt: a typed failure, not a log
    :class: eb-diagram
 
-   campaign.
+   A campaign finding is a typed failure. The log is not the finding.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/36-campaign-to-claim.svg
+   :alt: plan, build, finding, claim
+   :class: eb-diagram
+
+   A campaign finding is not a vibe. It becomes a claim with a file behind it.
 #+end_export
 
 #+begin_questions
@@ -153,12 +161,6 @@ eb-stack campaign status --state "$STATE" |
  select(.status == "open" or .status == "in-progress") |
  {id, class, stage, recipe, summary, owner}]}'
 #+end_example
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 571
 #+ATTR_EB: :id EB-Campaign-1 :title Class this failure
 #+begin_exercise
 Four terminal failures. Name =class= and the first repair, and say

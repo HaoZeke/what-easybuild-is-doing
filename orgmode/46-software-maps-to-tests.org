@@ -1,17 +1,25 @@
 #+TITLE: Software maps to tests
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  module --> yml --> suite
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/46-software-maps-to-tests-2.svg
+   :alt: an installed module maps through YAML to a suite
+   :class: eb-diagram
+
+   Software maps to tests. The map is a file, not a convention in the class name.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/46-software-maps-to-tests.svg
-   :alt: map
+   :alt: module through YAML to a suite
    :class: eb-diagram
 
-   map.
+   Software maps to tests through a file.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/46-pr-vs-nightly.svg
+   :alt: a new module hits the map; PR and nightly are two uses
+   :class: eb-diagram
+
+   The map says what runs when a module lands. A missing entry is a silent next morning.
 #+end_export
 
 #+begin_questions

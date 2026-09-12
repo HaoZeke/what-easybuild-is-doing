@@ -1,17 +1,25 @@
 #+TITLE: Compile or run-only
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  sources --> compile OR run-only
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/43-compile-or-run-only-2.svg
+   :alt: sources feed compile; a run-only test skips that work
+   :class: eb-diagram
+
+   Compile or run-only. Loading a module is the EasyBuild join, not a third kind of test.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/43-compile-or-run-only.svg
-   :alt: compile vs run
+   :alt: sources compile, or the test is run-only
    :class: eb-diagram
 
-   compile vs run.
+   Compile or run-only. Those are the two shapes.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/43-compile-vs-runonly.svg
+   :alt: RegressionTest compiles sources; RunOnlyRegressionTest loads a module
+   :class: eb-diagram
+
+   Compile or run-only is a class choice. valid_prog_environs on a run-only test is not a compiler claim.
 #+end_export
 
 #+begin_questions
@@ -103,12 +111,6 @@ These illustrate how a suite avoids defining a separate class for each module.
 * What the generated job script actually contains
 Previous attempt returned empty.
 Return the rewrite.
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan
 #+begin_example
 #!/bin/bash
 stream.x

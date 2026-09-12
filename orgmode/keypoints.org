@@ -1,18 +1,26 @@
 #+TITLE: What to remember
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  claim --> page --> check
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/keypoints-2.svg
+   :alt: each chapter yields a claim and what would falsify it
+   :class: eb-diagram
+
+   Keypoints are produced from the chapters. They are claims, not slogans.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/keypoints.svg
-   :alt: keypoints
+   :alt: claim, page, check
    :class: eb-diagram
 
-   keypoints.
+   What to remember is a claim plus the page that would falsify it.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/keypoints-claim-check.svg
+   :alt: a keypoint is a claim a page already taught, then a check
+   :class: eb-diagram
+
+   What to remember is a claim with a page behind it.
 #+end_export
 Keypoints for each chapter are produced in reading order directly from the chapters instead of manual maintenance.
 The Carpentries refer to this as a digest ([[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]]).

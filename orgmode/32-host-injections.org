@@ -1,17 +1,25 @@
 #+TITLE: A site stack next to EESSI, not inside it
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  site MPI --> inject --> EESSI tree
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/32-host-injections-2.svg
+   :alt: site stack joins MODULEPATH beside EESSI, not inside the mount
+   :class: eb-diagram
+
+   A site stack is next to EESSI. Injecting into the mount is a different, wrong, object.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/32-host-injections.svg
-   :alt: host inject
+   :alt: site stack beside EESSI
    :class: eb-diagram
 
-   host inject.
+   Host injections sit next to EESSI. They do not write into the mount.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/32-beside-not-inside.svg
+   :alt: site MPI injected beside EESSI, not copied into it
+   :class: eb-diagram
+
+   A host injection is next to EESSI. It does not rewrite the CVMFS tree.
 #+end_export
 
 #+begin_questions

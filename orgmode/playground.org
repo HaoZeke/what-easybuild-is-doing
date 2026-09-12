@@ -1,27 +1,27 @@
 #+TITLE: Playground
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  try --> widget --> reset
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/playground-2.svg
+   :alt: a playground widget talks to the in-page model; reload resets it
+   :class: eb-diagram
+
+   The playground is the model without the chapter. Nothing here is installed.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/playground.svg
-   :alt: playground
+   :alt: try, widget, reset
    :class: eb-diagram
 
-   playground.
+   The playground is the in-page model without the chapter.
 #+end_export
-Previous rewrite failed the voice gate: rgoswami.AIVocabulary.
-Rewrite again without those hinges.
-Keep every fact.
+#+begin_export rst
+.. figure:: _static/diagrams/playground-widget-model.svg
+   :alt: a playground widget evaluates the model; reset restores it
+   :class: eb-diagram
 
-Counts first.
-Impersonal.
-No drumroll.
+   The playground is the same model the chapters teach, with a reset.
+#+end_export
 
-TS exploration methods identify a candidate
 * Parse
 
 #+begin_src easyconfig :widget parse :hydrate load

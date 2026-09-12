@@ -1,17 +1,25 @@
 #+TITLE: A wrapper is the range EasyBuild will not write
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  old name --> .modulerc --> new module
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/37-wrapping-and-modulerc-2.svg
+   :alt: old module name maps to a newer module
+   :class: eb-diagram
+
+   A wrapper or .modulerc is the range EasyBuild will not write. The pin in the file stays exact.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/37-wrapping-and-modulerc.svg
-   :alt: wrap
+   :alt: a wrapper maps an old name to a newer module
    :class: eb-diagram
 
-   wrap.
+   A wrapper is the range EasyBuild will not write.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/37-wrap-is-not-range.svg
+   :alt: ModuleRC maps an old name; the recipe still has no range
+   :class: eb-diagram
+
+   A wrapper is the range EasyBuild will not write in a recipe. The pin law in RecipeReader still holds.
 #+end_export
 
 #+begin_questions

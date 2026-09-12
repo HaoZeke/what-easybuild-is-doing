@@ -1,18 +1,26 @@
 #+TITLE: The same stack somewhere else
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  siteA --> CVMFS --> siteB
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/26-the-same-stack-somewhere-else-2.svg
+   :alt: two sites mount the same Stratum-0 and see the same module tree
+   :class: eb-diagram
+
+   The same stack somewhere else is the same mount, not a rebuild.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/26-the-same-stack-somewhere-else.svg
-   :alt: same stack
+   :alt: the same mount at another site
    :class: eb-diagram
 
-   same stack.
+   The same stack somewhere else is the same CernVM-FS tree.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/26-same-modules-other-host.svg
+   :alt: one CVMFS tree mounted on two hosts
+   :class: eb-diagram
+
+   The stack is the same bytes. The host is not. Compatibility is a client fact, not a rebuild.
 #+end_export
 
 #+begin_objectives
@@ -85,16 +93,10 @@ The stack is then one =module use= away.
 module use /cvmfs/software.eessi.io/init/modules
 module load EESSI/2023.06
 #+end_example
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition
 #+begin_example
 unset MODULEPATH
 source /cvmfs/software.eessi.io/versions/2023.06/init/lmod/bash
 #+end_example
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier equals the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712. The cut incurred 0/24 regressions. Every number traces to a Snellius job. The index is in the appendix. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used.
 * Route two: no root
 Two mechanisms exist for two different reasons.
 =cvmfsexec= mounts a repository *without* privileges, using user namespaces.

@@ -1,17 +1,25 @@
 #+TITLE: Format, lint, and check are three different questions
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  .eb --> style --> checksums
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/34-recipe-format-lint-check-2.svg
+   :alt: format, lint, and check are three different questions
+   :class: eb-diagram
+
+   Format asks about layout. Lint asks about local rules. Check asks whether the file can build.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/34-recipe-format-lint-check.svg
-   :alt: lint
+   :alt: format, lint, and check
    :class: eb-diagram
 
-   lint.
+   Format, lint, and check are three different questions.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/34-lint-is-not-check.svg
+   :alt: style lint and checksum check are two commands
+   :class: eb-diagram
+
+   Lint is format. Check is bytes. Neither solves a stack.
 #+end_export
 
 #+begin_questions
@@ -68,10 +76,6 @@ The output does not correspond to =eb --check-style=.
 The output does not reflect an opinion about =configopts=.
 A format run that changes a checksum or a patch order is a bug in the formatter, not a feature.
 * Lint reports; it does not repair
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) is calculated from the energy barrier, the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24).
-On OptBench it fires near a shallow basin and those 7
 * Check is the robot question
 The =recipe check= opens other files.
 #+begin_example

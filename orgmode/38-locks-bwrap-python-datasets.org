@@ -1,17 +1,25 @@
 #+TITLE: Four EasyBuild 5 surfaces the earlier chapters skipped
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  lock.json --> bwrap --> dataset
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/38-locks-bwrap-python-datasets-2.svg
+   :alt: four EasyBuild 5 surfaces: locks, bwrap, Python bindings, datasets
+   :class: eb-diagram
+
+   Four surfaces the earlier chapters skipped. Each one is a new object, not a flag on an old one.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/38-locks-bwrap-python-datasets.svg
-   :alt: lock
+   :alt: locks, bwrap, Python bindings, datasets
    :class: eb-diagram
 
-   lock.
+   Four EasyBuild 5 surfaces the earlier chapters skipped.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/38-four-surfaces.svg
+   :alt: install lock, bwrap, Python prefixes, Dataset
+   :class: eb-diagram
+
+   Four EasyBuild 5 surfaces. An install lock is not a Resolvo lock. A Dataset is a module whose payload is data.
 #+end_export
 
 #+begin_questions

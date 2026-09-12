@@ -1,17 +1,25 @@
 #+TITLE: Build your own, without asking anyone
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  prefix --> eb --> own modulepath
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/10-build-your-own-without-asking-2.svg
+   :alt: owned prefix to eb to a MODULEPATH the operator controls
+   :class: eb-diagram
+
+   A user prefix is a full install. Nobody has to approve the modulepath.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/10-build-your-own-without-asking.svg
-   :alt: user install
+   :alt: owned prefix through eb to an owned modulepath
    :class: eb-diagram
 
-   user install.
+   An owned prefix is enough. The operator does not ask for a modulepath.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/10-user-beside-site.svg
+   :alt: user installpath beside the site tree
+   :class: eb-diagram
+
+   A personal prefix is a second tree. The site tree is not asked, and it is not overwritten.
 #+end_export
 
 #+begin_objectives

@@ -1,17 +1,25 @@
 #+TITLE: A checksum is a claim about bytes
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  bytes --> SHA256 --> recipe field
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/07-a-checksum-is-a-claim-about-bytes-2.svg
+   :alt: source archive, SHA256, hex; optional dict for one named file
+   :class: eb-diagram
+
+   A checksum names bytes. It does not name the software those bytes claim to be.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/07-a-checksum-is-a-claim-about-bytes.svg
-   :alt: checksum
+   :alt: bytes to SHA256 to the recipe field
    :class: eb-diagram
 
-   checksum.
+   A checksum is a claim about bytes. It is silent about whether those bytes are the software.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/07-two-checksums.svg
+   :alt: each archived name has its own SHA256; mismatch refuses
+   :class: eb-diagram
+
+   A checksum is a claim about named bytes. Two archives are two claims. A miss stops the build.
 #+end_export
 
 #+begin_objectives

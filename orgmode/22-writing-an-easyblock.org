@@ -1,18 +1,26 @@
 #+TITLE: Writing an easyblock
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  ConfigureMake --> override --> class
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/22-writing-an-easyblock-2.svg
+   :alt: an easyblock is a class that owns configure, build, and install
+   :class: eb-diagram
+
+   An easyblock is a class. The easyconfig fills parameters. The class owns the steps the file does not.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/22-writing-an-easyblock.svg
-   :alt: easyblock
+   :alt: an easyblock class owns the steps
    :class: eb-diagram
 
-   easyblock.
+   An easyblock is a class. Write one when the file cannot name the steps.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/22-easyblock-inherit.svg
+   :alt: EasyBlock to ConfigureMake to a site class that overrides one method
+   :class: eb-diagram
+
+   Write an easyblock when a method on ConfigureMake is the wrong shape. Inherit, then override that method.
 #+end_export
 
 #+begin_objectives
@@ -109,7 +117,6 @@ from easybuild.framework.easyconfig import CUSTOM
 from easybuild.tools.build_log import EasyBuildError
 from easybuild.tools.environment import setvar
 from easybuild.tools.filetools import apply_regex_substitutions
-
 
 class EB_example(ConfigureMake):
  """Support for building/installing example."""

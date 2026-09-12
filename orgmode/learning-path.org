@@ -1,18 +1,26 @@
 #+TITLE: A path through this book
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  task --> level --> part
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/learning-path-2.svg
+   :alt: a task enters an hour-sized level in RecipeReader, StackWalker, or ReframeReader
+   :class: eb-diagram
+
+   The number in the filename is not the reading order. A task enters a level. The level names a part.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/learning-path.svg
-   :alt: path
+   :alt: task to level to part
    :class: eb-diagram
 
-   path.
+   A path through this book is a task, then a level, then a part.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/learning-path-levels.svg
+   :alt: levels A B C through RecipeReader, then StackWalker and ReframeReader
+   :class: eb-diagram
+
+   The path is a task and a level, then a part. RecipeReader, StackWalker, ReframeReader stay the names.
 #+end_export
 Filenames keep a number to allow the source tree to sort.
 That number does not indicate a reading order.
@@ -54,11 +62,17 @@ It will download.
 It will search for an easyblock.
 It may use dependencies.
 * Level B. Understand why a build fails
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the
+Two hours.
+The level where most support tickets reside.
+Requires level A.
+
+| Read | For |
+|---+---|
+| [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] | why a version is a pin and not a floor |
+| [[file:04-the-robot.org][The robot]] | what =--robot= resolves, and in what order |
+| [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] | why a suffix is identity |
+| [[file:06-what-installed-means.org][What "installed" means]] | what a sanity check asserts |
+| [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] | what a checksum does and does not promise |
 * Level C. Work on a machine
 Estimated time: two hours.
 Requires level A. Level B speeds it up.
@@ -96,24 +110,6 @@ Needs D.
 Testing, and the four things it can mean names the fourth kind and stops.
 [[file:part-a-test.org][The test]] is that kind.
 * Level F. Distribute a stack
-Counts first.
-Impersonal.
-No drumroll.
-
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
-
-The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin. Those 7/59 cases regress.
-
-OCI-NEB cut the Baker-Chan force count from 13920 to 5712.
-OCI-NEB produced 0/24 regressions.
-
-Every number traces to a Snellius job.
-The index is in the appendix.
-
-Packing jobs does not save SBU.
-The bill is the fraction requested, not the fraction used.
 
 A completed build prints a single line.
 A completed build creates one file.
@@ -123,9 +119,6 @@ The sequence consists of a test class, the pipeline, the configuration file, a p
 There are two levels.
 The grain matches the recipe.
 * Level G. Write a ReFrame test
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
 The d
 * Level H. Run a portable suite
 Two hours.

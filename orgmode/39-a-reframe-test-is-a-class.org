@@ -1,17 +1,25 @@
 #+TITLE: A ReFrame test is a class
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  class --> fields --> run
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/39-a-reframe-test-is-a-class-2.svg
+   :alt: class, valid_systems, executable; optional sanity and performance
+   :class: eb-diagram
+
+   A ReFrame test is a class. The machine is not a field on that class. It lives in the config.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/39-a-reframe-test-is-a-class.svg
-   :alt: class
+   :alt: a test is a class
    :class: eb-diagram
 
-   class.
+   A ReFrame test is a class. The machine is not a field on it.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/39-two-constraints.svg
+   :alt: valid_systems, valid_prog_environs, sanity
+   :class: eb-diagram
+
+   A ReFrame test is a class. Two constraints decide where it may run. Sanity, not the exit code, decides pass.
 #+end_export
 
 #+begin_questions
@@ -104,10 +112,6 @@ The sanity phase remains unaffected.
 #+begin_example
 reframe -c stream/stream_runonly.py -l
 #+end_example
-TS exploration methods identify a candidate transition mechanism.
-The transition rate estimate under HTST is calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
-The dimer does
 #+ATTR_EB: :id EB-ReFrame-39-1 :title What decides a pass
 #+begin_exercise
 The STREAM binary is replaced by one that exits 0 and prints only

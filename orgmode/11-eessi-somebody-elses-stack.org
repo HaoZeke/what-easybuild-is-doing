@@ -1,17 +1,25 @@
 #+TITLE: EESSI, somebody else's stack
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  stratum --> CVMFS --> client --> modules
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/11-eessi-somebody-elses-stack-2.svg
+   :alt: EESSI mount with an extend prefix beside it, not inside it
+   :class: eb-diagram
+
+   EESSI is somebody else's tree. Install on top into an owned prefix. Do not write into the mount.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/11-eessi-somebody-elses-stack.svg
-   :alt: EESSI
+   :alt: stratum to CernVM-FS to the client to modules
    :class: eb-diagram
 
-   EESSI.
+   EESSI is a filesystem already built. The client mount is the stack.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/11-mount-not-build.svg
+   :alt: EESSI arrives as a mount, not as a local build
+   :class: eb-diagram
+
+   Somebody else built the stack. The client mounts it. StackWalker starts here.
 #+end_export
 
 #+begin_questions
@@ -69,7 +77,7 @@ Confirm.
 Then use.
 The second concerns the generation question, which determines whether the remainder of this chapter applies.
 * Check the generation before planning anything
-The compatibility layer sits behind the newest EasyBuild toolchain generation.
+The compatibility layer is behind the newest EasyBuild toolchain generation.
 A version of EESSI includes a specific set of top‑level toolchains.
 An easyconfig names a particular generation.
 These two facts must agree.

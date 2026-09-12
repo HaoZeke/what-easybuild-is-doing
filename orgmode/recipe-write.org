@@ -1,17 +1,25 @@
 #+TITLE: Write one
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  sources --> sanity --> file
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-write-2.svg
+   :alt: no recipe, then sources, sanity, and a new file
+   :class: eb-diagram
+
+   Write one: sources and a sanity check. The rest is the RecipeReader chapters.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-write.svg
-   :alt: recipe write
+   :alt: sources to sanity to file
    :class: eb-diagram
 
-   recipe write.
+   Write one: sources, a sanity check, a file.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-write-copy-or-nothing.svg
+   :alt: write by copying a neighbour, or from sources and sanity
+   :class: eb-diagram
+
+   Write one by copying a neighbour, or from nothing. Both still need sources and a sanity check.
 #+end_export
 A recipe for software that lacks one.
 A port from conda-forge or Spack.

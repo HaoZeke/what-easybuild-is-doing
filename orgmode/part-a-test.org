@@ -1,18 +1,5 @@
 #+TITLE: ReframeReader
 #+OPTIONS: toc:nil num:nil
-#+begin_export rst
-.. figure:: _static/illustrations/reframe-reader.jpg
-   :alt: ReframeReader plate
-   :class: eb-diagram
-
-   ReframeReader.
-#+end_export
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  class --> pipeline --> run
-</pre>
-#+end_export
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker
@@ -39,6 +26,13 @@ This part also teaches ReFrame.
    :class: eb-diagram
 
    ReframeReader: six stages. The configuration file is the machine.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/part-test-class-config-run.svg
+   :alt: ReframeReader: class and config, then a run
+   :class: eb-diagram
+
+   ReframeReader is a class becoming a run. The machine stays in the configuration.
 #+end_export
 Start at [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]].
 This step assumes that Testing, and the four things it can mean has already been read.

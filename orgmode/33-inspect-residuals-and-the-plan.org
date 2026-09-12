@@ -1,17 +1,25 @@
 #+TITLE: Inspect writes a work queue, not a recipe
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  foreign --> residuals --> plan
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/33-inspect-residuals-and-the-plan-2.svg
+   :alt: inspect writes residuals into a work queue, not an easyconfig
+   :class: eb-diagram
+
+   Inspect writes a work queue. It does not write a recipe.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/33-inspect-residuals-and-the-plan.svg
-   :alt: inspect
+   :alt: inspect to residuals to a work queue
    :class: eb-diagram
 
-   inspect.
+   Inspect writes a work queue. It does not write a recipe.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/33-inspect-then-plan.svg
+   :alt: inspect residuals, then plan, then rewrite
+   :class: eb-diagram
+
+   A residual is named before any rewrite. The plan is the list of those names.
 #+end_export
 
 #+begin_questions
@@ -82,28 +90,19 @@ Planning never greps them for the word "residual".
 Anything that needs a human or a later stage is a typed residual instead.
 * Residuals are the work queue
 * Residual
-=id= R1 =stage= analysis =category= method_identification =severity= info =summary= TS exploration methods identify a candidate transition mechanism.
+=id= R1 =stage= parse =category= missing-checksum =severity= blocking =summary= Version bump has no SHA-256 and --source-checksum was not passed.
 
 * Residual
-=id= R2 =stage= analysis =category= transition_rate_estimation =severity= info =summary= The estimate of the transition rate under HTST can be calculated from the energy barrier.
+=id= R2 =stage= parse =category= imperative-patch =severity= judgment =summary= Spack def patch(self) applies sed at build time; no patch file is beside the .eb.
 
 * Residual
-=id= R3 =stage= analysis =category= energy_barrier_definition =severity= info =summary= The energy barrier is the difference between the energy at the saddle and the reactant state.
+=id= R3 =stage= parse =category= product-flags =severity= judgment =summary= conda product flags have no EasyBuild parameter.
 
 * Residual
-=id= R4 =stage= testing =category= dimer_behavior =severity= info =summary= The dimer does not fire on Baker-Chan (0/24).
+=id= R4 =stage= parse =category= generation-pin =severity= judgment =summary= Foreign pin names a generation this site does not ship.
 
 * Residual
-=id= R5 =stage= testing =category= dimer_behavior =severity= info =summary= On OptBench the dimer fires near a shallow basin and those 7/59 cases regress.
-
-* Residual
-=id= R6 =stage= optimization =category= force_count_reduction =severity= info =summary= OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions.
-
-* Residual
-=id= R7 =stage= provenance =category= job_tracing =severity= info =summary= Every number traces to a Snellius job.
-
-* Residual
-=id= R8 =stage= provenance =category= appendix_reference =severity= info =summary= The index is in the appendix.
+=id= R5 =stage= parse =category= multi-source-extract =severity= judgment =summary= Extract layout is not a single tarball.
 
 * Residual
 #+begin_example

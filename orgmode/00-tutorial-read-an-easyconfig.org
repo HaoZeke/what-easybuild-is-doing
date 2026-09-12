@@ -1,31 +1,34 @@
 #+TITLE: Tutorial: read an easyconfig the way EasyBuild does
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  file --> templates --> easyblock --> toolchain
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/00-tutorial-read-an-easyconfig-2.svg
+   :alt: name, version, toolchain, sources on one rail
+   :class: eb-diagram
+
+   The tutorial reads four fields. Templates and the easyblock come after the file runs.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/00-tutorial-read-an-easyconfig.svg
-   :alt: tutorial walk
+   :alt: file to templates to easyblock to toolchain to robot
    :class: eb-diagram
 
-   tutorial walk.
+   The tutorial is that sequence. The model is the file EasyBuild evaluates.
 #+end_export
-The model this page is teaching evaluates the file.
-The model this page is teaching formats the templates.
-The model this page is teaching picks the easyblock.
-The model this page is teaching walks the toolchain.
-The model this page is teaching asks the robot.
-Commands are props.
-The model is the sequence.
-Work down the page.
-Every live sample is type-along.
-Edit the island.
-Recordings later in the book are labelled as recordings.
-Do not type those.
-Check that the island matches the expected output under it.
+#+begin_export rst
+.. figure:: _static/diagrams/00-says-vs-means.svg
+   :alt: file text through the namespace to the model
+   :class: eb-diagram
+
+   The tutorial object is the model, not the command. The file is evaluated.
+#+end_export
+This tutorial evaluates a file the way EasyBuild does.
+Templates are formatted after the file runs.
+The easyblock is derived from the name.
+The toolchain decides which dependencies are visible.
+The robot resolves a bare filename.
+Each sample on this page is editable and runs in the browser.
+Recordings later in the book are labelled as recordings and are not typed.
+The expected output is under the sample.
 Twenty minutes.
 Nothing to install.
 Nothing to put back.

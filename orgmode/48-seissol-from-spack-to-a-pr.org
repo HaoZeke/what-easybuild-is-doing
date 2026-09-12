@@ -1,17 +1,25 @@
 #+TITLE: SeisSol, from a Spack recipe to a PR
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  Spack --> eb-stack --> .eb --> PR
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/48-seissol-from-spack-to-a-pr-2.svg
+   :alt: Spack recipe and old easyconfig plus the site generation write the next file, then a PR
+   :class: eb-diagram
+
+   Both sources feed the next file. The generation is a site fact. The PR may not claim a checksum it did not hash.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/48-seissol-from-spack-to-a-pr.svg
-   :alt: SeisSol
+   :alt: Spack through eb-stack to an easyconfig to a PR
    :class: eb-diagram
 
-   SeisSol.
+   SeisSol: a Spack recipe and an old easyconfig become one next file, then a PR.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/48-site-generation.svg
+   :alt: Spack and an old easyconfig feed eb-stack; the site names the generation
+   :class: eb-diagram
+
+   The generation is a site fact. eb-stack writes the next file. eb still has to run.
 #+end_export
 
 #+begin_questions
@@ -127,10 +135,6 @@ The wrapper writes:
 ~/.local/easybuild/RHEL9/2025/software
 ~/.local/easybuild/RHEL9/2025/modulefiles
 #+end_example
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/
 * Two defects the first build named
 ** The patch that was no longer the patch
 The first =eblocalinstall= failed on ASAGI.

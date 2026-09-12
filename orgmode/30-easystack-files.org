@@ -1,17 +1,25 @@
 #+TITLE: An easystack is the list the bot will build
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  yaml --> eb --easystack --> many .eb
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/30-easystack-files-2.svg
+   :alt: an easystack YAML is the ordered list the bot will build
+   :class: eb-diagram
+
+   An easystack is the list. It is not a solver. The bot feeds it to eb in that order.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/30-easystack-files.svg
-   :alt: easystack
+   :alt: YAML list the bot will build
    :class: eb-diagram
 
-   easystack.
+   An easystack is the list the bot will build, in that order.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/30-easystack-is-the-list.svg
+   :alt: software, version, toolchain
+   :class: eb-diagram
+
+   An easystack is the list the bot will build. Each row is a name, a version, and a toolchain.
 #+end_export
 
 #+begin_questions
@@ -226,10 +234,6 @@ changed_easystacks=$(cat ${pr_diff} | grep '^+++' | cut -f2 -d' ' \
  | egrep -v 'known-issues|missing' \
  | (grep -v "scripts/gpu_support/" || true))
 #+end_example
-TS exploration methods identify a candidate transition mechanism.
-The transition rate estimate under HTST can be calculated from the energy barrier.
-The energy barrier equals the difference between the saddle energy and the reactant state energy.
-The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin and 7/
 #+ATTR_EB: :id EB-Easystack-2 :title What the bot will type
 #+begin_exercise
 A pull request against =EESSI/software-layer= =main= adds one file:

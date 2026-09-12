@@ -1,17 +1,25 @@
 #+TITLE: The configuration file is the machine
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  reframe.py --> system --> partition
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/41-the-configuration-file-is-the-machine-2.svg
+   :alt: the config file names system, partition, and environment
+   :class: eb-diagram
+
+   The configuration file is the machine. The test class does not name the site.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/41-the-configuration-file-is-the-machine.svg
-   :alt: config
+   :alt: config file names the machine
    :class: eb-diagram
 
-   config.
+   The configuration file is the machine. The class is portable.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/41-test-vs-config.svg
+   :alt: the configuration file names system, partition, and environment
+   :class: eb-diagram
+
+   The machine lives in the configuration. The class does not name a cluster.
 #+end_export
 
 #+begin_questions
@@ -122,12 +130,6 @@ Tests request them from =valid_prog_environs=.
 valid_systems = ['+gpu -login %arch=zen2']
 valid_prog_environs = ['+foss', '+intel']
 #+end_src
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from
 * Three environment variables
 EESSI recommends these rather than repeating flags.
 | Variable | Flag it replaces | What it names |

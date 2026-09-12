@@ -1,17 +1,25 @@
 #+TITLE: The pipeline has six stages
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  setup --> compile --> run --> sanity --> perf --> cleanup
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/40-the-pipeline-has-six-stages-2.svg
+   :alt: setup and compile on the host; run on the partition; then sanity, perf, cleanup
+   :class: eb-diagram
+
+   Six stages, always in this order. A run-only test still walks the list. It just does no work in compile.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/40-the-pipeline-has-six-stages.svg
-   :alt: pipeline
+   :alt: setup, compile, run, sanity, performance, cleanup
    :class: eb-diagram
 
-   pipeline.
+   The pipeline has six stages. Every test walks the same list.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/40-login-vs-partition.svg
+   :alt: setup and cleanup on the host; compile and run on the partition
+   :class: eb-diagram
+
+   Six stages, two machines. A failure in run is on the partition. A failure in setup is not.
 #+end_export
 
 #+begin_questions
@@ -123,9 +131,6 @@ def set_tasks_from_partition(self):
  self.num_tasks = ncpus
  self.num_tasks_per_node = ncpus
 #+end_src
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions. Every number traces to a Snellius job.
 #+ATTR_EB: :id EB-ReFrame-40-1 :title Name the failing stage
 #+begin_exercise
 Four reports. For each, name the stage, and say whether the job ran.

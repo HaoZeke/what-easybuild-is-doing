@@ -1,18 +1,26 @@
 #+TITLE: Glossary
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  term --> object
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/glossary-2.svg
+   :alt: glossary grouped as recipe, run, output, testing
+   :class: eb-diagram
+
+   Each term appears once. A chapter points here instead of defining it again.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/glossary.svg
-   :alt: glossary
+   :alt: a term names one object
    :class: eb-diagram
 
-   glossary.
+   Each term appears once. Chapters point here.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/glossary-term-object.svg
+   :alt: a glossary term names an object in one of the three parts
+   :class: eb-diagram
+
+   A glossary entry is a name for an object the book already used.
 #+end_export
 Each term appears a single time on this page, and any chapter may reference it in situ.
 Encountering =versionsuffix= in One easyconfig, many installs does not require this page, while a reader requiring the complete vocabulary can obtain it here.

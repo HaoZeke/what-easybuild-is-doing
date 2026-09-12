@@ -1,17 +1,25 @@
 #+TITLE: Reading a failed ReFrame run
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  stage --> output --> reason
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/47-reading-a-failed-reframe-run-2.svg
+   :alt: stage directory holds output and the job script; those name the phase
+   :class: eb-diagram
+
+   Restore the session, not the suite. The phase says where it died. It does not say why the science is wrong.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/47-reading-a-failed-reframe-run.svg
-   :alt: failed run
+   :alt: stage directory to output to the reason
    :class: eb-diagram
 
-   failed run.
+   A failed ReFrame run is a stage directory. Restore that session.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/47-failure-info.svg
+   :alt: FAILURE INFO names the stage, the output, and the generated script
+   :class: eb-diagram
+
+   The stage directory holds what ran and what it printed. Restore the session, not the suite.
 #+end_export
 
 #+begin_questions

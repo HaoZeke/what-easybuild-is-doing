@@ -1,17 +1,25 @@
 #+TITLE: Read a file
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  file --> name --> toolchain
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-read-2.svg
+   :alt: reading a file is Python, toolchain, pin, and robot
+   :class: eb-diagram
+
+   Read a file. EasyBuild evaluates it before any eb command runs.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/recipe-read.svg
-   :alt: recipe read
+   :alt: file to name to toolchain
    :class: eb-diagram
 
-   recipe read.
+   Read a file. Name and toolchain are already claims.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-read-four.svg
+   :alt: name, version, toolchain, deps
+   :class: eb-diagram
+
+   Read a file as these four. EasyBuild evaluates them before any eb command.
 #+end_export
 EasyBuild processes a file before any =eb= command is executed.
 The tutorial appears first.

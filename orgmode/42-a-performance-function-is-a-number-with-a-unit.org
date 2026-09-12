@@ -1,17 +1,25 @@
 #+TITLE: A performance function is a number with a unit
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  extract --> number --> unit
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/42-a-performance-function-is-a-number-with-a-unit-2.svg
+   :alt: extract a number, name its unit, compare to a reference
+   :class: eb-diagram
+
+   A performance function is a number with a unit. A bare float is not a measurement.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/42-a-performance-function-is-a-number-with-a-unit.svg
-   :alt: perf
+   :alt: a number with a unit against a reference
    :class: eb-diagram
 
-   perf.
+   A performance function is a number with a unit.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/42-sanity-vs-perf.svg
+   :alt: sanity is pass or fail; performance is a number with a unit and a reference
+   :class: eb-diagram
+
+   A performance function is a number with a unit. A sanity function is not.
 #+end_export
 
 #+begin_questions
@@ -34,12 +42,6 @@ flowchart LR
 - [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]], for the
  performance stage.
 #+end_prerequisites
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier, which is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin and those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions. Every number traces to
 #+begin_src python
 @performance_function('MB/s')
 def copy_bw(self):
@@ -60,8 +62,6 @@ A test containing performance functions but no references still *records* number
 Recording without comparison enables site to build baseline.
 Baseline is used for comparison with next week's run.
 * References
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate
 #+begin_src python
 reference = {
  'generic:default': {

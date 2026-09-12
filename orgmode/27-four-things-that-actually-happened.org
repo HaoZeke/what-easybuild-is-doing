@@ -1,18 +1,26 @@
 #+TITLE: Four things that actually happened
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  login --> build --> GPU --> user job
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/27-four-things-that-actually-happened-2.svg
+   :alt: four recorded events, not a parable
+   :class: eb-diagram
+
+   Four things that actually happened. Each one is a chapter already written, on a real log.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/27-four-things-that-actually-happened.svg
-   :alt: four facts
+   :alt: four recorded events
    :class: eb-diagram
 
-   four facts.
+   Four things that actually happened. Each one is already a chapter.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/27-four-claims.svg
+   :alt: login, build, GPU, and job are four separate facts
+   :class: eb-diagram
+
+   Four things that happened are four machines, not one story. Each has its own module view.
 #+end_export
 
 #+begin_objectives
@@ -63,11 +71,6 @@ The fix set the symlinks in =postinstallcmds=.
 It runs before the sanity check.
 The check that had been failing could pass honestly.
 * The login node that lied, twice
-OCI-NEB cut the Baker-Chan force count from 13920 to 5712, with 0/24 regressions. Mean cost fell 31%, from 409 to 280 evaluations. 21 of 24 systems improved; 3 of 24 regressed by up to 18% on shallow basins. The consultancy question is not "is DMC good" but three practical ones: the efficient run on this machine, the honest SBU cost, and how long before the answer stops moving. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used. The state x_k lives in R^n, the measurements y_k in R^q, and the known inputs u_k in R^p, with uncorrelated zero-mean noise covariances Q_k > 0 and R_k > 0. The dimer does not fire on Baker-Chan (0/24).
-On OptBench it fires near a shallow basin and those 7/59 cases regress.
-Wall time versus walker count on one H100, 128 to 1920 walkers; GPU cost per walker-step still falling at 1024.
-A double-ended path is a discrete chain of images with springs that keep the spacing.
-The climbing image moves uphill along that path.
 The task took one day.
 =/sw/arch= is a symlink for each node architecture.
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10" :caption "What a login node resolves"

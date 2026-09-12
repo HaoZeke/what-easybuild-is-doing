@@ -1,10 +1,11 @@
 #+TITLE: eb-stack ports a recipe and bumps one
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  conda/spack --> plan --> SBOM --> .eb
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/12-eb-stack-updater-and-generator-2.svg
+   :alt: a port starts from a foreign recipe; a bump starts from a working easyconfig; eb still builds
+   :class: eb-diagram
+
+   Port writes a file from someone else's recipe. Bump moves pins on a file that already works. eb still has to run.
 #+end_export
 
 #+begin_questions
@@ -35,6 +36,13 @@ The graph below is that SBOM for a GROMACS bump, drawn by =eb-stack stack graph=
    :class: eb-diagram
 
    Planned SBOM for a GROMACS generation. Edges are runtime dependsOn.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/12-port-and-bump.svg
+   :alt: port and bump both write a file; neither runs eb
+   :class: eb-diagram
+
+   eb-stack writes an easyconfig. A port starts from someone else's recipe. A bump retargets a generation. eb still has to run.
 #+end_export
 This page describes those two tasks and includes the files on the page.
 * A port starts as someone else's recipe
@@ -86,7 +94,7 @@ eb-stack package plan \
  --stack-policy site/foss-2024a.toml \
  --out-dir /tmp/eon-from-conda
 #+end_example
-Please provide the org‑mode prose you would like rewritten.
+What comes out is a tree, not a speech:
 #+begin_example
 package.plan.json
 package.sbom.cdx.json

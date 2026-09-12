@@ -1,17 +1,25 @@
 #+TITLE: A stack lock is not a package lock
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  universe --> Resolvo --> lock
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/35-stack-solve-and-the-diff-2.svg
+   :alt: a stack lock is a tree; a package lock is one pin
+   :class: eb-diagram
+
+   A stack lock is not a package lock. The diff is of the tree the lock named.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/35-stack-solve-and-the-diff.svg
-   :alt: solve
+   :alt: wanted set to stack lock to a tree diff
    :class: eb-diagram
 
-   solve.
+   A stack lock is not a package lock. The diff is of the tree.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/35-solve-is-not-build.svg
+   :alt: Resolvo writes a lock and a diff; eb is a later step
+   :class: eb-diagram
+
+   A solve is not a build. The lock is a claim about versions. eb still has to run.
 #+end_export
 
 #+begin_questions
@@ -43,14 +51,6 @@ The system asks which jointly consistent set is built.
 The system also asks for the build order of the set and the changes since the previous year.
 The command is =stack solve=.
 * A policy for many roots
-OCI-NEB cut the Baker-Chan force count from 13920 to 5712.
-There were 0/24 regressions. Mean cost fell 31%, from 409 to 280 evaluations. 21 of 24 systems improved. 3 of 24 regressed by up to 18% on shallow basins. The consultancy question is not "is DMC good". Three practical questions remain: the efficient run on this machine, the honest SBU cost, and the time before the answer stops moving. Packing jobs does not save SBU. The bill is the fraction requested, not the fraction used. The state x_k lives in R^n. The measurements y_k live in R^q. The known inputs u_k live in R^p. Uncorrelated zero-mean noise covariances Q_k > 0 and R_k > 0 apply. The dimer does not fire on Baker-Chan (0/24).
-On OptBench it fires near a shallow basin.
-Those 7/59 cases regress.
-Wall time versus walker count on one H100 ranges from 128 to 1920 walkers.
-GPU cost per walker-step still falls at 1024 walkers.
-A double-ended path is a discrete chain of images with springs that keep the spacing.
-The climbing image moves uphill along that path.
 The fixture policy at =fixtures/gromacs_2025_to_next/policies/prefer_newer.json= represents
 #+begin_example
 {

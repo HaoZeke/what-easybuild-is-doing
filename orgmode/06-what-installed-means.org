@@ -1,17 +1,25 @@
 #+TITLE: What "installed" means
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  eb ok --> modulefile --> module load
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/06-what-installed-means-2.svg
+   :alt: three checks after install: paths, commands, enhanced
+   :class: eb-diagram
+
+   A green eb line is not a claim that the software works. Three optional checks prove three different things.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/06-what-installed-means.svg
-   :alt: installed
+   :alt: a finished install is not yet a claim that the software works
    :class: eb-diagram
 
-   installed.
+   eb succeeding writes a modulefile. That is not the same object as a working install.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/06-three-artifacts.svg
+   :alt: success writes a prefix and a modulefile; load is the claim
+   :class: eb-diagram
+
+   Installed means a prefix exists and a module loads it. A successful eb is not the whole claim.
 #+end_export
 
 #+begin_objectives

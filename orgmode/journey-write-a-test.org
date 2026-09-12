@@ -1,17 +1,25 @@
 #+TITLE: Journey: write a test
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  kind --> class --> run
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/journey-write-a-test-2.svg
+   :alt: four kinds of testing, then a ReFrame class, then a run
+   :class: eb-diagram
+
+   Write a test: name the kind, then write the class. The machine stays in the config.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/journey-write-a-test.svg
-   :alt: journey test
+   :alt: kind to class to run
    :class: eb-diagram
 
-   journey test.
+   Write a test: name the kind, then write the class.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/journey-test-pages.svg
+   :alt: write-a-test journey through four kinds, the class, and the pipeline
+   :class: eb-diagram
+
+   The write-a-test journey names the four kinds, then a ReFrame class that runs.
 #+end_export
 Four kinds of testing.
 A ReFrame class runs an installed module.

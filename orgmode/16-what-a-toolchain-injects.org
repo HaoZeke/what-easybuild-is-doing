@@ -1,18 +1,26 @@
 #+TITLE: What a toolchain injects
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  toolchain --> CC/FC --> flags
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/16-what-a-toolchain-injects-2.svg
+   :alt: prepare injects compiler drivers, flags, and numerical link lines
+   :class: eb-diagram
+
+   Loading the toolchain module does not set $CC. The toolchain object sets the compilers inside prepare.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/16-what-a-toolchain-injects.svg
-   :alt: inject
+   :alt: toolchain to compiler drivers to flags
    :class: eb-diagram
 
-   inject.
+   The toolchain injects compilers and flags during prepare, not when the module is loaded.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/16-implicit-from-toolchain.svg
+   :alt: compiler, flags, and MPI or BLAS injected by the toolchain
+   :class: eb-diagram
+
+   The toolchain injects compilers, flags, and libraries the easyconfig never lists.
 #+end_export
 
 #+begin_objectives

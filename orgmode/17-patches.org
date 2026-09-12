@@ -1,18 +1,26 @@
 #+TITLE: Patches, and what a patch is relative to
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  tarball --> patch -pN --> tree
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/17-patches-2.svg
+   :alt: a patch is relative to one extracted tree
+   :class: eb-diagram
+
+   A patch is a claim about one tree. Applied against another version it is a different object.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/17-patches.svg
-   :alt: patch
+   :alt: a patch applied to extracted source
    :class: eb-diagram
 
-   patch.
+   A patch is relative to one extracted tree.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/17-patch-relative-to-tree.svg
+   :alt: a patch applies to the extracted tree, not the URL
+   :class: eb-diagram
+
+   A patch is relative to the unpacked tree and a -pN strip. It is not relative to the source URL.
 #+end_export
 
 #+begin_objectives

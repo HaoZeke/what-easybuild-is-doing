@@ -1,17 +1,25 @@
 #+TITLE: A portable test leaves the machine in the config
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  test --> config --> any site
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/45-a-portable-test-leaves-the-machine-in-the-config-2.svg
+   :alt: a portable test plus a mixin; the site stays in the config
+   :class: eb-diagram
+
+   A portable test leaves the machine in the config. The mixin is what changes per site, not the class.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/45-a-portable-test-leaves-the-machine-in-the-config.svg
-   :alt: portable
+   :alt: test plus config equals any site
    :class: eb-diagram
 
-   portable.
+   A portable test leaves the machine in the config.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/45-machine-in-config.svg
+   :alt: the class plus mixin stay portable; the site config is the machine
+   :class: eb-diagram
+
+   valid_systems = ['snellius'] is a trap. The machine belongs in the configuration.
 #+end_export
 
 #+begin_questions
@@ -35,13 +43,6 @@ flowchart LR
 - [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]], for
  the product those hooks run on.
 #+end_prerequisites
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench the dimer fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712. The cut resulted in 0/24 regressions. Every number traces to a Snellius job. The index is in the appendix. Packing jobs does not save SBU. The bill is the
 #+begin_src python
 valid_systems = ['snellius']
 self.num_tasks_per_node = min(self.num_tasks, 128)

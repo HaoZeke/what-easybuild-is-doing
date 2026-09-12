@@ -1,18 +1,26 @@
 #+TITLE: How a build executes
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  fetch --> extract --> patch --> configure --> build --> install
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/13-how-a-build-executes-2.svg
+   :alt: fetch, extract, patch, configure, build, install; optional test
+   :class: eb-diagram
+
+   Each parameter is named after the step it feeds. Cutting the sequence short is a flag, not a rewrite.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/13-how-a-build-executes.svg
-   :alt: build stages
+   :alt: fetch, extract, patch, configure, build, install
    :class: eb-diagram
 
-   build stages.
+   A build is a named sequence. Each easyconfig parameter is named after the step it feeds.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/13-easyblock-methods.svg
+   :alt: easyblock methods on the execute rail
+   :class: eb-diagram
+
+   Each stage is an easyblock method. The log names the method that failed.
 #+end_export
 
 #+begin_questions

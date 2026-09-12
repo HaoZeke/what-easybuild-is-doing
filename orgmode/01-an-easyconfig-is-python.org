@@ -1,10 +1,11 @@
 #+TITLE: An easyconfig is Python
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  Python namespace --> name --> easyblock class
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/01-an-easyconfig-is-python-2.svg
+   :alt: file enters a Python namespace; SYSTEM is a dict; name becomes an easyblock class
+   :class: eb-diagram
+
+   The file is Python. SYSTEM is already in scope. The easyblock class is a string transform of name.
 #+end_export
 
 #+begin_questions
@@ -31,6 +32,13 @@ The installed module name is a railroad, not a sentence.
    :class: eb-diagram
 
    Module name grammar. The versionsuffix is optional. Nothing on this rail is a range.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/01-eval-namespace.svg
+   :alt: evaluation namespace, templates after eval, derived easyblock
+   :class: eb-diagram
+
+   SYSTEM is already in the namespace. Templates resolve after the file runs. A missing easyblock line still names a class.
 #+end_export
 #+begin_src easyconfig :widget parse
 name = 'code-server'

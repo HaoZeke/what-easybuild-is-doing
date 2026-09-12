@@ -1,17 +1,25 @@
 #+TITLE: Parameters multiply the suite
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  class --> parameter --> N cases
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/44-parameters-multiply-the-suite-2.svg
+   :alt: one class, parameter and variable, N concrete cases
+   :class: eb-diagram
+
+   Parameters multiply the suite. Filtering a run does not shrink the definition.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/44-parameters-multiply-the-suite.svg
-   :alt: params
+   :alt: one class becomes N cases
    :class: eb-diagram
 
-   params.
+   Parameters multiply the suite. They do not shrink the class.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/44-parameter-vs-variable.svg
+   :alt: parameters multiply cases; variables stay overridable
+   :class: eb-diagram
+
+   A parameter multiplies the suite. A variable does not. Two lists of three are nine cases.
 #+end_export
 
 #+begin_questions

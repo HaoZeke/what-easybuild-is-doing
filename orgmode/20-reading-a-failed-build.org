@@ -1,18 +1,26 @@
 #+TITLE: Reading a failed build
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  log --> start_dir --> missing file
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/20-reading-a-failed-build-2.svg
+   :alt: error block to log to start_dir to the failed command
+   :class: eb-diagram
+
+   Read the error block first. Then the log, then the directory the command ran in. Reproduce that command.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/20-reading-a-failed-build.svg
-   :alt: failed build
+   :alt: log to start_dir to the missing file
    :class: eb-diagram
 
-   failed build.
+   A failed build is a reading problem. The log names a directory. That directory names the command.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/20-failure-classes.svg
+   :alt: fetch, configure, and sanity failures all point back at a pin
+   :class: eb-diagram
+
+   Read the stage, then start_dir, then the pin. The error text is not the cause.
 #+end_export
 
 #+begin_objectives
@@ -62,7 +70,6 @@ If the prediction was a licence error from =--check-licence=, that is the
 reading the flag invites and the exit code rules out.
 #+end_reveal
 #+end_predict
-
 
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; long scratch paths elided to /scratch" :caption "What EasyBuild says when a shell command fails"
 $ eb wobble-1.0.eb

@@ -1,17 +1,25 @@
 #+TITLE: One easyconfig, many installs
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  .eb --> archA & archB --> two modules
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/08-one-easyconfig-many-installs-2.svg
+   :alt: one easyconfig yields an install per architecture and per extension
+   :class: eb-diagram
+
+   One file is many installs. Chapters on pins, checksums, and sanity apply once per extension.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/08-one-easyconfig-many-installs.svg
-   :alt: many installs
+   :alt: one easyconfig, two architectures, two modules
    :class: eb-diagram
 
-   many installs.
+   One easyconfig is many installs. Architecture is one axis. Extensions are another.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/08-file-times-toolchain.svg
+   :alt: one recipe times toolchain and arch yields many prefixes
+   :class: eb-diagram
+
+   The file is not the install. The same easyconfig lands in as many prefixes as there are (toolchain, arch) pairs.
 #+end_export
 
 #+begin_objectives

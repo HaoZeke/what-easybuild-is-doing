@@ -1,18 +1,5 @@
 #+TITLE: StackWalker
 #+OPTIONS: toc:nil num:nil
-#+begin_export rst
-.. figure:: _static/illustrations/stack-walker.jpg
-   :alt: StackWalker plate
-   :class: eb-diagram
-
-   StackWalker.
-#+end_export
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  stratum --> CVMFS --> tree
-</pre>
-#+end_export
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker
@@ -36,6 +23,13 @@ This part describes the arrival: the stratum, the bot, the easystack file, and t
    :class: eb-diagram
 
    StackWalker: a stratum becomes a module tree.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/part-stack-arrival.svg
+   :alt: StackWalker: CernVM-FS, bot, easystack, host injection
+   :class: eb-diagram
+
+   StackWalker is a stratum becoming a module tree. Arrival is these four objects.
 #+end_export
 [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] is the first read when the machine lacks its own software.
 #+begin_export rst

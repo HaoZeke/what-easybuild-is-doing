@@ -1,17 +1,25 @@
 #+TITLE: Journeys
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  first --> failed --> port --> test
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/journeys-2.svg
+   :alt: four sibling journeys, not a sequence
+   :class: eb-diagram
+
+   Four how-to paths. They are siblings. A page may belong to more than one.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/journeys.svg
-   :alt: journeys
+   :alt: four journeys
    :class: eb-diagram
 
-   journeys.
+   Four journeys. They are paths across pages that already exist.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/journeys-cross-parts.svg
+   :alt: a journey may enter RecipeReader, StackWalker, or ReframeReader
+   :class: eb-diagram
+
+   A journey is a path across pages that already exist. The same page may sit on more than one path.
 #+end_export
 A journey defines a how‑to path across pages that already exist.
 The same page may belong to multiple paths.

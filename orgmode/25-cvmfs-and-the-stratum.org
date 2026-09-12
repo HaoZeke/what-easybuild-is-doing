@@ -1,18 +1,26 @@
 #+TITLE: Reading a stack off the wire: CernVM-FS
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  stratum-0 --> stratum-1 --> client
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/25-cvmfs-and-the-stratum-2.svg
+   :alt: Stratum-0 to Stratum-1 to catalog to client cache
+   :class: eb-diagram
+
+   CernVM-FS is a catalog plus a cache, not a copy of the tree. A miss is a network fetch.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/25-cvmfs-and-the-stratum.svg
-   :alt: CVMFS
+   :alt: Stratum to CernVM-FS to the client
    :class: eb-diagram
 
-   CVMFS.
+   The stack on the wire is a stratum and a catalog, not a tarball of the prefix.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/25-catalog-and-objects.svg
+   :alt: stratum-0 to stratum-1; client fetches catalog then objects
+   :class: eb-diagram
+
+   CernVM-FS is a catalog plus chunks. The client mounts the catalog; objects arrive on read.
 #+end_export
 
 #+begin_objectives

@@ -1,25 +1,31 @@
 #+TITLE: Journey: port a package
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  conda/spack --> eb-stack --> .eb
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/journey-port-2.svg
+   :alt: conda-forge or Spack through eb-stack to an easyconfig
+   :class: eb-diagram
+
+   A port is a foreign recipe in and an easyconfig out. eb still has to build it.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/journey-port.svg
-   :alt: journey port
+   :alt: conda-forge or Spack through eb-stack to an easyconfig
    :class: eb-diagram
 
-   journey port.
+   Port a package: a foreign recipe in, an easyconfig out.
 #+end_export
-Previous rewrite failed the voice gate: rgoswami.AIVocabulary, rgoswami.TricolonAbuse.
-Rewrite again without those hinges.
-Keep every fact.
-Counts first.
-Impersonal.
-No drumroll.
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST) can be calculated from the energy barrier.
-The energy barrier is the difference between the energy at the saddle and the reactant state.
-The dimer does not fire on Baker-Chan (0/24). On OptBench it fires near a shallow basin. Those 7/59 cases regress. OCI-NEB cut the Baker-Chan force count from 13920 to 5712. There are 0/24 regressions. Every number traces to a Snellius job. The index is in the appendix. Packing jobs does not save SBU. The bill is
+#+begin_export rst
+.. figure:: _static/diagrams/journey-port-pages.svg
+   :alt: port journey from a foreign recipe through eb-stack to an easyconfig
+   :class: eb-diagram
+
+   The port journey takes conda-forge or Spack in and writes an easyconfig out.
+#+end_export
+conda-forge or Spack is used.
+An easyconfig is produced.
+Then the residual queue appears.
+
+1. [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]
+2. [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]]
+3. [[file:21-writing-one-from-nothing.org][Writing one from nothing]]
+4. [[file:48-seissol-from-spack-to-a-pr.org][SeisSol, from a Spack recipe to a PR]]

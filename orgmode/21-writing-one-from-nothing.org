@@ -1,18 +1,26 @@
 #+TITLE: Writing one from nothing
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  sources --> easyblock --> sanity
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/21-writing-one-from-nothing-2.svg
+   :alt: sources, easyblock, and sanity paths become a new easyconfig
+   :class: eb-diagram
+
+   A recipe from nothing is sources, a block, and a sanity check. The rest is the chapters already written.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/21-writing-one-from-nothing.svg
-   :alt: write recipe
+   :alt: sources and sanity become a file
    :class: eb-diagram
 
-   write recipe.
+   Writing one from nothing starts with sources and a sanity check, not with a template dump.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/21-min-fields.svg
+   :alt: name version toolchain sources sanity
+   :class: eb-diagram
+
+   A new easyconfig is these fields, then an easyblock. Everything else is a later argument.
 #+end_export
 
 #+begin_objectives

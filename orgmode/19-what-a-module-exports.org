@@ -1,18 +1,26 @@
 #+TITLE: What a module exports
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  modulefile --> PATH --> depends_on
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/19-what-a-module-exports-2.svg
+   :alt: PATH, EBROOT, family; optional extra Lua
+   :class: eb-diagram
+
+   The modulefile is the deliverable. What it prepends and sets is what a user actually receives.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/19-what-a-module-exports.svg
-   :alt: module
+   :alt: modulefile to PATH and setenv
    :class: eb-diagram
 
-   module.
+   What a module exports is what a user gets. The prefix is not the interface.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/19-load-exports.svg
+   :alt: load prepends PATH, sets env, and depends_on other modules
+   :class: eb-diagram
+
+   What a module exports is the load: paths, environment, and the modules it still needs.
 #+end_export
 
 #+begin_questions

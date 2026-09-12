@@ -1,18 +1,26 @@
 #+TITLE: Standing where the build stood
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  eb --> module --> rebuild
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/24-development-environments-2.svg
+   :alt: stand in the build environment via --shell or a dumped module env
+   :class: eb-diagram
+
+   A failed command is reproduced where the build stood, not in the login shell.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/24-development-environments.svg
-   :alt: dev env
+   :alt: stand in the environment the build used
    :class: eb-diagram
 
-   dev env.
+   Reproduce the failed command where the build stood.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/24-stand-in-build-env.svg
+   :alt: load the build environment, edit, rebuild in place
+   :class: eb-diagram
+
+   A development environment is the module set the build used, still loaded, so an edit can rebuild.
 #+end_export
 
 #+begin_objectives

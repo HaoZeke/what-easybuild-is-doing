@@ -1,19 +1,26 @@
 #+TITLE: What a build is allowed to see
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  host libs -/-> prefix
-RPATH --> own tree
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/14-the-isolation-policy-2.svg
+   :alt: constructed environment, RPATH into the prefix, kernel and glibc still leak
+   :class: eb-diagram
+
+   The build does not inherit the login environment. RPATH points at the prefix. The kernel and glibc are still the host's.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/14-the-isolation-policy.svg
-   :alt: isolation
+   :alt: host libraries do not enter the prefix; RPATH points at the tree
    :class: eb-diagram
 
-   isolation.
+   The environment is constructed. Host libraries are not a dependency just because they exist.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/14-visible-vs-hidden.svg
+   :alt: RPATH and the module env are visible; host paths are not
+   :class: eb-diagram
+
+   The isolation policy is a list of what the build may see. Ambient host libraries are not on that list.
 #+end_export
 
 #+begin_objectives

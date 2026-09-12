@@ -1,18 +1,26 @@
 #+TITLE: Languages that bring their own package manager
 
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  exts_list --> pip/R --> prefix
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/18-language-ecosystems-2.svg
+   :alt: pip, cargo, and npm run inside an easyconfig; the pins stay exact
+   :class: eb-diagram
+
+   The language package manager runs inside the build. It does not become the resolver. Pins stay exact.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/18-language-ecosystems.svg
-   :alt: ecosystem
+   :alt: language package managers run inside the easyconfig
    :class: eb-diagram
 
-   ecosystem.
+   pip, cargo, and npm run inside the build. They do not replace the pin.
+#+end_export
+#+begin_export rst
+.. figure:: _static/diagrams/18-ecosystem-blocks.svg
+   :alt: PythonBundle and RPackage install through exts_list; a standalone does not
+   :class: eb-diagram
+
+   Language ecosystems bring their own installer. The easyblock is the join to a prefix.
 #+end_export
 
 #+begin_objectives

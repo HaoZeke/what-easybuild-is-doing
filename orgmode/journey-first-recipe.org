@@ -1,17 +1,31 @@
 #+TITLE: Journey: first recipe
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  read --> mechanisms --> module
-</pre>
+#+begin_export rst
+.. figure:: _static/diagrams/journey-first-recipe-2.svg
+   :alt: read the file, then the four mechanisms, then a module
+   :class: eb-diagram
+
+   First recipe: read a file the way EasyBuild does, then the four mechanisms.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/journey-first-recipe.svg
-   :alt: journey first
+   :alt: read, mechanisms, module
    :class: eb-diagram
 
-   journey first.
+   First recipe: read a file, then the four mechanisms.
 #+end_export
-TS exploration methods identify a candidate transition mechanism.
-The estimate of the transition rate (under HTST
+#+begin_export rst
+.. figure:: _static/diagrams/journey-first-pages.svg
+   :alt: first-recipe journey through tutorial, Python, toolchain, pin, robot
+   :class: eb-diagram
+
+   The first-recipe journey reads a file the way EasyBuild does, then the four mechanisms.
+#+end_export
+Read a file as EasyBuild does.
+Then the four mechanisms that everything else rests on.
+
+- [[file:00-tutorial-read-an-easyconfig.org][Read an easyconfig the way EasyBuild does]]
+- [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]
+- [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]
+- [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]
+- [[file:04-the-robot.org][The robot]]

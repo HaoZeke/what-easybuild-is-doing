@@ -1,11 +1,5 @@
 #+TITLE: A versionsuffix is part of the name
 #+OPTIONS: toc:nil num:nil
-#+begin_export html
-<pre class="mermaid">
-flowchart LR
-  name --> version --> suffix label
-</pre>
-#+end_export
 
 #+begin_objectives
 1. Say what a =versionsuffix= does, and what it does not.
