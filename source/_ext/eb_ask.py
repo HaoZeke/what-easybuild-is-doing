@@ -6,9 +6,10 @@ out loud in its own documentation: "Retrieval is local and needs nothing. The
 answer needs a model, and you choose which."
 
 This book has no server, so the split is the whole feature. What ships is the
-retrieval half: a pack of the book's own chunks with the term statistics
-precomputed, ranked in the reader's browser, answering a question with the
-passages that answer it, opened in place. If the reader has a model endpoint
+retrieval half: a pack of the book's own chunks plus the EasyBuild, EESSI
+and eb-stack docs and code that ``scripts/ingest_ask_sources.py`` walked,
+with the term statistics precomputed, ranked in the reader's browser,
+answering a question with the passages that answer it, opened in place. If the reader has a model endpoint
 of their own they can point the panel at it and get prose with citations; if
 they do not, they get the passages and a sentence saying nothing wrote an
 answer. Neither case fabricates one.
@@ -139,6 +140,49 @@ def _is_transcript(node) -> bool:
     )
 
 
+def _external_chunks(app) -> list[dict]:
+    """Chunks from EasyBuild / EESSI / eb-stack, written by ingest_ask_sources.
+
+    The file is optional. A book built without the trees still ranks its own
+    pages; a book built after ingest ranks those pages too.
+    """
+    src = Path(app.srcdir) / "_static" / "eb-ask-external.json"
+    if not src.is_file():
+        return []
+    try:
+        data = json.loads(src.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as err:
+        logger.warning("ask: could not read %s (%s)", src, err)
+        return []
+    raw = data.get("chunks") if isinstance(data, dict) else data
+    if not isinstance(raw, list):
+        logger.warning("ask: %s is not a chunk list", src)
+        return []
+    out: list[dict] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "")
+        if len(text.strip()) < 40:
+            continue
+        out.append(
+            {
+                "doc": str(item.get("doc") or item.get("source") or "external"),
+                "anchor": str(item.get("anchor") or ""),
+                "title": str(item.get("title") or ""),
+                "crumb": str(item.get("crumb") or item.get("origin") or ""),
+                "kind": str(item.get("kind") or "docs"),
+                "origin": str(item.get("origin") or ""),
+                "source": str(item.get("source") or ""),
+                "name": str(item.get("name") or ""),
+                "text": text,
+                "url": str(item.get("url") or ""),
+            }
+        )
+    logger.info("eb_ask: %d external chunks from %s", len(out), src.name)
+    return out
+
+
 def _chunks_for_doc(env, docname: str, doctree: nodes.document) -> list[dict]:
     chunks: list[dict] = []
     doc_title = env.titles.get(docname)
@@ -154,6 +198,8 @@ def _chunks_for_doc(env, docname: str, doctree: nodes.document) -> list[dict]:
                     "title": _section_title(section) or crumb,
                     "crumb": crumb,
                     "kind": "prose",
+                    "origin": "this book",
+                    "source": "book",
                     "text": text,
                 }
             )
@@ -172,6 +218,8 @@ def _chunks_for_doc(env, docname: str, doctree: nodes.document) -> list[dict]:
                     "title": node.get("eb_title", ""),
                     "crumb": crumb,
                     "kind": node.get("eb_kind", "reference"),
+                    "origin": "this book",
+                    "source": "book",
                     "name": node.get("eb_name", ""),
                     "text": node.astext(),
                 }
@@ -185,6 +233,8 @@ def _chunks_for_doc(env, docname: str, doctree: nodes.document) -> list[dict]:
                     "title": node.get("title", "") or "exercise",
                     "crumb": crumb,
                     "kind": "exercise",
+                    "origin": "this book",
+                    "source": "book",
                     "name": node.get("ident", ""),
                     "text": node.astext(),
                 }
@@ -204,6 +254,8 @@ def _chunks_for_doc(env, docname: str, doctree: nodes.document) -> list[dict]:
                     "title": caption or "a recording",
                     "crumb": crumb,
                     "kind": "transcript",
+                    "origin": "this book",
+                    "source": "book",
                     "text": node.astext(),
                 }
             )
@@ -220,6 +272,7 @@ def _build_pack(app) -> dict:
             logger.warning("ask: no doctree for %s (%s)", docname, err)
             continue
         raw.extend(_chunks_for_doc(env, docname, doctree))
+    raw.extend(_external_chunks(app))
 
     chunks = []
     df: Counter = Counter()
@@ -236,9 +289,16 @@ def _build_pack(app) -> dict:
             df[term] += 1
         # The link is computed here rather than in the browser, because the
         # html and singlehtml builders disagree about what a document's uri
-        # is and only the builder knows which one is running.
-        page = app.builder.get_target_uri(c["doc"]).split("#")[0]
-        url = f"{page}#{c['anchor']}" if c["anchor"] else page
+        # is and only the builder knows which one is running. External
+        # chunks already carry a public URL; do not rewrite those.
+        if c.get("url"):
+            url = c["url"]
+        else:
+            try:
+                page = app.builder.get_target_uri(c["doc"]).split("#")[0]
+            except Exception:
+                page = c["doc"]
+            url = f"{page}#{c['anchor']}" if c["anchor"] else page
         chunks.append(
             {
                 "id": f"c{i}",
@@ -248,6 +308,8 @@ def _build_pack(app) -> dict:
                 "title": c["title"],
                 "crumb": c["crumb"],
                 "kind": c["kind"],
+                "origin": c.get("origin", ""),
+                "source": c.get("source", ""),
                 "name": c.get("name", ""),
                 # Enough to show a passage and to mark the query terms in it.
                 # The whole chapter is a click away and the pack is a
