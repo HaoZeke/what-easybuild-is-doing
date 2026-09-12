@@ -19,6 +19,10 @@ out_templates="$here/source/_static/eb-templates.json"
 out_hierarchy="$here/source/_static/eb-hierarchy.json"
 
 if ! command -v "$eb_stack" >/dev/null 2>&1 && [ ! -x "$eb_stack" ]; then
+    if [[ -f "$out" && -f "$out_templates" && -f "$out_hierarchy" ]]; then
+        echo "gen-engine-data: no eb-stack; using committed tables." >&2
+        exit 0
+    fi
     echo "gen-engine-data: no eb-stack at '$eb_stack'." >&2
     echo "gen-engine-data: set EB_STACK to the binary, or install it on PATH." >&2
     exit 1
