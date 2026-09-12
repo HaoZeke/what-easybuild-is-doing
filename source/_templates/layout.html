@@ -6,6 +6,20 @@
   {{ super() }}
   <meta name="color-scheme" content="light dark">
   <style>
+    .eb-skip {
+      position: absolute;
+      left: -999px;
+      top: 0.75rem;
+      z-index: 1000;
+      padding: 0.4rem 0.7rem;
+      background: var(--eb-page, #f7f6f3);
+      color: var(--eb-page-ink, #24292f);
+    }
+    .eb-skip:focus {
+      left: 0.75rem;
+    }
+  </style>
+  <style>
     /* Inline so a cached eb-book.css cannot leave a cream article on a dark rail. */
     html, body, .sy-page, .sy-main, .sy-lside, article.yue, .sy-head, .sy-head-blur {
       background-color: var(--eb-page, #f7f6f3) !important;
@@ -38,5 +52,24 @@
   <script type="module">
     import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
     mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "strict" });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var search = document.querySelector("form.searchbox input[name='q']");
+      if (search && !search.getAttribute("aria-label")) {
+        search.setAttribute("aria-label", "Search the book");
+      }
+      var main = document.querySelector("article.yue[role='main']");
+      if (main && !main.id) {
+        main.id = "main-content";
+      }
+      if (!document.querySelector("a.eb-skip")) {
+        var skip = document.createElement("a");
+        skip.className = "eb-skip";
+        skip.href = "#main-content";
+        skip.textContent = "Skip to content";
+        document.body.insertBefore(skip, document.body.firstChild);
+      }
+    });
   </script>
 {% endblock %}
