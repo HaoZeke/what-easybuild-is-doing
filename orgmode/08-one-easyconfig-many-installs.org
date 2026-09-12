@@ -130,8 +130,8 @@ They get =0.9.6=, the extension's version, not =1.0=. The rebinding is
 not optional and there is no template inside an entry that reaches back
 out to the bundle. If they need =1.0= there, they have to write it.
 
-The third is different
-one of its extensions, and the bundle is evaluated before any of them.
+The third question is about the bundle, not an extension.
+The bundle is evaluated before any of them.
 =%(ext_name)s= exists for =exts_filter=, which is a template the bundle
 expands once per extension at check time; a =versionsuffix= is resolved
 long before that and has no extension in scope to ask about.

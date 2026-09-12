@@ -137,7 +137,7 @@ the mapping file has to contain the software yet.
 [[https://www.eessi.io/docs/test-suite/][EESSI test-suite documentation]]: three uses, available
 tests, [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/test.sh][bot/test.sh]], the mapping file named in Testing, and the four things it can mean.
 [[https://github.com/eth-cscs/cscs-reframe-tests][eth-cscs/cscs-reframe-tests]]
-README: [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/config][config/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][checks/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]], the listing command.
+README: [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/config][CSCS config/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][CSCS checks/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][CSCS ci/]], the listing command.
 [[https://csc.fi/en/training-calendar/csc-computing-environment-self-learning/][CSC Computing Environment self-learning]]: ten topics, no
 ReFrame. CSCS 2022 ReFrame webinar: the separate course.
 #+end_detail
@@ -147,7 +147,7 @@ ReFrame. CSCS 2022 ReFrame webinar: the separate course.
  missing line is a silent skip the next morning.
 - EESSI's suite is one tree with three filters:
  contribution (=CI=), nightly, end user.
-- CSCS lays out [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/config][config/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][checks/]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]]. The machine,
+- CSCS lays out [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/config][the config tree]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/checks][the checks tree]], [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][the ci tree]]. The machine,
  the tests, and the invocation stay apart.
 - CSC's computing-environment course is not this course.
  ReFrame is taught as its own unit, which is why it is

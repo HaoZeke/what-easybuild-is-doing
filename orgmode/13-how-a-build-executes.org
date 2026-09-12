@@ -180,7 +180,10 @@ The =skipsteps= setting in the easyconfig permanently removes a step.
 The setting applies to all users each time.
 The article [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] describes a case where =sanitycheck= was affected.
 A genuine defect moved from the build host to the user.
-The =--module-only= option executes solely the =module= step against an existing installation.
+The =--module-only= option skips fetch, extract, patch, prepare's
+unpack, configure, build, test and install. It still runs
+=prepare=, =ready=, =postiter=, =sanitycheck= and =module= against
+an existing installation.
 The option is useful when a modulefile requires regeneration while the software does not.
 The option is hazardous.
 #+ATTR_EB: :id EB-Steps-1 :title Which step, and which parameter

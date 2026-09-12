@@ -22,7 +22,8 @@
 4. Read an EasyBuild error for the assumption behind it rather than the
  state it reports.
 #+end_objectives
-The file provides a VS Code installation in a browser on a supercomputer.
+An easyconfig is a Python file EasyBuild evaluates.
+The file below is one: a VS Code installation that runs in a browser on a supercomputer.
 The file contains twenty lines.
 Recipes of this form are merged weekly.
 The installed module name is a railroad, not a sentence.
@@ -191,7 +192,8 @@ too. So they stay apart, and that is the entire reason the low line is
 not left alone: without encoding it, both names would collide on
 =EB_a_minus_b= and one package would silently get the other's easyblock.
 #+end_solution
-#+end_exercise The class for =code-server= exists.
+#+end_exercise
+The class for =code-server= exists.
 Three actions are performed.
 =mapped_arch= is computed as the source of that template value.
 An error is raised for any architecture that is neither x86-64 nor aarch64.
@@ -325,7 +327,8 @@ against a git checkout archived under the repository's name, and they
 are quiet in exactly the same way. A diff against the previous recipe
 will report them unchanged, which is the wrong question.
 #+end_solution
-#+end_exercise Two observations are relevant.
+#+end_exercise
+Two observations are relevant.
 Neither concerns QMCPACK.
 First: *An EasyBuild error reports the state it discovered*.
 The assumption underlying that state is absent from the message.

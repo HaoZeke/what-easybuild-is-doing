@@ -124,7 +124,8 @@ The download is 5511 bytes, not 26624. The hash covers the *compressed*
 form, and =B= in the manifest is the uncompressed size. Decompressing the
 5511 bytes gives exactly 26624, and what comes out is a SQLite database.
 #+end_reveal
-#+end_predict The manifest shows the root catalog =7ca4fb...=.
+#+end_predict
+The manifest shows the root catalog =7ca4fb...=.
 Objects are stored in =data/=, organized into 256 directories based on the first two hex digits of their hash.
 #+begin_src ebtranscript :source "curl and python3 against the EESSI Stratum 1, local workstation, 2026-09-10" :caption "Fetch by hash, then check the hash"
 $ h=7ca4fb6b5db9c1432243b47e306e46327cdeda19
@@ -170,7 +171,8 @@ It was established here by trying both against the live repository.
 The outcomes were a 404 and a 200.
 Treat the suffix as a fact about the deployed format rather than a documented interface.
 Expect regular file objects to have no suffix.
-The =.cvmfsdirtab= fetch later in this page relies on that. #+end_detail
+The =.cvmfsdirtab= fetch later in this page relies on that.
+#+end_detail
 * Inside the catalog
 =md5path_1= and =md5path_2= form the two halves of an MD5, with paths omitted and only their hashes retained.
 Absolute paths are not stored to conserve space.
@@ -406,7 +408,8 @@ kilobytes and lists twenty-five entries.
  in it. That is the argument for nesting, in one sentence, and it is
  why 40,070 catalogs is a feature rather than an accident.
 #+end_solution
-#+end_exercise The manifest's bottom signature uses the *repository* key located on the publisher.
+#+end_exercise
+The manifest's bottom signature uses the *repository* key located on the publisher.
 The allowed signing certificates are listed in =.cvmfswhitelist=.
 The file is signed with a different key:.
 * Two keys

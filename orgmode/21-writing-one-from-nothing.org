@@ -196,7 +196,7 @@ The line limit is 120 instead of 79.
 =E741= is ignored.
 =W291=, trailing whitespace, is replaced by a custom check that exempts comments and the =description=, =examples= and =citing= parameters.
 Those are prose.
-Prose sometimes ends a line with a
+Prose sometimes ends a line with a trailing space.
 #+ATTR_EB: :id EB-Write-2 :title Read a checksums block
 #+begin_exercise
 Three easyconfigs, three checksum blocks. Say what each one asserts, and
@@ -287,7 +287,7 @@ eb old.eb --try-toolchain-version=2025a --try-update-deps \
 The upstream warning indicates potential unwanted formatting changes.
 Replacement of local variables or templates (such as =name=, =version= or =%(version)s=) with their *value* can occur.
 Each generated file must be reviewed before it becomes a commit.
-#+end_detail #+end_detail
+#+end_detail
 
 #+ATTR_EB: :id EB-Write-1 :title From a tarball and a README
 #+begin_exercise

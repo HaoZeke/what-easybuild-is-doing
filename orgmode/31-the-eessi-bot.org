@@ -24,7 +24,7 @@
 
 #+begin_questions
 - What does a =bot: build= comment start, and what does it not start?
-- Why is =software-layer='s [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]] thirty-three lines?
+- Why is =software-layer='s [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][software-layer-scripts bot/build.sh]] thirty-three lines?
 - Where does a successful tarball go, and what still has to happen
  before a module appears on a login node?
 #+end_questions
@@ -93,7 +93,7 @@ The execution backend is an HPC cluster, one bot instance per site.
 GitHub-hosted runners are not the builders.
 =for:= and =on:= are separate (see below).
 The bot defines an interface.
-The *target repository* owns [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]] and [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/test.sh][bot/test.sh]].
+The *target repository* owns [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][scripts/bot/build.sh]] and [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/test.sh][scripts/bot/test.sh]].
 Builds run in a container so =/cvmfs= is writable, the view inside is controlled, and a machine that does not mount EESSI natively can still build.
 * The comment language
 Instructions start with =bot:=.
@@ -124,8 +124,8 @@ Partial matching does *not* apply to =for:=.
 |---+---|---|
 | =instance:...= | =inst:= | which bot instance (e.g. =aws=) |
 | =repository:...= | =repo:= | which EESSI version/repo |
-| =on:architecture=...,accelerator=...= | =on:arch=...,accel=...= | where the job runs |
-| =for:architecture=...,accelerator=...= | =for:arch=...,accel=...= | which prefix is written |
+| ~on:architecture=...,accelerator=...~ | ~on:arch=...,accel=...~ | where the job runs |
+| ~for:architecture=...,accelerator=...~ | ~for:arch=...,accel=...~ | which prefix is written |
 
 A node type that the instance config declares as having a GPU is allocated only when =accel== is also passed.
 Otherwise =on:arch=x86_64/amd/zen4= would land on a GPU zen4 node when a CPU‑only zen4 node was the intent.
@@ -181,7 +181,7 @@ git checkout --detach ${commit_sha}
 software-layer-scripts/bot/build.sh
 #+end_example
 The live pin on 2026-09-12 is =5ade683520c3655ebb57e4295f494214b92baad1=.
-That is the design session's "build logic ownership" decision in one file: the bot submits a job that runs [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]] from the *target* repository.
+That is the design session's "build logic ownership" decision in one file: the bot submits a job that runs [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][the target bot/build.sh]] from the *target* repository.
 The target repository immediately hands off to a detached scripts commit.
 The real =software-layer-scripts/bot/build.sh= then reads =cfg/job.cfg= (written by the event handler from the comment's =for:= / =on:= / repo).
 Sets =EESSI_SOFTWARE_SUBDIR_OVERRIDE= from =.architecture.software_subdir=.
@@ -258,7 +258,7 @@ Talks:
  ([[https://www.eessi.io/docs/training-events/2025/EESSI-happyhour-2025-016-EESSI-Bot-Goals-Design.pdf][EESSI-happyhour-2025-016-EESSI-Bot-Goals-Design.pdf]]): the ten
  goals on slides 3--4 (goal 4 is scarce build resources);
  GitHub App; HPC backend; =for:= / =on:=; repo-owned
- [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]]; containers; split components; *Build/Deploy/Ingest
+ [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][scripts bot/build.sh]]; containers; split components; *Build/Deploy/Ingest
  Strategy* (PDF page 12) for human triggers of build, transfer,
  ingest.
 - *Revisit the EESSI bot*, EESSI Happy Hour, 2026-06-22
@@ -298,7 +298,7 @@ failed builds]].
  =optarch= stays native. CPU-to-CPU cross-compilation is not
  implemented.
 - =software-layer/bot/build.sh= pins a
- =software-layer-scripts= commit and execs *that* [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]].
+ =software-layer-scripts= commit and execs *that* [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][pinned bot/build.sh]].
  The job's =.diff= is what selects the easystack files.
 - A green job produces a tarball. Signing is a detached =.sig= at
  deploy, and it is optional. =bot:deploy= uploads it.

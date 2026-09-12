@@ -258,7 +258,7 @@ class Prerequisites(SphinxDirective):
 
     def run(self):
         node = prerequisites_node()
-        node["title"] = "Before this chapter"
+        node["title"] = "Before this page"
         self.state.nested_parse(self.content, self.content_offset, node)
         if not node.children:
             raise self.error("prerequisites: the block is empty")
@@ -375,6 +375,8 @@ def resolve_keypoints_index(app, doctree, fromdocname):
             container += heading
             bullets = nodes.bullet_list()
             for point in entry["points"]:
+                if "(INFO/" in point or "/home/runner/" in point or "Duplicate name" in point:
+                    continue
                 item = nodes.list_item()
                 para = nodes.paragraph()
                 para += nodes.Text(point)

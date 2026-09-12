@@ -51,7 +51,6 @@ Two keys exist, each a list of paths relative to the install directory.
 The check verifies existence.
 Three files are present.
 The build passes.
-The claim scope is examined.
 It asserts that three paths exist.
 It does not assert executability, correct version, or start capability.
 A zero-byte file at =bin/vasp_std= would satisfy it.

@@ -32,9 +32,9 @@
  and a container, on stated grounds.
 #+end_objectives
 [[file:14-the-isolation-policy.org][The isolation policy]] measured that loading =foss/2025a= sets =EBROOTFOSS=; =$CC= remains unset.
-EasyBuild constructs the build environment during =prepare=; evaporation at run end is expected.
-Evaporation does not occur.
-The page discusses the location of the missing environment.
+EasyBuild constructs the build environment during =prepare=.
+That environment is gone when the build exits.
+The rest of this page says where a copy of it remains.
 * Look inside the installation first
 Each successful installation includes a rarely opened subdirectory.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10; a Tarball install of a one-file test package" :caption "What ends up in <installdir>/easybuild/"

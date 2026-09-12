@@ -135,7 +135,8 @@ The following table shows the mapping.
 
 An explicit =start_dir= resolves relative to that result.
 A =start_dir= suitable for a git checkout may be wrong for a release tarball of the same software.
-#+end_detail That rule (see [[dive:start-dir-descent]]) represents the entire failure. =wobble-1.0= contained exactly one entry, =bin=. =bin= also contained a single entry. EasyBuild descended twice. =Tarball= copied the contents of *that* directory into the install prefix. The install tree is: #+end_detail =%(installdir)s/bin/wobble= does not exist.
+#+end_detail
+That rule (see [[dive:start-dir-descent]]) represents the entire failure. =wobble-1.0= contained exactly one entry, =bin=. =bin= also contained a single entry. EasyBuild descended twice. =Tarball= copied the contents of *that* directory into the install prefix. The install tree is: #+end_detail =%(installdir)s/bin/wobble= does not exist.
 =%(installdir)s/wobble= exists.
 Exit 127 reported the condition.
 There are two ways to fix it.
@@ -215,7 +216,8 @@ The second location will confirm the successful completion of those steps.
  the build system was told a prefix it disagreed with. Nothing in the
  configure output is worth reading until those two are answered.
 #+end_solution
-#+end_exercise The error block lists the command, the exit code, the cwd, and a path to =out.txt=.
+#+end_exercise
+The error block lists the command, the exit code, the cwd, and a path to =out.txt=.
 Open that file.
 Two logs exist.
 Identifying which appears on the page prevents confusion.

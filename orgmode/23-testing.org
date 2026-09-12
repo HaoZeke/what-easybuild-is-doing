@@ -131,7 +131,9 @@ export EASYBUILD_TEST_REPORT_ENV_FILTER='^SSH|USER|HOSTNAME|UID|.*COOKIE.*'
 #+end_example
 A report is generated regardless of request.
 The report is placed beside the installation log as =<log basename>_test_report.md=.
-Read a report before uploading the first one. #+end_detail The contents (see [[dive:test-report-contents]]) enumerate the machine, the configuration, and the modules.
+Read a report before uploading the first one.
+#+end_detail
+The contents (see [[dive:test-report-contents]]) enumerate the machine, the configuration, and the modules.
 A test report is evidence.
 A reviewer can tell whether the success applies.
 * Testing on hardware the site does not have

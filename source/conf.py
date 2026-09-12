@@ -73,6 +73,7 @@ html_js_files = [
     "https://cdn.tailwindcss.com",
     ("eb-annotate.js", {"defer": "defer"}),
     ("vangrail-kernel.js", {"defer": "defer"}),
+    ("eb-a11y.js", {"defer": "defer"}),
     "hypothesis-config.js",
     ("https://hypothes.is/embed.js", {"async": "async"}),
 ]
@@ -131,6 +132,7 @@ epub_exclude_files = [
     # Annotations need a browser to store them in.
     "_static/eb-annotate.css",
     "_static/eb-annotate.js",
+    "_static/eb-a11y.js",
     "_static/eb-widget.css",
     "_static/eb-widget.js",
     "_static/eb-widget-engine.js",

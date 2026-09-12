@@ -1017,6 +1017,20 @@ article.yue .toctree-wrapper .toctree-l2 {
   color: var(--eb-fg-muted);
 }
 
+.eb-skip {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 20;
+  padding: 0.35rem 0.6rem;
+  background: var(--eb-page-ink, #24292f);
+  color: var(--eb-page, #f7f6f3);
+  text-decoration: none;
+}
+.eb-skip:focus {
+  top: 0.75rem;
+}
+
 .back-to-top {
   right: 1.25rem !important;
   left: auto !important;

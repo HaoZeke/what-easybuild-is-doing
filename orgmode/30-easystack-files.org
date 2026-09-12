@@ -190,7 +190,8 @@ easyconfigs pull request 25908, commit
 3. Octave can be deployed as soon as the bot has green artefacts on
 every supported CPU target. scikit-bio waits on pull request 25908 being merged, even if the bot has already built it from that commit.
 That is the webinar's rule, not a courtesy.
-#+end_solution #+end_exercise
+#+end_solution
+#+end_exercise
 
 * Rebuilds are a different directory, and a different flag
 By default, EESSI does not rebuild.

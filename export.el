@@ -194,6 +194,12 @@
 
 (defun ebguide-publish-to-rst (plist filename pub-dir)
   "Publish FILENAME as RST through the ebguide-rst backend."
+  (with-temp-buffer
+    (insert-file-contents filename)
+    (goto-char (point-min))
+    (when (re-search-forward "^#\\+end_[a-z]+ .+" nil t)
+      (error "%s: glued #+end_* marker at line %d"
+             filename (line-number-at-pos))))
   (org-publish-org-to 'ebguide-rst filename ".rst" plist pub-dir))
 
 ;; Sphinx resolves :doc: roles to rendered pages; ox-rst would otherwise
