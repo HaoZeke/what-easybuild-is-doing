@@ -25,6 +25,7 @@ version = "0.1"
 extensions = [
     "sphinx_copybutton",
     "sphinx_design",
+    "sphinxcontrib.bibtex",
     "eb_widget",
     "eb_transcript",
     "eb_lesson",
@@ -33,6 +34,11 @@ extensions = [
     "eb_knowl",
     "eb_ask",
 ]
+
+# OokCite collection `what-easybuild-is-doing`, exported to refs.bib.
+# McCalpin 1995 is the one entry with no DOI; STREAM's own citation.
+bibtex_bibfiles = ["refs.bib"]
+bibtex_reference_style = "author_year"
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -50,10 +56,14 @@ highlight_language = "none"
 
 nitpicky = True
 
+graphviz_output_format = "svg"
+
 # -- HTML --------------------------------------------------------------------
 
 html_theme = "shibuya"
 html_static_path = ["_static"]
+html_extra_path = ["CNAME"]
+html_baseurl = "https://hpceb.rgoswami.me/"
 # Typography and layout for long-form reading, layered over the theme rather
 # than replacing it. Scoped to article.yue so navigation keeps the theme's
 # own design; see the file for what it changes and why.
@@ -61,7 +71,11 @@ html_css_files = ["eb-book.css", "eb-annotate.css"]
 # Annotations are the reader's own, stored in their browser and exported by
 # them; see _static/eb-annotate.js for the anchoring model and the
 # accessibility requirements it has to meet.
-html_js_files = [("eb-annotate.js", {"defer": "defer"})]
+html_js_files = [
+    "https://cdn.tailwindcss.com",
+    ("eb-annotate.js", {"defer": "defer"}),
+    ("vangrail-kernel.js", {"defer": "defer"}),
+]
 html_title = project
 html_copy_source = False
 html_show_sourcelink = False
@@ -69,8 +83,10 @@ html_show_sourcelink = False
 html_theme_options = {
     "github_url": "https://github.com/HaoZeke/what-easybuild-is-doing",
     "nav_links": [
-        {"title": "eb-stack", "url": "https://eb-stack.rgoswami.me"},
-        {"title": "EasyBuild docs", "url": "https://docs.easybuild.io"},
+        {"title": "Journeys", "url": "journeys"},
+        {"title": "RecipeReader", "url": "part-a-recipe"},
+        {"title": "StackWalker", "url": "part-a-stack"},
+        {"title": "ReframeReader", "url": "part-a-test"},
     ],
 }
 
@@ -109,6 +125,9 @@ epub_exclude_files = [
     "_static/eb-ask.css",
     "_static/eb-ask.js",
     "_static/eb-ask-pack.json",
+    "_static/eb-ask-external.json",
+    "_static/vangrail-kernel.js",
+    "_static/vangrail_kernel.wasm",
     # Annotations need a browser to store them in.
     "_static/eb-annotate.css",
     "_static/eb-annotate.js",
@@ -118,10 +137,12 @@ epub_exclude_files = [
     "_static/eb-charmap.json",
     "_static/eb-templates.json",
     "_static/eb-hierarchy.json",
+    "_static/eb-universe.json",
     # Sphinx leaves this behind when a build is interrupted, and the epub
     # builder then refuses a file it has no mimetype for. Under -W that turns
     # a stale artifact from a previous run into a failed build.
     ".buildinfo.bak",
+    "CNAME",
 ]
 # eb-transcript.css is deliberately absent from that list. A transcript is
 # static text and renders in the EPUB, so its stylesheet belongs there.

@@ -1,17 +1,40 @@
-#+TITLE: The stack
+#+TITLE: StackWalker
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker
 
-Part 2
+StackWalker
+#+end_export
+#+begin_export rst
+.. image:: _static/marks/stack-walker.svg
+   :alt: StackWalker
+   :class: eb-part-mark
+   :width: 280
 #+end_export
 A stack forms a tree of modules on a machine that may never have built them.
-EESSI is one such tree.
-CernVM-FS provides the mechanism by which it arrives.
+EESSI is one such tree.[fn:eessi]
+CernVM-FS provides the mechanism by which it arrives.[fn:cvmfs]
 A site stack resides alongside it.
 This part describes the arrival: the stratum, the bot, the easystack file, and the host injection.
+#+begin_export rst
+.. figure:: _static/diagrams/stack-walker.svg
+   :alt: stratum-0 to stratum-1 to CernVM-FS to client mount to module tree
+   :class: eb-diagram
+
+   StackWalker: a stratum becomes a module tree.
+#+end_export
 [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] is the first read when the machine lacks its own software.
+#+begin_export rst
+.. rst-class:: eb-upstream
+
+- `EESSI <https://www.eessi.io/>`__
+- `EESSI docs <https://eessi.github.io/docs/>`__
+- `software-layer <https://github.com/EESSI/software-layer>`__
+- `CernVM-FS <https://cernvm.cern.ch/fs/>`__
+#+end_export
+[fn:eessi] https://www.eessi.io/
+[fn:cvmfs] https://cernvm.cern.ch/fs/
 #+begin_export rst
 .. toctree::
  :maxdepth: 1

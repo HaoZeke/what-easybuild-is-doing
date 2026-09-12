@@ -4,11 +4,24 @@
 #+begin_export rst
 .. rst-class:: eb-subtitle
 
-A recipe. A stack. A test.
+RecipeReader. StackWalker. ReframeReader.
 #+end_export
-EasyBuild documentation indicates the required typing.
+EasyBuild documentation indicates the required typing.[fn:ebdocs]
 This book is the file, the tree, and the run.
 A journey is a how-to path across existing pages.
+#+begin_export rst
+.. figure:: _static/diagrams/book-map.svg
+   :alt: RecipeReader to StackWalker to ReframeReader
+   :class: eb-diagram
+
+   Three named parts. A journey crosses them.
+#+end_export
+#+begin_export html
+<pre class="mermaid">
+flowchart LR
+  A[RecipeReader] --> B[StackWalker] --> C[ReframeReader]
+</pre>
+#+end_export
 #+begin_export rst
 .. rst-class:: eb-map
 
@@ -17,8 +30,16 @@ A journey is a how-to path across existing pages.
 - `Port a package <journey-port.html>`_ - conda-forge or Spack in, an easyconfig out
 - `Write a test <journey-write-a-test.html>`_ - four kinds, then a ReFrame class
 #+end_export
-Pages are grouped by reading type: [[file:part-a-recipe.org][the recipe]], [[file:part-a-stack.org][the stack]], [[file:part-a-test.org][the test]].
+Pages are grouped by product: [[file:part-a-recipe.org][RecipeReader]], [[file:part-a-stack.org][StackWalker]], [[file:part-a-test.org][ReframeReader]].
 The path, the papers, and the sample execution details are [[file:colophon.org][at the back]].
+#+begin_export rst
+.. rst-class:: eb-upstream
+
+- `EasyBuild <https://easybuild.io/>`__ · `docs <https://docs.easybuild.io/>`__
+- `EESSI <https://www.eessi.io/>`__ · `docs <https://eessi.github.io/docs/>`__
+- `ReFrame <https://reframe-hpc.readthedocs.io/>`__
+#+end_export
+[fn:ebdocs] https://docs.easybuild.io/
 #+begin_export rst
 .. toctree::
  :hidden:

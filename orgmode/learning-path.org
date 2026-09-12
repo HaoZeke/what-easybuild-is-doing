@@ -7,9 +7,9 @@ The page is the curriculum and contains hour-sized levels with named prerequisit
 A reader arrives with a task.
 The map can be entered at any point.
 The book consists of three parts, each represented by a page.
-The part [[file:part-a-recipe.org][The recipe]] provides the file and the build.
-The part [[file:part-a-stack.org][The stack]] provides a tree on a machine that may not have built it.
-The part [[file:part-a-test.org][The test]] provides four kinds of testing, then ReFrame.
+[[file:part-a-recipe.org][RecipeReader]] provides the file and the build.
+[[file:part-a-stack.org][StackWalker]] provides a tree on a machine that may not have built it.
+[[file:part-a-test.org][ReframeReader]] provides four kinds of testing, then ReFrame.
 The levels are hour-sized entries into those parts.
 Numbering does not represent the curriculum.
 * By task
@@ -23,7 +23,7 @@ Numbering does not represent the curriculum.
 | A stack on a machine with none. | [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] |
 | A ReFrame test of an installed module. | [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] |
 | EasyBuild is the wrong tool. | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
-* The recipe
+* RecipeReader
 
 * Level A. Read a recipe
 One hour.
@@ -106,7 +106,7 @@ The bill is the fraction requested, not the fraction used.
 
 A completed build prints a single line.
 A completed build creates one file.
-* The test
+* ReframeReader
 The official tutorial, the CSCS webinar, ExCALIBUR-tests and the EESSI suite each follow the same sequence.
 The sequence consists of a test class, the pipeline, the configuration file, a performance number, and the portable suite.
 There are two levels.

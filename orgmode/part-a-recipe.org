@@ -1,22 +1,44 @@
-#+TITLE: The recipe
+#+TITLE: RecipeReader
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker
 
-Part 1
+RecipeReader
+#+end_export
+#+begin_export rst
+.. image:: _static/marks/recipe-reader.svg
+   :alt: RecipeReader
+   :class: eb-part-mark
+   :width: 280
 #+end_export
 An easyconfig is a file.
-EasyBuild evaluates the easyconfig, selects an easyblock, resolves a toolchain, and writes a module.
+EasyBuild evaluates the easyconfig, selects an easyblock, resolves a toolchain, and writes a module.[fn:ebdocs]
 The file defines a pin.
 The file defines the robot search.
 The file defines a sanity check.
 The file defines build execution.
 The file defines recipe creation when none exists.
+#+begin_export rst
+.. figure:: _static/diagrams/recipe-reader.svg
+   :alt: .eb file to evaluate to easyblock to toolchain to module
+   :class: eb-diagram
+
+   RecipeReader: the file becomes a module.
+#+end_export
 Start with the [[file:00-tutorial-read-an-easyconfig.org][tutorial]].
 The tutorial takes about twenty minutes.
 Installation is not required.
 Four entries are presented instead of thirty pages.
+#+begin_export rst
+.. rst-class:: eb-upstream
+
+- `EasyBuild docs <https://docs.easybuild.io/>`__
+- `easybuild-framework <https://github.com/easybuilders/easybuild-framework>`__
+- `easybuild-easyblocks <https://github.com/easybuilders/easybuild-easyblocks>`__
+- `easybuild-easyconfigs <https://github.com/easybuilders/easybuild-easyconfigs>`__
+#+end_export
+[fn:ebdocs] https://docs.easybuild.io/
 #+begin_export rst
 .. toctree::
  :maxdepth: 1

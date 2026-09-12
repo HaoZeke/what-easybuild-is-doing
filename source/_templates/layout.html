@@ -1,0 +1,42 @@
+{# A book, not a theme demo. Shibuya still emits the document;
+   the rail and the "Made with Sphinx" line are painted out in CSS. #}
+{% extends "!layout.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <meta name="color-scheme" content="light dark">
+  <style>
+    /* Inline so a cached eb-book.css cannot leave a cream article on a dark rail. */
+    html, body, .sy-page, .sy-main, .sy-lside, article.yue, .sy-head, .sy-head-blur {
+      background-color: var(--eb-page, #f7f6f3) !important;
+      color: var(--eb-page-ink, #24292f);
+    }
+    html.dark, html[data-color-mode="dark"] {
+      --eb-page: #1a1917;
+      --eb-page-ink: #ecece8;
+      --eb-fg: #ecece8;
+      color-scheme: dark;
+    }
+    @media (prefers-color-scheme: dark) {
+      html:not(.light):not([data-color-mode="light"]) {
+        --eb-page: #1a1917;
+        --eb-page-ink: #ecece8;
+        --eb-fg: #ecece8;
+        color-scheme: dark;
+      }
+    }
+  </style>
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = { corePlugins: { preflight: false } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="application/json" class="js-hypothesis-config">
+    {"openSidebar": false, "showHighlights": "whenSidebarOpen", "theme": "clean", "enableExperimentalNewNoteButton": true}
+  </script>
+  <script src="https://hypothes.is/embed.js" async></script>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "strict" });
+  </script>
+{% endblock %}

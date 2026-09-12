@@ -53,11 +53,15 @@ article.yue {
 
 /* --- palette ---------------------------------------------------------------
  *
- * Six values, defined once in light and redefined once in dark. The accent is
- * used for exactly two things: a link, and the rule that marks a live sample.
- * Anything that needs a third colour is usually a structure problem.
+ * Tokens live on <html>. Shibuya's switch sets html.dark / html.light and
+ * data-color-mode="dark|light|auto". It never sets data-theme. Putting the
+ * palette on the root means article, sidebar and header all read the same
+ * ink and paper; a token on article.yue alone left the chrome dark and the
+ * page cream.
  */
-article.yue {
+html,
+html.light,
+html[data-color-mode="light"] {
   --eb-fg: #24292f;
   --eb-fg-muted: #57606a;
   --eb-rule: #d8dee4;
@@ -66,44 +70,88 @@ article.yue {
   --eb-surface: #f6f8fa;
   --eb-surface-edge: #d0d7de;
   --eb-code-fg: #7c4a03;
+  --eb-page: #f7f6f3;
+  --eb-page-ink: #24292f;
+}
+
+html.dark,
+html[data-color-mode="dark"] {
+  --eb-fg: #ecece8;
+  --eb-fg-muted: #b4b2aa;
+  --eb-rule: #3a3833;
+  --eb-accent: #6cb6ff;
+  --eb-accent-quiet: #6cb6ff26;
+  --eb-surface: #221f1c;
+  --eb-surface-edge: #3a3833;
+  --eb-code-fg: #e3b341;
+  --eb-page: #1a1917;
+  --eb-page-ink: #ecece8;
+  --sy-c-background: #1a1917;
+  --sy-c-text: #ecece8;
+  --sy-c-heading: #f4f3ee;
+  --sy-c-light: #b4b2aa;
+  --sy-c-bold: #f4f3ee;
+  --yue-c-text: #ecece8;
+  --yue-c-heading: #f4f3ee;
+  --yue-c-bold: #f4f3ee;
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
-  article.yue {
-    --eb-fg: #e6edf3;
-    --eb-fg-muted: #9198a1;
-    --eb-rule: #30363d;
+  html:not(.light):not([data-color-mode="light"]) {
+    --eb-fg: #ecece8;
+    --eb-fg-muted: #b4b2aa;
+    --eb-rule: #3a3833;
     --eb-accent: #6cb6ff;
     --eb-accent-quiet: #6cb6ff26;
-    --eb-surface: #161b22;
-    --eb-surface-edge: #30363d;
+    --eb-surface: #221f1c;
+    --eb-surface-edge: #3a3833;
     --eb-code-fg: #e3b341;
+    --eb-page: #1a1917;
+    --eb-page-ink: #ecece8;
+    --sy-c-background: #1a1917;
+    --sy-c-text: #ecece8;
+    --sy-c-heading: #f4f3ee;
+    --sy-c-light: #b4b2aa;
+    --sy-c-bold: #f4f3ee;
+    --yue-c-text: #ecece8;
+    --yue-c-heading: #f4f3ee;
+    --yue-c-bold: #f4f3ee;
+    color-scheme: dark;
   }
 }
 
-/* The theme toggles a class rather than relying only on the media query, so
-   both routes have to set the same values or a manual switch does nothing. */
-html[data-theme="dark"] article.yue,
-.dark article.yue {
-  --eb-fg: #e6edf3;
-  --eb-fg-muted: #9198a1;
-  --eb-rule: #30363d;
-  --eb-accent: #6cb6ff;
-  --eb-accent-quiet: #6cb6ff26;
-  --eb-surface: #161b22;
-  --eb-surface-edge: #30363d;
-  --eb-code-fg: #e3b341;
+/* Home-page part cards. sphinx-design chrome, book type. */
+article.yue .sd-card {
+  border: 1px solid var(--eb-surface-edge);
+  background: var(--eb-surface);
+  border-radius: 2px;
+}
+article.yue .sd-card-title {
+  font-family: var(--eb-sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+article.yue .sd-card-body {
+  font-size: 0.95rem;
+  color: var(--eb-fg-muted);
 }
 
-html[data-theme="light"] article.yue {
-  --eb-fg: #24292f;
-  --eb-fg-muted: #57606a;
-  --eb-rule: #d8dee4;
-  --eb-accent: #0b6bcb;
-  --eb-accent-quiet: #0b6bcb26;
-  --eb-surface: #f6f8fa;
-  --eb-surface-edge: #d0d7de;
-  --eb-code-fg: #7c4a03;
+/* Sidebar: parts and their next level. Deeper pages stay on the part page. */
+.sy-rail .toctree-l3,
+.sy-rail .toctree-l4 {
+  display: none;
+}
+
+/* Part openers. A small kicker above the title, same accent as a link. */
+article.yue .eb-part-kicker {
+  font-family: var(--eb-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--eb-accent);
+  margin: 0 0 0.35rem;
 }
 
 /* --- the gutter grid -------------------------------------------------------
@@ -734,4 +782,235 @@ article.yue > h1 + p {
     text-decoration: none;
     color: inherit;
   }
+}
+
+/* --- the book, not the theme ----------------------------------------------
+ *
+ * Crafting Interpreters, Janet, Tufte: a page is paper, a title, prose,
+ * and the next title. A documentation theme is a left rail of every
+ * page, a "Made with", and a search box. Those go away.
+ */
+
+/* Paper and ink come from --eb-page / --eb-page-ink on <html>. Every
+   surface has to take them: Shibuya darkens the header and the rail via
+   html.dark and leaves the article on the light --sy-c-background that
+   :root still holds. */
+html,
+body,
+.sy-page,
+.sy-main,
+.sy-lside,
+.sy-lside-inner,
+.sy-scrollbar,
+article.yue,
+.sy-head,
+.sy-head-blur,
+.sy-foot {
+  background-color: var(--eb-page) !important;
+  color: var(--eb-page-ink);
+}
+
+article.yue,
+article.yue p,
+article.yue li,
+article.yue h1,
+article.yue h2,
+article.yue h3,
+article.yue h4,
+article.yue dt,
+article.yue dd {
+  color: var(--eb-fg) !important;
+}
+
+.sy-lside a {
+  color: var(--eb-fg-muted) !important;
+}
+
+.sy-lside a.current,
+.sy-lside .current > a {
+  color: var(--eb-page-ink) !important;
+}
+
+.sy-head a,
+.sy-head-brand,
+.sy-head-links a {
+  color: var(--eb-page-ink) !important;
+}
+
+/* Keep the left contents. Hide only the right "on this page" rail
+   and the theme footer chrome. Do not cap the flex row. */
+.sy-rside,
+.sy-breadcrumbs,
+.sy-foot-copyright,
+.sy-foot-socials,
+.rside-overlay {
+  display: none !important;
+}
+
+.sy-page {
+  max-width: 88rem !important;
+}
+
+main.sy-main {
+  max-width: none !important;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+article.yue {
+  --eb-measure: 72ch;
+}
+
+.sy-head {
+  border-bottom: 1px solid var(--eb-rule) !important;
+  box-shadow: none !important;
+}
+
+.sy-head a,
+.sy-head-brand,
+.sy-head-links a {
+  font-family: Inter, system-ui, sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 550 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+}
+
+article.yue h1 {
+  font-size: clamp(1.9rem, 4vw, 2.7rem) !important;
+  line-height: 1.15 !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.02em !important;
+  text-wrap: balance;
+}
+
+article.yue .eb-part-kicker {
+  font-family: var(--eb-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  font-weight: 650;
+}
+
+article.yue img.eb-part-mark,
+article.yue .eb-part-mark {
+  display: block;
+  max-width: 18rem;
+  height: auto;
+  margin: 0 0 1.25rem;
+  color: var(--eb-page-ink);
+}
+
+article.yue figure.eb-diagram,
+article.yue img.eb-diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0 2rem;
+}
+
+article.yue figure.eb-diagram img {
+  max-width: 100%;
+  height: auto;
+}
+
+article.yue .eb-upstream {
+  font-family: var(--eb-sans);
+  font-size: 0.92rem;
+  margin: 2rem 0 2.5rem;
+}
+
+article.yue .eb-upstream ul {
+  list-style: none;
+  padding: 0;
+}
+
+article.yue pre.mermaid {
+  background: transparent;
+  border: 0;
+  font-size: 0.9rem;
+}
+
+article.yue .eb-map {
+  list-style: none;
+  padding: 0;
+  margin: 3rem 0 4rem;
+}
+
+article.yue .eb-map li {
+  margin: 0;
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--eb-rule);
+}
+
+article.yue .eb-map li:last-child {
+  border-bottom: 1px solid var(--eb-rule);
+}
+
+article.yue .eb-map a {
+  font-size: 1.85rem;
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  text-decoration-color: transparent;
+}
+
+article.yue .eb-map a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.14em;
+}
+
+article.yue .eb-journeys {
+  list-style: none;
+  padding: 0;
+}
+
+article.yue ol {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sphinx still emits the master toctree on the title page for prev/next.
+   Readers get the three names above, not the whole tree. */
+body:has(#what-easybuild-is-doing) article.yue .toctree-wrapper,
+.sy-main:has(#what-easybuild-is-doing) .toctree-wrapper {
+  display: none !important;
+}
+
+article.yue .toctree-wrapper ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+article.yue .toctree-wrapper li {
+  font-size: 1.15rem;
+  margin: 0.45rem 0;
+}
+
+article.yue .toctree-wrapper .toctree-l2 {
+  font-size: 1rem;
+  color: var(--eb-fg-muted);
+}
+
+.sy-foot {
+  background: transparent !important;
+  border-top: 1px solid var(--eb-rule) !important;
+  margin-top: 4rem;
+}
+
+.sy-foot .title {
+  font-family: Literata, Georgia, serif !important;
+  font-size: 1.15rem !important;
+}
+
+article.yue a.headerlink {
+  visibility: hidden;
+}
+
+article.yue h1:hover > a.headerlink,
+article.yue h2:hover > a.headerlink {
+  visibility: visible;
+  text-decoration: none;
+  font-size: 0.55em;
+  color: var(--eb-rule);
 }

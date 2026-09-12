@@ -121,7 +121,7 @@ Tests are mapped to software in =tests/eessi_test_mapping/software_to_tests.yml=
 Adding software declares which tests should now run rather than leaving somebody to remember.
 The build bot runs them through =bot/test.sh= on the architecture the build targeted.
 The rule is small: *a test has a location, and a result without its location is not a result.* A green test on a login node and a green test on the GPU node a user submitted to are two different facts, and only one of them answers the ticket.
-Part 2 of this book is that kind in full: [[file:39-a-reframe-test-is-a-class.org][chapters 39 to 47]].
+[[file:part-a-test.org][ReframeReader]] is that kind in full: [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] through [[file:47-reading-a-failed-reframe-run.org][Reading a failed ReFrame run]].
 A test class, the six-stage pipeline, the configuration file, a performance number, then the portable suite and a failed run.
 CSCS teaches it as a webinar separate from getting started; EESSI walks a job script, a site-specific test, then a mixin.
 The mapping file above is [[file:46-software-maps-to-tests.org][Software maps to tests]].

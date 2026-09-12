@@ -1,21 +1,43 @@
-#+TITLE: The test
+#+TITLE: ReframeReader
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
 .. rst-class:: eb-part-kicker
 
-Part 3
+ReframeReader
+#+end_export
+#+begin_export rst
+.. image:: _static/marks/reframe-reader.svg
+   :alt: ReframeReader
+   :class: eb-part-mark
+   :width: 300
 #+end_export
 A module that loads is not a module that ran the workload.
 [[file:23-testing.org][Testing, and the four things it can mean]] names four kinds of testing.
-The fourth kind is ReFrame.
+The fourth kind is ReFrame.[fn:reframe]
 ReFrame is a decorated class.
 ReFrame is a six-stage pipeline.
 ReFrame is a configuration file that is the machine.
-CSCS teaches ReFrame as its own course.
+CSCS teaches ReFrame as its own course.[fn:cscs]
 This part also teaches ReFrame.
+#+begin_export rst
+.. figure:: _static/diagrams/reframe-reader.svg
+   :alt: setup to compile to run to sanity to performance to cleanup
+   :class: eb-diagram
+
+   ReframeReader: six stages. The configuration file is the machine.
+#+end_export
 Start at [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]].
 This step assumes that Testing, and the four things it can mean has already been read.
+#+begin_export rst
+.. rst-class:: eb-upstream
+
+- `ReFrame docs <https://reframe-hpc.readthedocs.io/>`__
+- `reframe-hpc/reframe <https://github.com/reframe-hpc/reframe>`__
+- `CSCS ReFrame tutorial <https://reframe-hpc.readthedocs.io/en/stable/tutorial.html>`__
+#+end_export
+[fn:reframe] https://reframe-hpc.readthedocs.io/
+[fn:cscs] https://www.cscs.ch/
 #+begin_export rst
 .. toctree::
  :maxdepth: 1
