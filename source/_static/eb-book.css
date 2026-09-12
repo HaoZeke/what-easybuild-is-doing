@@ -69,7 +69,8 @@ html[data-color-mode="light"] {
   --eb-accent-quiet: #0b6bcb26;
   --eb-surface: #f6f8fa;
   --eb-surface-edge: #d0d7de;
-  --eb-code-fg: #7c4a03;
+  --eb-code-fg: #24292f;
+  --eb-code-bg: #eceae4;
   --eb-page: #f7f6f3;
   --eb-page-ink: #24292f;
 }
@@ -83,7 +84,8 @@ html[data-color-mode="dark"] {
   --eb-accent-quiet: #6cb6ff26;
   --eb-surface: #221f1c;
   --eb-surface-edge: #3a3833;
-  --eb-code-fg: #e3b341;
+  --eb-code-fg: #ecece8;
+  --eb-code-bg: #2a2824;
   --eb-page: #1a1917;
   --eb-page-ink: #ecece8;
   --sy-c-background: #1a1917;
@@ -106,7 +108,8 @@ html[data-color-mode="dark"] {
     --eb-accent-quiet: #6cb6ff26;
     --eb-surface: #221f1c;
     --eb-surface-edge: #3a3833;
-    --eb-code-fg: #e3b341;
+    --eb-code-fg: #ecece8;
+    --eb-code-bg: #2a2824;
     --eb-page: #1a1917;
     --eb-page-ink: #ecece8;
     --sy-c-background: #1a1917;
@@ -392,9 +395,10 @@ article.yue pre {
 }
 
 article.yue :not(pre) > code {
-  background: none;
+  background: var(--eb-code-bg);
   color: var(--eb-code-fg);
-  padding: 0 0.1em;
+  padding: 0.08em 0.28em;
+  border-radius: 3px;
   /* A parameter name is one word; break it only if it cannot fit. */
   overflow-wrap: break-word;
 }
@@ -1011,6 +1015,17 @@ article.yue .toctree-wrapper li {
 article.yue .toctree-wrapper .toctree-l2 {
   font-size: 1rem;
   color: var(--eb-fg-muted);
+}
+
+.back-to-top {
+  right: 1.25rem !important;
+  left: auto !important;
+  bottom: 1.25rem !important;
+  z-index: 2;
+}
+
+article.yue .eb-detail {
+  margin-bottom: 4.5rem;
 }
 
 .sy-foot {

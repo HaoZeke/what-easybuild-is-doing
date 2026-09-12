@@ -214,21 +214,25 @@ smallest change that makes the claim true.
 #+end_exercise
 
 * What the PR is allowed to say
-The overlay is four files: ASAGI 1.0, easi 1.7.0, PSpaMM 0.3.1 on =gfbf-2025a=, SeisSol 1.3.2.
-The SeisSol checksum is the inject digest of the recursive =git_config= archive.
-That digest lives in the package-config as =source_checksums=.
-It is not a Spack hash and not a working-tree hash.
-=eb --check-contrib= ran on the four files.
-It passed style and SHA256.
-=eb --new-pr= opened [[https://github.com/easybuilders/easybuild-easyconfigs/pull/26851][easybuild-easyconfigs#26851]] from the HaoZeke fork onto =develop=.
-The body names the four files and the Lua 5.4 bound on easi 1.7.0.
-=resolves= is the SAT of the 2025a robot plus the overlay.
-=builds= is the site wrapper install of those four files.
-A login-node =--help= provides the sanity the recipe declared.
-It is not a TPV run.
-=eb --from-pr 26851 --robot --force= rebuilt the same four files in 14 minutes 49 seconds.
-All results were SUCCESS.
-That is the report referenced in the PR comment.
+The overlay is four files on the 2025 generation.
+
+- ASAGI 1.0, easi 1.7.0, PSpaMM 0.3.1 on =gfbf-2025a=, SeisSol 1.3.2.
+- The SeisSol checksum is the inject digest of the recursive
+  =git_config= archive. It lives in the package-config as
+  =source_checksums=. It is not a Spack hash and not a working-tree
+  hash.
+- =eb --check-contrib= passed style and SHA256 on those four files.
+- =eb --new-pr= opened
+  [[https://github.com/easybuilders/easybuild-easyconfigs/pull/26851][easybuild-easyconfigs#26851]]
+  from the HaoZeke fork onto =develop=. The body names the four files
+  and the Lua 5.4 bound on easi 1.7.0.
+- =resolves= is the SAT of the 2025a robot plus the overlay.
+- =builds= is the site wrapper install of those four files.
+- A login-node =--help= is the sanity the recipe declared. It is not a
+  TPV run.
+- =eb --from-pr 26851 --robot --force= rebuilt the same four files in
+  14 minutes 49 seconds. All results were SUCCESS. That is the report
+  in the PR comment.
 #+ATTR_EB: :id sources-48 :title Where this page comes from :kind sources
 #+begin_detail
 Public artifacts, read 2026-09-12.
