@@ -1,14 +1,14 @@
 direction: right
-n0: "RecipeReader"
-n1: "StackWalker"
-n2: "ReframeReader"
-n3: "first recipe"
-n4: "build failed"
-n5: "port"
-n6: "write a test"
-n0 -> n1
-n1 -> n2
-n2 -> n3
-n3 -> n4
-n4 -> n5
-n5 -> n6
+rr: RecipeReader
+sw: StackWalker
+rf: ReframeReader
+j1: first recipe
+j2: build failed
+j3: port
+j4: write a test
+j1 -> rr
+j2 -> rr
+j3 -> rr
+j3 -> sw
+j4 -> rf
+rr -> sw -> rf
