@@ -18,12 +18,6 @@
 
 StackWalker
 #+end_export
-#+begin_export rst
-.. image:: _static/marks/stack-walker.svg
-   :alt: StackWalker
-   :class: eb-part-mark
-   :width: 280
-#+end_export
 A stack forms a tree of modules on a machine that may never have built them.
 EESSI is one such tree.[fn:eessi]
 CernVM-FS provides the mechanism by which it arrives.[fn:cvmfs]

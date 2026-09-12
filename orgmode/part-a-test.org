@@ -22,12 +22,6 @@
 
 ReframeReader
 #+end_export
-#+begin_export rst
-.. image:: _static/marks/reframe-reader.svg
-   :alt: ReframeReader
-   :class: eb-part-mark
-   :width: 300
-#+end_export
 A module that loads is not a module that ran the workload.
 [[file:23-testing.org][Testing, and the four things it can mean]] names four kinds of testing.
 The fourth kind is ReFrame.[fn:reframe]

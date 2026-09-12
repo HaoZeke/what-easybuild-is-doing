@@ -16,12 +16,6 @@
 
 RecipeReader
 #+end_export
-#+begin_export rst
-.. image:: _static/marks/recipe-reader.svg
-   :alt: RecipeReader
-   :class: eb-part-mark
-   :width: 280
-#+end_export
 An easyconfig is a file.
 EasyBuild evaluates the easyconfig, selects an easyblock, resolves a toolchain, and writes a module.[fn:ebdocs]
 The file defines a pin.

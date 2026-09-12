@@ -1,0 +1,15 @@
+digraph g_04_the_robot_2 {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.5",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+
+  n0 [label="site overlay"];
+  n1 [label="colon"];
+  n2 [label="empty slot"];
+  n3 [label="defaults"];
+  n0 -> n1;
+  n1 -> n2;
+  n2 -> n3;
+}

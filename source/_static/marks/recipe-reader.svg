@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 48" role="img" aria-label="RecipeReader">
-  <rect x="1" y="1" width="46" height="46" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
-  <path d="M10 12h28M10 20h20M10 28h24M10 36h16" fill="none" stroke="currentColor" stroke-width="2"/>
-  <text x="58" y="32" font-family="Inter,Helvetica,sans-serif" font-size="22" font-weight="650" fill="currentColor">RecipeReader</text>
-</svg>
