@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("_ext"))
 
 # -- Project information -----------------------------------------------------
 
-project = "The file, the tree, and the run"
+project = "EasyBuild: the file, the tree, and the run"
 author = "Rohit Goswami"
 copyright = "2026, Rohit Goswami"
 release = "0.1.0"

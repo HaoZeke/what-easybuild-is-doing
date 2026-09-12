@@ -439,7 +439,7 @@
     state.notes.forEach(function (n) {
       (byPage[n.page] = byPage[n.page] || []).push(n);
     });
-    var out = ["# Notes on The file, the tree, and the run", ""];
+    var out = ["# Notes on EasyBuild: the file, the tree, and the run", ""];
     out.push("Exported " + new Date().toISOString() + ".", "");
     Object.keys(byPage)
       .sort()

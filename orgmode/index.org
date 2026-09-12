@@ -1,4 +1,4 @@
-#+TITLE: The file, the tree, and the run
+#+TITLE: EasyBuild: the file, the tree, and the run
 #+OPTIONS: toc:nil num:nil
 
 #+begin_export rst
