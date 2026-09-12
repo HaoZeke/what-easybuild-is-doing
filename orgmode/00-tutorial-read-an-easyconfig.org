@@ -8,13 +8,6 @@
    The tutorial reads four fields. Templates and the easyblock come after the file runs.
 #+end_export
 #+begin_export rst
-.. figure:: _static/diagrams/00-tutorial-read-an-easyconfig.svg
-   :alt: file to templates to easyblock to toolchain to robot
-   :class: eb-diagram
-
-   The tutorial is that sequence. The model is the file EasyBuild evaluates.
-#+end_export
-#+begin_export rst
 .. figure:: _static/diagrams/00-says-vs-means.svg
    :alt: file text through the namespace to the model
    :class: eb-diagram
