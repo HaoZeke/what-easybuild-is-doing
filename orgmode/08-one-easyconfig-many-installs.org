@@ -19,7 +19,7 @@
    :alt: one recipe times toolchain and arch yields many prefixes
    :class: eb-diagram
 
-   The file is not the install. The same easyconfig lands in as many prefixes as there are (toolchain, arch) pairs.
+   The file is not the install. The same easyconfig is written into as many prefixes as there are (toolchain, arch) pairs.
 #+end_export
 
 #+begin_objectives
@@ -31,7 +31,7 @@
 #+end_objectives
 Every easyconfig up to now installs one component.
 The following template installs hundreds of components.
-It forms the majority of a real software stack.
+It is most of a real software stack: the applications, not the toolchain.
 #+begin_src easyconfig :widget parse
 easyblock = 'Bundle'
 
@@ -186,7 +186,7 @@ The next page discusses hooks.
 Hooks are the supported way to modify EasyBuild behavior without editing an easyconfig.
 
 #+begin_keypoints
-- The file is not the install. The same easyconfig lands in as many prefixes as there are (toolchain, arch) pairs.
+- The file is not the install. The same easyconfig is written into as many prefixes as there are (toolchain, arch) pairs.
 - =exts_list= is more installs inside one file, not one install with extras.
 - A generation is the set of those pairs that move together.
 #+end_keypoints

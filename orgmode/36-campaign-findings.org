@@ -33,10 +33,10 @@
 
 #+begin_objectives
 1. Read a campaign state file and say which claim rungs it
- currently holds.
+ still contains.
 2. Classify an open finding by =class=, =disposition=, and =stage=,
  and name the first repair surface.
-3. Claim, resolve, and retry a finding on the same state path
+3. Claim, resolve and retry a finding on the same state path
  without losing the audit trail.
 #+end_objectives
 
@@ -70,7 +70,7 @@ Each execution increments =attempts=.
 Build and binary claims are reset until the current attempt validates them.
 History and findings are retained.
 Only one writer may operate at a time.
-An OS advisory lock together with a visible =.lock= file records host, PID, and Linux process-start identity.
+An OS advisory lock together with a visible =.lock= file records host, PID and Linux process-start identity.
 The kernel releases the guard when the controller exits, preventing stale metadata from permanently blocking a retry.
 A remote Slurm job may outlive that controller; verify its termination before retrying.
 * The three booleans are independent

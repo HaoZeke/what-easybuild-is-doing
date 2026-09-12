@@ -121,7 +121,7 @@ A portable test leaves the machine in the config as that hook.
 =max_jobs= is the partition's concurrency cap for the asynchronous policy.
 Eight is a starting number, not a recommendation.
 A site that shares a QoS with users sets this from the QoS instead of a tutorial.
-* Features, extras, and the filter syntax
+* Features, extras and the filter syntax
 Partitions or environments declare =features=, a list of tags.
 Partitions or environments declare =extras=, a key/value map.
 Tests request them from =valid_systems=.
@@ -184,7 +184,7 @@ is [[https://github.com/eth-cscs/cscs-reframe-tests/blob/master/config/cscs.py][
 
 #+begin_keypoints
 - The test describes what to run. The configuration describes
- where. A number of cores in the test is a number of cores on
+ where. A core count written in the test is a core count on
  one machine.
 - The builtin configuration always defines =generic:default= and
  =builtin=. A site file adds to it.

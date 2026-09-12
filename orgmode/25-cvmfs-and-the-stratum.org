@@ -354,7 +354,7 @@ repository you pick; the numbers will differ and the relationships will
 not. If =sha1sum= disagrees with the object name, you have found either a
 corrupted mirror or a much more interesting problem.
 
-Step 5 is the point of the exercise. To change one file you need a catalog
+Step 5 is why the exercise exists. To change one file you need a catalog
 that names its new hash; to change a catalog you need its parent to name
 *that* new hash, recursively, up to the root; and the root catalog's hash
 is in the signed manifest. So you need the repository's private key, and
@@ -483,7 +483,7 @@ and the client documentation:
 Replacement is least-recently-used, and the threshold is not the quota:
 "When exceeding the cache quota, files are deleted until the overall cache
 size is less than or equal to the cache threshold. The cache threshold is
-currently hard-wired to half of the cache quota."
+hard-wired in this client to half of the cache quota."
 
 For a single machine the shipped configuration documents
 =CVMFS_CLIENT_PROFILE=single= for "laptops or fewer than 5 machines", and

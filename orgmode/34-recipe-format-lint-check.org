@@ -1,4 +1,4 @@
-#+TITLE: Format, lint, and check are three different questions
+#+TITLE: Format, lint and check are three different questions
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
 .. figure:: _static/diagrams/34-recipe-format-lint-check-2.svg
@@ -12,7 +12,7 @@
    :alt: format, lint, and check
    :class: eb-diagram
 
-   Format, lint, and check are three different questions.
+   Format, lint and check are three different questions.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/34-lint-is-not-check.svg
@@ -62,7 +62,7 @@ The three components are not aliases.
 * Format rewrites physical lines
 The =recipe format= performs deterministic physical‑line wrapping.
 It is the entire contract.
-Product configuration, source selection, checksums, patches, and sanity paths remain as authored.
+Product configuration, source selection, checksums, patches and sanity paths remain as authored.
 #+begin_example
 eb-stack recipe format RECIPE.eb
 eb-stack recipe format RECIPE.eb --dry-run
@@ -91,7 +91,7 @@ Missing dependencies remain missing.
 The command does not create placeholder recipes.
 =--metadata-only= skips the robot walk when the file itself is the question.
 The structured result lists each dependency and indicates whether a matching easyconfig exists in the overlay order.
-Later =--easyconfigs= paths override earlier ones for the same name, version, toolchain, and versionsuffix, following the same rule used by =stack solve=.
+Later =--easyconfigs= paths override earlier ones for the same name, version, toolchain and versionsuffix, following the same rule used by =stack solve=.
 A check failure reporting an absent dependency is not a format problem.
 It indicates either a missing overlay (the eOn core-guard recipes reside in [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/eon_core_rgpot/easyconfigs][fixtures/eon_core_rgpot/easyconfigs/]] for this reason) or a stack-policy pin that selected a candidate the robot does not possess.
 The subsequent command is not =recipe format=.

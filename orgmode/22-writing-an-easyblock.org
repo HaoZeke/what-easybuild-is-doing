@@ -50,8 +50,8 @@ The first two normally resolve the issue.
 =preconfigopts=, =configopts=, =prebuildopts=, =buildopts=, =preinstallopts=, =installopts= and =postinstallcmds= are strings inserted into the commands described in [[file:13-how-a-build-executes.org][How a build executes]].
 They handle more cases than expected.
 *Is there a generic easyblock for this build system?* =CMakeMake=, =MesonNinja=, =PythonPackage=, =Cargo=, =Bundle=, =Tarball=, =Binary=, =MakeCp=, =PerlModule= are available.
-Deriving from the appropriate class and overriding a single method requires only a fraction of the effort of building from scratch.
-This approach is recommended in EasyBuild documentation.
+Deriving from the appropriate class and overriding a single method requires far less effort than building from scratch.
+EasyBuild documentation recommends deriving from that class.
 *Will more than one easyconfig need it?* This question determines the true threshold.
 An easyblock represents code maintained by a site across EasyBuild versions.
 A single package with one unusual step can be addressed with a =postinstallcmds= line and a comment.
@@ -81,7 +81,7 @@ escaped: a space becomes =_=, a =-= becomes =_minus_=, and an =_= becomes
 =encode_class_name('netCDF-Fortran')= returns.
 
 The module filename is a separate, lossier transformation: lowercased,
-dashes to underscores, anything else dropped. =netCDF-Fortran= lives in
+dashes to low lines, anything else dropped. =netCDF-Fortran= lives in
 =netcdf_fortran.py=, =GAMESS-US= in =gamess_us.py=, and
 =get_module_path('netCDF-Fortran')= returns
 ='easybuild.easyblocks.netcdf_fortran'=.

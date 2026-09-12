@@ -74,7 +74,7 @@ A local directory overrides the site recipe when the site recipe is insufficient
 export EASYBUILD_ROBOT_PATHS=$HOME/my-easyconfigs:
 #+end_example
 The trailing colon is The robot's empty element.
-In this case it is useful: your directory takes precedence, while the site's defaults remain behind it.
+Here it is useful: your directory takes precedence, while the site's defaults remain behind it.
 If the colon is omitted, the defaults disappear.
 * The third list, which is the one people forget
 A list untouched by the prefix is not printed by =--show-config=.
@@ -146,14 +146,14 @@ Your colleague has the same list wrong in the other direction. Something
 has dropped the site's module tree from =MODULEPATH=, so nothing counts
 as already built and the whole closure becomes theirs to compile.
 The robot restated: the robot path decides what can be found, and
-=MODULEPATH= decides what counts as already there. This is the one
+=MODULEPATH= decides what counts as already there. That setting is the one
 EasyBuild does not set for you.
 #+end_solution
 #+end_exercise
 
 * What this costs
 Disk resources are consolidated.
-Software, sources, and build directories reside under a single prefix within a home directory that has a quota.
+Software, sources and build directories reside under a single prefix within a home directory that has a quota.
 Set =sourcepath= to a shared download cache when available; clean the build directory.
 Time is a factor.
 From‑source is [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]]'s trade; costs do not decrease.

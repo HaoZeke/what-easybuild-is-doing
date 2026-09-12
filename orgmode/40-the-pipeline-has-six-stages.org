@@ -31,7 +31,7 @@
 
 #+begin_objectives
 1. Name the six pipeline stages, and say which ones a run-only test
- actually does work in.
+ does work in.
 2. Say where each stage executes: the ReFrame host, or the partition.
 3. Attach a hook to a stage, and say when it runs relative to that
  stage.
@@ -62,7 +62,7 @@ The failing phase appears in the =FAILURE INFO= block as the first field to read
 * Loading is not the pipeline
 Before any stage execution, ReFrame builds each discovered test by importing its file and invoking =__init__=.
 Each test is instantiated regardless of its suitability for the current system.
-After loading, the framework filters tests using system, environment, and command-line criteria, and then *clones* each remaining test for every (partition, environment) combination.
+After loading, the framework filters tests using system, environment and command-line criteria, and then *clones* each remaining test for every (partition, environment) combination.
 That clone is the test case.
 The original object is not scheduled for execution.
 Work performed in =__init__= or a post‑init hook executes for tests that will later be skipped, as noted on the pipeline page.

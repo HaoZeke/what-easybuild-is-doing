@@ -202,7 +202,7 @@ ERROR: Script(s) already exists, not overwriting them (unless --force is
 used): wobble-1.0.env
 #+end_src
 Both sections are empty.
-This is the correct answer, not a failure.
+That outcome is the correct answer, not a failure.
 =wobble= uses the system toolchain.
 The system toolchain loads no modules.
 The system toolchain sets no compiler variables.
@@ -333,7 +333,7 @@ makes the others worse.
 1. Nothing new: =<installdir>/easybuild/= already has the easyconfig, the
  log and =reprod/=. The log names the framework version, the easyconfig
  names the toolchain and the dependencies, and =reprod/easyblocks/=
- holds the code that ran. This is the answer to most software
+ contains the code that ran. Those files are the answer to most software
  archaeology on an EasyBuild site, and it needs no tooling.
 
 2. =eb --dump-env-script=, sourced once. The devel module would also

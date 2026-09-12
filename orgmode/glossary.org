@@ -48,7 +48,7 @@ The Python class that carries out a build. Chosen by the =easyblock=
 parameter, or computed from =name= when that parameter is absent:
 =EB_<name>= with characters escaped (=-= to =_minus_=, =_= to
 =_underscore_=, space to =_=), in a module file whose name is lowercased
-with dashes turned to underscores.
+with dashes turned to low lines.
 
 EasyBuild 5.3.1 ships 82 generic classes in 47 modules and 282
 software-specific ones. Generic ones carry no =EB_= prefix.
@@ -163,7 +163,7 @@ machine.
 
 #+ATTR_EB: :id term-optarch :title optarch :kind term :name optarch
 #+begin_detail
-The toolchain option, on by default, that tells the compiler to optimise
+The toolchain option, on by default, that passes =-O2= (and friends) to the compiler to optimise
 for the microarchitecture it is running on. It is why binaries are not
 interchangeable between node types and why sites keep one install tree
 per architecture. =toolchainopts = {'optarch': False}= turns it off for
@@ -293,7 +293,7 @@ drivers, the filesystem clients and the scheduler.
 which build a host gets. =-a cpupath= returns an ordered
 colon-separated list from most specific to most generic, and the
 initialisation script takes the first entry that exists on disk. The
-selected value lands in =$EESSI_SOFTWARE_SUBDIR=;
+selected value is written into =$EESSI_SOFTWARE_SUBDIR=;
 =$EESSI_CPU_FAMILY= is only =uname -m=.
 
 [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].

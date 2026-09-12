@@ -87,7 +87,7 @@ Available options for foss toolchain:
 #+end_src
 Four of them cover most of the entries found in real easyconfigs.
 =usempi= sets =$CC= to the MPI wrapper instead of the bare compiler.
-A package whose build system lacks MPI wrapper awareness and uses =$CC= receives MPI through this mechanism.
+A package whose build system lacks MPI wrapper awareness and uses =$CC= receives MPI through those variables.
 Use it for parallel software whose configure script does not provide =--with-mpi=.
 =openmp= adds the compiler's OpenMP flag.
 It is required.
@@ -107,7 +107,7 @@ Altering it silently modifies the scientific outcome.
 =optarch= is enabled by default and has the greatest impact.
 When enabled, the compiler receives =-march=native= or the toolchain's equivalent to optimise for the current microarchitecture.
 That binary runs faster and may use instructions unavailable on other processors in the same cluster.
-This mechanism underlies [[file:06-what-installed-means.org][What "installed" means]]'s per-architecture install trees.
+Those variables underlie [[file:06-what-installed-means.org][What "installed" means]]'s per-architecture install trees.
 A site with mixed hardware maintains separate trees not for tidiness but.
 There are two methods for a site to control this.
 Specifying =--optarch= on the command line sets the flag globally.

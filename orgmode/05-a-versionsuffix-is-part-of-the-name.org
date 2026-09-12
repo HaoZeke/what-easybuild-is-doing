@@ -85,7 +85,7 @@ The hierarchy in [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hier
 So a =versionsuffix= is structural for whoever declares it.
 It is opaque to whoever depends on it.
 =NVHPC-25.11-CUDA-12.9.1= and =NVHPC-25.11-CUDA-12.8.0= are two unrelated toolchains as far as the hierarchy walk is concerned.
-The same relationship holds for =foss-2025a= and =foss-2024a=.
+The same relationship is true for =foss-2025a= and =foss-2024a=.
 #+ATTR_EB: :id EB-Suffix-1 :title Are these the same toolchain
 #+begin_exercise
 Four module names:

@@ -169,7 +169,7 @@ A job starts only when the same comment lacks =accel== on a site with a GPU‑on
 * The 33-line script is a pin
 =software-layer/bot/build.sh= is not the build.
 It pins the scripts repository.
-It prevents a software-layer pull request from silently drifting from the scripts that EESSI currently runs.
+It prevents a software-layer pull request from silently drifting from the scripts that EESSI 2025.06 runs.
 #+begin_example
 commit_sha=$(cat ${TOPDIR}/software_layer_scripts_commit)
 git clone --depth 1 --filter=blob:none --no-checkout \
@@ -180,7 +180,7 @@ git checkout --detach ${commit_sha}
 # symlink everything except bot/build.sh, then:
 software-layer-scripts/bot/build.sh
 #+end_example
-The live pin at the time of writing is =5ade683520c3655ebb57e4295f494214b92baad1=.
+The live pin on 2026-09-12 is =5ade683520c3655ebb57e4295f494214b92baad1=.
 That is the design session's "build logic ownership" decision in one file: the bot submits a job that runs [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]] from the *target* repository.
 The target repository immediately hands off to a detached scripts commit.
 The real =software-layer-scripts/bot/build.sh= then reads =cfg/job.cfg= (written by the event handler from the comment's =for:= / =on:= / repo).

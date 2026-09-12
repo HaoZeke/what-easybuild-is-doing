@@ -160,7 +160,7 @@ The doubled separator indicates that the substitution runs per character and col
 The consequence people trip over stays invisible in =code-server=.
 Try =Python-bundle-PyPI=.
 Then try a name with =_= in it.
-The character is *itself* encoded as =_underscore_= .
+The character is *itself* encoded as =_low_line_= .
 That is what keeps the mapping reversible.
 Left alone, =_minus_= would be ambiguous.
 It could represent an encoded hyphen or a name that spells out =minus= between two of them.
@@ -187,7 +187,7 @@ name was transformed.
 
 =a-b= gives =EB_a_minus_b=. =a_minus_b= gives
 =EB_a_underscore_minus_underscore_b=
-too. So they stay apart, and that is the entire reason the underscore is
+too. So they stay apart, and that is the entire reason the low line is
 not left alone: without encoding it, both names would collide on
 =EB_a_minus_b= and one package would silently get the other's easyblock.
 #+end_solution
@@ -341,7 +341,7 @@ A checksum change cannot be ignored.
 They were correct previously.
 A diff against the prior easyconfig shows them unchanged.
 Unchanged is not the relevant question.
-The relevant question is whether they still apply to the archive currently being unpacked.
+The relevant question is whether they still apply to the archive being unpacked on this run.
 * Three consequences
 An easyconfig is a Python file evaluated in a prepared namespace.
 All three of these appear constantly.

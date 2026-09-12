@@ -178,5 +178,5 @@ thing can be asked.
 #+begin_keypoints
 - =builddependencies= are not in the module. =dependencies= are.
 - Python can sit in both lists. The runtime one wins after the build is gone.
-- Confirm the claim by reading the install, not only the easyconfig.
+- Confirm the claim by reading the install rather than the easyconfig.
 #+end_keypoints

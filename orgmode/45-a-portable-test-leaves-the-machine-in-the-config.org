@@ -87,7 +87,7 @@ The parameter list is no longer two strings from last year's Snellius tree.
 A site with a single mpi4py module yields one case.
 A site with four mpi4py modules yields four cases.
 =valid_systems= is no longer a hostname.
-The mixin requests the configuration features declared: CPU, GPU, and a minimum memory.
+The mixin requests the configuration features declared: CPU, GPU and a minimum memory.
 A partition that does not advertise those features skips the test.
 That skip is a result.
 It is the correct result.

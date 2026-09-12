@@ -120,7 +120,7 @@ The bytes live wherever the site puts them.
 The cons of Approach 1 are the ones the webinar lists.
 The procedure is manual.
 A shared filesystem is a worse startup path than CernVM-FS.
-For a handful of packages on one cluster it is enough.
+For a few packages on one cluster it is enough.
 A container is available when the host is not a safe build environment.
 Run =eessi_container.sh -b $EESSI_SITE_SOFTWARE_PREFIX= to get the same four exports and module loads inside.
 * Approach 2: the bot, pointed at a site repository
@@ -161,7 +161,7 @@ Rebuilds on a site repository use the same =rebuilds/= directory.
 An easystack is the list the bot will build.
 The scripts include the =--rebuild= option.
 Removal is a Stratum-0 transaction and an Lmod cache rebuild, not a bot comment.
-* Drivers, CUDA, and an ABI-compatible MPI
+* Drivers, CUDA and an ABI-compatible MPI
 Three items are added *into* the injection tree by a site, even if the remaining site stack resides in the prefix recommended by Approach 1.
 The runtime includes *NVIDIA drivers*.
 The driver is bound to the host kernel.
@@ -248,7 +248,7 @@ The webinar proposes keeping those installations on the shared filesystem of App
 #+begin_exercise
 Four requests. For each, name the approach, the variable that has
 to be set before any module load, and the one check that says the
-result is where it should be.
+result is in the site prefix.
 
 1. A single extra package, this week, on one zen3 partition, no
  CernVM-FS admin access.

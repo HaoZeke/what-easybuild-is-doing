@@ -102,7 +102,7 @@ Needs D.
 |---+---|
 | [[file:21-writing-one-from-nothing.org][Writing one from nothing]] | an easyconfig for software that has none |
 | [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]] | =exts_list= and bundles |
-| [[file:18-language-ecosystems.org][Languages that bring their own package manager]] | Python, R, Rust, and the ecosystem with no easyblock |
+| [[file:18-language-ecosystems.org][Languages that bring their own package manager]] | Python, R, Rust and the ecosystem with no easyblock |
 | [[file:29-extensions.org][Extensions, and what an entry in exts_list inherits]] | what an exts_list entry inherits, and what it does not |
 | [[file:22-writing-an-easyblock.org][Writing an easyblock]] | when a parameter is not enough |
 | [[file:23-testing.org][Testing, and the four things it can mean]] | the four things called testing |
@@ -134,7 +134,7 @@ Read [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and b
 
 Read [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]] when inspecting artifacts and the residual queue.
 
-Read [[file:34-recipe-format-lint-check.org][Format, lint, and check are three different questions]] when formatting, linting, and checking.
+Read [[file:34-recipe-format-lint-check.org][Format, lint and check are three different questions]] when formatting, linting and checking.
 
 Read [[file:35-stack-solve-and-the-diff.org][A stack lock is not a package lock]] when performing whole‑stack lock, build list, and diff.
 
@@ -142,7 +142,7 @@ Read [[file:36-campaign-findings.org][A campaign finding is a typed failure, not
 
 Read [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]] when handling ModuleRC, wrapping, and =-Dr=.
 
-Read [[file:38-locks-bwrap-python-datasets.org][Four EasyBuild 5 surfaces the earlier pages skipped]] when installing locks, bwrap, and datasets.
+Read [[file:38-locks-bwrap-python-datasets.org][Four EasyBuild 5 pages the earlier pages skipped]] when installing locks, bwrap and datasets.
 
 Read [[file:27-four-things-that-actually-happened.org][Four things that actually happened]] when examining the failures in full, with the diagnosis.
 

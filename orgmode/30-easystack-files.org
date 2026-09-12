@@ -221,7 +221,7 @@ fi
 The directory is the flag.
 Placing a rebuild in the ordinary easystack file does not cause =--rebuild= to be passed, and EasyBuild will not overwrite an existing installation.
 Placing a new package in =rebuilds/= causes =--rebuild= to be passed and bypasses the robot, which is the incorrect command for a package that has not yet been added.
-The comments at the top of a rebuild file constitute the bill of materials: what was rebuilt, why, and which issue or pull request required it.
+The comments at the top of a rebuild file constitute the bill of materials: what was rebuilt, why and which issue or pull request required it.
 The CUDA 12.1.1 rebuild from May 2024 is the documented template, including =accept-eula-for: CUDA= under =options:=.
 * How the bot finds the file at all
 The bot ignores tickets and commit messages when deciding what to build.

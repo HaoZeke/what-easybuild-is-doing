@@ -117,7 +117,7 @@ could have replaced?
 Neither is replaceable by a dry run, and that is the point: =eb -x= never
 extracts anything, so a parameter that names a directory the archive does
 not contain looks fine under it. The archive listing is the only thing
-that settles it.
+that is the measurement.
 
 If =--force= or a rebuild was the first move, that is the reflex worth
 losing: nothing about this failure is stale state.
@@ -175,12 +175,12 @@ Write the commit message. Specifically decide:
 3. What you would say about the twenty days, and to whom.
 4. Which of these belongs in the commit and which belongs somewhere else:
  the loader error, the architectures affected, how you measured it, the
- ticket, and the fact that a sanity check had been switched off.
+ ticket, and a sanity check that had been switched off.
 
 #+begin_solution
 1. What was wrong, in one line a search will find: the unversioned
  =math_libs= and =comm_libs= entries pointed into the newer CUDA tree
- the same tarball carries. Then why the fix is where it is:
+ the same tarball carries. Then why the fix lives on that line:
  =postinstallcmds= runs before the sanity check, so the check that had
  been failing can pass honestly.
 
@@ -221,7 +221,7 @@ Examine the pipeline's summariser to determine which fields can be empty for rea
 #+begin_detail
 1. *State where a result came from.* Every claim about a build
  carries a machine and an architecture, in the ticket and in the commit
- message. This book's transcripts do it for the same reason.
+ message. This book's transcripts do it so a later reader can rerun the command.
 2. *Read the archive, not the diff.* A version bump is a change of source.
 3. *Do not switch a check off to make a build pass.* A failing check on a
  package that cannot be fixed is a report about something else.
@@ -264,7 +264,7 @@ Write the plan before you type anything. Specifically:
  hardware; the build host passing tells you about the build host.
 
 4. The reply says which version, which toolchain, which architectures it
- was built for, and on which architecture it was actually run. It does
+ was built for, and on which architecture it ran. It does
  not say "it works" on the strength of a login-node check, and it does
  not promise a date before the toolchain question is settled.
 #+end_solution

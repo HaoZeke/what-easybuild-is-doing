@@ -29,7 +29,7 @@ The failing build in [[file:20-reading-a-failed-build.org][Reading a failed buil
 EESSI's installation instructions cover a laptop.
 CernVM-FS ships a client profile for that case.
 [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] does it on four kinds of machine.
-On a large shared machine the *consequences* change, not the mechanism: many users, one tree, a scheduler, several microarchitectures, and a rebuild that costs somebody a night.
+On a large shared machine the *consequences* change, not the mechanism: more users than maintainers, one tree, a scheduler, several microarchitectures, and a rebuild that costs somebody a night.
 * What the samples are
 A browser is provided.
 Every sample runs in the page.

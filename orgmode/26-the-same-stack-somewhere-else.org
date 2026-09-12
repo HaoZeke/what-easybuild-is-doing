@@ -26,7 +26,7 @@
 #+begin_objectives
 1. Get an optimised software stack onto a machine the operator does not administer,
  by three different routes, and say which route fits which machine.
-2. Say how EESSI decides which build to give the host it lands on, and
+2. Say how EESSI decides which build to give the host it runs on, and
  override that decision.
 3. Say what a site adds on top without writing to =/cvmfs=.
 #+end_objectives
@@ -181,7 +181,7 @@ rather than reasoning about it from the architecture underfoot.
 #+ATTR_EB: :id eessi-archdetect-docs :title Two selectors, and the page that names the wrong one :kind discrepancy
 #+begin_detail
 [[https://www.eessi.io/docs/software_layer/][The software-layer page]]
-says archspec chooses: "We leverage the *archspec* Python library to
+says archspec chooses: "We use the *archspec* Python library to
 automatically select the best suited part of the software stack for a
 particular host, based on its system architecture."
 
@@ -334,7 +334,7 @@ EESSI documentation, fetched 2026-09-10:
 - [[https://www.eessi.io/docs/overview/][overview]]: the three layers, and what the host OS still provides
 - [[https://www.eessi.io/docs/filesystem_layer/][filesystem layer]]: CernVM-FS, the Stratum 1s, the status page
 - [[https://www.eessi.io/docs/compatibility_layer/][compatibility layer]]: Gentoo Prefix and Portage
-- [[https://www.eessi.io/docs/software_layer/][software layer]]: EasyBuild, Lmod, and the archspec claim
+- [[https://www.eessi.io/docs/software_layer/][software layer]]: EasyBuild, Lmod and the archspec claim
 - [[https://www.eessi.io/docs/software_layer/cpu_targets/][CPU targets]]: the target list and the fallback policy
 - [[https://www.eessi.io/docs/repositories/versions/][versions]]: which toolchains each version carries
 - [[https://www.eessi.io/docs/using_eessi/setting_up_environment/][setting up your environment]]: both initialisation routes and every override variable

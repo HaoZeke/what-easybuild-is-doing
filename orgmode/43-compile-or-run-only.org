@@ -73,7 +73,7 @@ tests/
 #+end_example
 ReFrame copies =src/= into the stage directory.
 ReFrame performs the build there.
-=sourcepath=, =build_system= and the Make, CMake, Autotools, and Spack backends constitute the How To.
+=sourcepath=, =build_system= and the Make, CMake, Autotools and Spack backends constitute the How To.
 ExCALIBUR-tests exercises each of them.
 The default configuration performs a single-file compilation using the compiler from the current environment.
 A run-only test may also ship files adjacent to itself via =readonly_files= or by using the same =src/=.

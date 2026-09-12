@@ -77,7 +77,7 @@ It is not a recipe problem.
 =--bwrap-installpath= is the temporary location.
 The goal is a prefix that other users must not see while it is partially written.
 The goal includes a CernVM-FS or similar read‑only view that cannot be written in place.
-The overlayfs work in 5.4.0 enables EESSI‑style writable‑over‑read‑only installations to use this approach.
+The overlayfs work in 5.4.0 enables EESSI‑style writable‑over‑read‑only installations to use that overlay.
 RPATH wrappers still fail when =/tmp= is mounted with =noexec= (EasyBuild #4910).
 A =--bwrap= detection that appears as a missing linker is frequently caused by that mount option.
 The isolation policy defines the build's environment.
@@ -142,7 +142,7 @@ Four incidents. Name the EasyBuild 5 surface, and the first check.
 
 #+begin_solution
 1. Install locks. Check =--locks-dir= (default =.locks= under
- the software prefix) and whether the surviving process holds
+ the software prefix) and whether the surviving process still has
  the mutex. Not a Resolvo lock. Do not pass =--ignore-locks=
  to "fix" it.
 
@@ -151,7 +151,7 @@ Four incidents. Name the EasyBuild 5 surface, and the first check.
 
 3. Entry points / =EBPYTHONPREFIXES=. =import= finding the
  package does not put a console script on =PATH=. Verify the
- command the user types, not only the import.
+ command the user types, in addition to the import.
 
 4. A =Dataset= easyconfig was not used, or
  =EASYBUILD_INSTALLPATH_DATA= was unset and the default

@@ -299,7 +299,7 @@ $ cat /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/out.txt
 No such file or directory
 #+end_src
 Executing it launches a shell whose environment originates from the sibling =env.sh=, with the failing command placed as the previous history entry.
-The loop consists of pressing up, editing, running, and repeating, using the environment that the build actually used rather than an approximation.
+The loop consists of pressing up, editing, running and repeating, using the environment that the build actually used rather than an approximation.
 This corresponds to [[file:14-the-isolation-policy.org][The isolation policy]].
 The login shell differs from the build's environment.
 A command that succeeds in one and fails in the other provides no output until the environment is identified.
@@ -406,7 +406,7 @@ For each, say what you read first and what you would rule out with it.
  expected is absent from that list, =source_urls= is wrong; if it is
  present and failed, the upstream moved.
 
-4. Neither log alone. This is a difference in environment or
+4. Neither log alone. The two logs differ in environment or
  configuration, so start with =eb --show-config= on both and diff it,
  then compare the loaded modules. The isolation policy's point applies: the
  environments are constructed, and the two of you constructed

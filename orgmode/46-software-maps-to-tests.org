@@ -19,11 +19,11 @@
    :alt: a new module hits the map; PR and nightly are two uses
    :class: eb-diagram
 
-   The map says what runs when a module lands. A missing entry is a silent next morning.
+   The map says what runs when a module is written. A missing entry is a silent next morning.
 #+end_export
 
 #+begin_questions
-- What runs when a new module lands in EESSI?
+- What runs when a new module is written in EESSI?
 - How does CSCS lay out a site suite?
 - Which of EESSI's three uses is a pull request, and which is a
  nightly?
@@ -68,7 +68,7 @@ Testing and the four things it can mean already named it: [[https://github.com/E
 Adding GROMACS to the stack without a line in that file causes a green build to ship a module that the suite will not touch.
 The generalisable rule is that a test has a location, and a result without its location is not a result.
 The mapping is that location, written down.
-Available tests in the public suite include GROMACS (six HECBioSim systems, implemented on top of ReFrame's =hpctestlib=), TensorFlow (the multi‑worker Keras tutorial), CP2K, OpenFOAM, and the OSU microbenchmarks.
+Available tests in the public suite include GROMACS (six HECBioSim systems, implemented on top of ReFrame's =hpctestlib=), TensorFlow (the multi‑worker Keras tutorial), CP2K, OpenFOAM and the OSU microbenchmarks.
 Each is a class under =eessi/testsuite/tests/apps/=.
 The mapping connects a module name to those classes.
 * CSCS: config, checks, CI
@@ -96,8 +96,8 @@ A site copying this layout does not need EESSI.
 The site must have a configuration file describing its partitions, a directory of tests that do not name those partitions, and a nightly job that runs the listing.
 =portable_tests.md= in that tree defines the written rule for what a check may assume.
 EESSI's mixin implements the same rule, enforced in code.
-* LUMI, CSC, and why this is a part
-The CSC Finland computing‑environment course contains ten topics on using Puhti and Mahti, including modules, batch jobs, Allas, and containers.
+* LUMI, CSC and why this is a part
+The CSC Finland computing‑environment course contains ten topics on using Puhti and Mahti, including modules, batch jobs, Allas and containers.
 The course is not a ReFrame course.
 LUMI's user documentation covers the same material for that machine.
 The ReFrame course consists of CSCS's webinar, the official tutorial, and EESSI's writing‑tests page.

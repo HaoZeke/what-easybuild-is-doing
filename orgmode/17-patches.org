@@ -54,9 +54,9 @@ It *copies* a file into the source tree at the specified path.
 No =patch= is used.
 No diff is used.
 Only a file is placed where the build expects one.
-This method allows a recipe to provide an entire makefile fragment instead of a diff against one.
+A recipe can provide an entire makefile fragment instead of a diff against one.
 Some packages require their build configuration as a file.
-This method delivers the required file.
+The extra source delivers the required file.
 The second element does not imply that a directory means copy.
 An integer denotes a strip level.
 A string combined with a name ending in =.patch= is a =sourcepath=.
@@ -136,7 +136,7 @@ and "applied to the right thing" have come apart.
 
 For the missing comment: find out whether the fix is upstream now. If it
 is, delete the patch and note the version it landed in. If it is not,
-add a header to the patch saying what it fixes and linking the issue or
+add a header to the patch that states what it fixes and linking the issue or
 pull request, so the next person can answer this question without
 archaeology.
 

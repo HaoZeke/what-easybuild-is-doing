@@ -81,7 +81,7 @@ The relevant question is "what is on the robot path".
 The default consists of the easyconfigs supplied with the EasyBuild installation.
 The default enables a fresh installation to build thousands of packages without additional configuration.
 The next portion may appear as a typo; it is intentional.
-The following example shows a legal and common method to set the option:
+For example, a legal and common method to set the option:
 #+begin_example
 --robot-paths=/my/site/easyconfigs:
 #+end_example
@@ -139,7 +139,7 @@ B has two elements, the second empty, so it reads: yours, then the
 defaults. That is the common site layout.
 
 C also has two, the first empty: defaults, then yours. That answers
-question 3, and it is the right shape when your directory holds a
+question 3, and it is the right shape when your directory contains a
 fallback rather than an override.
 #+end_solution
 #+end_exercise
@@ -199,7 +199,7 @@ The resolved plan is =eb pkg.eb -Dr=.
 [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]] is the page for that change.
 =-D= / =--dry-run= already retains every dependency.
 It marks each one =[x]= or =[ ]= once =-r= is also on the command line.
-There is no =eb --retain-all-deps=; that name is an internal argument used by =-D=, =--dep-graph=, and =--check-conflicts=.
+No =eb --retain-all-deps= exists; that name is an internal argument used by =-D=, =--dep-graph= and =--check-conflicts=.
 =-M= / =--missing-modules= prints only the absent set.
 ** What is being rebuilt does not satisfy anything
 Loop details are easy to miss.
@@ -260,7 +260,7 @@ So a build plan is a property of the machine as much as of the
 easyconfig, and it does not travel between them. The robot path decides
 what can be *found*; =MODULEPATH= decides what counts as already *built*.
 
-=-D= already retains every dependency and marks each one. There is no
+=-D= already retains every dependency and marks each one. No
 =eb --retain-all-deps=. Use =-D= when the question is the full
 closure, and =-M= when the question is what is absent on this
 machine.

@@ -153,7 +153,7 @@ typed residual (and which severity), or a claim.
  counter; nothing in the next stage has to act on it.
 
 2. A =judgment= residual, category =imperative-patch=, stage
- =parse=. There is no patch file to copy beside the emitted
+ =parse=. No patch file exists to copy beside the emitted
  =.eb=. Someone has to write one, or drop the change.
 
 3. Evidence in =sources=. Not a residual. Provenance is =exact=.

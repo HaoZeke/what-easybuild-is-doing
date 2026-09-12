@@ -104,7 +104,7 @@ The longest‑running failure mode is the lack of any parameter.
 A sanity check runs on the machine that performed the build.
 On a cluster with multiple processor architectures, the install tree is split per architecture.
 A binary tuned for one architecture differs from the binary for another.
-A green check marks a statement about one of those trees.
+A green check is a statement about one of those trees.
 The following shows that arrangement on a real machine.
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-09, 2025 module environment" :caption "One module name, and the tree it resolves to"
 $ hostname

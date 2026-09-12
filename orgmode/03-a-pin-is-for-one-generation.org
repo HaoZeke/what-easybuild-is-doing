@@ -32,7 +32,7 @@ Other packaging systems operate similarly.
 In Python, =install_requires= accepts =>=1.14.6=.
 Cargo interprets =1.14.6= as a compatible version constraint.
 Conda uses =>=1.14.6,<2= as its constraint syntax.
-EasyBuild lacks operators, ranges, carets, and tildes in its syntax.
+EasyBuild lacks operators, ranges, carets and tildes in its syntax.
 #+begin_export rst
 .. figure:: _static/diagrams/rail-pin.svg
    :alt: name, exactly, version

@@ -131,7 +131,7 @@ This invisibility is the single most useful aspect of this page.
 Alternative parameter names are honoured on input.
 The =install_opts= name works where =installopts= is intended, and real easyconfigs in the upstream repository use it.
 * What an extension does not inherit
-The configuration of an extension initially inherits from its parent, which is convenient, but it is wrong for parameters that describe *the parent's* sources.
+Configuring an extension initially inherits from its parent, which is convenient, but it is wrong for parameters that describe *the parent's* sources.
 Eight parameters are reset to their defaults first, in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/extension.py][easybuild/framework/extension.py]].
 #+begin_example
 restore_options = (
@@ -166,7 +166,7 @@ This makes a resumed bundle cheap instead of a re‑run.
 =Extension.sanity_check_step= builds the same commands.
 It runs them with =fail_on_error=False=.
 
-The exit code settles it.
+The exit code is the measurement.
 A failure is collected with the command, its input and its output rather than aborting the run.
 
 Two consequences follow from it being a single mechanism.
@@ -197,7 +197,7 @@ so.
 
 *An unknown per-extension option is dropped at =debug= level.* Not a
 warning. The comment above it explains the intent, which is to let an
-easyblock accept keys that are meaningful only for extensions, and the
+easyblock accept keys that apply only to extensions, and the
 cost is that a typo is silent.
 
 *The merge is a shallow =update=.* A per-extension list value replaces the

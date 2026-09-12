@@ -85,7 +85,7 @@ eb-stack stack solve \
  --stack-diff-out stack.diff.md
 #+end_example
 =--easyconfigs= may be specified multiple times.
-Later paths replace earlier ones when name, version, toolchain, and versionsuffix match.
+Later paths replace earlier ones when name, version, toolchain and versionsuffix match.
 A site‑only package is added to the universe.
 =--stack-diff-out= requires =--baseline-easyconfigs=.
 Omitting the baseline causes an error instead of a silent skip.

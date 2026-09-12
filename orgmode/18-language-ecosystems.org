@@ -91,7 +91,7 @@ $ python3 -c 'from easybuild.easyblocks.generic.cargo import Cargo
 By default, =offline = True=.
 The =crates= variable is a list populated with each crate and its version required by the build, analogous to the =exts_list= job for Python.
 A Rust easyconfig lists its full dependency tree, vendors the dependencies, and performs the build with the network disabled.
-This approach requires more effort than =cargo build= and is the only method to obtain a reproducible build for future years.
+Pinning crates in the easyconfig requires more effort than =cargo build= and is the only method to obtain a reproducible build for future years.
 * The ecosystem with no easyblock
 EasyBuild 5.3.1 ships 82 generic easyblock classes, in 47 modules, and 282 software-specific ones.
 None of them is for npm.

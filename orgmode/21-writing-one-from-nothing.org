@@ -265,7 +265,7 @@ For moving an existing easyconfig rather than writing one:
 
 | Option | Changes |
 |---+---|
-| =--try-toolchain=<name>,<version>= | both halves of the toolchain |
+| =--try-toolchain=<name>,<version>= | both parts of the toolchain |
 | =--try-toolchain-name= | the name only |
 | =--try-toolchain-version= | the version only |
 | =--try-software-version= | the software version |
@@ -315,7 +315,7 @@ that it needs HDF5 and a C++17 compiler.
  dependencies by constructing that filename.
 
  Not =configopts = '--prefix=...'=. EasyBuild passes the prefix itself,
- and hardcoding one is how an install lands outside the tree the site
+ and hardcoding one is how an install is written outside the tree the site
  manages.
 
 2. =eb thing-2.4-foss-2025a.eb --inject-checksums=, with the filename

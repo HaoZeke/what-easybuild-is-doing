@@ -36,7 +36,7 @@
 3. Say what a module naming scheme changes, and what a hierarchical one
  does to =MODULEPATH=.
 #+end_objectives
-The citable unit consists of name, version, toolchain, and versionsuffix, not the easyconfig filename nor EasyBuild.
+The citable unit consists of name, version, toolchain and versionsuffix, not the easyconfig filename nor EasyBuild.
 FORCE11 software citation requires the specific version that was executed.
 [[file:06-what-installed-means.org][What "installed" means]] stated that the modulefile is the only artifact a user encounters, and then did not open one.
 An example is provided.
@@ -190,7 +190,7 @@ Using the modulefile above:
 
 #+begin_solution
 1 is =description=, via =whatis=. Which is the argument for writing a
-description that reads as a sentence: it is the one line most users ever
+description that reads as a sentence: it is the one line a person who only loads modules ever
 see about your package.
 
 2 is not a bug. =depends_on= is reference-counted, so HDF5 stays loaded

@@ -44,7 +44,7 @@
 #+end_prerequisites
 A single class may generate multiple runs.
 ReFrame creates a cartesian product of all =parameter= values defined in the class.
-ReFrame clones a test case for each combination of value‑tuple, partition, and environment.
+ReFrame clones a test case for each combination of value‑tuple, partition and environment.
 The suite size increases dramatically.
 EESSI's mpi4py tutorial warns that four parameters with (3, 3, 2, 2) values generate 36 tests.
 This count excludes the additional multiplication by partitions and environments.

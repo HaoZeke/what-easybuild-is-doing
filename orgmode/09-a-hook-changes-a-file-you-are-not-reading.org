@@ -168,7 +168,7 @@ A hook used to apply a package-specific change provides a global mechanism whose
 The subsequent reader examines the easyconfig and observes no change.
 * The condition this puts on An easyconfig is Python
 Python states that any expected path originates from a value assigned in the easyconfig.
-On a site employing hooks, the statement holds only after confirming that no hook has modified it.
+On a site employing hooks, the statement is true only after confirming that no hook has modified it.
 Determining this requires reading a short Python file and its guards.
 Two rules follow.
 The second is problematic.

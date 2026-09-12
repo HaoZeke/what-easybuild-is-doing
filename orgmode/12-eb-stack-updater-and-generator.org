@@ -29,7 +29,7 @@ Neither task invokes =eb=.
 Both generate files that a human then builds.
 [[https://eb-stack.rgoswami.me][eb-stack]] is the tool.
 A planned CycloneDX SBOM is one of the files it writes.
-The graph below is that SBOM for a GROMACS bump, drawn by =eb-stack stack graph= (and by =scripts/sbom_to_dot.py=).
+The next figure is that SBOM for a GROMACS bump, drawn by =eb-stack stack graph= (and by =scripts/sbom_to_dot.py=).
 #+begin_export rst
 .. figure:: _static/diagrams/sbom-gromacs.svg
    :alt: FFTW, OpenBLAS, OpenMPI, GROMACS as a CycloneDX dependency graph
@@ -241,7 +241,7 @@ This is a blocking residual rather than a guessed hash.
 
 =recipe lint= examines the file.
 =recipe check= examines the file.
-See [[file:34-recipe-format-lint-check.org][Format, lint, and check are three different questions]].
+See [[file:34-recipe-format-lint-check.org][Format, lint and check are three different questions]].
 =campaign run= is the initial command that performs compilation.
 See [[file:36-campaign-findings.org][A campaign finding is a typed failure, not a log]].
 A green plan represents the claim =resolves=.

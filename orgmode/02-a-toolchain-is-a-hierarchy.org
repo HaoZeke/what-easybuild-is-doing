@@ -141,7 +141,7 @@ questions.
 #+end_exercise
 
 * The system toolchain is not always in it
-The same docstring subsequently qualifies the bottom of the list.
+The same docstring then qualifies the bottom of the list.
 #+begin_quote
 The system toolchain is considered the most minimal subtoolchain only
 if the =add_system_to_minimal_toolchains= build option is enabled.
@@ -159,7 +159,7 @@ EasyBuild performs checks:
 List of toolchain dependency modules and toolchain definition do not match
 (found [...] vs expected {...})
 #+end_example
-The function =_verify_toolchain= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/tools/toolchain/toolchain.py][easybuild/tools/toolchain/toolchain.py]] fires in the *prepare* step, seconds after start, before any unpacking.
+The function =_verify_toolchain= in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/tools/toolchain/toolchain.py][easybuild/tools/toolchain/toolchain.py]] fires in the *prepare* step, seconds after start, before any archive is extracted.
 Three properties of that check together make it unfixable from an easyconfig.
 It reads only the *direct* dependencies of the toolchain module.
 The call used is =dependencies_for(mod_name,..., depth=0)=.
