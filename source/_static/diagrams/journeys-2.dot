@@ -1,0 +1,17 @@
+digraph g_journeys_2 {
+  graph [rankdir=TB, bgcolor="transparent", pad="0.2", nodesep="0.4", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  j [label="journeys"];
+  a [label="first recipe"];
+  b [label="a build failed"];
+  c [label="port a package"];
+  d [label="write a test"];
+  j -> a;
+  j -> b;
+  j -> c;
+  j -> d;
+
+}

@@ -1,0 +1,13 @@
+digraph g_37_wrap_is_not_range {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  old [label="old module name"];
+  rc [label=".modulerc"];
+  new [label="new module"];
+  not [label="not a range in the .eb"];
+  old -> rc -> new;
+  rc -> not;
+}

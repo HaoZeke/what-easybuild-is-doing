@@ -1,0 +1,13 @@
+digraph g_part_test_class_config_run {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  rf [label="ReframeReader"];
+  cls [label="class"];
+  cfg [label="config"];
+  run [label="run"];
+  rf -> cls -> run;
+  rf -> cfg -> run;
+}

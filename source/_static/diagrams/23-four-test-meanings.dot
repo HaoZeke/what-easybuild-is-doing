@@ -1,0 +1,11 @@
+digraph g_23_four_test_meanings {
+  graph [rankdir=TB, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  sm [label="smoke\nin the recipe"];
+  sa [label="sanity_check"];
+  un [label="upstream unit"];
+  rf [label="ReFrame class"];
+}

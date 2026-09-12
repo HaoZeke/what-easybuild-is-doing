@@ -1,0 +1,16 @@
+digraph g_07_two_checksums {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  src [label="source bytes"];
+  amd [label="SHA256 amd64"];
+  arm [label="SHA256 arm64"];
+  ok [label="both match"];
+  no [label="refuse"];
+  src -> amd -> ok;
+  src -> arm -> ok;
+  amd -> no;
+  arm -> no;
+}

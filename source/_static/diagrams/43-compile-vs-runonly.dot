@@ -1,0 +1,13 @@
+digraph g_43_compile_vs_runonly {
+  graph [rankdir=TB, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  rt [label="RegressionTest"];
+  src [label="sources next to the test"];
+  ro [label="RunOnlyRegressionTest"];
+  mod [label="module load"];
+  rt -> src;
+  ro -> mod;
+}

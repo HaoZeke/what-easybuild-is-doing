@@ -1,0 +1,13 @@
+digraph g_42_sanity_vs_perf {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  out [label="job output"];
+  sa [label="sanity\npass / fail"];
+  pe [label="performance\nnumber + unit"];
+  ref [label="reference"];
+  out -> sa;
+  out -> pe -> ref;
+}

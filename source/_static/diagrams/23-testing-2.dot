@@ -1,0 +1,17 @@
+digraph g_23_testing_2 {
+  graph [rankdir=TB, bgcolor="transparent", pad="0.2", nodesep="0.4", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  q [label="four questions"];
+  suite [label="package test suite"];
+  sanity [label="sanity check"];
+  report [label="test report"];
+  portable [label="ReFrame run"];
+  q -> suite;
+  q -> sanity;
+  q -> report;
+  q -> portable;
+
+}

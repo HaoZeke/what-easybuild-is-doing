@@ -1,0 +1,20 @@
+digraph g_index_journeys_cross {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.35", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  rr [label="RecipeReader"];
+  sw [label="StackWalker"];
+  rf [label="ReframeReader"];
+  j1 [label="first recipe"];
+  j2 [label="build failed"];
+  j3 [label="port"];
+  j4 [label="write a test"];
+  j1 -> rr;
+  j2 -> rr;
+  j3 -> rr;
+  j3 -> sw;
+  j4 -> rf;
+  rr -> sw -> rf;
+}

@@ -1,0 +1,12 @@
+digraph g_journey_first_recipe_2 {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.4", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  read [label="read the file"];
+  mech [label="four mechanisms"];
+  mod [label="a module"];
+  read -> mech -> mod;
+
+}

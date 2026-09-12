@@ -1,0 +1,19 @@
+digraph g_01_an_easyconfig_is_python_2 {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.2", nodesep="0.4", ranksep="0.55",
+         fontname="Inter,Helvetica,sans-serif"];
+  node [shape=box, style="rounded,filled", fillcolor="#f7f6f3", color="#1a1917",
+        fontname="Inter,Helvetica,sans-serif", fontsize=11, penwidth=1.2];
+  edge [color="#1a1917", arrowsize=0.7, penwidth=1.1];
+  file [label=".eb file"];
+  ns [label="Python namespace"];
+  ev [label="evaluate"];
+  name [label="name string"];
+  cls [label="easyblock class"];
+  file -> ns -> ev;
+  ev -> name -> cls;
+  sys [label="SYSTEM is a dict"];
+  quoted [label="'tools' is a string"];
+  ev -> sys;
+  ev -> quoted;
+
+}
