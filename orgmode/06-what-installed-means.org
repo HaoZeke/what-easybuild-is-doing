@@ -101,7 +101,7 @@ A green check is a statement about one of those trees.
 The following shows that arrangement on a real machine.
 #+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-09, 2025 module environment" :caption "One module name, and the tree it resolves to"
 $ hostname
-int4.local.snellius.surf.nl
+login.example
 
 $ readlink -f /sw/arch
 /gpfs/admin/_hpc/sw/arch/AMD-ZEN2
@@ -172,7 +172,7 @@ says where, and the node to verify on is the one that failed.
 #+end_exercise
 
 * And how the check is done matters as much as where
-A related trap is presented by the tool.
+The tool has a related trap.
 The command =patchelf --set-rpath= writes =DT_RUNPATH=, not =DT_RPATH=.
 The dynamic linker consults =DT_RPATH= before =LD_LIBRARY_PATH=, and =DT_RUNPATH= after it.
 Patching a binary in that way and testing it in a shell that already has the library on =LD_LIBRARY_PATH= makes resolution go through the environment.

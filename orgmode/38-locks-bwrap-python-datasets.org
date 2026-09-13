@@ -42,7 +42,7 @@
 
 #+begin_prerequisites
 - [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]:
- Resolvo locks. this page's locks are files on disk during
+ Resolvo locks. The locks on this page are files on disk during
  =eb=.
 - [[file:18-language-ecosystems.org][Languages that bring their own package manager]]: Python
  extensions. =EBPYTHONPREFIXES= is how a second prefix is

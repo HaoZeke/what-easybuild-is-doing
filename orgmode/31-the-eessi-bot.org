@@ -68,7 +68,7 @@ Bot instance equals GitHub App.
 Bot instance written in Python and Bash.
 Bot instance configured from =.ini= file.
 Bot instance installed on =software-layer=, =software-layer-scripts=, and =compatibility-layer=.
-Caspar van Leeuwen's 1 June 2026 webinar begins like a site.
+Caspar van Leeuwen's 1 June 2026 webinar opens with a site.
 Three processes match those run by EESSI.
 *Smee* provides webhook relay.
 GitHub cannot reach a login node.
