@@ -181,9 +181,9 @@ Using the modulefile above:
  line. Which easyconfig parameter produced it?
 2. They then run =module unload QMCPACK= and find HDF5 still loaded.
  Is that a bug?
-3. Your package installs data files in =share/mydata= and its binary
- needs =$MYPKG_DATA= to find them. Which parameter, and what is the
- wrong way to do it?
+3. After =module load QMCPACK=, which of =EBROOTQMCPACK=, =PATH=,
+ and =LD_LIBRARY_PATH= does =module show= print, and which of
+ those is the prefix the binary was installed under?
 4. A colleague adds =modextravars = {'CC': 'mpicc'}= so builds against
  the module pick up MPI. Why will that not do what they expect?
 

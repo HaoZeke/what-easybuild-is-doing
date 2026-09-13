@@ -87,7 +87,7 @@ import zipfile
 # and epub_exclude_files deliberately keeps it. Asserting on the "eb-" prefix
 # catches that file too and fails a build that is correct.
 WIDGET = ("eb-widget", "eb-charmap", "eb-templates", "eb-hierarchy")
-z = zipfile.ZipFile("build/epub/WhatEasyBuildIsDoing.epub")
+z = zipfile.ZipFile("build/epub/EasyBuildTheFileTheTreeAndTheRun.epub")
 names = z.namelist()
 stowaways = [n for n in names if any(part in n for part in WIDGET)]
 if stowaways:

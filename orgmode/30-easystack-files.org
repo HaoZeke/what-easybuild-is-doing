@@ -78,7 +78,9 @@ eb GROMACS-2025.4-foss-2025b.eb --installpath /my/custom/installpath --parallel 
 #+end_example
 Missing any of the three rules can be costly after a bot job fails.
 A list marker must be present.
-YAML lacking the leading =- = does not constitute an easystack. Dashes that form a command‑line flag are *omitted* in the file. =from-pr: 15924= corresponds to =--from-pr 15924=.
+YAML lacking the leading list dash does not constitute an easystack.
+Dashes that form a command-line flag are *omitted* in the file.
+~from-pr: 15924~ corresponds to ~--from-pr 15924~.
 Short options such as =D: True= are permitted but discouraged.
 Certain values must be quoted.
 YAML converts an unquoted =1= to the boolean =True=.

@@ -64,7 +64,7 @@ EasyBuild derives the suffix from the dependency once, at parse time.
 It writes the result into a filename.
 No check occurs afterwards that the name still describes the tree.
 The third line also shows that =nvidia-compilers= takes =versionsuffix= as its *own* third positional attribute.
-It is A pin is for one generation's (='name', 'version', 'versionsuffix', 'toolchain'=) tuple.
+That is the (='name', 'version', 'versionsuffix', 'toolchain'=) tuple from [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]].
 A suffix travels as data from one easyconfig into another's dependency list.
 Placing it in the fourth slot causes EasyBuild to treat it as a toolchain.
 * From below, a suffix is not a suffix

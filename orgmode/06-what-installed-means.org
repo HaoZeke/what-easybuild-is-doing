@@ -53,7 +53,7 @@ The build passes.
 It asserts that three paths exist.
 It does not assert executability, correct version, or start capability.
 A zero-byte file at =bin/vasp_std= would satisfy it.
-The parameter fulfills its single purpose precisely.
+The parameter only checks that those paths exist.
 The word "installed" suggests a much stronger claim than the underlying check.
 * Running something is a stronger claim, and it is optional
 

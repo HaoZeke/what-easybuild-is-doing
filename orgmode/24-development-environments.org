@@ -265,7 +265,7 @@ moduleclass = 'devel'
 No software is installed.
 The output is a modulefile.
 It sets =$CC=, =$CXX=, =$FC=, =$CFLAGS= and other variables for the named toolchain.
-The compiler environment consistently.
+Those variables stay set for the rest of the session.
 The RPATH wrapper directory is copied when the site builds with =--rpath=.
 Manually compiled binaries are linked like the stack's.
 For machines where a modules tool cannot be installed, EasyBuild generates container recipes via =--container-*= options.

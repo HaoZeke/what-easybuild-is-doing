@@ -118,8 +118,10 @@ The sequence consists of a test class, the pipeline, the configuration file, a p
 There are two levels.
 The grain matches the recipe.
 * Level G. Write a ReFrame test
-[[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] and [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]].
-A decorated class, a sanity function, and a configuration file.
+[[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]],
+[[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]],
+[[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]],
+and [[file:42-a-performance-function-is-a-number-with-a-unit.org][A performance function is a number with a unit]].
 Two hours.
 * Level H. Run a portable suite
 Two hours.

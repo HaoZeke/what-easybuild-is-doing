@@ -121,7 +121,7 @@ pass? Which phase fails, and why is the exit code not the answer?
 It fails in the sanity phase. =assert_found= looks for
 =Solution Validates= in =stdout= and does not find it. The exit code
 is 0 and is never consulted. ReFrame's default is that a test is
-unsuccessful until a sanity function returns a failure; an empty or
+unsuccessful until a sanity function succeeds; an empty or
 partial log is a failed test, not a quiet success.
 #+end_solution
 #+end_exercise

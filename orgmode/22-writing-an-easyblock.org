@@ -189,7 +189,7 @@ That line is the indicator to look for instead of the absence of a traceback.
 *=eb --module-only --force=* skips the compile and install steps
 and still runs =prepare=, =ready=, =sanitycheck= and =module=.
 The easyblock's exports become readable before any compilation.
-Under =--module-only=, the compile and install =*_step= methods
+Under =--module-only=, the compile and install step methods
 are skipped, which is a trap of the second command.
 An easyblock whose =configure_step= sets =self.foo= and whose =sanity_check_step= reads it encounters =None=.
 The fix provides a helper method invoked by both steps and stops state from being carried between steps.
@@ -229,7 +229,7 @@ instead if not.
  [[file:13-how-a-build-executes.org][How a build executes]]'s =postiter= step
  putting the environment back between them. Reach for an easyblock only
  if the second run needs to *find* the first one's output in a way no
- flag can express, and then say so in a comment
+ flag can express, and then say so in a comment. Otherwise the next
  person will assume the iteration would have worked.
 #+end_solution
 #+end_exercise
