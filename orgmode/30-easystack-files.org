@@ -103,7 +103,7 @@ That is the next section.
 * EESSI puts the EasyBuild version in the filename
 The [[https://github.com/EESSI/software-layer][EESSI/software-layer]] repository was split on 2025-06-11.
 The build scripts reside in [[https://github.com/EESSI/software-layer-scripts][EESSI/software-layer-scripts]].
-Remaining content in =software-layer= consists mainly of easystack files and a 33-line [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][bot/build.sh]] that pins the scripts commit.
+Remaining content in =software-layer= consists mainly of easystack files and a 33-line [[https://github.com/EESSI/software-layer/blob/main/bot/build.sh][software-layer/bot/build.sh]] that pins a software-layer-scripts commit.
 Installations for a specific EESSI version are no longer tracked by a git branch.
 Tracking now uses the directory:
 #+begin_example

@@ -78,8 +78,11 @@ It is not a recipe problem.
 The goal is a prefix that other users must not see while it is partially written.
 The goal includes a CernVM-FS or similar read‑only view that cannot be written in place.
 The overlayfs work in 5.4.0 enables EESSI‑style writable‑over‑read‑only installations to use that overlay.
-RPATH wrappers still fail when =/tmp= is mounted with =noexec= (EasyBuild #4910).
-A =--bwrap= detection that appears as a missing linker is frequently caused by that mount option.
+RPATH wrappers still fail when =/tmp= is mounted with =noexec=
+([[https://github.com/easybuilders/easybuild-framework/issues/4910][#4910]]).
+That is independent of =--bwrap=. The wrapper scripts need an
+executable temporary directory. =--tmpdir= on an =exec= filesystem
+is the fix, not a bwrap flag.
 The isolation policy defines the build's environment.
 This flag represents one implementation.
 * EBPYTHONPREFIXES and entry points

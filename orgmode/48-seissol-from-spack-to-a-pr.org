@@ -163,6 +163,7 @@ It does not load on a node whose production stack is =2025=.
 =eb -S SeisSol= on that login node returns only [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]].
 A =foss/2026.1= recipe asks the robot for a generation the site has not built.
 =--robot= will try to compile GCC 15 and the rest of 2026.1 beside the 2025 tree.
+That compile writes into the user's prefix and consumes home quota.
 #+ATTR_EB: :title Which file loads on the 2025 stack
 #+begin_predict
 A login node has just run =module load 2025=.

@@ -173,7 +173,7 @@ The module system enforces the hierarchy.
 Discovery then follows a two-step process.
 Users find it baffling until explained once.
 =--module-naming-scheme= sets the scheme.
-The scheme reflects
+The scheme decides whether the module path is EasyBuildMNS, HierarchicalMNS, or another site scheme.
 #+ATTR_EB: :id EB-Module-1 :title Where did that line come from
 #+begin_exercise
 Using the modulefile above:

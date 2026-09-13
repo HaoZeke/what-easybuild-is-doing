@@ -178,7 +178,6 @@ The conclusion remained incorrect.
 The check identified a defect in the toolchain module.
 Disabling the module did not enable the binary to start.
 The responsibility for discovery shifted to the user.
-The check also carries a reputation issue requiring clarification.
 In a GPU package the check appears to fail on =libcuda.so.1=.
 The library resides with the driver and exists only on GPU nodes.
 EasyBuild exempts that library by default, together with =libcuda.so=, =libnvidia-ml.so= and =libnvidia-ml.so.1=.

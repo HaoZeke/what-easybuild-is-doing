@@ -82,7 +82,7 @@ The hook assigns =num_tasks= from =processor.num_cpus= in the configuration.
 A node with 64 cores receives 64 tasks.
 A node with 128 cores receives 128 tasks.
 The test file lacks both numbers.
-=find_modules('mpi4py')= queries the modules tool for what is loaded on *this* machine.
+=find_modules('mpi4py')= queries the modules tool for names *available* on this system, then the suite loads each case.
 The parameter list is no longer two strings from last year's Snellius tree.
 A site with a single mpi4py module yields one case.
 A site with four mpi4py modules yields four cases.
@@ -150,8 +150,8 @@ it runs on any configured partition.
  test are three facts about one machine.
 - The mixin reads the partition. "One full node" is a
  request; the configuration supplies the number.
-- =find_modules= builds the parameter list from the tree
- that is actually loaded.
+- =find_modules= builds the parameter list from modules
+ available on the system, then the suite loads each case.
 - A missing feature or too little memory is a skip, not a
  failed job.
 #+end_keypoints

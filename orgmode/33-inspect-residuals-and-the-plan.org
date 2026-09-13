@@ -71,11 +71,14 @@ No rung of the ladder is established.
 =package.plan.json= has =schema_version= 1.
 Unknown fields are rejected.
 The sections that matter on a first read are listed below.
+These names belong to the plan, not to a conda-forge =recipe.yaml=.
+A rattler-build recipe uses =build.number= and =script=; =outputs=
+is for split packages.
 =origin= records =conda-forge=, =spack=, =pypi=, =cran=, =cargo=, or =easy-build=.
 =package= records normalised name, version, homepage, license.
 =sources= records URLs, filenames, SHA-256, VCS identity.
 =dependencies= records names, constraints, roles, conditions, provenance.
-=build= records toolchain, easyblock, patches, typed easyconfig parameters.
+=build= records the planned EasyBuild toolchain, easyblock, patches, and typed easyconfig parameters.
 =profiles= records independently installable products.
 =outputs= records requested profile and stack-policy pairs.
 =residuals= records the work queue.

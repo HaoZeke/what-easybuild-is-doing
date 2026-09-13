@@ -81,8 +81,10 @@ Login nodes run AMD‑ZEN2, one of the two correct architectures.
 Every check from a login node reported a working module, while a check on a GPU node reported a broken module with the same name.
 The problem was declared fixed on that basis.
 It was not fixed.
+* The login node that lied, twice
 The second mistake, subtler and worth spelling out, follows.
-Pointing directly at the H100 tree with an absolute =/gpfs/.../AMD-ZEN4-H100/...= path does not rescue the test...= entries, and those resolve against *the node underfoot*.
+Pointing directly at the H100 tree with an absolute =/gpfs/.../AMD-ZEN4-H100/...= path does not rescue the test.
+Modulepath entries still resolve against *the node underfoot*.
 =ldd= on the H100 binary, run from a login node, resolves cuSPARSE out of the ZEN2 tree and reports zero missing libraries.
 A correct‑looking =ldd= on the wrong node is not weak evidence.
 It is evidence for a different question.

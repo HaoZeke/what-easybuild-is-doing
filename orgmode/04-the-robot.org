@@ -132,8 +132,8 @@ follows from it.
 
 A has one element and no empty one, so the defaults have nowhere to go
 and your directory replaces them. That is the answer to question 2, and
-it is the common mistake
-forgotten every package it ships with.
+it is the common mistake: the robot no longer sees every package
+EasyBuild ships with.
 
 B has two elements, the second empty, so it reads: yours, then the
 defaults. That is the common site layout.

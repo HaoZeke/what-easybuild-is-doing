@@ -104,8 +104,6 @@ The engine is not the short snippet displayed here.
 * Step 4: which easyblock will EasyBuild look for
 An easyconfig without an =easyblock= assumes a software-specific one exists.
 EasyBuild derives the name by converting the software's name one character at a time.
-Multiple names must be provided in this field.
-Own software can be added when available.
 #+begin_src easyconfig :widget easyblock :hydrate load
 code-server
 c++
