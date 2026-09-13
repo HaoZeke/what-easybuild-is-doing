@@ -136,21 +136,9 @@ The rule is not a matter of politeness; the dependency is not a candidate, causi
 Change =2025a= to =2024a=, then to =1999z=.
 Provide a different chain, followed by a refusal indicating which generations the page knows.
 A hierarchy reflects what is installed rather than the string.
-* What you now know
-- The file is Python. EasyBuild evaluates it in a prepared namespace.
-- Unquoted names are variables that EasyBuild supplied.
-- =%(...)s= is formatting against that namespace, not a second language.
-- A missing =easyblock= line is still an easyblock: the name is transformed.
-- A toolchain is the top of a hierarchy. That hierarchy is the set of legal dependencies.
-- A blank version, an unknown generation, or a chain the page cannot follow is a refusal. EasyBuild reports it. It does not guess.
 * Where to go next
-- A build failed: [[file:journey-a-build-failed.org][Journey: a build failed]], then [[file:20-reading-a-failed-build.org][Reading a failed build]].
-- The version next to a dependency is not a minimum: [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]].
-- =module load= cannot find the name: [[file:04-the-robot.org][The robot]], then [[file:06-what-installed-means.org][What "installed" means]].
-- No admin rights: [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
-- No site stack: [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]].
-- Whether EasyBuild is the tool: [[file:afterword-when-easybuild-is-the-wrong-tool.org][Afterword: when EasyBuild is the wrong tool]].
-- Straight through RecipeReader: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+- The next page in RecipeReader: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+- A build failed: [[file:journey-a-build-failed.org][Journey: a build failed]].
 
 #+begin_keypoints
 - The file is Python. EasyBuild evaluates it in a prepared namespace.

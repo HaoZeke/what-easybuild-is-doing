@@ -51,21 +51,21 @@ from reframe.core.builtins import sanity_function, performance_function
 
 @rfm.simple_test
 class stream_test(rfm.RunOnlyRegressionTest):
- valid_systems = ['*']
- valid_prog_environs = ['*']
- executable = 'stream.x'
+    valid_systems = ['*']
+    valid_prog_environs = ['*']
+    executable = 'stream.x'
 
- @sanity_function
- def validate(self):
- return sn.assert_found(r'Solution Validates', self.stdout)
+    @sanity_function
+    def validate(self):
+        return sn.assert_found(r'Solution Validates', self.stdout)
 
- @performance_function('MB/s')
- def copy_bw(self):
- return sn.extractsingle(r'Copy:\s+(\S+)', self.stdout, 1, float)
+    @performance_function('MB/s')
+    def copy_bw(self):
+        return sn.extractsingle(r'Copy:\s+(\S+)', self.stdout, 1, float)
 
- @performance_function('MB/s')
- def triad_bw(self):
- return sn.extractsingle(r'Triad:\s+(\S+)', self.stdout, 1, float)
+    @performance_function('MB/s')
+    def triad_bw(self):
+        return sn.extractsingle(r'Triad:\s+(\S+)', self.stdout, 1, float)
 #+end_src
 The file reads like a configuration: names on the left, values on the right.
 Line five breaks that reading.

@@ -195,13 +195,11 @@ Write the commit message. Specifically decide:
  month, which means the commit message and the team's notes, not the
  ticket. The user gets a working module and a date, not an autopsy.
 
-4. In the commit: the error string
- will search for; the architectures affected
- of the bug; how you measured it, in one line
- library resolution is only as good as the node it was made on. Not in
- the commit: the ticket reference on its own, which ages out, and the
- detail of the earlier retracted diagnosis, which belongs in the notes
- where somebody can read the whole sequence.
+4. In the commit: the error string the next person will search for,
+ the architectures the bug affected, and how it was measured, in one
+ line. Library resolution is only as good as the node it was made on.
+ Not in the commit: the ticket reference on its own, which ages out,
+ and the retracted diagnosis, which belongs in the notes.
 #+end_solution
 #+end_exercise
 

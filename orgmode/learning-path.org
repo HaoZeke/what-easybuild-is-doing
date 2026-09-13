@@ -110,15 +110,15 @@ Needs D.
 Testing, and the four things it can mean names the fourth kind and stops.
 [[file:part-a-test.org][ReframeReader]] is that kind.
 * Level F. Distribute a stack
-
-A completed build prints a single line.
-A completed build creates one file.
+[[file:25-cvmfs-and-the-stratum.org][CernVM-FS]] and [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
+Two hours. The artifact is a mounted tree, not a tarball.
 * ReframeReader
 The official tutorial, the CSCS webinar, ExCALIBUR-tests and the EESSI suite each follow the same sequence.
 The sequence consists of a test class, the pipeline, the configuration file, a performance number, and the portable suite.
 There are two levels.
 The grain matches the recipe.
 * Level G. Write a ReFrame test
+[[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] and [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]].
 A decorated class, a sanity function, and a configuration file.
 Two hours.
 * Level H. Run a portable suite
