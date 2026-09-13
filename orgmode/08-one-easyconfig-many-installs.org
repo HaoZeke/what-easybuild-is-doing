@@ -190,3 +190,13 @@ Hooks are the supported way to modify EasyBuild behavior without editing an easy
 - =exts_list= is more installs inside one file, not one install with extras.
 - A generation is the set of those pairs that move together.
 #+end_keypoints
+
+#+begin_export rst
+.. mermaid::
+
+   flowchart LR
+     G[foss-2025a] --> X86[x86_64]
+     G --> ARM[aarch64]
+     X86 --> I1[install prefix]
+     ARM --> I2[install prefix]
+#+end_export

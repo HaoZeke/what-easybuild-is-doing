@@ -178,6 +178,12 @@ ERROR: One or more style checks FAILED!
 
 [FAIL] ugly-1.0.eb
 #+end_src
+
+#+begin_src ebtranscript :source "EasyBuild 5.3.1, local workstation, 2026-09-10" :caption "check-contrib after style is clean"
+$ eb --check-contrib clean-1.0.eb
+Running contrib check on 1 easyconfig(s)...
+All checks passed.
+#+end_src
 Two items in that output are specific to EasyBuild instead of pycodestyle.
 =W299= is EasyBuild's trailing-whitespace check, replacing pycodestyle's =W291=.
 It exempts comments and the =description=, =examples= and =citing= parameters.

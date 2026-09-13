@@ -154,7 +154,7 @@ class Eon(MesonPackage):
 
  version("2.16.0", sha256="3d4da89a393c8821bf370cb97c9d2403718d83f9cbb5e8b918cd90af14ed52dc")
 
- depends_on("meson@1.8.0:", type="build")
+ depends_on("meson@1.8.0:", type="build")  # meson 1.8.0 or newer
  depends_on("python@3.11:", type=("build", "run"))
  depends_on("py-numpy", type=("build", "run"))
  depends_on("eigen@3.4:")
@@ -163,7 +163,7 @@ class Eon(MesonPackage):
  depends_on("highway")
  depends_on("libinih")
 #+end_src
-=depends_on("eigen@3.4:")= defines a range.
+=depends_on("eigen@3.4:")= (eigen 3.4 or newer) defines a range.
 EasyBuild does not support ranges ([[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]).
 The solver selects =Eigen-3.4.0= from the robot tree for that generation.
 A =def patch(self):= that executes sed is not a file.

@@ -74,8 +74,8 @@ Its install still runs =code-server --help=.
 That command originates from the easyblock.
 The easyconfig may not mention that check.
 The easyblock may still run it.
-A package receives an executing check when its easyblock provides one.
-A package receives an executing check when its author writes one.
+A package receives an executing check when its easyblock provides
+one, or when its author writes one.
 Many easyconfigs have neither.
 For those, "installed" means that the files are present.
 * A third kind of check, for a failure the first two cannot see
