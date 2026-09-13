@@ -146,7 +146,7 @@ The root cause is re‑established on the hardware and the toolchain's own recip
 A temporary =--rebuild= goes on the build‑list lines for everything built against the broken toolchain and comes off once the results are checked on a node of each architecture class.
 Three separate mistakes are in that list and only one of them is the symlink.
 *Switching the check off moved the discovery to a user.* Step 2's reasoning was true on both counts: the check was reporting a real defect and no change to this package could repair it.
-The conclusion did not follow.
+The checks were true. The conclusion was not.
 The check was carrying information about the *toolchain*.
 Deleting the report left the toolchain broken and the package shipping.
 [[file:23-testing.org][Testing, and the four things it can mean]].
@@ -206,7 +206,6 @@ Write the commit message. Specifically decide:
 
 * Task three: a user says a module is broken and the report cannot be reproduced
 The ticket said 24 regressions. The pipeline printed zero.
-The pipeline still billed a full hour.
 The pipeline still billed a full hour.
 ** A pipeline's summary can be empty for two different reasons
 One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.
