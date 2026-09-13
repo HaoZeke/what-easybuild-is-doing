@@ -158,7 +158,6 @@ The name remained =-CUDA-12.9.1=.
 The dependency remained pinned to CUDA 12.9.1.
 Both matched the specification.
 On two of the four architectures the underlying tree contained CUDA 13.0.
-The consequence is specific.
 Any component linking cuSPARSE via that toolchain extracts =libcusparse.so.12= from the 13.0 tree.
 It requires =libnvJitLink.so.13=.
 That library exists only within the 13.0 redistributable.

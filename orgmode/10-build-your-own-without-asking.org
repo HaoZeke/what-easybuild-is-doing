@@ -39,17 +39,17 @@ $ eb --show-config
 # (C: command line argument, D: default value, E: environment variable,
  F: configuration file)
 #
-buildpath (E) = /home/rohitg/eb-demo/build
-bwrap-installpath (E) = /home/rohitg/eb-demo/bwrap
-containerpath (E) = /home/rohitg/eb-demo/containers
-installpath (E) = /home/rohitg/eb-demo
-packagepath (E) = /home/rohitg/eb-demo/packages
-prefix (E) = /home/rohitg/eb-demo
-repositorypath (E) = /home/rohitg/eb-demo/ebfiles_repo
+buildpath (E) = ~/eb-demo/build
+bwrap-installpath (E) = ~/eb-demo/bwrap
+containerpath (E) = ~/eb-demo/containers
+installpath (E) = ~/eb-demo
+packagepath (E) = ~/eb-demo/packages
+prefix (E) = ~/eb-demo
+repositorypath (E) = ~/eb-demo/ebfiles_repo
 robot-paths (D) = /sw/noarch/RHEL9/2025/software/EasyBuild/5.3.1/easybuild/easyconfigs
 rpath (D) = True
-sourcepath (E) = /home/rohitg/eb-demo/sources
-sourcepath-data (E) = /home/rohitg/eb-demo/sources
+sourcepath (E) = ~/eb-demo/sources
+sourcepath-data (E) = ~/eb-demo/sources
 #+end_src
 Read the bracketed letters first.
 The legend displays the printed configuration model.

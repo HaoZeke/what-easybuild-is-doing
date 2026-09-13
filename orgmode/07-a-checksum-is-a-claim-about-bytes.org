@@ -169,10 +169,7 @@ The two break in different ways.
 
 The first row contains everything a checksum protects.
 The other three rows are not the checksum's responsibility.
-An easyconfig is Python's failure got past a verification working perfectly.
-Next: =exts_list=.
-One easyconfig installs hundreds of packages.
-Each row above applies to each of them.
+=exts_list= applies the same rows once per extension.
 
 #+begin_keypoints
 - A checksum names bytes, not a version and not an architecture.

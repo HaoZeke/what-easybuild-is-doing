@@ -149,9 +149,9 @@ The forms, and what each one means. From EasyBuild's own documentation of
 | a dict of filename to checksum | per-file, and what injection writes for two or more sources |
 
 The tuple form exists for a real situation: an upstream that re-cut a
-release with changes that do not affect behaviour. It is also the form to
-be suspicious of
-claim somebody has to have actually checked.
+release with changes that do not affect behaviour. It is the form to
+question. "Either of these archives is fine" is a claim somebody has
+to have actually checked.
 
 A =None= entry skips verification for that file, and
 =--enforce-checksums= turns that skip back into an error, which is what a

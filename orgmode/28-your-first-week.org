@@ -210,7 +210,9 @@ Zero of 24 regressions occurred.
 The pipeline still billed a full hour.
 ** A pipeline's summary can be empty for two different reasons
 One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.
-A pipeline that summarises a run typically fills a field such as =EasyBuild log:= by grepping its own output for the line that =eb= prints at the end, =Results of the build can be found in the log file(s)=.
+A pipeline that summarises a run typically fills =EasyBuild log:=
+by grepping for the line =eb= prints at the end.
+That line is =Results of the build can be found in the log file(s)=.
 =eb= prints that line on failed builds as well.
 An *empty* log field does not indicate "no information".
 It indicates that =eb= never printed the line.
