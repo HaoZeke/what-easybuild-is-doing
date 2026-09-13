@@ -136,7 +136,8 @@ The following table shows the mapping.
 An explicit =start_dir= resolves relative to that result.
 A =start_dir= suitable for a git checkout may be wrong for a release tarball of the same software.
 #+end_detail
-That rule (see [[dive:start-dir-descent]]) represents the entire failure. =wobble-1.0= contained exactly one entry, =bin=. =bin= also contained a single entry. EasyBuild descended twice. =Tarball= copied the contents of *that* directory into the install prefix. The install tree is: #+end_detail =%(installdir)s/bin/wobble= does not exist.
+That rule (see [[dive:start-dir-descent]]) represents the entire failure. =wobble-1.0= contained exactly one entry, =bin=. =bin= also contained a single entry. EasyBuild descended twice. =Tarball= copied the contents of *that* directory into the install prefix. The install tree is:
+=%(installdir)s/bin/wobble= does not exist.
 =%(installdir)s/wobble= exists.
 Exit 127 reported the condition.
 There are two ways to fix it.
@@ -309,7 +310,7 @@ To examine a failure before it occurs rather than after, =eb --dump-env-script <
 The file contains the =module load= lines for the toolchain and its dependencies.
 The file also contains the build environment defined by the toolchain object.
 Sourcing that file gives the shell the same environment as the build.
-This topic comprises the entire content of [[file:24-development-environments.org][Standing where the build stood]].
+That dump is the subject of [[file:24-development-environments.org][Standing where the build stood]].
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "The generated cmd.sh, in full"
 $ cat /tmp/eb-ctnn91ni/run-shell-cmd-output/wobble-96mpj6ai/cmd.sh
 #!/usr/bin/env bash

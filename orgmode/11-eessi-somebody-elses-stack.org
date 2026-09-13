@@ -97,7 +97,7 @@ Avoid this.
 Bootstrapping an entire generation into a user prefix duplicates what EESSI's own build bots do centrally.
 It also creates a long detour to a stack that cannot be shared.
 A generation gap means not yet on this EESSI version.
-This is a finding rather than a failure.
+A missing generation is a finding, not a failed mount.
 * Installing on top, with EESSI-extend
 EESSI supplies a module that configures EasyBuild for stack installation.
 Build bots use the same module.

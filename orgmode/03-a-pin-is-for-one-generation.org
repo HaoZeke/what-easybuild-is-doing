@@ -106,7 +106,7 @@ The version changes from 1.14.6 to 1.14.5.
 The build then fails on netCDF.
 The version provided by =foss-2024a= is looked up and inserted.
 Twenty minutes later the easyconfig builds.
-There is no record of which numbers were requirements and which were incidental.
+The recipe does not record which numbers were requirements and which were incidental.
 The right shape is different.
 Treat the old easyconfig's versions as *floors*.
 *Floors* are evidence about what the package was once seen to work with.

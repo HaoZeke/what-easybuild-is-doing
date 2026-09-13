@@ -90,7 +90,7 @@ It concerns which cost is acceptable.
 - conda-forge delivers minutes per environment, identical results on a laptop and a cluster, and binaries built for portability rather than for the instruction set already paid for.  
 
 A site operating a large machine typically employs more than one of these systems for different user populations.
-This is a sound arrangement rather than an admission of defeat.
+A site that uses more than one of those systems is not failing.
 * The part that transfers
 A pin, a checksum, and a module name are claims. The same
 questions apply to a Spack spec, a conda pin, and a container
@@ -112,9 +112,9 @@ A checksum concerns bytes and nothing else.
 A green build describes one tree on one machine.
 None of those are EasyBuild questions.
 EasyBuild is a good place to learn them.
-There is no default EasyBlock.
+No default EasyBlock exists.
 There are no version ranges.
-There is no guessing.
+The framework does not guess.
 A tool that does not guess shows where the uncertainty actually is.
 Take that.
 The rest is documentation.

@@ -149,8 +149,7 @@ The module is generated in the =module= step after the build has completed sever
 * Naming schemes
 The transcript path equals =modulefiles/chem/QMCPACK/4.4.0-foss-2025a.lua=.
 The =chem= identifier originates from =moduleclass=.
-This is a categorised scheme.
-This is one of several schemes.
+=moduleclass= is a category. Other naming schemes exist.
 *Flat* is EasyBuild's default.
 =EasyBuildMNS= is the naming scheme.
 Every module resides in a single directory.

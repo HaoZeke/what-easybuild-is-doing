@@ -229,7 +229,7 @@ dependencies = [
 Use the same command with =--version= and =--source-checksum= to increase the *application* version.
 If the checksum is omitted, the tarball name changes.
 The hash becomes stale.
-This is a blocking residual rather than a guessed hash.
+That missing hash is a blocking residual, not a guessed checksum.
 * Two commands, then =eb=
 | Job | Command | Input | Output |
 |---+---|---|---|

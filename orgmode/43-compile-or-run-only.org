@@ -58,7 +58,7 @@ EESSI's suite consists almost entirely of the second kind.
 The software is pre‑built by EasyBuild.
 The assessment concerns whether the module can run a known workload on this node.
 CSCS's suite includes both system‑health tests that compile STREAM and OSU and application tests that load a module.
-There is a third class, =CompileOnlyRegressionTest=, whose run stage is omitted.
+A third class, =CompileOnlyRegressionTest=, omits the run stage.
 It is the appropriate tool for "does this compiler build that file".
 It is not suitable for any task described in this book involving an installed stack.
 * Sources next to the test
