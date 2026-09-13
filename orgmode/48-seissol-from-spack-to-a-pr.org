@@ -68,31 +68,67 @@ The 1.1.4 easyconfig already used netCDF 4.9.2, above that Spack upper bound.
 CMake for 1.3.2 asks for Eigen 3.4 or newer and handles yaml-cpp 0.8.
 Those inspect residuals are Spack conservatism, not SeisSol bounds.
 =package bump= of [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]] is the parent.
-#+begin_example
-eb-stack package bump \
-  --source SeisSol-1.1.4-foss-2023a.eb \
-  --version 1.3.2 \
-  --toolchain-version 2025a \
-  --package-config seissol.toml \
-  --easyconfigs ROBOT \
-  --out-dir OUT
-#+end_example
 Leave out =--toolchain-name=. The family stays =foss=.
 A SeisSol-only bump that exits 0 while ASAGI, easi, or PSpaMM have no
-=foss-2025a= candidate is a hole. The parent now exits 1.
-It prints one =companion== line per hole. The text after =companion==
-is a full =eb-stack package= command.
+=foss-2025a= candidate is a hole. The parent exits 1 and prints the
+holes. The text after each =companion== is a full =eb-stack package=
+command. =re_run== is the parent command again.
 
-1. ASAGI 1.0: =package bump= of the 2023a recipe.
-2. easi 1.7.0: =package bump --version 1.7.0= with the easi package-config.
-   ImpalaJIT is =exclude_from_solve=. 1.7.0 is Lua-only.
-3. PSpaMM 0.3.1: =package plan= from the Spack =py_pspamm= recipe, on
-   =gfbf-2025a=. PSpaMM has no easyconfig to bump. The package-config sets
-   =options.modulename= to =pypspamm=.
+#+begin_src ebtranscript :source "eb-stack package bump, 2026-09-11" :caption "Parent bump exits 1; three companion= lines, then re_run="
+$ eb-stack package bump \
+>   --source SeisSol-1.1.4-foss-2023a.eb \
+>   --version 1.3.2 \
+>   --toolchain-version 2025a \
+>   --package-config seissol.toml \
+>   --easyconfigs ROBOT \
+>   --out-dir OUT
+generation_target=foss-2025a
+residual=unresolved-generation-dep ASAGI =1.0
+residual=unresolved-generation-dep easi =1.7.0
+residual=unresolved-generation-dep PSpaMM =0.3.1
+companion=eb-stack package bump --source ASAGI-1.0-foss-2023a.eb --toolchain-name foss --toolchain-version 2025a --version 1.0 --easyconfigs ROBOT --out-dir OUT
+companion=eb-stack package bump --source easi-1.3.0-foss-2023a.eb --toolchain-name foss --toolchain-version 2025a --version 1.7.0 --package-config easi.toml --easyconfigs ROBOT --out-dir OUT
+companion=eb-stack package plan --package-config pspamm.toml --source py-pspamm/package.py --toolchain-name gfbf --toolchain-version 2025a --easyconfigs ROBOT --out-dir OUT
+re_run=eb-stack package bump --source SeisSol-1.1.4-foss-2023a.eb --toolchain-name foss --toolchain-version 2025a --version 1.3.2 --package-config seissol.toml --easyconfigs ROBOT --out-dir OUT
+done_when=exit 0
+next=eval each companion= line as a shell command, then eval re_run=
+Error: unresolved on this generation; run each companion= line, then re_run=
+#+end_src
 
-=re_run== is the parent command again. The overlay is done when that
-parent exits 0. The package-config stores the inject digest and the
-=local_*= names.
+1. ASAGI 1.0: the first =companion== is =package bump= of the 2023a recipe.
+2. easi 1.7.0: the second is =package bump --version 1.7.0= with the easi
+   package-config. ImpalaJIT is =exclude_from_solve=. 1.7.0 is Lua-only.
+3. PSpaMM 0.3.1: the third is =package plan= from the Spack =py_pspamm=
+   recipe, on =gfbf-2025a=. PSpaMM has no easyconfig to bump. The
+   package-config sets =options.modulename= to =pypspamm=.
+
+After those three commands, the same parent is =re_run==. The overlay is
+done when that line exits 0 and writes the four =.eb= files.
+
+#+begin_src ebtranscript :source "eb-stack package bump re_run, 2026-09-11" :caption "re_run= after the three companions; parent exits 0"
+$ eval "$re_run"
+generation_target=foss-2025a
+done_when=exit 0
+$ ls OUT/*.eb
+OUT/ASAGI-1.0-foss-2025a.eb
+OUT/PSpaMM-0.3.1-gfbf-2025a.eb
+OUT/SeisSol-1.3.2-foss-2025a.eb
+OUT/easi-1.7.0-foss-2025a.eb
+#+end_src
+
+=seissol.toml= stores the inject digest and the =local_*= names. The
+digest is not a Spack hash and not a working-tree hash.
+
+#+begin_example
+[source_checksums]
+# inject digest of the recursive git_config archive EasyBuild packed
+"seissol-v1.3.2.tar.gz" = "inject"
+
+[easyconfig]
+local_host_arch = "hsw"
+local_order = "6"
+local_equations = "elastic"
+#+end_example
 #+ATTR_EB: :id EB-SeisSol-1 :title Inspect, bump, or plan
 #+begin_exercise
 For each starting point, name the eb-stack command, or say the
@@ -127,6 +163,7 @@ It does not load on a node whose production stack is =2025=.
 =eb -S SeisSol= on that login node returns only [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]].
 A =foss/2026.1= recipe asks the robot for a generation the site has not built.
 =--robot= will try to compile GCC 15 and the rest of 2026.1 beside the 2025 tree.
+#+ATTR_EB: :title Which file loads on the 2025 stack
 #+begin_predict
 A login node has just run =module load 2025=.
 Which of these four files can =eblocalinstall= resolve against
@@ -136,7 +173,7 @@ the modules already on the node?
 2. [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.3.2-foss-2025a.eb][SeisSol-1.3.2-foss-2025a.eb]]
 3. [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.3.2-foss-2025b.eb][SeisSol-1.3.2-foss-2025b.eb]]
 4. =SeisSol-1.3.2-intel-2025a.eb=
-#+end_predict
+
 #+begin_reveal
 (2).
 =foss/2025a= is present.
@@ -146,13 +183,20 @@ the generation the 2025 production recipes use.
 =intel= is documented for local builds by experienced users, not
 the default site stack.
 #+end_reveal
+#+end_predict
 The 2025a robot includes Lua 5.4.8 and libxsmm 1.17. easi 1.7.0 provides =lmathx= via Lua 5.4.
 A warning states that Lua 5.5 may fail to compile.
 The companion Lua 5.4.8 recipe that a 2026.1 bump would have added is unnecessary on 2025a.
 * The site wrapper is the install
-The site loads =eb/<latest>= and installs with its wrapper, not a raw
-=eb= plus hand-set =--installpath-software=.
-The wrapper writes software and modulefiles under the 2025 prefix.
+The Snellius EasyBuild tutorial loads =eb/<latest>= and installs
+with =eblocalinstall=, not a raw =eb= plus hand-set
+=--installpath-software=.
+The wrapper writes software and modulefiles under the 2025 prefix:
+
+#+begin_example
+~/.local/easybuild/RHEL9/2025/software
+~/.local/easybuild/RHEL9/2025/modules
+#+end_example
 * Two defects the first build named
 ** The patch that was no longer the patch
 The first =eblocalinstall= failed on ASAGI.

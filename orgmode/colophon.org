@@ -31,17 +31,17 @@ CernVM-FS ships a client profile for that case.
 [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] does it on four kinds of machine.
 On a large shared machine the *consequences* change, not the mechanism: more users than maintainers, one tree, a scheduler, several microarchitectures, and a rebuild that costs somebody a night.
 * What the samples are
-A browser is provided.
-Every sample runs in the page.
-Editing a sample changes the answer while typing.
-Pressing Escape opens a playground.
-Three of the four kinds operate on tables exported from eb-stack at build time.
-A cross-check compares the browser answers against the binary on each build.
-The fourth reads an easyconfig into its evaluated model.
-It is a reduced reader rather than the real parser.
-It follows single-line assignments and *names what it skipped*.
-No browser functionality can configure, compile, or link.
-When a step requires a real toolchain the page displays a recording of a real run, with where and when printed beside it.
+The listings and transcripts are the book. A print or EPUB copy
+has those and nothing else.
+
+In a browser, some pages also mount a table from eb-stack at build
+time. Editing that table changes the on-page answer. Escape opens a
+playground. Those controls are not in the EPUB. They do not
+configure, compile, or link.
+
+When a step needs a real toolchain, the page shows a recording of a
+real run, with where and when printed beside it. That recording is
+what print gets too.
 * Who wrote this
 Rohit Goswami maintains software stacks on a national machine.
 Rohit Goswami runs the same tools on a laptop.
