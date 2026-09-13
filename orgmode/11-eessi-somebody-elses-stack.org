@@ -232,7 +232,7 @@ Place the easyconfig into EasyBuild, or open a pull request for it.
 Build it in the EESSI build environment using =EESSI-extend=.
 Add an entry to the easystack file for that EESSI version and toolchain generation.
 Open a pull request against the software layer, targeting =main=.
-A builder posts one =bot: build for:arch=...= per supported CPU target.
+A builder posts one ~bot: build for:arch=...~ per supported CPU target.
 When green, =bot:deploy= uploads the tarballs.
 A Stratum-0 ingest publishes them.
 Two conditions apply before work starts.
