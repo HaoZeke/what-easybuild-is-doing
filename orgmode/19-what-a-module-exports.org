@@ -31,8 +31,8 @@
 
 #+begin_objectives
 1. Read a generated modulefile and say where each line came from.
-2. Name the variables EasyBuild always sets, and use one from an
- easyconfig.
+2. Name the variables EasyBuild always sets, and find one with
+ =module show=.
 3. Say what a module naming scheme changes, and what a hierarchical one
  does to =MODULEPATH=.
 #+end_objectives

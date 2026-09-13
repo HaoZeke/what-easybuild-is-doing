@@ -116,7 +116,7 @@ GROMACS
 *Expected output.* punctuation spelled out as words: the hyphen in =code-server= becomes =minus=, and =c++= becomes =EB_c_plus__plus_=.
 Look at the doubled separator in the middle.
 The substitution runs per character and collapses nothing, and that is what keeps it reversible.
-Now type a name with a low line in it, say =my_tool=.
+Now type a name with an underscore in it, say =my_tool=.
 *Expected output.* =_underscore_= .
 That character is encoded too, and it has to be.
 Left alone, =_minus_= could mean either an encoded hyphen or a name that really contained the letters =minus=.

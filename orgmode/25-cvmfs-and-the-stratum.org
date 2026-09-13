@@ -84,7 +84,7 @@ Yfe0b764e723f0fdba0522e72b59f86f66f5234d7
 <256 bytes of RSA signature>
 #+end_src
 The format consists of thirteen fields, each represented by a single letter, followed by a separator, a 40‑character certificate fingerprint, and a 256‑byte signature, totaling 603 bytes for a repository containing three generations of a software stack.
-Only four of these fields are used.
+The next ten letters are the ones this page uses.
 =C= is the content hash of the root file catalog.
 =B= is the catalog size, 26624 bytes.
 =S= is the revision number, 23927.

@@ -21,9 +21,6 @@
 
    EasyBuild is the wrong tool when the job is a different installer, or no installer.
 #+end_export
-This page contains no widgets.
-This page contains no parameters.
-This page opposes the subject of every other page.
 * What EasyBuild is built to be good at
 EasyBuild builds software from source reproducibly into a curated generation of exact versions.
 EasyBuild produces modulefiles for a shared system whose users outnumber its maintainers by a factor of a thousand or more.

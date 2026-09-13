@@ -101,7 +101,7 @@ Almost no easyconfig does either.
 The convention against it is advisable.
 It is a *convention*.
 Nothing in the format forbids computation.
-* The things in angle brackets are not in angle brackets
+* The things in percent-brackets are not typed in percent-brackets
 
 Look at =sources=:
 
