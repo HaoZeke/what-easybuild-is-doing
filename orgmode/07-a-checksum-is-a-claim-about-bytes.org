@@ -162,7 +162,7 @@ The two break in different ways.
 
 | Change | How it is found |
 |---+---|
-| The version | The checksum mismatches and the build stops. Out the value it computed. |
+| The version | The checksum mismatches and the build stops. |
 | The archive's layout | =start_dir= or a patch level still parses, and the build fails later on a path. |
 | The kind of source, tag to release | Both of the above, and only the first announces itself. |
 | A checksum borrowed from another ecosystem | Verification fails against an artifact that really is that version. |

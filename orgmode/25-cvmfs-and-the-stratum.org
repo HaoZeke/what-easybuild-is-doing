@@ -56,8 +56,6 @@ All commands in this page execute on a standard machine lacking a specific accou
 The public EESSI repository responds to plain GET requests.
 This page performs verification instead of description.
 Each numeric value returned originates from the network on 2026-09-10.
-Apply this setting once.
-Subsequent steps follow automatically.
 #+begin_example
 base=http://s1eessieu1-cvmfs.openhtc.io/cvmfs/software.eessi.io
 #+end_example

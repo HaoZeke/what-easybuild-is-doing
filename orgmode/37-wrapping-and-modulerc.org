@@ -113,7 +113,6 @@ Three situations. Name the mechanism, and say what a user
 
 * EasyBuild 5: -D no longer implies -r
 Before EasyBuild 5.0, =--dry-run= and =-D= automatically set =--robot=.
-A reader who entered.
 #+begin_example
 eb GROMACS-2025.2-foss-2025a.eb -D
 #+end_example
@@ -147,8 +146,7 @@ GROMACS closure. Two commands:
 
 #+begin_solution
 1. A prints an overview of the named easyconfig. It does not
- walk the robot. B prints the resolved closure, short paths,
-.
+ walk the robot. B prints the resolved closure, short paths.
 
 2. B. That is the plan.
 

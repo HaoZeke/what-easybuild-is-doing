@@ -3,7 +3,7 @@
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
 .. figure:: _static/diagrams/glossary-2.svg
-   :alt: glossary grouped as recipe, run, output, testing
+   :alt: glossary grouped as RecipeReader, StackWalker, ReframeReader
    :class: eb-diagram
 
    Each term appears once. A page points here instead of defining it again.

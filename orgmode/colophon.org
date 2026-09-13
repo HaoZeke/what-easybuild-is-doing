@@ -30,6 +30,10 @@ EESSI's installation instructions cover a laptop.
 CernVM-FS ships a client profile for that case.
 [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] does it on four kinds of machine.
 On a large shared machine the *consequences* change, not the mechanism: more users than maintainers, one tree, a scheduler, several microarchitectures, and a rebuild that costs somebody a night.
+* The path and the papers
+The learning path is [[file:learning-path.org][A path through this book]].
+The bibliography is [[file:papers.org][Papers]].
+
 * What the samples are
 The listings and transcripts are the book. A print or EPUB copy
 has those and nothing else.

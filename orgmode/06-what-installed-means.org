@@ -36,7 +36,7 @@ The gap between them contains bugs that reach a user bearing the developer's nam
 * Existence is the default claim
 After the install step copies files into place, EasyBuild checks the count.
 The first consulted parameter is =sanity_check_paths=.
-A concrete example follows.
+
 #+begin_src easyconfig :widget parse
 name = 'VASP6'
 version = '6.5.1'
@@ -67,7 +67,7 @@ sanity_check_commands = [
  "python -c 'from archspec.cpu import host; print(host())'"
 ]
 #+end_src
-The check now actually executed the thing.
+The command ran.
 The import resolved.
 The interpreter found the package.
 The function returned.
