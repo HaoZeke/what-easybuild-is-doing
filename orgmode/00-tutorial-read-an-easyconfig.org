@@ -130,9 +130,8 @@ Determine the contents of a hierarchy.
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
 The widget lists the hierarchy. Start at =system=. The last name is
-=foss-2025a=. Two members of that list are toolchains a package on
-=foss-2025a= may depend on.
-A package on =foss-2025a= may depend on any component built with any member of that list.
+=foss-2025a=. A package on =foss-2025a= may depend on any component
+built with any member of that list.
 A package on =GCCcore= cannot depend on a =foss= build.
 The rule is not a matter of politeness; the dependency is not a candidate, causing the robot to report that it cannot locate something visible on disk.
 Change =2025a= to =2024a=, then to =1999z=.
