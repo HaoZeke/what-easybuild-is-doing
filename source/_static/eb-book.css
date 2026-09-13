@@ -1017,6 +1017,11 @@ article.yue .toctree-wrapper .toctree-l2 {
   color: var(--eb-fg-muted);
 }
 
+#rside:empty,
+aside#rside:not(:has(*)) {
+  display: none;
+}
+
 .eb-skip {
   position: absolute;
   left: 0.75rem;

@@ -56,7 +56,7 @@ Loading a toolchain provides =EBROOT= and =EBVERSION= only.
 It does not provide =$CC=, =$CXX=, =$CFLAGS=, =$LIBBLAS=, or =$LIBSCALAPACK=.
 These variables exist only within a build.
 EasyBuild's toolchain object sets them from the toolchain class and from =toolchainopts=.
-This is the subject of [[file:16-what-a-toolchain-injects.org][What a toolchain injects]].
+[[file:16-what-a-toolchain-injects.org][What a toolchain injects]] is that page.
 Loading a toolchain does not reproduce a build's environment.
 Debugging a compilation by loading =foss= and manually executing the failing command encounters this limitation.
 Few discover why the command behaves differently.
@@ -137,7 +137,7 @@ A site with mixed hardware keeps separate install trees.
 
 EasyBuild will not build packages listed in =osdependencies=.
 
-This is the deliberate hole.
+That is the deliberate hole.
 
 Some things belong to the distribution.
 

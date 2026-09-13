@@ -31,7 +31,7 @@
 3. Reproduce a failing command in the environment it failed in.
 #+end_objectives
 Everything before this page was about what EasyBuild does when it works.
-This is the one that gets used.
+That one is the one that gets used.
 It is a reading skill rather than a repertoire of fixes.
 The material here is a real failure.
 It was produced on purpose.

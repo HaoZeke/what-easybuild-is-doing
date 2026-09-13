@@ -37,6 +37,11 @@ The file defines recipe creation when none exists.
 
    RecipeReader is the file becoming a module. These are the mechanisms the file defines.
 #+end_export
+- [[file:recipe-read.org][Read a file]]
+- [[file:recipe-fail.org][When it fails]]
+- [[file:recipe-run.org][How it runs]]
+- [[file:recipe-write.org][Write one]]
+
 Start with the [[file:00-tutorial-read-an-easyconfig.org][tutorial]].
 The tutorial takes about twenty minutes.
 Installation is not required.

@@ -53,7 +53,7 @@ Registration or decorator is not required; the name provides the subscription.
 =parse_hook= is the most significant.
 A modification there changes what is built rather than only how.
 * A hook sees everything, so it starts with a guard
-This is the outline of an example, reduced to its structure.
+The outline of an example, reduced to its structure:
 #+begin_src easyconfig :widget parse
 def parse_hook(ec, *args, **kwargs):
  if ec.name != 'NVHPC':

@@ -189,7 +189,7 @@ Any name can be assigned.
 EasyBuild reads each top-level assignment as a parameter.
 A name it does not recognise is reported; the fix requires *local variables must be named =local_*=*.
 =--fix-deprecated-easyconfigs= renames them.
-This is [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]'s "it is Python" with the bill attached.
+That is [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]'s "it is Python" with the bill attached.
 The file lacks a separate namespace for custom scratch values.
 =--check-style= runs pycodestyle using EasyBuild's settings.
 The line limit is 120 instead of 79.

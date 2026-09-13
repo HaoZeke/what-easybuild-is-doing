@@ -169,7 +169,7 @@ It runs them with =fail_on_error=False=.
 The exit code is the measurement.
 A failure is collected with the command, its input and its output rather than aborting the run.
 
-Two consequences follow from it being a single mechanism.
+Two results follow from it being a single mechanism.
 
 An extension whose =modulename= is =False= produces *no* commands.
 It is skipped in both roles.

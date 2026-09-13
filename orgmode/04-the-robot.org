@@ -186,7 +186,7 @@ The plan depends on =MODULEPATH= as much as on the robot path.
 These are two distinct lists configured in separate ways.
 A dependency that is already installed is considered satisfied.
 It does not appear in the order.
-Two consequences follow.
+Two results follow.
 Both are useful.
 A build plan is not portable.
 Executing the same command on a machine with a different set of installed modules yields a different, yet equally correct, plan.
@@ -298,7 +298,7 @@ It searches the path for missing items.
 It repeats.
 The resolved set expands during execution.
 =--dry-run= lists packages that were never requested.
-Two consequences deserve attention.
+Two results deserve attention.
 A plan lacks portability.
 Items present in the current run's list cease to count as available.
 Both a library and its dependents are rebuilt.

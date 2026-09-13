@@ -40,7 +40,7 @@ The test comprises four distinct questions.
 Answering the incorrect question results in a broken module being shipped.
 They occur in the following order:
 1. The package's own test suite runs during the build.  
-This is the =test= step.
+That is the =test= step.
 2. EasyBuild's sanity check runs after the install.  
 Refer to What "installed" means.
 3. An uploaded test report states that a build succeeded on a real machine.  

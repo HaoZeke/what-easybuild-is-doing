@@ -106,7 +106,7 @@ The next two facts are easy to state.
 They were not obvious at the time.
 Switching the check off did not make the binary start.
 It moved the discovery from a build host to a user.
-This is [[file:06-what-installed-means.org][What "installed" means]]'s whole argument.
+That is [[file:06-what-installed-means.org][What "installed" means]]'s whole argument.
 The check was carrying information: *the toolchain module is broken*.
 That requires escalation.
 A failing check on a package that cannot be fixed is a report about something else.

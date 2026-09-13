@@ -149,7 +149,7 @@ ReFrame 4.3.3 and later, with the common EESSI logging configuration, then write
 - Output files are written at =$RFM_PREFIX/output/<system>/<partition>/<environ>/=. 
 - Perflogs are written at =$RFM_PREFIX/perflogs/<system>/<partition>/<environ>/=. 
 A site that sets the three variables has a ReFrame invocation that is just =reframe -l= or =reframe -r=.
-This is what a cron job and a human can both remember.
+A cron job and a human can both remember that.
 #+ATTR_EB: :id EB-ReFrame-41-1 :title What belongs where
 #+begin_exercise
 A colleague's STREAM test contains =num_tasks = 128= and

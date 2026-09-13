@@ -172,7 +172,7 @@ It places the directory first on the Python search path.
 This establishes precedence.
 
 An included easyblock overrides the shipped one.
-This is desirable for testing.
+That is useful for testing.
 It must not remain in a site configuration.
 
 =eb --list-easyblocks=detailed= reports the exact file that was loaded.
