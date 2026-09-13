@@ -35,7 +35,9 @@ This part describes the arrival: the stratum, the bot, the easystack file, and t
    :alt: StackWalker: CernVM-FS, bot, easystack, host injection
    :class: eb-diagram
 
-   StackWalker is a stratum becoming a module tree. Arrival is these four objects.
+   StackWalker is a stratum becoming a module tree. Arrival is
+   EESSI, CernVM-FS, the same stack elsewhere, the easystack,
+   the bot, and host injections.
 #+end_export
 [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]] is the first read when the machine lacks its own software.
 #+begin_export rst

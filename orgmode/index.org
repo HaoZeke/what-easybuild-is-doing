@@ -24,29 +24,15 @@
 
 RecipeReader. StackWalker. ReframeReader.
 #+end_export
-#+begin_export rst
-.. figure:: _static/diagrams/index-2.svg
-   :alt: four journeys: first recipe, a build failed, port a package, write a test
-   :class: eb-diagram
-
-   A journey is a how-to path across pages that already exist. The same page can sit on more than one path.
-#+end_export
 EasyBuild installs scientific software from a recipe file.[fn:ebdocs]
 This book is the file, the tree, and the run.
-A journey is a how-to path across existing pages.
-#+begin_export rst
-.. figure:: _static/diagrams/book-map.svg
-   :alt: RecipeReader to StackWalker to ReframeReader
-   :class: eb-diagram
-
-   Three named parts. A journey crosses them.
-#+end_export
+A journey is a how-to path across the three named parts.
 #+begin_export rst
 .. figure:: _static/diagrams/index-journeys-cross.svg
    :alt: journeys cross RecipeReader, StackWalker, and ReframeReader
    :class: eb-diagram
 
-   A journey is a how-to path across the three named parts.
+   Four journeys cross RecipeReader, StackWalker, and ReframeReader.
 #+end_export
 #+begin_export rst
 .. rst-class:: eb-map

@@ -304,7 +304,7 @@ step, on a machine that can fetch the file.
 
 #+ATTR_EB: :id EB-Python-2 :title The smallest change that fixes it
 #+begin_exercise
-The recipe above fails with:
+The QMCPACK easyconfig in the previous section fails with:
 
 : Specified start dir /tmp/.../qmcpack-4.4.0/qmcpack does not exist
 

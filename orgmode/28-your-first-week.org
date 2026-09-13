@@ -40,8 +40,9 @@
 - Read access to whatever repository your site keeps its easyconfigs in.
 #+end_prerequisites
 * What is between the operator and eb
-The page does not address EasyBuild's defaults.
-Before the first task, locate the five items in the site repository.
+Before the first task, find these in the site repository:
+the easyconfig tree, the patches, the stack list, the build
+wrapper, and the site config.
 Each site stores them under different names.
 A newcomer who finds them within the first hour stops guessing.
 Most site repositories contain one directory per initial, matching upstream's layout, with patches beside the easyconfig that needs them.

@@ -108,3 +108,6 @@ sources = ['zlib-%(version)s.tar.gz']
 checksums = ['9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23']
 moduleclass = 'lib'
 #+end_src
+
+* Where to go next
+- Next: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].

@@ -261,8 +261,6 @@ The =installpath= returns a microarchitecture‑qualified path.
 The path corresponds to What "installed" means's per‑architecture tree with the architecture visible in the path.
 The all‑CPU‑target claim belongs to the bot.
 It does not belong to the host.
-Next, consider the engine on which these samples run.
-Consider the one idea in it worth taking even if never used.
 
 #+begin_keypoints
 - EESSI is a stack you mount, not a stack you install.

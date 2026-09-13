@@ -41,7 +41,7 @@
 
 #+begin_prerequisites
 - [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]: a
- dependency version is a pin. this page is the site-side
+ dependency version is a pin. This page is the site-side
  escape.
 - [[file:04-the-robot.org][The robot]]: =-D= is how a plan is
  read. EasyBuild 5 changed what that flag implies.

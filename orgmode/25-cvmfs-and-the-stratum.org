@@ -239,20 +239,7 @@ $ sqlite3 cat.db "select name from catalog where flags=3"
 2025.06
 2026.06
 #+end_src
-The root catalog of the entire EESSI software stack is 26 kilobytes.
-It knows almost nothing.
-It knows the top-level layout.
-For each EESSI version it has a hash and a promise.
-Asking for anything under =/versions/2025.06= causes the client to fetch that catalog first.
-The client verifies it the same way.
-The client then continues.
-There is no limit on the nesting.
-A client that never enters a subtree never downloads its metadata.
-Signing the manifest is enough.
-The root catalog's hash is in the signed manifest.
-Each nested catalog's hash is in its parent.
-Each file's hash is in the catalog that lists it.
-It forms a Merkle tree with one signature at the top.
+
 #+ATTR_EB: :id cvmfs-scale :title What a 26-kilobyte catalog accounts for :kind reference
 #+begin_detail
 Every catalog carries a =statistics= table covering itself and its whole

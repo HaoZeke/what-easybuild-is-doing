@@ -435,3 +435,5 @@ source/_static/eb-charmap.json
 
 # Sphinx output
 build/
+
+.ask-cache-store/

@@ -52,8 +52,10 @@ CC=[] CFLAGS=[] LIBBLAS=[]
 $ echo "EBROOTFOSS=[$EBROOTFOSS]"
 EBROOTFOSS=[/sw/arch/RHEL9/EB_production/2025/software/foss/2025a]
 #+end_src
-Loading a toolchain provides =EBROOT= and =EBVERSION= only.
-It does not provide =$CC=, =$CXX=, =$CFLAGS=, =$LIBBLAS=, or =$LIBSCALAPACK=.
+Loading a toolchain loads the hierarchy. Those modules export
+=PATH=, =LD_LIBRARY_PATH=, =EBROOTFOSS=, =EBROOTGCC= and the rest.
+It does not set =$CC=, =$CXX=, =$CFLAGS=, =$LIBBLAS=, or
+=$LIBSCALAPACK=.
 These variables exist only within a build.
 EasyBuild's toolchain object sets them from the toolchain class and from =toolchainopts=.
 [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] is that page.
