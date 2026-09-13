@@ -76,8 +76,8 @@ A zero-byte file fails this check.
 The code-server easyconfig from [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] lacks such a line.
 Its install still runs =code-server --help=.
 That command originates from the easyblock.
-An easyconfig is Python's point that behavior may be implied by the name.
-Behavior may not be mentioned in the easyconfig.
+The easyconfig may not mention that check.
+The easyblock may still run it.
 A package receives an executing check when its easyblock provides one.
 A package receives an executing check when its author writes one.
 Many easyconfigs have neither.

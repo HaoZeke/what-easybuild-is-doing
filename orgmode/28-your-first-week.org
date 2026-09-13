@@ -6,14 +6,14 @@
    :alt: avail, load, then extend the stack rather than replace it
    :class: eb-diagram
 
-   The first week is reading the tree that is already there. Extend it. Do not fork it.
+   Avail, load, then extend the stack. Do not fork it.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/28-your-first-week.svg
    :alt: read the tree, then extend it
    :class: eb-diagram
 
-   The first week is somebody else's stack. Extend it. Do not replace it.
+   Read the site tree, then add one package. Do not replace the stack.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/28-first-week-path.svg
