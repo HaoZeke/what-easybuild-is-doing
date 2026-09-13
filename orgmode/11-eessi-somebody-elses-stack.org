@@ -89,7 +89,7 @@ An opt‑in is available.
 #+begin_example
 export EESSI_SITE_TOP_LEVEL_TOOLCHAINS_2025_06='[{"name": "foss", "version": "2026.1"}]'
 #+end_example
-A setting triggers EasyBuild *plan* the build.
+A setting makes EasyBuild plan the build.
 Read the plan prior to script execution.
 When the generation is absent from the compatibility layer, every dependency is skipped.
 The run then begins by bootstrapping the compiler itself and downloading a couple of hundred megabytes of GCC.
