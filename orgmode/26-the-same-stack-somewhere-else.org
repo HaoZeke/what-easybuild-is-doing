@@ -370,8 +370,7 @@ would make, and the one check you would run before believing the result.
 1. Route one, native. Set =CVMFS_CLIENT_PROFILE=single= and raise
  =CVMFS_QUOTA_LIMIT=; 40 GB allows a generous cache and the default
  4000 MB will thrash. Check =$EESSI_SOFTWARE_SUBDIR= after
- initialisation
- fallback list matters.
+ initialisation. The fallback list matters.
 
 2. =cvmfsexec=, or a container with =eessi_container.sh=. The decisions
  are where the cache goes, since your home directory may be quota'd and
@@ -385,11 +384,10 @@ would make, and the one check you would run before believing the result.
  against the second's: if they are the same, the cache is not being
  reused and every run is paying full price.
 
-4. Route one, plus host injections, and this is the case that needs the
- fourth step. The driver update is exactly when
- =link_nvidia_host_libraries.sh= has to be re-run, per EESSI's own
- documentation. The check is to run something CUDA on that node, not on
- a login node, which is [[file:27-four-things-that-actually-happened.org][Four things that actually happened]]'s whole subject.
+4. Route one, plus =EESSI_NVIDIA_OVERRIDE_DEFAULT= on 2025.06 (or
+ =EESSI_HOST_INJECTIONS= on 2023.06). Re-run
+ =link_nvidia_host_libraries.sh= after the driver update. The check
+ is CUDA on that node, not on a login node.
 #+end_solution
 #+end_exercise
 

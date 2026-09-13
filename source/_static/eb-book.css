@@ -872,11 +872,16 @@ main.sy-main {
   .sy-head-inner {
     flex-wrap: wrap;
   }
-  .sy-head-nav {
+  .sy-head-nav,
+  .sy-head-nav.is-hidden,
+  nav.sy-head-nav {
     display: flex !important;
+    visibility: visible !important;
     flex: 1 1 100%;
     order: 5;
     width: 100%;
+    height: auto !important;
+    overflow: visible !important;
   }
   .sy-head-links ul {
     display: flex;
@@ -886,6 +891,7 @@ main.sy-main {
     margin: 0;
     list-style: none;
   }
+  button.js-menu,
   .js-menu {
     display: none !important;
   }
