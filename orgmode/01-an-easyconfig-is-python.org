@@ -23,7 +23,7 @@
  state it reports.
 #+end_objectives
 An easyconfig is a Python file EasyBuild evaluates.
-The file below is one: a VS Code installation that runs in a browser on a supercomputer.
+This one is a VS Code installation that runs in a browser on a supercomputer.
 The file contains twenty lines.
 Recipes of this form are merged weekly.
 The installed module name is a railroad, not a sentence.
