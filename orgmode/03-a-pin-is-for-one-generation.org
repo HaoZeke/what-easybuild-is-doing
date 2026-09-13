@@ -99,7 +99,7 @@ generation the easyconfig was written against. Carried across generations,
 it states a requirement the software never made.
 #+end_quote
 
-* This is why retargeting is not a text edit
+* Why retargeting is not a text edit
 The first move is to open the easyconfig and replace =2025a= with =2024a=.
 The build fails on HDF5.
 The version changes from 1.14.6 to 1.14.5.

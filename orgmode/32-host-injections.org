@@ -208,7 +208,7 @@ The Slingshot-11 write-up places OpenMPI 5.x for 2023.06 on Grace:
 The EESSI GROMACS and the EESSI OSU benchmarks retain their module names.
 The libraries they resolve at runtime are those provided by the site.
 No package above MPI is rebuilt.
-This is true only if the replacement is ABI‑compatible with the EESSI OpenMPI that the rest of the tree was linked against.
+That is true only if the replacement is ABI‑compatible with the EESSI OpenMPI that the rest of the tree was linked against.
 Lmod hooks constitute the other half of fabric tuning: environment variables at load time rather than a replaced =.so=.
 EESSI's =SitePackage.lua= searches for two additional files under =host_injections=:.
 #+begin_example
