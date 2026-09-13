@@ -89,8 +89,8 @@ A successful performance test produces a separate line for each metric.
 P: copy_bw: 19538.4 MB/s (r:0, l:None, u:None)
 P: triad_bw: 14883.4 MB/s (r:0, l:None, u:None)
 #+end_example
-=r= is the reference, =l= and =u= are the thresholds. --performance-report= prints the same facts as a table at the end of the session.
-RFM_PERF_INFO_LEVEL= raises the log level of the =P:= lines if a suite's stdout is too noisy.
+=r= is the reference, =l= and =u= are the thresholds. =--performance-report= prints the same facts as a table at the end of the session.
+=$RFM_PERF_INFO_LEVEL= raises the log level of the =P:= lines if a suite's stdout is too noisy.
 The durable record is the perflog, by default at =perflogs/<system>/<partition>/<testname>.log=, or under =$RFM_PREFIX/perflogs/= when the prefix is set.
 It is a CSV whose columns are configurable.
 A site that graphs STREAM triad over six months reads this file, not the session JSON.
