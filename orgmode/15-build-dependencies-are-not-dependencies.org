@@ -48,6 +48,9 @@ dependencies = [
  ('libxml2', '2.13.4'),
 ]
 #+end_src
+A four-tuple is legal too: =('CMake', '2.8.12', '', ('GCC', '4.8.2'))=.
+=hiddendependencies= is a third list: the robot still walks it, and
+the module does not load it.
 During =prepare=, both lists are loaded onto the compiler path.
 Reading the easyconfig shows the lists interchangeable.
 The walk below treats both lists as robot items to locate.

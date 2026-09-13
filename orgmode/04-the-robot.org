@@ -30,7 +30,8 @@
 
 #+begin_objectives
 1. Say what a bare easyconfig filename is, and what resolves it.
-2. Read a =--robot-paths= value and say where the site defaults go in it.
+2. Read a =--robot-paths= value and say which element is the
+ shipped EasyBuild defaults.
 3. Name the three lists the robot consults, and say which one is not
  EasyBuild's to set.
 #+end_objectives

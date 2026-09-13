@@ -234,7 +234,9 @@ A site obtains a tree that behaves as if it were inside the repository.
 Three uses are defined.
 A stack built elsewhere cannot know the uses.
 *GPU drivers.* The driver belongs to the host kernel and cannot be shipped in a repository.
-The script =link_nvidia_host_libraries.sh= populates the injection tree with links to the host's driver libraries.
+On 2025.06 the script writes NVIDIA driver links into
+=compat/.../lib/nvidia= via =EESSI_NVIDIA_OVERRIDE_DEFAULT=.
+It does not populate =host_injections= for those drivers.
 The documentation states: "Re‑run this script each time the NVIDIA GPU drivers on the host system are updated."
 It may expose libraries that are new to the driver version.
 *A full CUDA installation.* The CUDA and cuDNN packages in the repository contain only runtime libraries.

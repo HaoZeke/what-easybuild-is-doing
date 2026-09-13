@@ -110,8 +110,8 @@ mention, so the lookup found nothing to verify against. (aarch64 would
 not have failed: that easyblock maps it to =arm64=, and that key is
 already there.)
 
-No x86-64 or arm64 build could catch it
-template resolves to a key that is present. The dictionary is keyed by
+No x86-64 or arm64 build could catch it: the template resolves to a
+key that is present. The dictionary is keyed by
 resolved filename rather than by architecture, and it says nothing at
 all about the filenames it omits. A per-architecture gap is invisible
 on every architecture except the one with the gap.

@@ -60,7 +60,7 @@ nitpicky = True
 
 html_theme = "shibuya"
 html_static_path = ["_static"]
-html_extra_path = ["CNAME"]
+html_extra_path = ["CNAME", "_headers"]
 html_baseurl = "https://hpceb.rgoswami.me/"
 # Typography and layout for long-form reading, layered over the theme rather
 # than replacing it. Scoped to article.yue so navigation keeps the theme's

@@ -65,7 +65,7 @@ The configuration retains the node.
 import reframe as rfm
 import reframe.utility.sanity as sn
 from eessi.testsuite.eessi_mixin import EESSI_Mixin
-from eessi.testsuite.constants import DEVICE_TYPES, COMPUTE_UNITS
+from eessi.testsuite.constants import DEVICE_TYPES, COMPUTE_UNITS, SCALES
 from eessi.testsuite.utils import find_modules
 
 @rfm.simple_test
@@ -73,6 +73,7 @@ class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
  device_type = DEVICE_TYPES.CPU
  compute_unit = COMPUTE_UNITS.CPU
  module_name = parameter(find_modules('mpi4py'))
+ scale = parameter(SCALES.keys())
  n_iterations = variable(int, value=1000)
  executable = 'python3'
  time_limit = '5m00s'
