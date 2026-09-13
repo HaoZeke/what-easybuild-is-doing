@@ -108,6 +108,7 @@ Needs D.
 
 Testing, and the four things it can mean names the fourth kind and stops.
 [[file:part-a-test.org][ReframeReader]] is that kind.
+* StackWalker
 * Level F. Distribute a stack
 [[file:25-cvmfs-and-the-stratum.org][CernVM-FS]] and [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
 Two hours. The artifact is a mounted tree, not a tarball.

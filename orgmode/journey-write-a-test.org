@@ -9,6 +9,8 @@
    39-a-reframe-test-is-a-class
    40-the-pipeline-has-six-stages
    41-the-configuration-file-is-the-machine
+   45-a-portable-test-leaves-the-machine-in-the-config
+   46-software-maps-to-tests
 #+end_export
 
 #+begin_export rst

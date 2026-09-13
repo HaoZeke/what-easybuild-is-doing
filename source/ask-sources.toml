@@ -1,0 +1,92 @@
+# External Ask sources. Roots are Git remotes. ingest_ask_sources.py
+# fetches each ref into the directory named by the gitignored pointer
+# `.ask-cache` (one gitignored path; set ASK_CACHE to override).
+# The book itself is still indexed from the Sphinx doctree.
+
+[[source]]
+id = "easybuild-docs"
+kind = "docs"
+origin = "EasyBuild docs"
+git = "https://github.com/easybuilders/easybuild-docs.git"
+ref = "main"
+include = ["docs/**/*.rst", "docs/**/*.md"]
+exclude = [
+  "**/changelog*",
+  "**/release_notes*",
+  "docs/version-specific/**",
+  "docs/ascii/**",
+  "docs/legacy/**",
+  "docs/user-survey/**",
+  "docs/archived*",
+  "docs/deprecated-easyconfigs.md",
+]
+url_prefix = "https://docs.easybuild.io/"
+url_strip = "docs/"
+
+[[source]]
+id = "easybuild-framework"
+kind = "code"
+origin = "EasyBuild framework"
+git = "https://github.com/easybuilders/easybuild-framework.git"
+ref = "develop"
+include = ["easybuild/**/*.py"]
+exclude = ["**/test/**", "**/tests/**"]
+url_prefix = "https://github.com/easybuilders/easybuild-framework/blob/develop/"
+
+[[source]]
+id = "easybuild-easyblocks"
+kind = "code"
+origin = "EasyBuild easyblocks"
+git = "https://github.com/easybuilders/easybuild-easyblocks.git"
+ref = "develop"
+include = ["easybuild/easyblocks/**/*.py"]
+exclude = ["**/test/**", "**/tests/**"]
+url_prefix = "https://github.com/easybuilders/easybuild-easyblocks/blob/develop/"
+
+[[source]]
+id = "eessi-docs"
+kind = "docs"
+origin = "EESSI docs"
+git = "https://github.com/EESSI/docs.git"
+ref = "main"
+include = ["docs/**/*.md"]
+exclude = [
+  "docs/available_software/**",
+  "docs/available_software_riscv/**",
+  "docs/img/**",
+  "docs/blog/**",
+  "docs/meetings/**",
+  "docs/talks/**",
+]
+url_prefix = "https://eessi.github.io/docs/"
+url_strip = "docs/"
+
+[[source]]
+id = "eessi-software-layer"
+kind = "code"
+origin = "EESSI software-layer"
+git = "https://github.com/EESSI/software-layer.git"
+ref = "main"
+include = ["**/*.py", "**/*.sh"]
+exclude = ["**/test/**", "**/tests/**", "**/.git/**"]
+url_prefix = "https://github.com/EESSI/software-layer/blob/main/"
+
+[[source]]
+id = "eb-stack-docs"
+kind = "docs"
+origin = "eb-stack docs"
+git = "https://github.com/HaoZeke/eb-stack.git"
+ref = "main"
+include = ["docs/orgmode/**/*.org", "README.md", "skills/**/*.md"]
+exclude = ["docs/build/**"]
+url_prefix = "https://github.com/HaoZeke/eb-stack/blob/main/"
+
+[[source]]
+id = "eb-stack-code"
+kind = "code"
+origin = "eb-stack"
+git = "https://github.com/HaoZeke/eb-stack.git"
+ref = "main"
+include = ["src/*.rs", "src/**/*.rs"]
+exclude = ["**/tests/**", "target/**"]
+url_prefix = "https://github.com/HaoZeke/eb-stack/blob/main/"

@@ -62,6 +62,11 @@ The configuration retains the node.
 * What the mixin changes
 
 #+begin_src python
+import reframe as rfm
+from eessi.testsuite.eessi_mixin import EESSI_Mixin
+from eessi.testsuite.constants import DEVICE_TYPES, COMPUTE_UNITS
+from eessi.testsuite.utils import find_modules
+
 @rfm.simple_test
 class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
  device_type = DEVICE_TYPES.CPU

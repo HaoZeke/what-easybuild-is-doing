@@ -273,7 +273,8 @@ The robot does not perform it.
 #+begin_example
 eb GROMACS-2025.2-foss-2025a.eb -r -D
 #+end_example
-Option =-D= corresponds to =--dry-run=.
+Option =-D= is =--dry-run-short= (short paths).
+=--dry-run= prints full paths.
 The resolved list includes a marker beside each entry showing installed status or build requirement.
 Read the list before each non‑trivial build for a specific reason.
 The typed command hides the difference between installing two items and installing ninety items.

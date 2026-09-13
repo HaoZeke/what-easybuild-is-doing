@@ -25,7 +25,7 @@
 Each term appears a single time on this page, and any page may reference it in situ.
 Encountering =versionsuffix= in One easyconfig, many installs does not require this page, while a reader requiring the complete vocabulary can obtain it here.
 Definitions are presented mechanically rather than descriptively: they specify what the entity *is* in the code and what alterations occur when it changes.
-* The recipe
+* RecipeReader
 
 #+ATTR_EB: :id term-easyconfig :title easyconfig :kind term :name easyconfig
 #+begin_detail
@@ -110,7 +110,7 @@ which is the tenth of the eighteen.
 [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]].
 #+end_detail
 
-* The run
+* Running a build
 
 #+ATTR_EB: :id term-steps :title the eighteen steps :kind term :name steps
 #+begin_detail

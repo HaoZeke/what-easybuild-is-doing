@@ -16,9 +16,9 @@
 #+end_export
 This tutorial evaluates a file the way EasyBuild does.
 Templates are formatted after the file runs.
-The easyblock is derived from the name.
-The toolchain decides which dependencies are visible.
-The robot resolves a bare filename.
+The easyblock is the Python class that builds the software.
+The toolchain is the compiler stack the file names.
+A later page, [[file:04-the-robot.org][The robot]], is how EasyBuild finds a filename.
 Each sample on this page is editable and runs in the browser.
 Recordings later in the book are labelled as recordings and are not typed.
 The expected output is under the sample.
