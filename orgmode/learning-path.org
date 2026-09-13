@@ -85,8 +85,7 @@ Reading a failed build is intended for that situation.
 * Level D. Build the machinery
 Three hours.
 B and C are required.
-Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps.
-Read [[file:13-how-a-build-executes.org][How a build executes]] for the mapping of each parameter to its owner.
+Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps and which parameter belongs to which owner.
 Read [[file:14-the-isolation-policy.org][The isolation policy]] for the visibility constraints of a build.
 Read [[file:15-build-dependencies-are-not-dependencies.org][Build dependencies are not dependencies]] for the three dependency kinds.
 Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =toolchainopts=.

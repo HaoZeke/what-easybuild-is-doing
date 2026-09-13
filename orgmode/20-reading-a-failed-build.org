@@ -151,9 +151,9 @@ The layout is usually the correct one.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "Not the tree the easyconfig assumed"
 $ ls -la ebtest/software/wobble/1.0/
 total 4
-drwxr-xr-x 2 rgoswami rgoswami 60 Sep 10 07:06 .
-drwxr-xr-x 3 rgoswami rgoswami 60 Sep 10 07:06 ..
--rwxr-xr-x 1 rgoswami rgoswami 26 Sep 10 07:06 wobble
+drwxr-xr-x 2 user     user     60 Sep 10 07:06 .
+drwxr-xr-x 3 user     user     60 Sep 10 07:06 ..
+-rwxr-xr-x 1 user     user     26 Sep 10 07:06 wobble
 #+end_src
 =%(installdir)s/bin/wobble= is missing.
 =%(installdir)s/wobble= is present.

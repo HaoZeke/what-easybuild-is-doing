@@ -299,14 +299,14 @@ them with five NVIDIA accelerator subdirectories each, and ten x86_64
 targets with thirteen accelerator subdirectories each. Five plus twenty
 plus a hundred and thirty.
 
-x86_64 targets: =generic=, =amd/zen2=, =amd/zen3=, =amd/zen4=,
-=amd/zen5=, =intel/haswell=, =intel/skylake_avx512=,
-=intel/cascadelake=, =intel/icelake=, =intel/sapphirerapids=,
-=intel/graniterapids=. aarch64: =generic=, =a64fx=, =neoverse_n1=,
-=neoverse_v1=, =nvidia/grace=, =aws/graviton4=. Plus
-=riscv64/generic=. Not every target exists in every version; the table
-on that page says which, and the fallback list means a host with no exact
-match still gets something.
+x86_64 targets in 2025.06: =generic=, =amd/zen2=, =amd/zen3=,
+=amd/zen4=, =amd/zen5=, =intel/haswell=, =intel/skylake_avx512=,
+=intel/cascadelake=, =intel/icelake=, =intel/sapphirerapids=.
+aarch64: =generic=, =a64fx=, =neoverse_n1=, =neoverse_v1=,
+=nvidia/grace=.
+=intel/graniterapids=, =aws/graviton4= and =riscv64/generic= are
+2026.06. The fallback list means a host with no exact match still
+gets something.
 
 Accelerator targets are named =accel/nvidia/cc<XY>=, and the
 initialisation script downgrades a compute capability that has no build

@@ -95,8 +95,8 @@ The behavior remained correct when the recipe built from a git commit.
 EasyBuild archives a clone under the repository's name and places the sources in =qmcpack/=.
 The release tarball extracts to =qmcpack-4.4.0/= with =CMakeLists.txt= at the top.
 [[file:20-reading-a-failed-build.org][Reading a failed build]]'s descent rule then resolves a relative =start_dir= under that.
-The method failure yields the more useful half.
-The verifying diff in step 6 *deliberately excluded the source block*.
+The six-check pipeline passed because the verifying diff in step 6
+*deliberately excluded the source block*.
 =start_dir= is not in that block.
 It is derived from that block.
 Six checks passed correctly.

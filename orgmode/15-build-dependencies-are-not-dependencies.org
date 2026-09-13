@@ -53,7 +53,7 @@ Reading the easyconfig shows the lists interchangeable.
 The walk below treats both lists as robot items to locate.
 Swapping a name from =dependencies= to =builddependencies= still makes the walk list it.
 The generated module marks the divergence.
-That segment cannot be emitted by a browser.
+The listing is a recording of a real run.
 #+begin_src easyconfig :widget solve :universe canned-foss-2025a
 name = 'GROMACS'
 version = '2025.2'

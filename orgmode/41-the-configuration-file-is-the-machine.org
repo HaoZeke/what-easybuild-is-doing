@@ -52,7 +52,8 @@ CSCS provides [[https://github.com/eth-cscs/cscs-reframe-tests/blob/master/confi
 A configuration is a Python file that assigns =site_configuration=, a dictionary.
 Three keys do most of the work.
 =systems= is a list of machines.
-Each system has a name, a list of hostnames ReFrame matches against =socket.gethostname()=, a modules system (=lmod=, =tmod=, =tmod4=, =nomod=), and a list of *partitions*.
+Each system has a name, a list of hostnames ReFrame matches against =socket.gethostname()=, a modules system (=lmod=, =envmod=, =nomod=), and a list of *partitions*.
+ReFrame 4.10 dropped =tmod= and deprecated =tmod4=.
 A partition is a scheduler plus a launcher plus a list of environments.
 =scheduler = 'slurm'= and =launcher = 'srun'= is the common HPC pair.
 =scheduler = 'local'= and =launcher = 'local'= is the laptop pair.

@@ -83,8 +83,7 @@ A package receives an executing check when its author writes one.
 Many easyconfigs have neither.
 For those, "installed" means that the files are present.
 * A third kind of check, for a failure the first two cannot see
-versionsuffix is part of the name.
-Check is performed on the recorded runtime library search path, the RPATH.
+The recorded runtime library search path, the RPATH, is a third check.
 It reads installed binaries.
 It resolves libraries they link against.
 It reports any that are missing.

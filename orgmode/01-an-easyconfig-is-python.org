@@ -161,7 +161,7 @@ The doubled separator indicates that the substitution runs per character and col
 The consequence people trip over stays invisible in =code-server=.
 Try =Python-bundle-PyPI=.
 Then try a name with =_= in it.
-The character is *itself* encoded as =_low_line_= .
+The character is *itself* encoded as =_underscore_= .
 That is what keeps the mapping reversible.
 Left alone, =_minus_= would be ambiguous.
 It could represent an encoded hyphen or a name that spells out =minus= between two of them.

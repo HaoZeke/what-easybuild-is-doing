@@ -87,7 +87,7 @@ These two facts must agree.
 If they do not agree, EESSI reports the mismatch.
 An opt‑in is available.
 #+begin_example
-export EESSI_SITE_TOP_LEVEL_TOOLCHAINS_2025_06='[{"name": "GCCcore", "version": "15.2.0"}]'
+export EESSI_SITE_TOP_LEVEL_TOOLCHAINS_2025_06='[{"name": "foss", "version": "2026.1"}]'
 #+end_example
 A setting triggers EasyBuild *plan* the build.
 Read the plan prior to script execution.

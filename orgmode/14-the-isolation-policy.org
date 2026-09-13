@@ -70,7 +70,8 @@ Running =module purge= is documented as futile.
 Running =module purge= is documented as broken on some systems (Cray).
 A loaded module that was not declared still triggers a warning.
 The failure appears months later on a machine where that module is missing.
-=--filter-env-vars= removes specified variables from the build environment.
+=--filter-env-vars= omits those names from the generated modulefile.
+It does not strip them from the build environment.
 Sites configure it for variables that break builds when inherited.
 =LD_LIBRARY_PATH= is the common example.
 A path in =LD_LIBRARY_PATH= overrides the toolchain's provision without a message.

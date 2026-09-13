@@ -131,7 +131,7 @@ Objects are stored in =data/=, organized into 256 directories based on the first
 $ h=7ca4fb6b5db9c1432243b47e306e46327cdeda19
 $ curl -sS -o cat.obj $base/data/${h:0:2}/${h:2}C
 $ ls -l cat.obj
--rw-r--r-- 1 rgoswami rgoswami 5511 Sep 10 07:28 cat.obj
+-rw-r--r-- 1 user     user     5511 Sep 10 07:28 cat.obj
 
 $ sha1sum cat.obj
 7ca4fb6b5db9c1432243b47e306e46327cdeda19 cat.obj
@@ -178,7 +178,8 @@ The =.cvmfsdirtab= fetch later in this page relies on that.
 Absolute paths are not stored to conserve space.
 MD5 hash values of the absolute path names are stored instead.
 A lookup consists of a hash and an index probe at any depth, but this prevents a catalog from being listed by prefix.
-=previous_revision= is a hash, creating a chain in the repository where each published revision references the preceding one.
+The catalog field previous_revision is a hash. Each published
+revision names the one before it.
 The =flags= column encodes the type of each entry, and the live histogram is sufficiently small to be read in full:.
 #+begin_src ebtranscript :source "sqlite3 on the decompressed root catalog of software.eessi.io, revision 23927, 2026-09-10" :caption "What a file catalog actually holds"
 $ sqlite3 cat.db '.tables'
