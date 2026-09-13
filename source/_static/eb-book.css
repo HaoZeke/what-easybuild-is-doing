@@ -1023,10 +1023,21 @@ article.yue .toctree-wrapper .toctree-l2 {
   color: var(--eb-fg-muted);
 }
 
-#rside:empty,
-aside#rside:not(:has(*)),
-aside#rside:has(#ethical-ad-placement):not(:has(.toc-tree, .sy-toc, nav)) {
-  display: none;
+#rside,
+aside#rside {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .eb-skip {

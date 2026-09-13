@@ -43,6 +43,9 @@ A journey is a how-to path across the three named parts.
 - `Write a test <journey-write-a-test.html>`_ - four kinds, then a ReFrame class
 #+end_export
 Pages are grouped by product: [[file:part-a-recipe.org][RecipeReader]], [[file:part-a-stack.org][StackWalker]], [[file:part-a-test.org][ReframeReader]].
+The tutorial is a tutorial. The journeys are how-to paths.
+The parts are explanation. [[file:keypoints.org][Keypoints]] and
+[[file:glossary.org][the glossary]] are reference.
 The path, the papers, and the sample execution details are [[file:colophon.org][at the back]].
 #+begin_export rst
 .. rst-class:: eb-upstream

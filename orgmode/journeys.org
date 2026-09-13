@@ -30,10 +30,9 @@
    :alt: a journey may enter RecipeReader, StackWalker, or ReframeReader
    :class: eb-diagram
 
-   A journey is a path across pages that already exist. The same page may sit on more than one path.
+   A how-to path may enter RecipeReader, StackWalker, or ReframeReader.
 #+end_export
-A journey defines a how‑to path across pages that already exist.
-The same page may belong to multiple paths.
+A journey is a how-to path. The same page may sit on more than one.
 #+begin_export rst
 .. rst-class:: eb-journeys
 
