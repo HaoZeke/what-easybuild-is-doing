@@ -163,8 +163,9 @@ can use and that you now maintain.
 The honest report is a generation gap: this recipe needs =foss-2026.1=,
 this EESSI version's layer stops short of it, so the ceiling here is a
 build on an ordinary target rather than an EESSI-verified one. That goes
-to whoever asked for the software, and the software-layer entry waits for
-an EESSI version whose layer carries the generation.
+to whoever asked for the software, and the software-layer entry is a switch to an EESSI version
+whose layer already carries the generation (2026.06 for
+=foss-2026.1=), not a wait.
 #+end_solution
 #+end_exercise
 

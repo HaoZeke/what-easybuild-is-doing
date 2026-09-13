@@ -73,7 +73,7 @@ The expression =depends_on('hdf5@1.10:')= is a real lower bound.
 A concretiser selects a version that satisfies all such bounds, with variants chosen at install time.
 That approach contrasts with the trade described in A pin is for one generation.
 Spack's format can retain the constraint that the software actually possesses.
-A package to move across environments without modification.
+A package can move across environments without a rebuild.
 Two installations on the same machine may legitimately differ.
 Reproducing a result requires recording the resolved graph instead of naming a generation.
 

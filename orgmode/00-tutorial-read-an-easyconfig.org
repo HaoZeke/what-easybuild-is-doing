@@ -134,7 +134,7 @@ A package on =foss-2025a= may depend on any component built with any member of t
 A package on =GCCcore= cannot depend on a =foss= build.
 The rule is not a matter of politeness; the dependency is not a candidate, causing the robot to report that it cannot locate something visible on disk.
 Change =2025a= to =2024a=, then to =1999z=.
-Provide a different chain, followed by a refusal indicating which generations the page knows.
+Ask for a chain the page does not know. The widget should refuse.
 A hierarchy reflects what is installed rather than the string.
 * Where to go next
 - The next page in RecipeReader: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].

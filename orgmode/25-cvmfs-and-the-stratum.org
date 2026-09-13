@@ -412,7 +412,7 @@ kilobytes and lists twenty-five entries.
 #+end_exercise
 The manifest's bottom signature uses the *repository* key located on the publisher.
 The allowed signing certificates are listed in =.cvmfswhitelist=.
-The file is signed with a different key:.
+The file is signed with a different key.
 * Two keys
 Delivery of the master public key via its repository is not possible.
 Distribution of the public key for repository signature verification must use a channel other than CernVM-FS content distribution.

@@ -215,7 +215,8 @@ That line is =Results of the build can be found in the log file(s)=.
 An *empty* log field does not indicate "no information".
 It indicates that =eb= never printed the line.
 The failure is before the easyconfig was processed, during the fetch phase.
-A field such as =Last successful build:= reporting *never* provides no signal for a newly added line.
+A field such as =Last successful build: never= is not "no data" when
+the line is new. It is the summariser's default.
 Examine the pipeline's summariser to determine which fields can be empty for reasons other than absence.
 #+ATTR_EB: :id first-week-habits :title Four habits that shorten the week :kind reference
 #+begin_detail

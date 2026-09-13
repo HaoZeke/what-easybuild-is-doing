@@ -101,7 +101,9 @@ The CSC Finland computing‑environment course contains ten topics on using Puht
 The course is not a ReFrame course.
 LUMI's user documentation covers the same material for that machine.
 The ReFrame course consists of CSCS's webinar, the official tutorial, and EESSI's writing‑tests page.
-These pages are Part 2 rather than a subsection of Testing, and they represent four meanings: the fourth kind of testing has its own layout, and the centres that run it teach it as an independent course.
+These pages are ReframeReader rather than a subsection of Testing.
+The fourth kind of testing has its own layout. The centres that run
+it teach it as an independent course.
 #+ATTR_EB: :id EB-ReFrame-46-1 :title Which filter
 #+begin_exercise
 Three requests. For each, say which invocation, and whether

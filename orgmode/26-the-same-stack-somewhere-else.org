@@ -40,7 +40,7 @@
 [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]] dissected a repository.
 The page uses that repository on machines lacking their own software stack, such as a laptop, a continuous‑integration runner, a cloud instance, and a cluster with externally managed stack.
 The tested claim originates from EESSI: "The host OS still provides a couple of things, like drivers for network and GPU, support for shared filesystems like GPFS and Lustre, a resource manager like Slurm, and so on."
-All of those components are delivered via HTTP.
+Those host pieces stay on the host. CernVM-FS delivers the three layers.
 * Three layers, and what each one does not do
 EESSI has three layers.
 The division is the interesting part.
