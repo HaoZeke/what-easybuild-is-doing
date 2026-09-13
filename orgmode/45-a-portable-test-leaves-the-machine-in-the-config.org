@@ -63,6 +63,7 @@ The configuration retains the node.
 
 #+begin_src python
 import reframe as rfm
+import reframe.utility.sanity as sn
 from eessi.testsuite.eessi_mixin import EESSI_Mixin
 from eessi.testsuite.constants import DEVICE_TYPES, COMPUTE_UNITS
 from eessi.testsuite.utils import find_modules
@@ -82,7 +83,7 @@ class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
 
     @rfm.sanity_function
     def validate(self):
-        return True
+        return sn.assert_found(r'Sum of all ranks', self.stdout)
 #+end_src
 =EESSI_Mixin= provides hooks that read the partition.
 =compute_unit = COMPUTE_UNITS.CPU= is one task per core.

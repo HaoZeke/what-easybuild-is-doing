@@ -77,9 +77,11 @@ The file itself stored the literal value.
 File order is irrelevant; =sources= may appear before =version=.
 The final line reports an easyblock that the file never mentions.
 * Step 2: change the version, and watch what follows
+In the sample above, change =version= from =4.130.0= to =4.131.0=.
+The formatted source name follows. The software name does not.
 =4.130.0= becomes =4.131.0=.
-=code-server= becomes =codeserver=.
-=EB_code_minus_server= becomes =EB_codeserver=.
+=code-server= stays =code-server=.
+=EB_code_minus_server= stays =EB_code_minus_server=.
 * Step 3: break it on purpose
 Delete the =version= line.
 *Expected output.* The model names the missing field and stops.
@@ -137,8 +139,7 @@ Change =2025a= to =2024a=, then to =1999z=.
 Ask for a chain the page does not know. The widget should refuse.
 A hierarchy reflects what is installed rather than the string.
 * Where to go next
-- The next page in RecipeReader: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
-- A build failed: [[file:journey-a-build-failed.org][Journey: a build failed]].
+- Next: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
 
 #+begin_keypoints
 - The file is Python. EasyBuild evaluates it in a prepared namespace.

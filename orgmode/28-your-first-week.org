@@ -204,7 +204,8 @@ Write the commit message. Specifically decide:
 #+end_exercise
 
 * Task three: a user says a module is broken and the report cannot be reproduced
-Zero of 24 regressions occurred.
+The ticket said 24 regressions. The pipeline printed zero.
+The pipeline still billed a full hour.
 The pipeline still billed a full hour.
 ** A pipeline's summary can be empty for two different reasons
 One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.

@@ -247,8 +247,8 @@ On the cluster it lists three things to build. On your laptop it lists
 ninety.
 
 1. What differs, given that the robot path is the same?
-2. Which flag makes the cluster print the ninety as well, and when would
- you want that?
+2. The cluster lists three. The laptop lists ninety. What on the
+ cluster, not a flag, makes the difference?
 
 #+begin_solution
 =MODULEPATH=. The robot asks the module system what is installed, through

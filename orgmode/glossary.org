@@ -240,7 +240,7 @@ A site decision made once: changing it renames every module the site has.
 [[file:19-what-a-module-exports.org][What a module exports]].
 #+end_detail
 
-* Delivery
+* StackWalker
 
 #+ATTR_EB: :id term-cvmfs :title CernVM-FS :kind term :name CernVM-FS
 #+begin_detail
@@ -299,7 +299,7 @@ selected value is written into =$EESSI_SOFTWARE_SUBDIR=;
 [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
 #+end_detail
 
-* Testing
+* ReframeReader
 
 #+ATTR_EB: :id term-reframe :title ReFrame :kind term :name ReFrame
 #+begin_detail
