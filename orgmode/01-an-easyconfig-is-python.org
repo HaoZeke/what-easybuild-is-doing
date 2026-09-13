@@ -275,7 +275,7 @@ The lever is already provided in this page.
 The easyconfig is a Python file; the expected path is a value assigned in it.
 The value was =start_dir=, and it was set to =qmcpack=.
 Five minutes earlier that value had been correct.
-The easyconfig was built from a git checkout, and EasyBuild archives a clone under the repository's name, so the sources resided one level down inside =qmcpack=/. A release tarball unpacks to =qmcpack-4.4.0/= with the sources at the top level.
+The easyconfig was built from a git checkout, and EasyBuild archives a clone under the repository's name, so the sources resided one level down inside =qmcpack/=. A release tarball unpacks to =qmcpack-4.4.0/= with the sources at the top level.
 The line was correct for the old source and incorrect for the new one.
 The change from one to the other says nothing about =start_dir=.
 A complete recipe contains one hole.

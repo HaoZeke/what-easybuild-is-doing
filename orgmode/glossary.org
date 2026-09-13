@@ -186,7 +186,7 @@ that is broken on a GPU node.
 [[file:27-four-things-that-actually-happened.org][Four things that actually happened]].
 #+end_detail
 
-* What comes out
+* The module
 
 #+ATTR_EB: :id term-modulefile :title modulefile :kind term :name modulefile
 #+begin_detail

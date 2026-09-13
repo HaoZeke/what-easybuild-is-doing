@@ -327,7 +327,8 @@ The host still provides the driver, the network stack, the filesystem client and
 An MPI from the repository communicating with a site fabric matches the case [[file:32-host-injections.org][A site stack next to EESSI, not inside it]].
 It is the sole location where "mount it and go" does not cover the entire scenario.
 The 2025.06 tree also carries =lfoss/2025b= (LLVM =foss=).
-The table above lists the documented common toolchains, not every top-level module.
+The versions table in the sources box lists the documented common
+toolchains, not every top-level module.
 #+ATTR_EB: :id sources-26 :title Where this page comes from :kind sources
 #+begin_detail
 EESSI documentation, fetched 2026-09-10:

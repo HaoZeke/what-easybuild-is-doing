@@ -204,8 +204,9 @@ Flag 4 is a regular file. Flag 8 is a symbolic link.
 The 33 entries with flag 12 are the catalog's symlink count.
 Three entries have flag 3.
 The count is three, not two.
-Documentation states that a nested-catalog transition directory appears as an empty directory in the parent catalog with flags set to 2.
-Documentation states that in the live catalog those entries carry flag 3.
+The CernVM-FS docs name transition directories as flag 2 and
+symlinks as flag 8. The live catalog stores those as bitmasks:
+flag 3 is 1|2, flag 12 is 4|8.
 The =statistics= table resolves the numbers arithmetically.
 In the =/versions/2025.06= catalog, =self_nested= equals 501.
 Exactly 501 entries have flag 3.

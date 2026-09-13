@@ -11,8 +11,7 @@
  * endpoint can point this at it and get prose with citation markers; the
  * endpoint and key stay in their own browser. A reader who has not gets the
  * ranked passages and a sentence saying that nothing wrote an answer, which
- * is the honest report and the one snelnext's Ask gives when its rails
- * refuse.
+ * is the honest report when no model is configured.
  *
  * Two rules the code enforces rather than hopes for:
  *
@@ -415,7 +414,7 @@
         if (!el.input.value.trim()) {
           el.note.textContent =
             pack.chunks.length +
-            " passages indexed. Retrieval runs here; nothing is sent anywhere.";
+            " passages (this book, EasyBuild, EESSI, eb-stack). Retrieval runs here; nothing is sent anywhere.";
         }
       })
       .catch(function () {
@@ -430,10 +429,11 @@
     document.documentElement.classList.remove("eb-ask-open");
   }
 
-  function kindBadge(kind) {
+  function kindBadge(chunk) {
     var span = document.createElement("span");
+    var kind = chunk.kind || "prose";
     span.className = "eb-ask__kind eb-ask__kind--" + kind;
-    span.textContent = kind;
+    span.textContent = chunk.origin ? chunk.origin : kind;
     return span;
   }
 
@@ -484,7 +484,7 @@
       crumb.className = "eb-ask__crumb";
       crumb.textContent = r.chunk.crumb;
       head.appendChild(crumb);
-      head.appendChild(kindBadge(r.chunk.kind));
+      head.appendChild(kindBadge(r.chunk));
       li.appendChild(head);
 
       var body = document.createElement("p");

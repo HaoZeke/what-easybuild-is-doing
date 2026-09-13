@@ -36,4 +36,4 @@
 #+end_export
 Four kinds of testing.
 A ReFrame class runs an installed module.
-[[file:23-testing.org][Testing and the four things it can mean]] [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]]
+[[file:23-testing.org][Testing and the four things it can mean]] [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]] [[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]] [[file:46-software-maps-to-tests.org][Software maps to tests]]

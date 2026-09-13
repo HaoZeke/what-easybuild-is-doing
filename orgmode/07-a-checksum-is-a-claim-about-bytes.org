@@ -174,5 +174,5 @@ The other three rows are not the checksum's responsibility.
 #+begin_keypoints
 - A checksum names bytes, not a version and not an architecture.
 - A dict maps resolved filenames to checksums. The keys are names, not =amd64=.
-- A tuple is logical OR: either archive satisfies the check.
+- Two checksums in one list entry are a logical OR: either archive satisfies the check.
 #+end_keypoints

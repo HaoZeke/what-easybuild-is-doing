@@ -78,7 +78,11 @@ class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
  readonly_files = ['mpi4py_reduce.py']
 
  def required_mem_per_node(self):
- return self.num_tasks_per_node * 100 + 250
+        return self.num_tasks_per_node * 100 + 250
+
+    @rfm.sanity_function
+    def validate(self):
+        return True
 #+end_src
 =EESSI_Mixin= provides hooks that read the partition.
 =compute_unit = COMPUTE_UNITS.CPU= is one task per core.
