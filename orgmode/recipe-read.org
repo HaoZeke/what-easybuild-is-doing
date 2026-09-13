@@ -28,7 +28,6 @@ The tutorial appears first.
  :maxdepth: 1
 
  00-tutorial-read-an-easyconfig
- playground
  01-an-easyconfig-is-python
  02-a-toolchain-is-a-hierarchy
  03-a-pin-is-for-one-generation

@@ -70,16 +70,16 @@ from eessi.testsuite.utils import find_modules
 
 @rfm.simple_test
 class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
- device_type = DEVICE_TYPES.CPU
- compute_unit = COMPUTE_UNITS.CPU
- module_name = parameter(find_modules('mpi4py'))
- scale = parameter(SCALES.keys())
- n_iterations = variable(int, value=1000)
- executable = 'python3'
- time_limit = '5m00s'
- readonly_files = ['mpi4py_reduce.py']
+    device_type = DEVICE_TYPES.CPU
+    compute_unit = COMPUTE_UNITS.CPU
+    module_name = parameter(find_modules('mpi4py'))
+    scale = parameter(SCALES.keys())
+    n_iterations = variable(int, value=1000)
+    executable = 'python3'
+    time_limit = '5m00s'
+    readonly_files = ['mpi4py_reduce.py']
 
- def required_mem_per_node(self):
+    def required_mem_per_node(self):
         return self.num_tasks_per_node * 100 + 250
 
     @rfm.sanity_function

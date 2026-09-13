@@ -170,10 +170,10 @@ not in =dependencies=.
  symptom go away?
 
 #+begin_solution
-The user has something loaded that the desk does not, or has a path in
-an environment variable the desk's build filters out. Their build found
+The user has something loaded that the desk does not. Their build found
 the header through the ambient environment rather than through a declared
-dependency.
+dependency. =--filter-env-vars= would not have stopped that: it only
+omits names from the generated modulefile.
 
 The build that succeeded is the wrong one. It depends on something the
 easyconfig does not state, so it is not reproducible: it works in that

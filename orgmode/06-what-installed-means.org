@@ -67,10 +67,7 @@ sanity_check_commands = [
  "python -c 'from archspec.cpu import host; print(host())'"
 ]
 #+end_src
-The command ran.
-The import resolved.
-The interpreter found the package.
-The function returned.
+The import resolved and the function returned.
 A zero-byte file fails this check.
 The code-server easyconfig from [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] lacks such a line.
 Its install still runs =code-server --help=.

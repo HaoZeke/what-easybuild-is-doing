@@ -18,7 +18,7 @@ export TMPDIR=${TMPDIR:-/var/lib/builds/tmp}
 export PATH="$HOME/.pixi/bin:$HOME/.local/bin:$PATH"
 set -euo pipefail
 
-SRC=${GUIDE_SRC:-$HOME/Git/tmp/what-easybuild-is-doing}
+SRC=${GUIDE_SRC:-$PWD}
 LOG=${GUIDE_LOGDIR:-$HOME/logs}/${SLURM_JOB_NAME}-${SLURM_JOB_ID}.log
 
 mkdir -p "$(dirname "$LOG")"

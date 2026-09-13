@@ -199,16 +199,21 @@ def _fragments(builder) -> dict:
 
 def visit_eb_detail_html(self, node: eb_detail) -> None:
     kind = node["eb_kind"]
+    title_id = f"eb-detail-title-{node['eb_id']}"
     self.body.append(
         self.starttag(
             node,
             "aside",
             CLASS=f"eb-detail eb-detail--{kind}",
-            **{"data-eb-detail": node["eb_id"]},
+            **{
+                "data-eb-detail": node["eb_id"],
+                "aria-labelledby": title_id,
+            },
         )
     )
     self.body.append(
-        f'<p class="eb-detail__title"><span class="eb-detail__kind">{kind}</span>'
+        f'<p class="eb-detail__title" id="{title_id}">'
+        f'<span class="eb-detail__kind">{kind}</span>'
         f"{self.encode(node['eb_title'])}</p>\n"
     )
     self.body.append('<div class="eb-detail__body">')

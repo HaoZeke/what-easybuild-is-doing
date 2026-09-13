@@ -1018,7 +1018,8 @@ article.yue .toctree-wrapper .toctree-l2 {
 }
 
 #rside:empty,
-aside#rside:not(:has(*)) {
+aside#rside:not(:has(*)),
+aside#rside:has(#ethical-ad-placement):not(:has(.toc-tree, .sy-toc, nav)) {
   display: none;
 }
 

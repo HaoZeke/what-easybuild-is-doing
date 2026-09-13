@@ -96,7 +96,9 @@ passes on every x86-64 and arm64 worker and fails on the riscv64 one,
 before anything is compiled.
 
 The =sources= line is unchanged. The =checksums= block still carries the
-two entries from the page's sample, keyed =amd64= and =arm64=.
+two entries from the page's sample, keyed
+=code-server-4.130.0-linux-amd64.tar.gz= and
+=code-server-4.130.0-linux-arm64.tar.gz=.
 
 1. What is the failure, precisely?
 2. Why did no x86-64 or arm64 build catch it?
