@@ -67,6 +67,7 @@ import reframe.utility.sanity as sn
 from eessi.testsuite.eessi_mixin import EESSI_Mixin
 from eessi.testsuite.constants import DEVICE_TYPES, COMPUTE_UNITS, SCALES
 from eessi.testsuite.utils import find_modules
+from reframe.core.builtins import sanity_function
 
 @rfm.simple_test
 class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
@@ -75,15 +76,20 @@ class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
     module_name = parameter(find_modules('mpi4py'))
     scale = parameter(SCALES.keys())
     n_iterations = variable(int, value=1000)
+    n_warmup = variable(int, value=100)
     executable = 'python3'
-    executable_opts = ['mpi4py_reduce.py', f'{self.n_iterations}']
+    executable_opts = [
+        'mpi4py_reduce.py',
+        '--n_iter', f'{n_iterations}',
+        '--n_warmup', f'{n_warmup}',
+    ]
     time_limit = '5m00s'
     readonly_files = ['mpi4py_reduce.py']
 
     def required_mem_per_node(self):
         return self.num_tasks_per_node * 100 + 250
 
-    @rfm.sanity_function
+    @sanity_function
     def validate(self):
         return sn.assert_found(r'Sum of all ranks', self.stdout)
 #+end_src

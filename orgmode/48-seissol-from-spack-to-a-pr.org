@@ -104,7 +104,22 @@ Error: unresolved on this generation; run each companion= line, then re_run=
    recipe, on =gfbf-2025a=. PSpaMM has no easyconfig to bump. The
    package-config sets =options.modulename= to =pypspamm=.
 
-After those three commands, the same parent is =re_run==. The overlay is
+#+begin_src ebtranscript :source "eb-stack companion ASAGI, 2026-09-11" :caption "First companion=: ASAGI bump exits 0"
+$ eb-stack package bump --source ASAGI-1.0-foss-2023a.eb --toolchain-name foss --toolchain-version 2025a --version 1.0 --easyconfigs ROBOT --out-dir OUT
+generation_target=foss-2025a
+done_when=exit 0
+#+end_src
+#+begin_src ebtranscript :source "eb-stack companion easi, 2026-09-11" :caption "Second companion=: easi bump exits 0"
+$ eb-stack package bump --source easi-1.3.0-foss-2023a.eb --toolchain-name foss --toolchain-version 2025a --version 1.7.0 --package-config easi.toml --easyconfigs ROBOT --out-dir OUT
+generation_target=foss-2025a
+done_when=exit 0
+#+end_src
+#+begin_src ebtranscript :source "eb-stack companion PSpaMM, 2026-09-11" :caption "Third companion=: PSpaMM plan exits 0"
+$ eb-stack package plan --package-config pspamm.toml --source py-pspamm/package.py --toolchain-name gfbf --toolchain-version 2025a --easyconfigs ROBOT --out-dir OUT
+generation_target=gfbf-2025a
+done_when=exit 0
+#+end_src
+After those three recorded commands, the same parent is =re_run==. The overlay is
 done when that line exits 0 and writes the four =.eb= files.
 
 #+begin_src ebtranscript :source "eb-stack package bump re_run, 2026-09-11" :caption "re_run= after the three companions; parent exits 0"
