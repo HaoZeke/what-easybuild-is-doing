@@ -5,19 +5,71 @@
  * word rather than a shade. And the reader's own marks must not be mistaken
  * for the book's own emphasis, so they get an underline the book never uses
  * elsewhere.
+ *
+ * The panel and launcher live on <body>, not inside article.yue, so they
+ * cannot inherit the article font tokens. They restate the palette and
+ * color-scheme here, matching html.dark / data-color-mode / prefers-color-scheme
+ * the same way the book page does. Native form widgets follow color-scheme.
  */
+
+.eb-annot-panel,
+.eb-annot-launcher {
+  --eb-annot-fg: var(--eb-page-ink, #24292f);
+  --eb-annot-muted: var(--eb-fg-muted, #57606a);
+  --eb-annot-paper: var(--eb-page, #f7f6f3);
+  --eb-annot-surface: var(--eb-surface, #f6f8fa);
+  --eb-annot-edge: var(--eb-surface-edge, #d0d7de);
+  --eb-annot-accent: var(--eb-accent, #0b6bcb);
+  --eb-annot-accent-quiet: var(--eb-accent-quiet, #0b6bcb26);
+  --eb-annot-rule: var(--eb-rule, #d8dee4);
+  --eb-annot-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    system-ui, sans-serif;
+  --eb-annot-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  color-scheme: light;
+}
+
+html.dark .eb-annot-panel,
+html.dark .eb-annot-launcher,
+html[data-color-mode="dark"] .eb-annot-panel,
+html[data-color-mode="dark"] .eb-annot-launcher {
+  --eb-annot-fg: #ecece8;
+  --eb-annot-muted: #b4b2aa;
+  --eb-annot-paper: #1a1917;
+  --eb-annot-surface: #221f1c;
+  --eb-annot-edge: #3a3833;
+  --eb-annot-accent: #6cb6ff;
+  --eb-annot-accent-quiet: #6cb6ff26;
+  --eb-annot-rule: #3a3833;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light):not([data-color-mode="light"]) .eb-annot-panel,
+  html:not(.light):not([data-color-mode="light"]) .eb-annot-launcher {
+    --eb-annot-fg: #ecece8;
+    --eb-annot-muted: #b4b2aa;
+    --eb-annot-paper: #1a1917;
+    --eb-annot-surface: #221f1c;
+    --eb-annot-edge: #3a3833;
+    --eb-annot-accent: #6cb6ff;
+    --eb-annot-accent-quiet: #6cb6ff26;
+    --eb-annot-rule: #3a3833;
+    color-scheme: dark;
+  }
+}
 
 /* --- the highlight -------------------------------------------------------- */
 
 article.yue mark.eb-annot {
-  background: color-mix(in srgb, var(--eb-accent) 16%, transparent);
+  background: var(--eb-accent-quiet, #0b6bcb26);
   color: inherit;
   padding: 0 0.05em;
   border-radius: 2px;
   text-decoration: underline;
   text-decoration-style: wavy;
   text-decoration-thickness: from-font;
-  text-decoration-color: var(--eb-accent);
+  text-decoration-color: var(--eb-accent, #0b6bcb);
   text-underline-offset: 0.22em;
   cursor: pointer;
 }
@@ -30,7 +82,7 @@ article.yue mark.eb-annot--noted {
 }
 
 article.yue mark.eb-annot:focus-visible {
-  outline: 2px solid var(--eb-accent);
+  outline: 2px solid var(--eb-accent, #0b6bcb);
   outline-offset: 2px;
 }
 
@@ -70,27 +122,27 @@ article.yue mark.eb-annot:focus-visible {
   align-items: center;
   gap: 0.45rem;
   padding: 0.45rem 0.8rem;
-  border: 1px solid var(--eb-surface-edge);
+  border: 1px solid var(--eb-annot-edge);
   border-radius: 999px;
-  background: var(--eb-surface);
-  color: var(--eb-fg);
-  font-family: var(--eb-sans);
+  background: var(--eb-annot-surface);
+  color: var(--eb-annot-fg);
+  font-family: var(--eb-annot-sans);
   font-size: 0.85rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 18px rgba(0, 0, 0, 0.08);
   cursor: pointer;
 }
 
 .eb-annot-launcher:hover {
-  border-color: var(--eb-accent);
+  border-color: var(--eb-annot-accent);
 }
 
 .eb-annot-launcher__count {
   min-width: 1.4em;
   padding: 0.02rem 0.3rem;
   border-radius: 999px;
-  background: var(--eb-accent-quiet);
-  color: var(--eb-accent);
-  font-family: var(--eb-mono);
+  background: var(--eb-annot-accent-quiet);
+  color: var(--eb-annot-accent);
+  font-family: var(--eb-annot-mono);
   font-size: 0.75rem;
   text-align: center;
 }
@@ -109,12 +161,12 @@ article.yue mark.eb-annot:focus-visible {
   width: min(100%, 26rem);
   overflow-y: auto;
   padding: 1rem 1.1rem 2rem;
-  border-left: 1px solid var(--eb-surface-edge);
-  background: var(--eb-panel, var(--eb-surface));
+  border-left: 1px solid var(--eb-annot-edge);
+  background: var(--eb-annot-paper);
   box-shadow: -8px 0 30px rgba(0, 0, 0, 0.18);
-  font-family: var(--eb-sans);
+  font-family: var(--eb-annot-sans);
   font-size: 0.88rem;
-  color: var(--eb-fg);
+  color: var(--eb-annot-fg);
 }
 
 .eb-annot-panel__head {
@@ -131,18 +183,18 @@ article.yue mark.eb-annot:focus-visible {
 
 .eb-annot-x {
   padding: 0.25rem 0.5rem;
-  border: 1px solid var(--eb-surface-edge);
+  border: 1px solid var(--eb-annot-edge);
   border-radius: 4px;
-  background: transparent;
-  color: var(--eb-fg-muted);
-  font-family: var(--eb-mono);
+  background: var(--eb-annot-surface);
+  color: var(--eb-annot-muted);
+  font-family: var(--eb-annot-mono);
   font-size: 0.76rem;
   cursor: pointer;
 }
 
 .eb-annot-panel__note {
   margin: 0.6rem 0 0.9rem;
-  color: var(--eb-fg-muted);
+  color: var(--eb-annot-muted);
   line-height: 1.5;
 }
 
@@ -156,15 +208,19 @@ article.yue mark.eb-annot:focus-visible {
 .eb-annot-form button,
 .eb-annot-io button,
 .eb-annot-item__row button,
-.eb-annot-jump {
+.eb-annot-jump,
+.eb-annot-import {
   padding: 0.28rem 0.6rem;
-  border: 1px solid var(--eb-surface-edge);
+  border: 1px solid var(--eb-annot-edge);
   border-radius: 4px;
-  background: transparent;
-  color: var(--eb-fg);
+  background: var(--eb-annot-surface);
+  color: var(--eb-annot-fg);
   font: inherit;
   font-size: 0.82rem;
   cursor: pointer;
+  color-scheme: inherit;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .eb-annot-add button:hover,
@@ -172,7 +228,7 @@ article.yue mark.eb-annot:focus-visible {
 .eb-annot-io button:hover,
 .eb-annot-item__row button:hover,
 .eb-annot-jump:hover {
-  border-color: var(--eb-accent);
+  border-color: var(--eb-annot-accent);
 }
 
 /* --- the form ------------------------------------------------------------- */
@@ -180,17 +236,17 @@ article.yue mark.eb-annot:focus-visible {
 .eb-annot-form {
   margin: 0.9rem 0;
   padding: 0.7rem 0.8rem;
-  border: 1px solid var(--eb-surface-edge);
-  border-left: 3px solid var(--eb-accent);
+  border: 1px solid var(--eb-annot-edge);
+  border-left: 3px solid var(--eb-annot-accent);
   border-radius: 3px;
-  background: var(--eb-surface);
+  background: var(--eb-annot-surface);
 }
 
 .eb-annot-form__quote {
   margin: 0 0 0.6rem;
   padding-left: 0.7rem;
-  border-left: 2px solid var(--eb-rule);
-  color: var(--eb-fg-muted);
+  border-left: 2px solid var(--eb-annot-rule);
+  color: var(--eb-annot-muted);
   font-size: 0.84rem;
   line-height: 1.5;
   max-height: 8rem;
@@ -201,26 +257,30 @@ article.yue mark.eb-annot:focus-visible {
   display: block;
   margin-bottom: 0.3rem;
   font-size: 0.82rem;
-  color: var(--eb-fg-muted);
+  color: var(--eb-annot-muted);
 }
 
 .eb-annot-form textarea {
   width: 100%;
+  box-sizing: border-box;
   padding: 0.4rem 0.5rem;
-  border: 1px solid var(--eb-surface-edge);
+  border: 1px solid var(--eb-annot-edge);
   border-radius: 4px;
-  background: transparent;
-  color: var(--eb-fg);
+  background: var(--eb-annot-paper);
+  color: var(--eb-annot-fg);
   font: inherit;
-  font-size: 0.86rem;
+  font-size: 1rem;
   resize: vertical;
+  color-scheme: inherit;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .eb-annot-form textarea:focus-visible,
 .eb-annot-panel button:focus-visible,
 .eb-annot-panel a:focus-visible,
 .eb-annot-panel input:focus-visible {
-  outline: 2px solid var(--eb-accent);
+  outline: 2px solid var(--eb-annot-accent);
   outline-offset: 1px;
 }
 
@@ -240,21 +300,21 @@ article.yue mark.eb-annot:focus-visible {
 
 .eb-annot-item {
   padding: 0.7rem 0;
-  border-top: 1px solid var(--eb-rule);
+  border-top: 1px solid var(--eb-annot-rule);
 }
 
 .eb-annot-item--empty {
-  color: var(--eb-fg-muted);
+  color: var(--eb-annot-muted);
 }
 
 .eb-annot-item__where {
   margin: 0 0 0.4rem;
   font-size: 0.8rem;
-  color: var(--eb-fg-muted);
+  color: var(--eb-annot-muted);
 }
 
 .eb-annot-item__where a {
-  color: var(--eb-accent);
+  color: var(--eb-annot-accent);
 }
 
 /* An orphan is labelled, and only then also tinted. */
@@ -263,13 +323,13 @@ article.yue mark.eb-annot:focus-visible {
   padding: 0.03rem 0.35rem;
   border: 1px solid currentColor;
   border-radius: 2px;
-  font-family: var(--eb-mono);
+  font-family: var(--eb-annot-mono);
   font-size: 0.7rem;
   text-transform: uppercase;
 }
 
 .eb-annot-item--orphan .eb-annot-item__flag {
-  color: #bf3989;
+  color: var(--eb-annot-accent);
 }
 
 .eb-annot-item--orphan blockquote {
@@ -279,7 +339,7 @@ article.yue mark.eb-annot:focus-visible {
 .eb-annot-item blockquote {
   margin: 0 0 0.4rem;
   padding-left: 0.7rem;
-  border-left: 2px solid var(--eb-accent);
+  border-left: 2px solid var(--eb-annot-accent);
   font-size: 0.85rem;
   line-height: 1.5;
 }
@@ -304,15 +364,11 @@ article.yue mark.eb-annot:focus-visible {
   align-items: center;
   margin-top: 1.2rem;
   padding-top: 0.8rem;
-  border-top: 1px solid var(--eb-rule);
+  border-top: 1px solid var(--eb-annot-rule);
 }
 
 .eb-annot-import {
-  padding: 0.28rem 0.6rem;
-  border: 1px dashed var(--eb-surface-edge);
-  border-radius: 4px;
-  font-size: 0.82rem;
-  cursor: pointer;
+  border-style: dashed;
 }
 
 .eb-annot-import input {
@@ -322,16 +378,59 @@ article.yue mark.eb-annot:focus-visible {
   font-size: 0.78rem;
 }
 
-/* On a narrow screen the panel takes the screen, so the page underneath
- * must not scroll behind it. */
+/* On a narrow screen the panel is the page. Sit below the sticky
+ * title bar, clear the home indicator, and keep thumbs off the Ask
+ * launcher. Native widgets already follow color-scheme from above. */
 @media (max-width: 640px) {
   .eb-annot-panel {
+    top: var(--sy-s-navbar-height, 56px);
+    left: 0;
+    right: 0;
     width: 100%;
     border-left: 0;
+    box-shadow: none;
+    padding: 0.75rem max(1rem, env(safe-area-inset-right))
+      calc(1.25rem + env(safe-area-inset-bottom))
+      max(1rem, env(safe-area-inset-left));
   }
+
+  .eb-annot-panel__head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: -0.75rem -0.25rem 0;
+    padding: 0.75rem 0.25rem 0.5rem;
+    background: var(--eb-annot-paper);
+  }
+
+  .eb-annot-x,
+  .eb-annot-add button,
+  .eb-annot-form button,
+  .eb-annot-io button,
+  .eb-annot-item__row button,
+  .eb-annot-jump,
+  .eb-annot-import {
+    min-height: 2.75rem;
+    padding: 0.55rem 0.85rem;
+  }
+
+  html.eb-annot-open,
   html.eb-annot-open body {
     overflow: hidden;
   }
+
+  html.eb-annot-open .eb-annot-launcher,
+  html.eb-annot-open .eb-ask-launcher {
+    display: none;
+  }
+
+  .eb-annot-launcher {
+    left: max(1rem, env(safe-area-inset-left));
+    right: auto;
+    bottom: max(1.1rem, env(safe-area-inset-bottom));
+    min-height: 2.75rem;
+  }
+
   .eb-annot-launcher__label {
     display: none;
   }
@@ -358,6 +457,6 @@ article.yue mark.eb-annot:focus-visible {
     white-space: normal;
     overflow: visible;
     font-style: italic;
-    color: #444;
+    color: inherit;
   }
 }
