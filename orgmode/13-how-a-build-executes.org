@@ -66,7 +66,7 @@ Each parameter belongs to a single step.
 Most error messages refer to a specific step.
 Figure 4 in [[cite:hosteEasybuildBuildingSoftware2012][Hoste, Timmerman, Georges and De Weirdt 2012]] presented the same concept as fifteen Roman numerals derived from user test cases.
 =postiter=, =permissions= and =package= were added in five major version updates.
-If no easyblock matches a name, the fallback is =ConfigureMake=.
+If no easyblock matches a name, =get_easyblock_class= raises =MISSING_EASYBLOCK=. There is no ConfigureMake fallback.
 Short-term memory can retain roughly seven items ([[cite:millerMagicalNumberSeven1956][Miller 1956]]; [[cite:wilsonBestPracticesScientific2014][Wilson et al. 2014]]).
 The eighteen step names are organized into three groups of six rather than a single list.
 #+ATTR_EB: :id EB-Steps-parsons-1 :title Put the first six in order

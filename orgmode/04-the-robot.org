@@ -19,7 +19,7 @@
    :alt: bare name searched in site paths then defaults
    :class: eb-diagram
 
-   A bare .eb is not a path. The robot walks ~--robot-paths~, site first when the colon form is used.
+   A bare .eb is not a path. The robot walks ``--robot-paths``, site first when the colon form is used.
 #+end_export
 
 #+begin_questions

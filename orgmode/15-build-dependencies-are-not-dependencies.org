@@ -51,7 +51,8 @@ dependencies = [
 A four-tuple is legal too: ~('CMake', '2.8.12', '', ('GCC', '4.8.2'))~.
 The empty third field is the versionsuffix. The fourth field is a
 per-dependency toolchain, used when that one item is not on the
-parent's toolchain.
+parent's toolchain. The four-tuple form is the one in
+[[https://docs.easybuild.io/writing-easyconfig-files/#dependency_specs][the official dependency specs]].
 =hiddendependencies= is a third list: the robot still walks it.
 The generated module loads those modules as hidden: they do not
 appear in =module avail=, and they still load.

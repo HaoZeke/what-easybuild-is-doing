@@ -185,12 +185,13 @@ The documented order is effective.
 *=eb -x=* performs an extended dry run that traverses the entire procedure and reports the actions each step would perform, including commands and environment changes.
 When no errors occur, the run concludes with =(no ignored errors during dry run)=.
 That line is the indicator to look for instead of the absence of a traceback.
-*=eb --module-only --force=* skips the compile and install steps
-and still runs =prepare=, =ready=, =sanitycheck= and =module=.
+*=eb --module-only --force=* skips fetch, extract, patch, configure,
+build, test and install. It still runs =prepare=, =ready=,
+=sanitycheck= and =module=.
 The easyblock's exports become readable before any compilation.
-Under =--module-only=, the compile and install step methods
-are skipped, which is a trap of the second command.
-An easyblock whose =configure_step= sets =self.foo= and whose =sanity_check_step= reads it encounters =None=.
+Under =--module-only=, =configure_step= does not run, so an easyblock
+whose =configure_step= sets =self.foo= and whose =sanity_check_step=
+reads it encounters =None=.
 The fix provides a helper method invoked by both steps and stops state from being carried between steps.
 A real build follows, then [[file:23-testing.org][Testing, and the four things it can mean]].
 #+ATTR_EB: :id EB-Easyblock-1 :title Four requests, and only one of them is code

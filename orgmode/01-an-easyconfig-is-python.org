@@ -105,7 +105,7 @@ Nothing in the format forbids computation.
 
 Look at =sources=:
 
-#+begin_src easyconfig :widget template
+#+begin_src easyconfig :widget template :hydrate load
 name = 'code-server'
 version = '4.130.0'
 sources = ['code-server-%(version)s-linux-%(mapped_arch)s.tar.gz']
@@ -138,7 +138,7 @@ Installation steps are not described.
 EasyBuild searches for an easyblock named after the software, applying name mangling.
 The package name is =code-server=.
 The module searched for is =code_server=, and the class inside it follows.
-#+begin_src easyconfig :widget easyblock
+#+begin_src easyconfig :widget easyblock :hydrate load
 code-server
 c++
 C#
@@ -282,11 +282,11 @@ A complete recipe contains one hole.
 The lint sample names the hole; it does not fill it.
 #+ATTR_EB: :id EB-Python-fade-1 :title Fill the hole the linter names
 #+begin_exercise
-This recipe is otherwise complete. The lint widget reports a missing
-checksums list. What is the smallest addition that makes the linter
-quiet, and what does that addition still not prove?
+This recipe is otherwise complete. The listing below has no
+=checksums= list. What is the smallest addition that makes that list
+present, and what does that addition still not prove?
 
-#+begin_src easyconfig :widget lint
+#+begin_src easyconfig :widget lint :hydrate load
 name = 'code-server'
 version = '4.130.0'
 toolchain = SYSTEM

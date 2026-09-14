@@ -155,7 +155,7 @@ Deleting the report left the toolchain broken and the package shipping.
 =ldd= on the GPU binary, run from a login node, reports zero missing libraries.
 Pointing at the other architecture's tree by its full path does not rescue the test either.
 The RPATH inside the binary still resolves against the node the command runs on.
-*Where a first‑timer goes wrong: they publish step 6.* A clean check is persuasive.
+*Where a first‑timer goes wrong: they publish the clean check.* A clean check is persuasive.
 A clean check is cheap.
 On a heterogeneous machine a clean check is evidence about the node it ran on and nothing else.
 The general form: *a claim about library resolution has to be measured on the architecture that will run the binary*.

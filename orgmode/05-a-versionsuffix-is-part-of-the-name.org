@@ -24,7 +24,6 @@ toolchain = SYSTEM
 Version 25.11 of the NVIDIA HPC SDK (=NVHPC=) appears.
 A reference to CUDA 12.9.1 follows.
 The later part is a =versionsuffix=.
-The =versionsuffix= is the most easily misread parameter in EasyBuild.
 The =versionsuffix= resembles a constraint but is a label.
 #+begin_export rst
 .. figure:: _static/diagrams/rail-module-name.svg
