@@ -133,7 +133,7 @@ A bump that changes the package version and does not pass =--source-checksum= ad
 The foreign-ingest README is explicit about the limit.
 These fixtures drive parser regression.
 They do not claim parity with a hand-authored EasyBuild pull request.
-Product flags, generation pins, and multi-source extract layout remain residual.
+Split outputs, generation pins, and multi-source extract layout remain residual.
 That sentence explains why inspect exists as a command of its own.
 The work queue is visible *before* Resolvo spends a robot tree on a recipe that still needs judgment.
 The planned SBOM, =package.sbom.cdx.json=, is CycloneDX 1.5 derived from the same plan.

@@ -26,7 +26,7 @@ EasyBuild builds software from source reproducibly into a curated generation of 
 EasyBuild produces modulefiles for a shared system whose users outnumber its maintainers by a factor of a thousand or more.
 Exact pins, generation timing, and from‑source build costs are covered respectively in [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]], [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]], and [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
 A generation means the whole stack moves at once typically once a year.
-From‑source builds take hours translating into a few hundred extensions and user‑defined problems.
+From-source builds take hours. A site that needs a few hundred extensions and user-defined problems pays that cost on every rebuild.
 Modulefiles make the artifact an environment rather than a copyable directory.
 These trade‑offs suit a national supercomputer serving thousands of users.
 They are unsuitable in many other contexts.
