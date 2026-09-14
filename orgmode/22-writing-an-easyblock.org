@@ -88,7 +88,7 @@ dashes to low lines, anything else dropped. =netCDF-Fortran= lives in
 
 Generic easyblocks carry *no* prefix and live in
 [[https://github.com/easybuilders/easybuild-easyblocks/blob/develop/easybuild/easyblocks/generic/][easybuild/easyblocks/generic/]]. That absence is how the two
-apart in =eb --list-easyblocks=: a name starting =EB_= is
+sit apart in =eb --list-easyblocks=: a name starting =EB_= is
 software-specific, everything else is generic.
 
 The =easyblock= easyconfig parameter overrides the whole computation.
