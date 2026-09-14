@@ -77,6 +77,16 @@ def main() -> None:
         ),
     )
     write(
+        out / "08-generation-pairs.svg",
+        Diagram(
+            NonTerminal("toolchain"),
+            Terminal("+"),
+            NonTerminal("arch"),
+            Terminal("->"),
+            NonTerminal("install prefix"),
+        ),
+    )
+    write(
         out / "21-min-fields.svg",
         Diagram(
             NonTerminal("name"),

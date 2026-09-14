@@ -73,6 +73,8 @@ A SeisSol-only bump that exits 0 while ASAGI, easi, or PSpaMM have no
 =foss-2025a= candidate is a hole. The parent exits 1 and prints the
 holes. The text after each =companion== is a full =eb-stack package=
 command. =re_run== is the parent command again.
+The transcript below is a recorded parent bump, not a description of
+a PR. Each =companion== line is a command that was printed.
 
 #+begin_src ebtranscript :source "eb-stack package bump, 2026-09-11" :caption "Parent bump exits 1; three companion= lines, then re_run="
 $ eb-stack package bump \

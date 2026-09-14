@@ -1,10 +1,11 @@
-{%- extends "shibuya/search.html" %}
+{%- extends "!layout.html" %}
 
 {% block body %}
+<h1>Search</h1>
 <p class="eb-search-lead">
-  The book search is the Ask box on every page. This page is the
-  fallback index. With JavaScript off, use
-  <a href="{{ pathto('keypoints') }}">What to remember</a>.
+  The book search is the Ask box on every page (the chip at the
+  bottom). This page is not a second engine. With JavaScript off,
+  use <a href="{{ pathto('keypoints') }}">What to remember</a>.
 </p>
 {{ super() }}
 {% endblock %}

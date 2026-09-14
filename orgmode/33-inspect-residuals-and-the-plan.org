@@ -72,6 +72,8 @@ No rung of the ladder is established.
 Unknown fields are rejected.
 The sections that matter on a first read are listed below.
 These names belong to the plan, not to a conda-forge =recipe.yaml=.
+Inspecting a conda-forge recipe does not emit Spack residuals. The
+=origin= on each residual is the format that was passed in.
 A rattler-build recipe uses =build.number= and =script=; =outputs=
 is for split packages.
 =origin= records =conda-forge=, =spack=, =pypi=, =cran=, =cargo=, or =easy-build=.
