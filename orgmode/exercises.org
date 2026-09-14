@@ -1,25 +1,11 @@
 #+TITLE: Every exercise in this book
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
-.. figure:: _static/diagrams/exercises-2.svg
-   :alt: each page plants an exercise where the object was just taught
-   :class: eb-diagram
-
-   Every exercise is on the page that just taught the object it tests.
-#+end_export
-#+begin_export rst
 .. figure:: _static/diagrams/exercises.svg
    :alt: prompt, try, answer
    :class: eb-diagram
 
-   Every exercise in this book is on the page that taught the object.
-#+end_export
-#+begin_export rst
-.. figure:: _static/diagrams/exercises-point-at-page.svg
-   :alt: each exercise points at a page and that page's object
-   :class: eb-diagram
-
-   An exercise is a prompt against a page that already taught the object.
+   Every exercise is on the page that just taught the object it tests.
 #+end_export
 Each page includes one or two items, positioned where the page has just taught the concept they test.
 This page enumerates all items in reading order.

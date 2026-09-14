@@ -89,7 +89,7 @@ The tutorial's starting point is =['*']=.
 A claim using this placeholder must be narrowed when the test leaves a laptop.
 Each test must also define a validation function decorated =@sanity_function=.
 ReFrame makes no default assumption about test success.
-The exit code is not examined.
+ReFrame does not treat a zero process exit as a pass. The exit code is not examined.
 [[cite:karakasisEnablingContinuousTesting2020][Karakasis et al. 2020]] state the design goal as productivity.
 The test writer focuses on logical requirements.
 The framework handles the job script, the scheduler, and the output files.

@@ -128,6 +128,7 @@ A site that shares a QoS with users sets this from the QoS instead of a tutorial
 Partitions or environments declare =features=, a list of tags.
 Partitions or environments declare =extras=, a key/value map.
 Tests request them from =valid_systems=.
+That assignment is on this page:
 Tests request them from =valid_prog_environs=.
 #+begin_src python
 valid_systems = ['+gpu -login %arch=zen2']
