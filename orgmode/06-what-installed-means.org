@@ -84,13 +84,8 @@ It reads installed binaries.
 It resolves libraries they link against.
 It reports any that are missing.
 It catches something the other two checks cannot detect structurally.
-A file exists.
-=--help= runs.
-The binary still cannot start.
-Three checks provide three different claims, increasing in strength.
-The path is present.
-Something runs.
-Everything it links resolves.
+A file exists. =--help= runs. The binary still cannot start.
+Those are three claims of increasing strength.
 Knowing which of the three a given package satisfies reveals what its green build signifies.
 * Where the check ran is part of what it proved
 The longest‑running failure mode is the lack of any parameter.

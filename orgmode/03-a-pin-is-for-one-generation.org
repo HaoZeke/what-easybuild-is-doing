@@ -72,8 +72,9 @@ The format does not express a set.
 A software stack built by one organisation for one year must be *reproducible*.
 A version range undermines reproducibility.
 When =foss-2025a= provides HDF5 1.14.6, every package on =foss-2025a= that depends on HDF5 receives 1.14.6.
-The stack then contains one HDF5 instance instead of four.
-A resolver that allows ranges would produce four instances.
+The stack then contains one HDF5.
+A resolver that allows ranges would produce one HDF5 per distinct
+range the solver picked.
 Exactness justifies its role.
 Problems arise when the easyconfig outlives the generation for which it was written.
 * The thing that breaks

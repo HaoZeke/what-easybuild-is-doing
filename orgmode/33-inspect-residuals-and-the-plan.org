@@ -40,7 +40,7 @@
 
 #+begin_prerequisites
 - [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]: the
- claim ladder. this page is the first two rungs' artifacts.
+ claim ladder. This page is the first two rungs' artifacts.
 #+end_prerequisites
 The link [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] placed the conda-forge recipe beside the =.eb= and halted at the residual queue.
 =package inspect= is the command executable from a fresh clone that lacks EasyBuild and a robot tree.
@@ -223,9 +223,9 @@ eb-stack package plan \
  --easyconfigs /path/to/easybuild-easyconfigs \
  --out-dir /tmp/new-package
 #+end_example
-The current CLI processes the provided input and updates the relevant state.
-A new file is added; the =preferred= pin in it controls the selection of the default version.
-After a successful plan, both the =build_dir= and the =install_dir= paths must exist before =campaign run= starts.
+1. What happens when that command is run as written?
+2. Which extra file does the command need, and what does a =preferred= pin in it control?
+3. After a successful plan, which two artifacts must exist before =campaign run= starts?
 #+begin_solution
 1. It exits with an error. =--stack-policy= is required on =package plan=.
 

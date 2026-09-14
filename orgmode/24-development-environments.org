@@ -3,10 +3,10 @@
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
 .. figure:: _static/diagrams/24-development-environments-2.svg
-   :alt: stand in the build environment via --shell or a dumped module env
+   :alt: stand in the build environment via a dumped module env or reprod/
    :class: eb-diagram
 
-   A failed command is reproduced where the build stood, not in the login shell.
+   The failed command is reproduced from the devel module or the dump in reprod/, not from the login shell.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/24-development-environments.svg

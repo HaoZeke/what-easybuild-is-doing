@@ -160,7 +160,7 @@ A direct write to =os.environ= is invisible to the dry run.
 * Loading one without installing it
 Try an easyblock without installing into EasyBuild.
 #+begin_example
-eb example-1.0.eb --include-easyblocks=$HOME/myeb/*.py
+eb example-1.0.eb --include-easyblocks='$HOME/myeb/*.py'
 #+end_example
 =--include-easyblocks= accepts a comma‑separated list of paths.
 Paths may be absolute, relative, or globbed.

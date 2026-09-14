@@ -48,7 +48,10 @@ dependencies = [
  ('libxml2', '2.13.4'),
 ]
 #+end_src
-A four-tuple is legal too: =('CMake', '2.8.12', '', ('GCC', '4.8.2'))=.
+A four-tuple is legal too: ~('CMake', '2.8.12', '', ('GCC', '4.8.2'))~.
+The empty third field is the versionsuffix. The fourth field is a
+per-dependency toolchain, used when that one item is not on the
+parent's toolchain.
 =hiddendependencies= is a third list: the robot still walks it.
 The generated module loads those modules as hidden: they do not
 appear in =module avail=, and they still load.

@@ -311,18 +311,18 @@ that it needs HDF5 and a C++17 compiler.
  request, and one thing neither of them can tell you.
 
 #+begin_solution
-1. =easyblock = 'ConfigureMake'=
- exactly what that easyblock does. =name='thing'=, =version='2.4'=,
- =homepage=, =description=, and a toolchain your site has, say
- =foss/2025a=, whose compiler is new enough for C++17. =source_urls=
- and =sources = [SOURCE_TAR_GZ]=. =dependencies = [('HDF5',
- '1.14.6')]=, which the robot will resolve against the toolchain from
- A toolchain is a hierarchy. A =sanity_check_paths= naming the binary the user will run,
- with both keys present. =moduleclass=
- the title. Saved as [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/t/thing/thing-2.4-foss-2025a.eb][thing-2.4-foss-2025a.eb]]
- dependencies by constructing that filename.
+1. ~easyblock = 'ConfigureMake'~: exactly what that easyblock does.
+ ~name = 'thing'~, ~version = '2.4'~, ~homepage~, ~description~, and a
+ toolchain your site has, say ~foss-2025a~, whose compiler is new
+ enough for C++17. ~source_urls~ and ~sources = [SOURCE_TAR_GZ]~.
+ ~dependencies = [('HDF5', '1.14.6')]~, which the robot will resolve
+ against the toolchain from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]. A
+ ~sanity_check_paths~ naming the binary the user will run, with both
+ keys present. ~moduleclass~ the title. Saved as
+ [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/t/thing/thing-2.4-foss-2025a.eb][thing-2.4-foss-2025a.eb]]
+ by constructing that filename.
 
- Not =configopts = '--prefix=...'=. EasyBuild passes the prefix itself,
+ Not ~configopts = '--prefix=...'~. EasyBuild passes the prefix itself,
  and hardcoding one is how an install is written outside the tree the site
  manages.
 

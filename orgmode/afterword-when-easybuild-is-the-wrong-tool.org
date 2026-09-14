@@ -57,7 +57,7 @@ A maintainer becomes the bottleneck for another's research week.
 Some vendors supply only a container image.
 EasyBuild can wrap a container. That is a different object from a recipe that builds the software.
 ** A stack somebody has already built
-EESSI is an optimised stack built with EasyBuild and mounted rather than installed, described in detail by another stack.
+EESSI is an optimised stack built with EasyBuild and mounted rather than installed, described in [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]].
 Use it to obtain the software.
 Use EasyBuild to determine the software specification.
 This implies a version required by no other, a site‑maintained patch, and a toolchain relied on by users.
@@ -66,7 +66,7 @@ Two systems address a similar problem with different trade‑offs.
 The comparison should be stated precisely.
 
 *Spack* expresses dependency constraints as ranges and resolves them for each installation ([[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]]).
-The expression =depends_on('hdf5@1.10:')= is a real lower bound.
+The expression ~depends_on('hdf5@1.10:')~ is a real lower bound.
 A concretiser selects a version that satisfies all such bounds, with variants chosen at install time.
 That approach contrasts with the trade described in A pin is for one generation.
 Spack's format can retain the constraint that the software actually possesses.

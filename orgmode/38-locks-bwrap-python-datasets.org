@@ -84,7 +84,9 @@ That is independent of =--bwrap=. The wrapper scripts need an
 executable temporary directory. =--tmpdir= on an =exec= filesystem
 is the fix, not a bwrap flag.
 The isolation policy defines the build's environment.
-This flag represents one implementation.
+=--bwrap= is the namespace isolation EasyBuild 5 ships. It needs
+user namespaces and a =bwrap= binary; without those the flag fails
+before any recipe runs.
 * EBPYTHONPREFIXES and entry points
 EasyBuild allows a Python installation to see packages in another prefix via =EBPYTHONPREFIXES=.
 A user or site prefix on top of EESSI can contribute =.so= and =.py= files without rebuilding CPython.

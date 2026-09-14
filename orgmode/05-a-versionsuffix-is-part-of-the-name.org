@@ -77,9 +77,7 @@ versionsuffix = '-ACC'
 
 toolchain = {'name': 'NVHPC', 'version': '25.11-CUDA-12.9.1'}
 #+end_src
-The toolchain's version reads =25.11-CUDA-12.9.1=.
-It is not =25.11= with a suffix beside it.
-It is a single string with the suffix already folded in.
+The toolchain's version reads =25.11-CUDA-12.9.1=, one string, suffix already folded in.
 That is what the consumer sees.
 The hierarchy in [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] is keyed on exactly that string.
 So a =versionsuffix= is structural for whoever declares it.

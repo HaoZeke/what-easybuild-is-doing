@@ -129,13 +129,16 @@ Determine the contents of a hierarchy.
 #+begin_src easyconfig :widget hierarchy :hydrate load
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
-The widget lists the hierarchy. Start at =system=. The last name is
-=foss-2025a=. A package on =foss-2025a= may depend on any component
-built with any member of that list.
-A package on =GCCcore= cannot depend on a =foss= build.
-The rule is not a matter of politeness; the dependency is not a candidate, causing the robot to report that it cannot locate something visible on disk.
+=foss-2025a= is a toolchain: GCC, OpenMPI, OpenBLAS, FFTW, ScaLAPACK.
+=GCCcore= is the compiler-only member at the bottom of that hierarchy.
+Start at =system=. The last name is =foss-2025a=.
+A package on =foss-2025a= may depend on any component built with any
+member of that list.
+A package on =GCCcore= cannot depend on a =foss= build: =foss= sits
+above =GCCcore=, so a =foss= module is not a candidate from there.
+The robot then reports that it cannot locate something visible on disk.
 Change =2025a= to =2024a=, then to =1999z=.
-Ask for a chain the page does not know. The widget should refuse.
+Ask for a chain the page does not know. An unknown chain is refused.
 A hierarchy reflects what is installed rather than the string.
 * Where to go next
 - Next: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].

@@ -192,11 +192,9 @@ Hooks are the supported way to modify EasyBuild behavior without editing an easy
 #+end_keypoints
 
 #+begin_export rst
-.. mermaid::
+.. figure:: _static/diagrams/08-generation-pairs.svg
+   :alt: foss-2025a splits into x86_64 and aarch64 install prefixes
+   :class: eb-diagram
 
-   flowchart LR
-     G[foss-2025a] --> X86[x86_64]
-     G --> ARM[aarch64]
-     X86 --> I1[install prefix]
-     ARM --> I2[install prefix]
+   A generation is the set of (toolchain, arch) pairs that move together.
 #+end_export

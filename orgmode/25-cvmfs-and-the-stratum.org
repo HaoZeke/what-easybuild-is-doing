@@ -178,7 +178,7 @@ MD5 hash values of the absolute path names are stored instead.
 A lookup consists of a hash and an index probe at any depth, but this prevents a catalog from being listed by prefix.
 The catalog field previous_revision is a hash. Each published
 revision names the one before it.
-The =flags= column encodes the type of each entry, and the live histogram is sufficiently small to be read in full:.
+The =flags= column encodes the type of each entry. The live histogram is small enough to read in full.
 #+begin_src ebtranscript :source "sqlite3 on the decompressed root catalog of software.eessi.io, revision 23927, 2026-09-10" :caption "What a file catalog actually holds"
 $ sqlite3 cat.db '.tables'
 bind_mountpoints catalog chunks nested_catalogs properties statistics

@@ -147,22 +147,22 @@ A spec is a range, and a concretiser selects one graph.
 The same software is parsed differently.
 =--format spack= specifies the parser.
 The file is Python and is *not* executed; literal =depends_on= and =version= calls are interpreted as syntax.
-#+begin_src python
+#+begin_example
 class Eon(MesonPackage):
- homepage = "https://eondocs.org/"
- url = "https://github.com/TheochemUI/eOn/releases/download/v2.16.0/eon-v2.16.0.tar.xz"
+    homepage = "https://eondocs.org/"
+    url = "https://github.com/TheochemUI/eOn/releases/download/v2.16.0/eon-v2.16.0.tar.xz"
 
- version("2.16.0", sha256="3d4da89a393c8821bf370cb97c9d2403718d83f9cbb5e8b918cd90af14ed52dc")
+    version("2.16.0", sha256="3d4da89a393c8821bf370cb97c9d2403718d83f9cbb5e8b918cd90af14ed52dc")
 
- depends_on("meson@1.8.0:", type="build")  # meson 1.8.0 or newer
- depends_on("python@3.11:", type=("build", "run"))
- depends_on("py-numpy", type=("build", "run"))
- depends_on("eigen@3.4:")
- depends_on("quill@11:")
- depends_on("readcon-core@0.13.1:")
- depends_on("highway")
- depends_on("libinih")
-#+end_src
+    depends_on("meson@1.8.0:", type="build")  # meson 1.8.0 or newer
+    depends_on("python@3.11:", type=("build", "run"))
+    depends_on("py-numpy", type=("build", "run"))
+    depends_on("eigen@3.4:")
+    depends_on("quill@11:")
+    depends_on("readcon-core@0.13.1:")
+    depends_on("highway")
+    depends_on("libinih")
+#+end_example
 =depends_on("eigen@3.4:")= (eigen 3.4 or newer) defines a range.
 EasyBuild does not support ranges ([[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]]).
 The solver selects =Eigen-3.4.0= from the robot tree for that generation.

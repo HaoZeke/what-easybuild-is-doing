@@ -86,7 +86,7 @@ Four lines are added to the current generation's build list.
 =eb-stack recipe lint=: clean.
 Dependency resolution: clean.
 The SHA256 of the release archive matches the one written into the recipes.
-A diff of build flags, dependencies and sanity checks against the previous version's recipes shows identical.
+A diff of build flags, dependencies and sanity checks against the previous version's recipes shows those four recipes identical.
 All four builds fail before compiling anything.
 #+begin_example
 Specified start dir /scratch/build/.../qmcpack-4.4.0/qmcpack does not exist

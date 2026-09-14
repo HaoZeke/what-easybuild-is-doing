@@ -131,9 +131,9 @@ configuration.
 #+begin_solution
 1. Stays. The workload names the binary.
 
-2. Moves. The configuration marks the GPU partition with a
- =gpu= feature. The test requests =+gpu=. Binding the
- cluster name makes every other site skip the test.
+2. Stays as a feature request. The configuration marks the GPU
+ partition with a =gpu= feature. The test requests =+gpu=. Binding
+ the cluster name makes every other site skip the test.
 
 3. Becomes a hook. =compute_unit= of one node, or of one
  GPU, reads =num_cpus= or the device count from the

@@ -108,8 +108,9 @@ Nothing in an easyconfig records which glibc version was present.
 A GPU build links against a library belonging to the driver rather than to the toolchain.
 
 =libcuda.so.1= is exempt from the RPATH check by default
-(=--filter-rpath-sanity-libs=). It is not exempt from
-=sanity_check_paths=.
+(=--filter-rpath-sanity-libs=).
+=sanity_check_paths= never looks at it: that parameter only tests
+files the easyconfig listed under the install prefix.
 
 =libcuda.so.1= is absent on a node without a GPU.
 

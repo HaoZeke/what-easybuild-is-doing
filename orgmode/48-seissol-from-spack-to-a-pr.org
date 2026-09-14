@@ -189,9 +189,9 @@ The 2025a robot includes Lua 5.4.8 and libxsmm 1.17. easi 1.7.0 provides =lmathx
 A warning states that Lua 5.5 may fail to compile.
 The companion Lua 5.4.8 recipe that a 2026.1 bump would have added is unnecessary on 2025a.
 * The site wrapper is the install
-The Snellius EasyBuild tutorial loads =eb/<latest>= and installs
-with =eblocalinstall=, not a raw =eb= plus hand-set
-=--installpath-software=.
+The Snellius EasyBuild tutorial loads the site EasyBuild module after
+=module load 2025= and installs with =eblocalinstall=, not a raw =eb=
+plus hand-set =--installpath-software=.
 The wrapper writes software and modulefiles under the 2025 prefix:
 
 #+begin_example

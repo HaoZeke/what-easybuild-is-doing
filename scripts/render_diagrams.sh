@@ -20,7 +20,7 @@ fi
 shopt -s nullglob
 if command -v d2 >/dev/null; then
   for f in "$dir"/*.d2; do
-    d2 --pad 20 --theme 0 "$f" "${f%.d2}.svg"
+    d2 --pad 20 --theme 0 --dark-theme 200 "$f" "${f%.d2}.svg"
   done
 else
   echo "render_diagrams: d2 not on PATH; *.d2 skipped" >&2

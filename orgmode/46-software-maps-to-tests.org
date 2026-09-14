@@ -91,9 +91,9 @@ reframe -C cscs-reframe-tests/config/cscs.py \
 =-c= denotes the check path.
 =-R= causes recursion.
 =-l= causes listing.
-The daily run uses the command with =-r= instead of =-l= from [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]].
+The listing command is the inventory. The nightly job in [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]] executes the same configuration and check path.
 A site copying this layout does not need EESSI.
-The site must have a configuration file describing its partitions, a directory of tests that do not name those partitions, and a nightly job that runs the listing.
+The site must have a configuration file describing its partitions, a directory of tests that do not name those partitions, and a nightly job that runs that pair.
 =portable_tests.md= in that tree defines the written rule for what a check may assume.
 EESSI's mixin implements the same rule, enforced in code.
 * LUMI, CSC and why this is a part
