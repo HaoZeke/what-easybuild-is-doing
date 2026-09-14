@@ -64,7 +64,7 @@ Keep a local rebuild only for a version required by no other, a
 site-maintained patch, or a toolchain the site's users still rely on.
 * When another packaging system fits the problem better
 Two systems address a similar problem with different trade‑offs.
-The comparison should be stated precisely.
+
 
 *Spack* expresses dependency constraints as ranges and resolves them for each installation ([[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]]).
 The expression ~depends_on('hdf5@1.10:')~ is a real lower bound.

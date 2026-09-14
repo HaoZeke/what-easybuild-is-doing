@@ -13,6 +13,7 @@
 - When is =%(version)s= substituted: while the file runs, or after?
 - What is an easyconfig without an =easyblock= line claiming?
 #+end_questions
+An easyconfig is a Python file EasyBuild evaluates.
 
 #+begin_objectives
 1. Say why =SYSTEM= carries no quotes and ='tools'= does.

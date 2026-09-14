@@ -212,7 +212,7 @@ easyconfigs:
  - Rust-1.91.1-GCCcore-14.3.0.eb
 #+end_example
 The [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] script splits changed YAML files of the pull request into two lists.
-The [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] script rebuilds the first list.
+The [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] script iterates both lists and passes =--rebuild= only when the path contains =/rebuilds/=.
 #+begin_example
 if [[ ${easystack_file} == *"/rebuilds/"* ]]; then
  ${EB} --easystack ${easystack_file} --rebuild

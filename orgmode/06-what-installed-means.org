@@ -47,10 +47,7 @@ sanity_check_paths = {
 }
 #+end_src
 Two keys exist, each a list of paths relative to the install directory.
-The check verifies existence.
-Three files are present.
-The build passes.
-It asserts that three paths exist.
+The check asserts that three paths exist.
 It does not assert executability, correct version, or start capability.
 A zero-byte file at =bin/vasp_std= would satisfy it.
 The parameter only checks that those paths exist.

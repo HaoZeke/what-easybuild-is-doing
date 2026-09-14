@@ -105,7 +105,7 @@ The =.eb= is an emitted recipe, not an artifact EasyBuild compiled.
 Lock denotes solver assignment.
 Plan includes parsed foreign recipe and residuals; parser‑invented items appear as typed leftovers, not guessed dependencies.
 [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]].
-This page contains two files for side‑by‑side placement.
+The feedstock and the Spack recipe sit next to each other.
 Name and version remain retained.
 =eon= transformed into =eOn=.
 =eigen >=3.4,<3.5= converted into pin for this generation.

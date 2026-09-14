@@ -263,6 +263,6 @@ own step methods use =run_shell_cmd=.
  environment variable is set so the dry run can see it.
 - =--include-easyblocks= shadows the shipped easyblock, and
  =--list-easyblocks=detailed= is how to confirm which file loaded.
-- Under =--module-only= compile and install do not run, so state carried between
+- Under =--module-only= fetch, extract, patch, configure, build, test and install do not run, so state carried between
  steps arrives as =None=.
 #+end_keypoints

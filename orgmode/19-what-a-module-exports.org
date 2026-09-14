@@ -186,8 +186,8 @@ Using the modulefile above:
 3. After =module load QMCPACK=, which of =EBROOTQMCPACK=, =PATH=,
  and =LD_LIBRARY_PATH= does =module show= print, and which of
  those is the prefix the binary was installed under?
-4. A colleague adds =modextravars = {'CC': 'mpicc'}= so builds against
- the module pick up MPI. Why will that not do what they expect?
+4. After =module load QMCPACK=, =echo $EBVERSIONQMCPACK= prints
+ =4.4.0=. Where did that value come from?
 
 #+begin_solution
 1 is =description=, via =whatis=. Which is the argument for writing a
@@ -202,12 +202,8 @@ that is worth investigating; if something does, Lmod is doing its job.
 It does not print =LD_LIBRARY_PATH= unless the easyblock also
 prepended that. =EBROOTQMCPACK= is the install prefix.
 
-4 will set =$CC= for a user who loads the module, and will do nothing
-for a build. A build's environment is constructed in =prepare=, as
-[[file:14-the-isolation-policy.org][The isolation policy]] describes, and its =$CC=
-comes from the toolchain object rather than from any module. Those builds need
-=toolchainopts = {'usempi': True}= in the consuming easyconfig, which is
-[[file:16-what-a-toolchain-injects.org][What a toolchain injects]].
+4 is =version=, exported as =EBVERSIONQMCPACK= by the modulefile
+EasyBuild wrote.
 #+end_solution
 #+end_exercise
 

@@ -117,8 +117,10 @@ No compile step runs.
 The =install_step= extracts into the data prefix.
 The default value of =extract_sources= is true.
 The =cleanup_data_sources= deletes fetched archives after install.
-The =object_storage_ignore_dirs= (5.4.0) lists directories to keep out of object storage.
-The =.= denotes the whole installdir.
+From 5.4.0, Dataset can store extracted files in a SHA256
+content-addressed object store and reuse a readable existing object.
+The =object_storage_ignore_dirs= lists directories to keep out of that
+store. The =.= denotes the whole installdir.
 Two path variables keep data off the software prefix.
 #+begin_example
 export EASYBUILD_SOURCEPATH_DATA=/sources/data
