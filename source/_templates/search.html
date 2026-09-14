@@ -1,0 +1,10 @@
+{%- extends "shibuya/search.html" %}
+
+{% block body %}
+<p class="eb-search-lead">
+  The book search is the Ask box on every page. This page is the
+  fallback index. With JavaScript off, use
+  <a href="{{ pathto('keypoints') }}">What to remember</a>.
+</p>
+{{ super() }}
+{% endblock %}

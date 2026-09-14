@@ -1119,3 +1119,26 @@ article.yue h2:hover > a.headerlink {
   font-size: 0.55em;
   color: var(--eb-rule);
 }
+
+article.yue .eb-kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0 0 1.25rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--eb-rule);
+  border-bottom: 1px solid var(--eb-rule);
+  list-style: none;
+  font-family: var(--eb-sans);
+  font-size: 0.85rem;
+}
+
+article.yue .eb-kinds li {
+  margin: 0;
+}
+
+.eb-search-lead {
+  max-width: var(--eb-measure, 640px);
+  margin: 0 0 1rem;
+  font-family: Literata, Georgia, serif;
+}

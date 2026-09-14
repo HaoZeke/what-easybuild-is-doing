@@ -57,10 +57,7 @@ No configuration is required.
 | [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] | why the file is Python, and what that costs |
 | [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] | which dependencies a toolchain permits |
 
-Finally, an easyconfig can be read aloud.
-It will download.
-It will search for an easyblock.
-It may use dependencies.
+The file is evaluated. The robot walks the tree. An easyblock runs the steps.
 * Level B. Understand why a build fails
 Two hours.
 The level where most support tickets reside.
