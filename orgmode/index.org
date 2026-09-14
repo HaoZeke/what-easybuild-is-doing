@@ -44,7 +44,7 @@ A journey is a how-to path across the three named parts.
 #+end_export
 Pages are grouped by product: [[file:part-a-recipe.org][RecipeReader]], [[file:part-a-stack.org][StackWalker]], [[file:part-a-test.org][ReframeReader]].
 The [[file:00-tutorial-read-an-easyconfig.org][tutorial]] is a tutorial. The journeys are how-to paths.
-A reader who only ever =module load=s starts at
+A reader who only ever module-loads starts at
 [[file:19-what-a-module-exports.org][What a module exports]].
 The parts are explanation. [[file:keypoints.org][Keypoints]] and
 [[file:glossary.org][the glossary]] are reference.

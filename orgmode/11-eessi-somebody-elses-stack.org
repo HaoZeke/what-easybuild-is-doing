@@ -138,12 +138,12 @@ Setting them afterwards changes nothing.
 =EESSI_USER_INSTALL= and =EESSI_PROJECT_INSTALL= may be set together.
 Both prefixes appear on =MODULEPATH=.
 New installs go to the user prefix.
-#+ATTR_EB: :id EB-EESSI-1 :title Every dependency says SKIPPED
+#+ATTR_EB: :id EB-EESSI-1 :title The 2025.06 tree does not carry 2026.1
 #+begin_exercise
 You have set one prefix variable, loaded =EESSI-extend= on the
 =2025.06= tree, and run a plan for an easyconfig on =foss-2026.1=.
-Every dependency comes back =[SKIPPED]=, and the run opens by fetching
-a couple of hundred megabytes of GCC.
+The run opens by fetching a couple of hundred megabytes of GCC. The
+2025.06 layer does not carry that generation.
 
 1. What has happened?
 2. You could let it run. Give two reasons not to.

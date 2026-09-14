@@ -115,7 +115,7 @@ A new entry for GROMACS on the 2025.06 tree, compiled with EasyBuild 5.3.0 and t
 #+begin_example
 easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml
 #+end_example
-The filename determines the EasyBuild module [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] that is loaded.
+The filename selects the EasyBuild version. [[https://github.com/EESSI/software-layer-scripts/blob/main/EESSI-install-software.sh][EESSI-install-software.sh]] is the installer that loads that module.
 #+begin_example
 eb_version=$(echo ${easystack_file} | sed 's/.*eb-\([0-9.]*\).*.yml/\1/g')
 source ${TOPDIR}/load_easybuild_module.sh ${eb_version}

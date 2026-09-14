@@ -96,7 +96,6 @@ With no such parameter, the class name is derived from =name=, which is
 why renaming software renames the easyblock it looks for.
 #+end_detail
 The widget in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] solves that encoding (see [[dive:easyblock-naming]]).
-The book contains one.
 * The methods that actually get overridden
 
 #+begin_src easyconfig :widget parse

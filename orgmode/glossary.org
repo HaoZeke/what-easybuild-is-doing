@@ -23,7 +23,7 @@
    A glossary entry is a name for an object the book already used.
 #+end_export
 Each term appears a single time on this page, and any page may reference it in situ.
-Encountering =versionsuffix= in One easyconfig, many installs does not require this page, while a reader requiring the complete vocabulary can obtain it here.
+Encountering =versionsuffix= in [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]] does not require the glossary; a reader who wants the complete vocabulary comes here.
 Definitions are presented mechanically rather than descriptively: they specify what the entity *is* in the code and what alterations occur when it changes.
 * RecipeReader
 

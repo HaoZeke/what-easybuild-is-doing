@@ -126,7 +126,6 @@ The interactive nodes used the architecture shown above.
 The user's node did not use that architecture.
 The check verified a different tree.
 That tree was already correct.
-The lesson extends beyond individual architectures.
 "It works" is incomplete without specifying where.
 On a heterogeneous cluster the location is not a minor detail.
 Verify on the node type that failed.

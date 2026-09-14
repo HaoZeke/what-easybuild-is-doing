@@ -23,7 +23,7 @@
    What to remember is a claim with a page behind it.
 #+end_export
 Keypoints for each page are produced in reading order directly from the pages instead of manual maintenance.
-The Carpentries refer to this as a digest ([[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]]).
+[[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]] is the Carpentries design this page follows: a claim plus the page that would falsify it.
 It has two purposes.
 Before a page, it indicates whether the page's purpose is already known.
 After finishing the book, it provides a page to reread instead of the entire book.

@@ -167,7 +167,7 @@ EasyBuild docs, last update 2026-08-09:
 - [[https://docs.easybuild.io/extended-dry-run/][Extended dry
  run]]: =-x= is a different command.
 
-A pin is for one generation remains the law of the easyconfig file. this page is
+[[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]] remains the law of the easyconfig file. This page is
 the site tree and the 5.0 dry-run change.
 #+end_detail
 

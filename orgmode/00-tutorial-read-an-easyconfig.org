@@ -12,7 +12,7 @@
    :alt: file text through the namespace to the model
    :class: eb-diagram
 
-   The tutorial object is the model, not the command. The file is evaluated.
+   The file is evaluated. The model is what remains.
 #+end_export
 This tutorial evaluates a file the way EasyBuild does.
 Templates are formatted after the file runs.

@@ -31,7 +31,7 @@ The =versionsuffix= resembles a constraint but is a label.
    :alt: module name railroad with optional versionsuffix on a loop
    :class: eb-diagram
 
-   The suffix rides the optional loop. It is not a dependency constraint.
+   The suffix rides the optional loop on the module name.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/rail-dep-tuple.svg

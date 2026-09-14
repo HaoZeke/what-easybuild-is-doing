@@ -1,7 +1,7 @@
 #+TITLE: What a module exports
 
 #+OPTIONS: toc:nil num:nil
-A reader who only ever =module load=s starts here. The recipe that
+A reader who only ever module-loads starts here. The recipe that
 produced the modulefile is on the other pages; this page is the load.
 #+begin_export rst
 .. figure:: _static/diagrams/19-what-a-module-exports-2.svg

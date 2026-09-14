@@ -151,7 +151,7 @@ The check was carrying information about the *toolchain*.
 Deleting the report left the toolchain broken and the package shipping.
 [[file:23-testing.org][Testing, and the four things it can mean]].
 *The workaround spread while the defect was hidden.* Step 3 is what a skipped check costs beyond one package: the next recipe copied the workaround along with everything else.
-*The retraction is the part to learn from.* Step 6 happened.
+*The retraction is the part to learn from.*
 =ldd= on the GPU binary, run from a login node, reports zero missing libraries.
 Pointing at the other architecture's tree by its full path does not rescue the test either.
 The RPATH inside the binary still resolves against the node the command runs on.

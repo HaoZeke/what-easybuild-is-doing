@@ -6,7 +6,7 @@
    :alt: constructed environment, RPATH into the prefix, kernel and glibc still leak
    :class: eb-diagram
 
-   The build does not inherit the login environment. RPATH points at the prefix. The kernel and glibc are still the host's.
+   RPATH points at the prefix. The kernel and glibc are still the host's. Loaded modules stay unless a site sets detect_loaded_modules to error or unload.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/14-the-isolation-policy.svg
