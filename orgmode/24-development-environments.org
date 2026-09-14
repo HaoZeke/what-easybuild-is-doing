@@ -206,8 +206,21 @@ That outcome is the correct answer, not a failure.
 =wobble= uses the system toolchain.
 The system toolchain loads no modules.
 The system toolchain sets no compiler variables.
-Running on a =foss= easyconfig fills both sections.
-The two comments are empty sections in the file that was written. A second run with the same path refuses to overwrite.
+A =foss= easyconfig fills both sections. The dump then looks like this
+(abbreviated; this is the form, not a recorded run of one site's
+=foss-2025a=):
+#+begin_example
+# toolchain & dependency modules
+module load GCCcore/14.2.0
+module load GCC/14.2.0
+module load OpenMPI/5.0.7-GCC-14.2.0
+
+# build environment
+export CC=mpicc
+export CXX=mpicxx
+export FC=mpifort
+#+end_example
+A second run with the same path refuses to overwrite.
 The tool calls it an environment.
 #+ATTR_EB: :id EB-DevEnv-2 :title Archaeology on one install
 #+begin_exercise
