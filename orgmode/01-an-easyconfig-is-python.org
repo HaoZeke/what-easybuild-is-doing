@@ -41,7 +41,7 @@ The installed module name is a railroad, not a sentence.
 
    SYSTEM is already in the namespace. Templates resolve after the file runs. A missing easyblock line still names a class.
 #+end_export
-#+begin_src easyconfig :widget parse
+#+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'
 version = '4.130.0'
 
