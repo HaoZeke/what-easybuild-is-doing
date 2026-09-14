@@ -304,7 +304,7 @@ Two results deserve attention.
 A plan lacks portability.
 Items present in the current run's list cease to count as available.
 Both a library and its dependents are rebuilt.
-Consult =-D= prior to any non‑trivial build.
+Consult =-Dr= prior to any non‑trivial build. EasyBuild 5 =-D= is not the robot.
 This option uniquely differentiates one installation from ninety.
 The following page covers =versionsuffix=.
 =versionsuffix= appears as a constraint and as a label.

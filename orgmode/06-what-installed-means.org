@@ -91,12 +91,12 @@ On a cluster with multiple processor architectures, the install tree is split pe
 A binary tuned for one architecture differs from the binary for another.
 A green check is a statement about one of those trees.
 The following shows that arrangement on a real machine.
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-09, 2025 module environment" :caption "One module name, and the tree it resolves to"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-09, 2025 module environment" :caption "One module name, and the tree it resolves to"
 $ hostname
 login.example
 
 $ readlink -f /sw/arch
-/gpfs/admin/_hpc/sw/arch/AMD-ZEN2
+/sw/arch/AMD-ZEN2
 
 $ module load 2025 QMCPACK/4.4.0-foss-2025a
 

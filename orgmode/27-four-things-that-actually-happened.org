@@ -73,9 +73,9 @@ The check that had been failing could pass honestly.
 * The login node that lied, twice
 The task took one day.
 =/sw/arch= is a symlink for each node architecture.
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10" :caption "What a login node resolves"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-10" :caption "What a login node resolves"
 $ readlink -f /sw/arch
-/gpfs/admin/_hpc/sw/arch/AMD-ZEN2
+/sw/arch/AMD-ZEN2
 #+end_src
 Login nodes run AMD‑ZEN2, one of the two correct architectures.
 Every check from a login node reported a working module, while a check on a GPU node reported a broken module with the same name.
