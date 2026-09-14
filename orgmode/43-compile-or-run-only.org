@@ -153,7 +153,7 @@ Four jobs. For each, name the base class, and say what
 [[https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html][ReFrame regression-test API]]: =RegressionTest=,
 =RunOnlyRegressionTest=, =CompileOnlyRegressionTest=,
 =sourcesdir=, =modules=, =build_system=. The =tests/src/= layout
-is from the CSCS 2022 webinar slides. [[https://github.com/ukri-excalibur/excalibur-tests][ExCALIBUR-tests tutorial]]
+is the one in [[https://github.com/eth-cscs/cscs-reframe-tests][cscs-reframe-tests]]. [[https://github.com/ukri-excalibur/excalibur-tests][ExCALIBUR-tests tutorial]]
 sections 5 and 6 walk Make/CMake/Autotools/Spack and run-only
 tests. [[https://www.eessi.io/docs/test-suite/writing-portable-tests/][EESSI's mpi4py tutorial]] is the run-only-plus-module
 pattern this page uses.

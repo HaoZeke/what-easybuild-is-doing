@@ -89,7 +89,6 @@ No such version will appear later.
 The content of the easyconfig states "1.14.6".
 The software does not necessarily require 1.14.6.
 Requiring 1.14.6 is unlikely.
-A required feature was present in an earlier version.
 Version 1.14.6 reflects what that generation contained when the easyconfig was authored.
 The version number records the build environment.
 The version number provides no information about the package's actual requirements.

@@ -143,7 +143,7 @@ The =target_directory: subprojects/rgpot= entry became a staged extract in the f
 In the full recipe, =sanity_check_commands= runs =eonclient --version= and =python -c "import eon"=; this mirrors the feedstock's =tests:= block.
 A Spack =package.py= file is the other input.
 The paper [[cite:gamblinSpackPackageManager2015][Gamblin et al. 2015]] describes that format.
-A spec is a range, and a concretiser selects one graph.
+A spec is a DAG of constraints (name, versions, variants, compiler, arch, deps). A concretiser selects one graph.
 The same software is parsed differently.
 =--format spack= specifies the parser.
 The file is Python and is *not* executed; literal =depends_on= and =version= calls are interpreted as syntax.

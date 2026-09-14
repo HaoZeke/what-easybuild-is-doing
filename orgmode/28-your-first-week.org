@@ -145,12 +145,12 @@ A root cause is published and then *retracted*, having been checked from a login
 The root cause is re‑established on the hardware and the toolchain's own recipe is fixed: =postinstallcmds= relinking the unversioned =math_libs= and =comm_libs= entries at the CUDA version the module declares.
 A temporary =--rebuild= goes on the build‑list lines for everything built against the broken toolchain and comes off once the results are checked on a node of each architecture class.
 Three separate mistakes are in that list and only one of them is the symlink.
-*Switching the check off moved the discovery to a user.* Step 2's reasoning was true on both counts: the check was reporting a real defect and no change to this package could repair it.
+*Switching the check off moved the discovery to a user.* The check was reporting a real defect and no change to this package could repair it.
 The checks were true. The conclusion was not.
 The check was carrying information about the *toolchain*.
 Deleting the report left the toolchain broken and the package shipping.
 [[file:23-testing.org][Testing, and the four things it can mean]].
-*The workaround spread while the defect was hidden.* Step 3 is what a skipped check costs beyond one package: the next recipe copied the workaround along with everything else.
+*The workaround spread while the defect was hidden.* A skipped check costs more than one package: the next recipe copied the workaround along with everything else.
 *The retraction is the part to learn from.*
 =ldd= on the GPU binary, run from a login node, reports zero missing libraries.
 Pointing at the other architecture's tree by its full path does not rescue the test either.

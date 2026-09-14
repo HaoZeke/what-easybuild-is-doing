@@ -60,7 +60,8 @@ EasyBuild can wrap a container. That is a different object from a recipe that bu
 EESSI is an optimised stack built with EasyBuild and mounted rather than installed, described in [[file:11-eessi-somebody-elses-stack.org][EESSI, somebody else's stack]].
 Use it to obtain the software.
 Use EasyBuild to determine the software specification.
-This implies a version required by no other, a site‑maintained patch, and a toolchain relied on by users.
+Keep a local rebuild only for a version required by no other, a
+site-maintained patch, or a toolchain the site's users still rely on.
 * When another packaging system fits the problem better
 Two systems address a similar problem with different trade‑offs.
 The comparison should be stated precisely.

@@ -70,7 +70,7 @@ The default does not use =module purge=.
 =ModulesTool.load= is invoked with =purge= False.
 Running =module purge= is documented as futile.
 Running =module purge= is documented as broken on some systems (Cray).
-A loaded module that was not declared still triggers a warning.
+A loaded EasyBuild module (one that exported =$EBROOT*=) that was not declared still triggers a warning.
 The failure appears months later on a machine where that module is missing.
 =--filter-env-vars= omits those names from the generated modulefile.
 It does not strip them from the build environment.

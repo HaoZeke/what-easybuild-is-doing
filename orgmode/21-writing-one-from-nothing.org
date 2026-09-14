@@ -333,7 +333,8 @@ that it needs HDF5 and a C++17 compiler.
  before inserting =checksums= after them. So expect a diff that touches
  lines you did not write.
 
-3. =eb --check-style= and =eb --check-contrib=. Neither runs the
+3. =eb --check-style= and =eb --check-contrib=. The second also
+ requires a SHA256 for every source and patch. Neither runs the
  software. They cannot tell you that =bin/thing= actually works, which
  is why upstream requires a test report from a human who built it, and
  why the author of a pull request is not allowed to merge it.

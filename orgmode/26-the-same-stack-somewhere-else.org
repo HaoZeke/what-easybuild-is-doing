@@ -314,9 +314,8 @@ Accelerator targets are named =accel/nvidia/cc<XY>=, and the
 initialisation script downgrades a compute capability that has no build
 to the nearest lower one ending in zero. In 2025.06 the ones that exist
 are =cc70=, =cc80=, =cc90=, =cc100= and =cc120= for NVIDIA, on four
-aarch64 targets and all ten x86_64 ones, plus =gfx908=, =gfx90a=,
-=gfx942=, =gfx1030=, =gfx1100=, =gfx1101=, =gfx1200= and =gfx1201= for
-AMD, x86_64 only. Those counts come from the catalogs rather than from the
+aarch64 targets and all ten x86_64 ones. 2025.06 does not ship ROCm
+accelerator targets. Those counts come from the catalogs rather than from the
 GPU-targets page, so they are what is on the wire today.
 #+end_detail
 Two limits must be stated plainly.

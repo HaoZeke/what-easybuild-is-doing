@@ -79,7 +79,7 @@ Requires level A. Level B speeds it up.
 [[file:28-your-first-week.org][Your first week on somebody's stack]] covers three tasks of the kind handed to a newcomer.
 Use level C when something is failing.
 Reading a failed build is intended for that situation.
-* Level D. Build the machinery
+* Level D. Read the machinery
 Three hours.
 B and C are required.
 Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps and which parameter belongs to which owner.
