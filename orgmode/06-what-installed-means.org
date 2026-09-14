@@ -201,7 +201,7 @@ The module remains unusable.
 
 A package includes the first check.
 It includes the second check only if its author or its EasyBlock supplied one.
-Knowing which of the three a given package carries reveals what its green build means.
+
 Then there are two things that are not about parameters at all.
 A pass describes the tree it ran against.
 On a cluster with more than one architecture it names one architecture.

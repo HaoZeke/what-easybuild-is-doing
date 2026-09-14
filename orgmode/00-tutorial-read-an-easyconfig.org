@@ -43,11 +43,8 @@ You will not need them here.
 #+end_objectives
 
 * Before you start
-Check that JavaScript is enabled in the browser.
-Each sample below runs on this page on the user's machine.
-A live sample differs from a printed one.
-A live sample shows *editable, runs as you type* above it and provides an answer below before any interaction.
-When a sample indicates that the engine is not loaded, JavaScript is disabled or still loading; wait briefly and then reload.
+Each sample below is a listing. In a browser with JavaScript it is
+also editable on the page. A print or EPUB copy is the listing only.
 * Step 1: what the file says, and what it means
 A real easyconfig is provided.
 The easyconfig installs a browser‑based VS Code on a supercomputer.
@@ -124,12 +121,13 @@ Two things follow.
 Given a name, you know which file EasyBuild will try to import.
 And given a class name in a traceback, you can read it backwards to the software.
 * Step 5: what a toolchain lets you see
-A dependency qualifies as a candidate only when built with a toolchain present in the package's hierarchy.
+=foss-2025a= is a toolchain: GCC, OpenMPI, OpenBLAS, FFTW, ScaLAPACK.
+A dependency is a candidate only when it was built with one of those
+members, or with =system=.
 Determine the contents of a hierarchy.
 #+begin_src easyconfig :widget hierarchy :hydrate load
 toolchain = {'name': 'foss', 'version': '2025a'}
 #+end_src
-=foss-2025a= is a toolchain: GCC, OpenMPI, OpenBLAS, FFTW, ScaLAPACK.
 =GCCcore= is the compiler-only member at the bottom of that hierarchy.
 Start at =system=. The last name is =foss-2025a=.
 A package on =foss-2025a= may depend on any component built with any

@@ -24,7 +24,7 @@
 
 #+begin_questions
 - What does a =bot: build= comment start, and what does it not start?
-- Why is =software-layer='s [[https://github.com/EESSI/software-layer-scripts/blob/main/bot/build.sh][software-layer-scripts bot/build.sh]] thirty-three lines?
+- Why is =software-layer='s [[https://github.com/EESSI/software-layer/blob/main/bot/build.sh][bot/build.sh]] thirty-three lines?
 - Where does a successful tarball go, and what still has to happen
  before a module appears on a login node?
 #+end_questions

@@ -283,7 +283,7 @@ The cut point of a repository is a maintenance decision.
 EESSI's file is in the repository.
 The hash resides in the catalog.
 The file is fetched like any other file.
-The suffix C is a regular file. Other catalog types carry a letter of their own.
+The suffix C is the catalog object. A regular file has no suffix. Other catalog types carry a letter of their own.
 * The cut points are declared, and the declaration is readable
 The fourth software-layer line =.../software/*/*= cuts a catalog per installed package version.
 Opening one module's files pulls in metadata for that package only.

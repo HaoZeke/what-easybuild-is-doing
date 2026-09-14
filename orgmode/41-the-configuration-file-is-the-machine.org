@@ -82,7 +82,7 @@ site_configuration = {
  'name': 'example',
  'descr': 'Example cluster',
  'modules_system': 'lmod',
- 'hostnames': ['*'],
+ 'hostnames': ['.*'],
  'stagedir': (
  f'/shared/reframe/{os.environ["USER"]}/stage'
  ),
