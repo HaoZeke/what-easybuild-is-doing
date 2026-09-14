@@ -56,7 +56,7 @@ parent's toolchain. The four-tuple form is the one in
 =hiddendependencies= is a third list: the robot still walks it.
 The generated module loads those modules as hidden: they do not
 appear in =module avail=, and they still load.
-During =prepare=, both lists are loaded onto the compiler path.
+During =prepare=, both lists are loaded into the build environment.
 Reading the easyconfig shows the lists interchangeable.
 The walk below treats both lists as robot items to locate.
 Swapping a name from =dependencies= to =builddependencies= still makes the walk list it.
