@@ -147,7 +147,7 @@ Read [[file:27-four-things-that-actually-happened.org][Four things that actually
 
 Read [[file:glossary.org][the glossary]] when a word in this book means something specific.
 
-Read [[file:keypoints.org][the keypoints]] when a page was read last week.
+Read [[file:keypoints.org][What to remember]] when a page was read last week.
 
 Read [[file:exercises.org][the exercises]] when a session is being run, or a self‑check is needed.
 

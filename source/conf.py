@@ -35,8 +35,7 @@ extensions = [
     "eb_ask",
 ]
 
-# OokCite collection `what-easybuild-is-doing`, exported to refs.bib.
-# McCalpin 1995 is the one entry with no DOI; STREAM's own citation.
+# Bibliography is refs.bib. McCalpin 1995 is the one entry with no DOI.
 bibtex_bibfiles = ["refs.bib"]
 bibtex_reference_style = "author_year"
 

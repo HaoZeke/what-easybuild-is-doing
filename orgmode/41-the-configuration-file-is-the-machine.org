@@ -158,7 +158,7 @@ new machine has a =cpu= partition with =num_cpus: 64=. Which
 two lines move, and which file do they move to?
 #+begin_solution
 =valid_systems= stays in the test. It becomes a feature request
-(or =['*']=, or the new system's name), not a hostname bound to
+(or =['.*']=, or the new system's name), not a hostname bound to
 one cluster. =num_tasks = 128= leaves the test
 entirely: 128 is a fact about Snellius, so it belongs in that
 site's configuration as =processor.num_cpus=, and the test

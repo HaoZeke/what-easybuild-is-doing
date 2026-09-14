@@ -183,7 +183,7 @@ It inherits every inference presented in this book.
 The expression =moduleclass = 'tools'= appears in the sample from An easyconfig is Python.
 It is a modulefile concern that propagated to the easyconfig.
 The modulefile may be entirely correct while describing an incorrect dependency tree.
-This situation corresponds precisely to a versionsuffix being part of the name.
+The module name still carries the CUDA string that no longer matches the GPU.
 A module labeled CUDA 12.9.1 declares a dependency on CUDA 12.9.1.
 Both are accurate.
 It resolves into a 13.0 tree.
