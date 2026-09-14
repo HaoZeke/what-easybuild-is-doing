@@ -320,11 +320,11 @@ Determine the location where the difference is expressed.
  =link_nvidia_host_libraries.sh=. Last year's symlinks are not
  reused.
 
-3. One tree per partition. The difference is the CernVM-FS
- config *on those nodes*, each with its own
- =EESSI_HOST_INJECTIONS= / =EESSI_NVIDIA_OVERRIDE_DEFAULT=.
- The repository content is the same; the client-side target is
- not.
+3. Two =EESSI_NVIDIA_OVERRIDE_DEFAULT= targets, one per GPU
+ partition, then =cvmfs_config reload= and
+ =link_nvidia_host_libraries.sh= on each. 2025.06 drivers live
+ under =compat/.../lib/nvidia=. They do not use a second
+ =EESSI_HOST_INJECTIONS= tree.
 #+end_solution
 #+end_exercise
 
