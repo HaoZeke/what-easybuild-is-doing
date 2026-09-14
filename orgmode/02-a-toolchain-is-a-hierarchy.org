@@ -38,7 +38,7 @@ toolchain = {'name': 'foss', 'version': '2025a'}
 =foss-2025a= forms the top of a structure.
 #+begin_export rst
 .. figure:: _static/diagrams/foss-2025a-hierarchy.svg
-   :alt: system under GCCcore 14.2.0 under GCC under gfbf under gompi under foss 2025a
+   :alt: system under GCCcore 14.2.0 under GCC; gfbf and gompi sit as siblings under GCC, both under foss 2025a
    :class: eb-diagram
 
    foss-2025a hierarchy. A package on foss may depend on anything below it in this walk.

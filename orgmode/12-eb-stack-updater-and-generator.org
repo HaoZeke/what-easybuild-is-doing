@@ -23,7 +23,7 @@
  retarget of software it does.
 #+end_objectives
 eb-stack performs two tasks.
-One task is a *port* that takes input from conda-forge, Spack, PyPI, CRAN, or Cargo and produces an EasyBuild recipe.
+One task is a *port* that takes input from conda-forge or Spack and produces an EasyBuild recipe.
 The other task is a *bump* that rewrites an easyconfig written for one toolchain generation for the next.
 Neither task invokes =eb=.
 Both generate files that a human then builds.

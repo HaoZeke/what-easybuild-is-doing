@@ -119,6 +119,9 @@ The default value of =extract_sources= is true.
 The =cleanup_data_sources= deletes fetched archives after install.
 From 5.4.0, Dataset can store extracted files in a SHA256
 content-addressed object store and reuse a readable existing object.
+Reuse is =is_readable()= on that hash path. It does not re-hash the
+stored object. A writable sibling under the object-storage root is
+trusted as if EasyBuild wrote it.
 The =object_storage_ignore_dirs= lists directories to keep out of that
 store. The =.= denotes the whole installdir.
 Two path variables keep data off the software prefix.

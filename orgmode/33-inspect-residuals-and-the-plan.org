@@ -168,7 +168,7 @@ typed residual (and which severity), or a claim.
 
 * Plan is inspect plus Resolvo, and it needs a policy
 The command defining =resolves= is =package plan=.
-The current CLI requires =--stack-policy=. eb-stack ports a recipe and bumps one's example left it out.
+The current CLI requires =--stack-policy=. The port listing on [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] already passes it.
 The live form from the tutorial is:
 #+begin_example
 eb-stack package plan \

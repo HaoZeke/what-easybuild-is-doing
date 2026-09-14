@@ -20,6 +20,10 @@ fi
 shopt -s nullglob
 if command -v d2 >/dev/null; then
   for f in "$dir"/*.d2; do
+    stem="$(basename "$f" .d2)"
+    case "$stem" in
+      rail-*|00-tutorial-read-an-easyconfig-2|recipe-read-four|21-min-fields) continue ;;
+    esac
     d2 --pad 20 --theme 0 --dark-theme 200 "$f" "${f%.d2}.svg"
   done
 else

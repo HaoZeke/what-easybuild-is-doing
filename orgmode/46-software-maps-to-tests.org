@@ -73,14 +73,13 @@ Each class lives in [[https://github.com/EESSI/test-suite][EESSI/test-suite]] un
 The mapping connects a module name to those classes.
 * CSCS: config, checks, CI
 The CSCS suite =eth-cscs/cscs-reframe-tests= provides the layout cited in the official ReFrame README, which is the most complete public tree.
-Three directories each execute a distinct job.
+The three directories that run a job are =config/=, =checks/=, and =ci/=.
+The tree also carries =containers/=, =deprecated_checks/=, =hpctestlib/=, =reframe_reporter/=, and =utility/=.
 #+begin_example
 cscs-reframe-tests/
 ├── config/ the machine
 ├── checks/ the tests
-├── ci/ how the site invokes them
-├── uenv_checks/ the same idea for uenv stacks
-└── portable_tests.md
+└── ci/ nightly --mode daily_production
 #+end_example
 List all information the suite knows about on a CSCS system.
 #+begin_example
@@ -91,7 +90,7 @@ reframe -C cscs-reframe-tests/config/cscs.py \
 =-c= denotes the check path.
 =-R= causes recursion.
 =-l= causes listing.
-The listing command is the inventory. The nightly job in [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]] executes the same configuration and check path.
+The listing command is the inventory. The nightly job in [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]] runs =--mode daily_production=.
 A site copying this layout does not need EESSI.
 The site must have a configuration file describing its partitions, a directory of tests that do not name those partitions, and a nightly job that runs that pair.
 =portable_tests.md= in that tree defines the written rule for what a check may assume.

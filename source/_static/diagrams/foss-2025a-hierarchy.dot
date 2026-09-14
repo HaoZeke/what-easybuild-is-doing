@@ -10,5 +10,9 @@ digraph foss_2025a {
   gfbf    [label="gfbf\n2025a"];
   gompi   [label="gompi\n2025a"];
   foss    [label="foss\n2025a"];
-  system -> gcccore -> gcc -> gfbf -> gompi -> foss;
+  system -> gcccore -> gcc;
+  gcc -> gfbf;
+  gcc -> gompi;
+  gfbf -> foss;
+  gompi -> foss;
 }

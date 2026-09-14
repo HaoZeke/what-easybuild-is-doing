@@ -34,6 +34,9 @@
 
    The write-a-test journey names the four kinds, then a ReFrame class that runs.
 #+end_export
-Four kinds of testing.
-A ReFrame class runs an installed module.
-[[file:23-testing.org][Testing and the four things it can mean]] [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]] [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]] [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]] [[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]] [[file:46-software-maps-to-tests.org][Software maps to tests]]
+1. Name the kind: [[file:23-testing.org][Testing and the four things it can mean]].
+2. Write the class: [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]].
+3. Walk the pipeline: [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]].
+4. Put the machine in the config: [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]].
+5. Leave the machine out of the test: [[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]].
+6. Map software to those tests: [[file:46-software-maps-to-tests.org][Software maps to tests]].
