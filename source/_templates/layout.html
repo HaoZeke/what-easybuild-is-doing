@@ -72,6 +72,12 @@
         skip.textContent = "Skip to content";
         document.body.insertBefore(skip, document.body.firstChild);
       }
+      document.querySelectorAll("article.yue a.headerlink").forEach(function (a) {
+        var parent = a.parentElement;
+        if (!parent) return;
+        var name = parent.textContent.replace(a.textContent, "").trim();
+        if (name) a.setAttribute("aria-label", "Permalink to " + name);
+      });
     });
   </script>
 {% endblock %}
