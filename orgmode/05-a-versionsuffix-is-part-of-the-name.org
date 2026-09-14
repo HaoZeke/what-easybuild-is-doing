@@ -131,7 +131,7 @@ The convention states that a derived suffix names the thing it was derived from.
 The convention is also all there is.
 * What happens when the name stops being true
 A label without enforcement can become stale.
-This staleness is where the parameter incurs real time cost.
+A suffix that no longer matches the CUDA the module declares is a rebuild.
 The 25.11 tarball is a =cuda_multi= build.
 It includes both CUDA 12.9 and CUDA 13.0 in a single archive.
 It is placed in versioned directories alongside unversioned entries.

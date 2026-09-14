@@ -171,7 +171,8 @@ The two break in different ways.
 
 The first row contains everything a checksum protects.
 The other three rows are not the checksum's responsibility.
-=exts_list= applies the same rows once per extension.
+=exts_list= (the list of Python or R extensions the easyconfig
+installs after the parent) applies the same rows once per extension.
 
 #+begin_keypoints
 - A checksum names bytes, not a version and not an architecture.

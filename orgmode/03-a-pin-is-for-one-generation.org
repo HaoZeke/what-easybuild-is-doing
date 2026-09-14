@@ -114,7 +114,7 @@ The target generation's available modules are the candidates.
 Look up what that generation provides. Do not carry the old numbers
 across as floors a solver must satisfy.
 * Where the real lower bound lives
-Dropping the floor is a fallback.
+Look up the target generation. That is not a fallback. It is the job.
 The answer lies elsewhere.
 If the minimum is needed, it is written down, just not in the easyconfig.
 

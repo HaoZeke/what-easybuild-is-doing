@@ -1,6 +1,6 @@
 """Ask: retrieval over the book, built at build time and run in the browser.
 
-The design is snelnext's, reduced to what a static site can honestly do.
+Ask ranks this book's pages plus ingested EasyBuild, EESSI, and eb-stack trees.
 There, retrieval is local and a model writes the answer; the split is stated
 out loud in its own documentation: "Retrieval is local and needs nothing. The
 answer needs a model, and you choose which."
