@@ -148,3 +148,19 @@ epub_exclude_files = [
 ]
 # eb-transcript.css is deliberately absent from that list. A transcript is
 # static text and renders in the EPUB, so its stylesheet belongs there.
+
+
+def _uncloak_mailto(app, doctree, fromdocname):
+    """Spack specs use name@version. Docutils cloaks those as mailto."""
+    from docutils import nodes
+
+    for node in list(doctree.findall(nodes.reference)):
+        uri = node.get("refuri", "")
+        if not uri.startswith("mailto:"):
+            continue
+        text = node.astext()
+        node.replace_self(nodes.literal(text, text))
+
+
+def setup(app):
+    app.connect("doctree-resolved", _uncloak_mailto)
