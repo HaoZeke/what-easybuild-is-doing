@@ -414,7 +414,9 @@
         if (!el.input.value.trim()) {
           el.note.textContent =
             pack.chunks.length +
-            " passages (this book, EasyBuild, EESSI, eb-stack). Retrieval runs here; nothing is sent anywhere.";
+            " passages (" +
+            originList(pack) +
+            "). Retrieval runs here; nothing is sent anywhere.";
         }
       })
       .catch(function () {
@@ -427,6 +429,20 @@
   function hide() {
     el.overlay.hidden = true;
     document.documentElement.classList.remove("eb-ask-open");
+  }
+
+  function originList(p) {
+    var seen = {};
+    var out = [];
+    var chunks = (p && p.chunks) || [];
+    for (var i = 0; i < chunks.length; i++) {
+      var o = chunks[i].origin;
+      if (o && !seen[o]) {
+        seen[o] = 1;
+        out.push(o);
+      }
+    }
+    return out.length ? out.join(", ") : "this pack";
   }
 
   function kindBadge(chunk) {

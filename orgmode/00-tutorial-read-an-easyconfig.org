@@ -141,7 +141,10 @@ Change =2025a= to =2024a=, then to =1999z=.
 Ask for a chain the page does not know. An unknown chain is refused.
 A hierarchy reflects what is installed rather than the string.
 * Where to go next
-- Next: [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
+- [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]
+- [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]
+- [[file:04-the-robot.org][The robot]]
+- [[file:journey-first-recipe.org][First recipe]]
 
 #+begin_keypoints
 - The file is Python. EasyBuild evaluates it in a prepared namespace.

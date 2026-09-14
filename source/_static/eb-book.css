@@ -966,6 +966,16 @@ article.yue figure.eb-diagram img {
   height: auto;
 }
 
+@media (max-width: 40rem) {
+  article.yue figure.eb-diagram,
+  article.yue figure.eb-diagram img {
+    max-height: 11rem;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 article.yue .eb-upstream {
   font-family: var(--eb-sans);
   font-size: 0.92rem;
