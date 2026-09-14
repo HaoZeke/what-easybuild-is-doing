@@ -40,7 +40,7 @@ The tool must not perform dependency resolution.
 * Python
 =PythonPackage= is the easyblock.
 Its defaults follow the policy.
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "PythonPackage defaults, abridged from thirty-one"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-10, EasyBuild 5.3.1" :caption "PythonPackage defaults, abridged from thirty-one"
 $ python3 -c 'from easybuild.easyblocks.generic.pythonpackage \
 > import PythonPackage
 > ex = PythonPackage.extra_options()
@@ -78,7 +78,7 @@ The =PerlModule= and =PerlBundle= follow the same pattern.
 The =JuliaPackage= and =JuliaBundle= are analogous.
 The =GoPackage= conforms as well.
 Rust is the exception; its defaults explicitly state the policy.
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The Cargo easyblock, in full"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-10, EasyBuild 5.3.1" :caption "The Cargo easyblock, in full"
 $ python3 -c 'from easybuild.easyblocks.generic.cargo import Cargo
 > ex = Cargo.extra_options()
 > for k in sorted(ex): print(" ", k, "=", repr(ex[k][0])[:30])'

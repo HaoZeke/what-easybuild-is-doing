@@ -37,7 +37,7 @@
 #+end_objectives
 The framework outputs the list.
 Its behavior remains unchanged across releases of the same major version:
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The whole sequence, from the framework itself"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-10, EasyBuild 5.3.1" :caption "The whole sequence, from the framework itself"
 $ python3 -c 'from easybuild.framework.easyblock import EasyBlock
 > for s in EasyBlock.get_steps(): print(s[0])'
 fetch

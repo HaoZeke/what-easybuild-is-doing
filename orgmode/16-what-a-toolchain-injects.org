@@ -64,7 +64,7 @@ toolchainopts = {'usempi': True, 'openmp': True, 'pic': True}
 Each key sets the values that the toolchain object places into those variables.
 =foss= in EasyBuild 5.3 accepts roughly thirty entries.
 The list is:
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, EasyBuild 5.3.1" :caption "The options a foss build accepts, abridged"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-10, EasyBuild 5.3.1" :caption "The options a foss build accepts, abridged"
 $ eb --avail-toolchain-opts=foss
 Available options for foss toolchain:
  cstd: Specify C standard (default: None)

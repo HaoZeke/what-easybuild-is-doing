@@ -31,7 +31,7 @@
 #+end_objectives
 EasyBuild does not require administrator rights.
 Use a directory owned by the current user.
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-09, EasyBuild 5.3.1" :caption "One environment variable, eight paths"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-09, EasyBuild 5.3.1" :caption "One environment variable, eight paths"
 $ export EASYBUILD_PREFIX=$HOME/eb-demo
 $ eb --show-config
 #

@@ -44,7 +44,7 @@ During =prepare=, EasyBuild loads the toolchain module and the dependency module
 During =prepare=, EasyBuild sets the compiler variables itself.
 The final step often surprises users.
 It is measured rather than asserted.
-#+begin_src ebtranscript :source "SURF Snellius, int4 interactive node, 2026-09-10, 2025 module environment" :caption "What a toolchain module does and does not export"
+#+begin_src ebtranscript :source "SURF Snellius, 2026-09-10, 2025 module environment" :caption "What a toolchain module does and does not export"
 $ module purge && module load 2025 foss/2025a
 $ echo "CC=[$CC] CFLAGS=[$CFLAGS] LIBBLAS=[$LIBBLAS]"
 CC=[] CFLAGS=[] LIBBLAS=[]
