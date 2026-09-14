@@ -7,7 +7,6 @@
 
    12-eb-stack-updater-and-generator
    33-inspect-residuals-and-the-plan
-   21-writing-one-from-nothing
    48-seissol-from-spack-to-a-pr
 #+end_export
 

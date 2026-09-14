@@ -318,7 +318,8 @@ that it needs HDF5 and a C++17 compiler.
  ~dependencies = [('HDF5', '1.14.6')]~, which the robot will resolve
  against the toolchain from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]]. A
  ~sanity_check_paths~ naming the binary the user will run, with both
- keys present. ~moduleclass~ the title. Saved as
+ keys present. Set ~moduleclass = 'tools'~ so =--new-pr= titles
+ as ={tools}[foss/2025a] thing v2.4=. Saved as
  [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/t/thing/thing-2.4-foss-2025a.eb][thing-2.4-foss-2025a.eb]]
  by constructing that filename.
 

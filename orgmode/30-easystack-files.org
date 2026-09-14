@@ -310,7 +310,8 @@ naming convention.
 - EESSI's path is
  =easystacks/software.eessi.io/<ver>/eessi-<ver>-eb-<ebver>-<tc>.yml=.
  The EasyBuild version in the name is the module the bot loads.
-- =from-commit= (or =from-pr=) is how an unmerged easyconfig is
+- =from-commit= (or =from-pr=) is how an easyconfig that is not yet
+ the default robot path is built. After a merge the pin can drop.
  built. Deployment into the repository waits on the EasyBuild
  merge.
 - A rebuild lives under =rebuilds/= and is the only case that

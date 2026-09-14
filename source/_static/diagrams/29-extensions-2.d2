@@ -1,8 +1,4 @@
 direction: right
-n0: "name"
-n1: "version"
-n2: "sources"
-n3: "checksums"
-n0 -> n1
-n1 -> n2
-n2 -> n3
+parent: "parent easyconfig"
+entry: "exts_list row"
+parent -> entry: inherits toolchain\nand sources policy

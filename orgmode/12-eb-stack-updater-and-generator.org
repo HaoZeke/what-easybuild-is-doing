@@ -301,8 +301,8 @@ The full sequence of inspect, bump, site generation, and upstream PR appears in 
 - A bump reads an easyconfig and writes the same software on a
  new toolchain generation. Application version, sources and
  patches stay; every pin that lives on the toolchain moves.
-- Ranges become pins. A Spack =eigen@3.4:= is =Eigen-3.4.0= on
- that generation, or a residual if the robot has no candidate.
+- A Spack =eigen@3.4:= is a lower bound. The robot either finds a
+ pin this generation ships or the range stays a residual.
 - Nothing in inspect, plan or bump compiles the package.
  =campaign run= calls =eb=.
 #+end_keypoints

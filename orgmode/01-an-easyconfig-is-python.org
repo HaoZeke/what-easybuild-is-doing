@@ -7,13 +7,13 @@
 
    The file is Python. =SYSTEM= is the empty toolchain, already in the evaluation namespace. The easyblock class is a string transform of name.
 #+end_export
+An easyconfig is a Python file EasyBuild evaluates.
 
 #+begin_questions
 - Why is one name quoted and the other not?
 - When is =%(version)s= substituted: while the file runs, or after?
 - What is an easyconfig without an =easyblock= line claiming?
 #+end_questions
-An easyconfig is a Python file EasyBuild evaluates.
 
 #+begin_objectives
 1. Say why =SYSTEM= carries no quotes and ='tools'= does.

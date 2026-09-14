@@ -343,12 +343,14 @@ Talks, read 2026-09-11:
  =/etc/profile.d= Lmod setup; =EESSI_MODULE_STICKY=,
  =EESSI_MODULE_FAMILY_NAME=.
 - Lara Peeters and Kenneth Hoste, *Building software on top of
- EESSI + contributing*, 2026-05-04: =EESSI_*_INSTALL= table,
- =eb --show-config= under =EESSI-extend=, =buildenv=.
-- *Site-Specific Tweaks with host_injections*, EESSI Happy Hour,
- 2026-06-08: four-slide pointer at the variant symlink and
- ABI-compatible MPI. The webinar is the page; this is the
- postcard.
+ EESSI + contributing*, 2026-05-04
+ ([[https://multixscale.github.io/][MultiXscale]] talk):
+ =EESSI_*_INSTALL= table, =eb --show-config= under
+ =EESSI-extend=, =buildenv=.
+- *Site-Specific Tweaks with host_injections*,
+ [[https://www.eessi.io/docs/][EESSI]] Happy Hour, 2026-06-08:
+ four-slide pointer at the variant symlink and ABI-compatible
+ MPI. The webinar is the page; this is the postcard.
 
 Docs:
 [[https://www.eessi.io/docs/site_specific_config/host_injections/][host

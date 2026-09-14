@@ -296,10 +296,10 @@ the catalog is what a thin first generation looks like from the
 outside. The root catalog's =/init/modules/EESSI/.modulerc.lua= is
 consistent with it: it makes 2023.06 the default and *hides* 2026.06.
 
-The 165 is itself the shape of the stack: five aarch64 targets, four of
-them with five NVIDIA accelerator subdirectories each, and ten x86_64
-targets with thirteen accelerator subdirectories each. Five plus twenty
-plus a hundred and thirty.
+The 165 is a catalog-walk count, not the official GPU-targets table.
+That table ships five NVIDIA compute capabilities (7.0, 8.0, 9.0, 10.0,
+12.0) on four aarch64 plus ten x86_64 hosts. Extra catalog directories
+are host/accelerator combinations, not thirteen extra CCs.
 
 x86_64 targets in 2025.06: =generic=, =amd/zen2=, =amd/zen3=,
 =amd/zen4=, =amd/zen5=, =intel/haswell=, =intel/skylake_avx512=,
