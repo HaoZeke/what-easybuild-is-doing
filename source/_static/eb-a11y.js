@@ -5,6 +5,14 @@
       q.setAttribute("aria-label", "Search the book");
     }
   }
+  function permalinkNames() {
+    document.querySelectorAll("article.yue a.headerlink").forEach(function (a) {
+      var parent = a.parentElement;
+      if (!parent) return;
+      var name = parent.textContent.replace(a.textContent, "").trim();
+      if (name) a.setAttribute("aria-label", "Permalink to " + name);
+    });
+  }
   function skipLink() {
     if (document.querySelector("a.eb-skip")) return;
     var main = document.querySelector("main.sy-main") || document.querySelector("article.yue");

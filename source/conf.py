@@ -77,6 +77,7 @@ html_js_files = [
     ("https://hypothes.is/embed.js", {"async": "async"}),
 ]
 html_title = project
+html_use_index = False
 html_copy_source = False
 html_show_sourcelink = False
 
