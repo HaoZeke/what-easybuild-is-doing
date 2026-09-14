@@ -141,7 +141,7 @@ Read [[file:36-campaign-findings.org][A campaign finding is a typed failure, not
 
 Read [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]] when handling ModuleRC, wrapping, and =-Dr=.
 
-Read [[file:38-locks-bwrap-python-datasets.org][Four EasyBuild 5 pages the earlier pages skipped]] when installing locks, bwrap and datasets.
+Read [[file:38-locks-bwrap-python-datasets.org][locks, bwrap, Python, and datasets]] when installing those four surfaces.
 
 Read [[file:27-four-things-that-actually-happened.org][Four things that actually happened]] when examining the failures in full, with the diagnosis.
 

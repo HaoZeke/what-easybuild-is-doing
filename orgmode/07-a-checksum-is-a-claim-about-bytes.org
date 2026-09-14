@@ -88,7 +88,7 @@ The archive did not contain the directory the build expected.
 #+end_quote
 Both statements hold simultaneously.
 Verification succeeded at full strength on exactly the right bytes.
-The build then failed on =start_dir=.
+The build then failed on =start_dir=: the directory named in the file was not in the unpacked archive.
 #+ATTR_EB: :id EB-Checksum-1 :title One architecture, one missing key
 #+begin_exercise
 A site adds riscv64 support to the code-server easyconfig. The build

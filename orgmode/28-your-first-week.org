@@ -117,8 +117,8 @@ could have replaced?
 
 Neither is replaceable by a dry run, and that is the point: =eb -x= never
 extracts anything, so a parameter that names a directory the archive does
-not contain looks fine under it. The archive listing is the only thing
-that is the measurement.
+not contain looks fine under it. The archive listing is what is in
+the tarball.
 
 If =--force= or a rebuild was the first move, that is the reflex worth
 losing: nothing about this failure is stale state.

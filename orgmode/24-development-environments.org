@@ -207,7 +207,7 @@ That outcome is the correct answer, not a failure.
 The system toolchain loads no modules.
 The system toolchain sets no compiler variables.
 Running on a =foss= easyconfig fills both sections.
-The two comments indicate that the tool declines to write an empty file.
+The two comments are empty sections in the file that was written. A second run with the same path refuses to overwrite.
 The tool calls it an environment.
 #+ATTR_EB: :id EB-DevEnv-2 :title Archaeology on one install
 #+begin_exercise

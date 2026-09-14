@@ -172,7 +172,7 @@ The solver selects =Eigen-3.4.0= from the robot tree for that generation.
 A =def patch(self):= that executes sed is not a file.
 It becomes a =judgment= residual.
 The emitted =.eb= does not claim that the sed occurred.
-Inspect exists.
+Inspect writes the work queue. The campaign then runs it.
 The queue is visible first.
 Plan then consumes the robot tree only for items already decided.
 =package inspect= uses the same parsers without performing the solve.

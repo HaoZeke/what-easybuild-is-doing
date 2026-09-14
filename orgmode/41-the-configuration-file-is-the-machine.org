@@ -109,7 +109,7 @@ site_configuration = {
  'logging': common_logging_config(),
 }
 #+end_src
-=hostnames = ['*']= matches any host.
+=hostnames = ['.*']= matches any host. A lone =*= is not a regex and ReFrame raises ConfigError.
 A shared configuration used from several login nodes requires this.
 A tighter list stops ReFrame from loading this system on a machine it does not describe.
 =stagedir= is the shared filesystem.

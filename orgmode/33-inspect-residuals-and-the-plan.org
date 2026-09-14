@@ -99,7 +99,7 @@ Anything that needs a human or a later stage is a typed residual instead.
 =id= R2 =stage= parse =category= imperative-patch =severity= judgment =summary= Spack def patch(self) applies sed at build time; no patch file is beside the .eb.
 
 * Residual
-=id= R3 =stage= parse =category= product-flags =severity= judgment =summary= conda product flags have no EasyBuild parameter.
+=id= R3 =stage= parse =category= split-outputs =severity= judgment =summary= rattler-build outputs splits packages; EasyBuild has one prefix per easyconfig.
 
 * Residual
 =id= R4 =stage= parse =category= generation-pin =severity= judgment =summary= Foreign pin names a generation this site does not ship.

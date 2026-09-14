@@ -196,7 +196,7 @@ well.
 * A worked case
 Take the code-server easyconfig from [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
 The easyconfig has no dependencies.
-The easyconfig is a poor example of pinning.
+The easyconfig pins a version with no dependencies. The pin is still a pin.
 The easyconfig is a perfect example of the *other* half of this problem: what a generation contains. code-server 4.130.0 is a real, released, upstream easyconfig.
 EasyBuild's own 5.2.0 and 5.2.1 releases carried these versions.
 #+begin_example

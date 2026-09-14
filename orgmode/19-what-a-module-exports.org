@@ -198,10 +198,9 @@ see about your package.
 while anything else still depends on it. If nothing does and it stays,
 that is worth investigating; if something does, Lmod is doing its job.
 
-3 is =modextravars = {'MYPKG_DATA': '%(installdir)s/share/mydata'}=. The
-wrong way is =modluafooter= with a hand-written =setenv=, which works
-and ties the easyconfig to Lua, so it breaks for a site using Tcl
-modules.
+3: =module show= prints =EBROOTQMCPACK= and the =PATH= prepend.
+It does not print =LD_LIBRARY_PATH= unless the easyblock also
+prepended that. =EBROOTQMCPACK= is the install prefix.
 
 4 will set =$CC= for a user who loads the module, and will do nothing
 for a build. A build's environment is constructed in =prepare=, as
