@@ -76,7 +76,7 @@ class EESSI_MPI4PY(rfm.RunOnlyRegressionTest, EESSI_Mixin):
     scale = parameter(SCALES.keys())
     n_iterations = variable(int, value=1000)
     executable = 'python3'
-    executable_opts = ['mpi4py_reduce.py']
+    executable_opts = ['mpi4py_reduce.py', f'{self.n_iterations}']
     time_limit = '5m00s'
     readonly_files = ['mpi4py_reduce.py']
 

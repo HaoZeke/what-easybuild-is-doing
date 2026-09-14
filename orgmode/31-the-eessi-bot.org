@@ -75,7 +75,7 @@ GitHub cannot reach a login node.
 =smee.io= (or site‑hosted smee) channel provides webhook URL for GitHub App.
 Smee client on login node forwards events to =127.0.0.1:3000=.
 #+begin_example
-singularity run smee-client_latest.sif --url http://smee.example/CHANNEL
+apptainer run docker://ghcr.io/eessi/smee-client:latest --url http://smee.example/CHANNEL
 # Forwarding ... to http://127.0.0.1:3000/
 #+end_example
 The *event handler* listens on that port.

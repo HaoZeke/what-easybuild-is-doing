@@ -80,7 +80,7 @@ If upstream re‑tags a release and the archive changes, the checksum fails.
 Suppose upstream publishes a *different* archive also labeled 4.130.0 and a checksum is computed for that archive.
 The checksum then passes indefinitely and reports nothing.
 It cannot indicate that the archive matches the layout expected by your easyconfig.
-This mirrors the failure described in An easyconfig is Python.
+This mirrors the failure in [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]: the name said 4.130.0, the archive was something else.
 The two claims merit side‑by‑side comparison.
 #+begin_quote
 The checksum verified against the archive.

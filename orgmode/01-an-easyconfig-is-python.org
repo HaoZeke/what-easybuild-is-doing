@@ -5,7 +5,7 @@
    :alt: file enters a Python namespace; SYSTEM is a dict; name becomes an easyblock class
    :class: eb-diagram
 
-   The file is Python. SYSTEM is already in scope. The easyblock class is a string transform of name.
+   The file is Python. =SYSTEM= is the empty toolchain, already in the evaluation namespace. The easyblock class is a string transform of name.
 #+end_export
 
 #+begin_questions
@@ -39,7 +39,7 @@ The installed module name is a railroad, not a sentence.
    :alt: evaluation namespace, templates after eval, derived easyblock
    :class: eb-diagram
 
-   SYSTEM is already in the namespace. Templates resolve after the file runs. A missing easyblock line still names a class.
+   =SYSTEM= is the empty toolchain, already in the namespace. Templates resolve after the file runs. A missing easyblock line still names a class.
 #+end_export
 #+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'
@@ -88,7 +88,7 @@ The other is a literal.
 Running the sample at the top returns a model.
 =toolchain= comes out as a structure with a name and a version.
 The text =SYSTEM= is gone by then.
-The last two lines of that output should be examined.
+The last two lines of that output are the toolchain name and the derived easyblock class.
 The file does not name an easyblock.
 The model reports the EasyBuild name that will be derived anyway.
 That forms the rest of this page.

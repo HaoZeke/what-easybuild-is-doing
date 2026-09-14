@@ -124,9 +124,8 @@ both pass.
  arrays; the bandwidth is outside the threshold.
 2. Sanity fails. Performance is not the headline; the
  =FAILURE INFO= names =sanity=. A site that only watches
- perflogs will not see this run
- the artifacts in the stage directory and does not treat the
- =Copy:= line as a result.
+ perflogs will not see this run. The artifacts stay in the
+ stage directory. The =Copy:= line is not a result.
 3. Both pass. With no reference there is nothing to miss. The
  number is logged. That is the baseline run.
 #+end_solution

@@ -91,11 +91,11 @@ Setting =CVMFS_QUOTA_LIMIT=10000= raises the cache from the default 4000 megabyt
 The stack is then one =module use= away.
 #+begin_example
 module use /cvmfs/software.eessi.io/init/modules
-module load EESSI/2023.06
+module load EESSI/2025.06
 #+end_example
 #+begin_example
 unset MODULEPATH
-source /cvmfs/software.eessi.io/versions/2023.06/init/lmod/bash
+source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
 #+end_example
 * Route two: no root
 Two mechanisms exist for two different reasons.

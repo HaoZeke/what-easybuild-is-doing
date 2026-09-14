@@ -108,14 +108,11 @@ The version provided by =foss-2024a= is looked up and inserted.
 Twenty minutes later the easyconfig builds.
 The recipe does not record which numbers were requirements and which were incidental.
 The right shape is different.
-Treat the old easyconfig's versions as *floors*.
-*Floors* are evidence about what the package was once seen to work with.
-The target generation's available modules are the *candidates*.
-Something must choose a set of *candidates* that satisfies the *floors* and remains internally consistent.
-That is a solver's job, not a text editor's.
-*Floors* only hold within one generation.
-When moving to a new generation, the *floors* must be dropped.
-Something must decide what the target generation provides instead.
+The old easyconfig's versions are evidence about what the package
+was once seen to work with, in that generation.
+The target generation's available modules are the candidates.
+Look up what that generation provides. Do not carry the old numbers
+across as floors a solver must satisfy.
 * Where the real lower bound lives
 Dropping the floor is a fallback.
 The answer lies elsewhere.

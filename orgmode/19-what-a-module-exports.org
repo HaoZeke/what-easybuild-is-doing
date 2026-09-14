@@ -79,7 +79,7 @@ prepend_path("PATH", pathJoin(root, "bin"))
 #+end_src
 Nobody wrote that file.
 Every line came from somewhere in the easyconfig.
-Being able to point at the source of each is most of what this page is for.
+Being able to read each export after =module load= is most of what this page is for.
 =help= and =whatis= come from =description= and =homepage=.
 Those parameters exist.
 A one-line description is worth writing properly.

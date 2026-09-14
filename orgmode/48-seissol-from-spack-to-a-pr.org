@@ -63,7 +63,7 @@ Nothing in that sentence compiled the package.
 * The parent is the old easyconfig
 =package inspect --format spack= on Spack's =seissol= recipe writes a plan and an SBOM.
 It does not write a =.eb=.
-The residuals are tight pins that Spack states and that SeisSol 1.3.2 CMake does not: =yaml-cpp@0.6.2=, =eigen@3.4.0= exact, =netcdf-c@:4.8.1=.
+The residuals are tight pins that Spack states and that SeisSol 1.3.2 CMake does not: =yaml-cpp@0.6.2=, =eigen@3.4.0= exact, =netcdf-c@4.6:4.8.1=.
 The 1.1.4 easyconfig already used netCDF 4.9.2, above that Spack upper bound.
 CMake for 1.3.2 asks for Eigen 3.4 or newer and handles yaml-cpp 0.8.
 Those inspect residuals are Spack conservatism, not SeisSol bounds.

@@ -163,8 +163,8 @@ The live =eessi-2026.06-eb-5.4.0-2026.1.yml= opens with OpenMPI and =foss-2026.1
 A colleague has a working local install of [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/o/Octave/Octave-11.1.0-foss-2025b.eb][Octave-11.1.0-foss-2025b.eb]]
 on EESSI 2025.06, built with EasyBuild 5.3.0. The easyconfig is
 already in that EasyBuild release. A second package,
-[[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/scikit/scikit-bio-0.7.2-foss-2025b.eb][scikit-bio-0.7.2-foss-2025b.eb]], exists only as EasyBuild
-easyconfigs pull request 25908, commit
+[[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/scikit-bio/scikit-bio-0.7.2-foss-2025b.eb][scikit-bio-0.7.2-foss-2025b.eb]], landed on develop after
+[[https://github.com/easybuilders/easybuild-easyconfigs/pull/25908][pull request 25908]] (merged 2026-05-14), commit
 =d04690454404aee9d12fc57858c79382adf64d8b=.
 
 1. Which easystack file receives each line?
@@ -189,9 +189,8 @@ easyconfigs pull request 25908, commit
  from-commit: d04690454404aee9d12fc57858c79382adf64d8b
  #+end_example
 
-3. Octave can be deployed as soon as the bot has green artefacts on
-every supported CPU target. scikit-bio waits on pull request 25908 being merged, even if the bot has already built it from that commit.
-That is the webinar's rule, not a courtesy.
+3. Both can be deployed as soon as the bot has green artefacts on
+every supported CPU target. The easyconfig is already on develop.
 #+end_solution
 #+end_exercise
 
