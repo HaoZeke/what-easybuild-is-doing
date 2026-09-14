@@ -869,6 +869,28 @@ main.sy-main {
 }
 
 @media (max-width: 767.98px) {
+  /* The chrome, which does not collapse on its own. Measured at a 390px
+     viewport: main.sy-main takes 2rem each side and the theme's own px-6
+     another 24px, so 112px of the screen is padding and the reading column is
+     278px. Trimming both takes it to 350px, which is 26% more text per line
+     and 26% less scrolling inside every code block. The grid below is not at
+     fault; its gutters are minmax(0, ..) and already go to zero here. */
+  main.sy-main {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  main.sy-main div.relative {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  /* A recording already sets its text smaller than body text, so on a phone
+     the indent costs more than the mark is worth. The rule stays. */
+  .eb-transcript {
+    padding-left: 0.6rem;
+  }
+
   .sy-head-inner {
     flex-wrap: wrap;
   }
