@@ -150,10 +150,12 @@ A job starts only when the same comment lacks =accel== on a site with a GPU‑on
  others filter the instruction out. That is the whole point of
  =inst:=.
 
-2. A zen4 node with an NVIDIA cc90 GPU. The prefix is the zen4
- *plus* the NVIDIA cc90 accelerator subdirectory. The job is a GPU
- build. It may still land on a CPU-only zen4 node if the instance
- has one that matches =on:=.
+2. The prefix is zen4 plus the NVIDIA cc90 accelerator
+ subdirectory, because that is what =for:= names. The allocated
+ node is whatever matches =on:arch=zen4= only. =accel== is not
+ on =on:=, so a GPU-declared zen4 type is not allocated. A
+ CPU-only zen4 node is used if the instance has one; otherwise
+ nothing starts.
 
 3. =on:= is matched against the instance's configured node types, so
  a suffix is enough. =for:= has no such reference list; the

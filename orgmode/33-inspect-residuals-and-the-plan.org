@@ -94,6 +94,9 @@ Notes are diagnostics.
 Planning never greps them for the word "residual".
 Anything that needs a human or a later stage is a typed residual instead.
 * Residuals are the work queue
+The cards below are examples from both formats, not one inspect of
+the eOn =recipe.yaml=. A conda-forge inspect of that fixture does
+not emit R2 or R4.
 * Residual
 =id= R1 =stage= parse =category= missing-checksum =severity= blocking =summary= Version bump has no SHA-256 and --source-checksum was not passed.
 
