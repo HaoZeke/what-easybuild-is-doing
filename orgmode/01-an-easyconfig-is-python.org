@@ -5,7 +5,7 @@
    :alt: file enters a Python namespace; SYSTEM is a dict; name becomes an easyblock class
    :class: eb-diagram
 
-   The file is Python. =SYSTEM= is the empty toolchain, already in the evaluation namespace. The easyblock class is a string transform of name.
+   The file is Python. EasyBuild evaluates it. The name becomes an easyblock class.
 #+end_export
 An easyconfig is a Python file EasyBuild evaluates.
 

@@ -15,6 +15,8 @@ The stable id can be referenced aloud, in messages, or in shared documents durin
 #+begin_export rst
 .. exercise-index::
 #+end_export
+The catalog names every exercise by id, including ``EB-Pin-mcq-1``,
+``EB-Robot-1``, ``EB-Python-1``, ``EB-Bot-1``.
 * The catalog
 
 - [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]]

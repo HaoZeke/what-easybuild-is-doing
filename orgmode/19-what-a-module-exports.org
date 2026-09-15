@@ -11,13 +11,6 @@ produced the modulefile is on the other pages; this page is the load.
    The modulefile is the deliverable. What it prepends and sets is what a user actually receives.
 #+end_export
 #+begin_export rst
-.. figure:: _static/diagrams/19-what-a-module-exports.svg
-   :alt: modulefile to PATH and setenv
-   :class: eb-diagram
-
-   What a module exports is what a user gets. The prefix is not the interface.
-#+end_export
-#+begin_export rst
 .. figure:: _static/diagrams/19-load-exports.svg
    :alt: load prepends PATH, sets env, and depends_on other modules
    :class: eb-diagram
