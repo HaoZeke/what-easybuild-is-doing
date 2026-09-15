@@ -256,8 +256,7 @@ A second =eblocalinstall= then completed PSpaMM, easi 1.7.0, and SeisSol 1.3.2.
 The recipe stores it as =local_host_arch=, with =local_order= and =local_equations=.
 =local_binary= and =configopts= are formatted from those three names.
 A site that retargets the arch edits one assignment.
-The binary runs on the login node.
-It is not a zen-tuned binary.
+The binary runs on the login node and is not zen-tuned.
 #+ATTR_EB: :id EB-SeisSol-2 :title Which claim failed
 #+begin_exercise
 Three failures. For each, name the claim that was false, and the
@@ -289,7 +288,7 @@ The overlay is four files on the 2025 generation.
 - ASAGI 1.0, easi 1.7.0, PSpaMM 0.3.1 on =gfbf-2025a=, SeisSol 1.3.2.
 - The SeisSol checksum is the inject digest of the recursive
   =git_config= archive. It lives in the package-config as
-  =source_checksums=. It is not a Spack hash and not a working-tree
+  =source_checksums=. That digest is neither a Spack hash nor a working-tree
   hash.
 - =eb --check-contrib= passed style and SHA256 on those four files.
 - =eb --new-pr= opened
@@ -298,7 +297,7 @@ The overlay is four files on the 2025 generation.
   and the Lua 5.4 bound on easi 1.7.0.
 - =resolves= is the SAT of the 2025a robot plus the overlay.
 - =builds= is the site wrapper install of those four files.
-- A login-node =--help= is the sanity the recipe declared. It is not a
+- A login-node =--help= is the sanity the recipe declared, not a
   TPV run.
 - =eb --from-pr 26851 --robot --force= rebuilt the same four files in
   14 minutes 49 seconds. All results were SUCCESS. That is the report

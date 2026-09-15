@@ -66,8 +66,7 @@ It defines the =generic= system, the =default= partition, the =builtin= environm
 A site file *adds* to that; it does not replace it.
 =reframe -l= with no =-C= lists tests against =generic:default+builtin=.
 STREAM on the tutorial page runs against =generic:default+builtin=
-with no site file. A site file *adds* systems. It is not required
-to list the class.
+with no site file. A site file *adds* systems. The class does not have to be listed.
 * A file small enough to read
 The documented skeleton of EESSI is reduced to the keys required for this page.
 #+begin_src python

@@ -21,8 +21,7 @@
 3. Recognise a =_verify_toolchain= failure as belonging to the toolchain
  module rather than to your easyconfig.
 #+end_objectives
-The line appears to be a sticker.
-It is not.
+The line looks like a sticker and is not one.
 #+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'
 version = '4.130.0'
@@ -134,7 +133,7 @@ in the =GCCcore= one.
 
 Your colleague is reading =module avail=, which lists what is installed.
 The robot is asking a different question: what is installed *and in this
-package's hierarchy*. The module is there. It is not a candidate. The
+package's hierarchy*. The module is there, not a candidate. The
 error says it cannot be found
 questions.
 #+end_solution

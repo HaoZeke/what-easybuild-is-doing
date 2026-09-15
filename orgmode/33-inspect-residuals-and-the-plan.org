@@ -237,7 +237,7 @@ eb-stack package plan \
 2. A stack-policy TOML, for example
  =examples/stacks/eon-foss-2026.1.toml=. A =preferred= pin names
  the candidate Resolvo tries first and records =fallback = true=
- if it cannot keep it. It is not a lock until the solve writes
+ if it cannot keep it. The pin is not a lock until the solve writes
  =locks/default.lock.json=.
 
 3. At least one =locks/<profile>.lock.json= and one emitted

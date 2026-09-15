@@ -104,8 +104,8 @@ Three situations. Name the mechanism, and say what a user
  module and no wrap. =module load= of the old name fails.
 
 3. That is a rebuild, or a wrapping-dependencies configuration
- that the site accepts as a lie about the pin. It is not
- something the recipe can spell. Changing the pin in the
+ that the site accepts as a lie about the pin. The recipe
+ cannot spell that. Changing the pin in the
  easyconfig and rebuilding is the claim that will survive a
  move to another site.
 #+end_solution
@@ -128,7 +128,7 @@ Both letters appear to request recursive operation (=‑r=) and debug output (=�
 A reader who omits =-r= will not obtain recursive behavior.
 The other dry‑run is =--extended-dry-run= / =-x=.
 It prints the build procedure.
-It is not a substitute for =-Dr=.
+That printout does not replace =-Dr=.
 The printed procedure may differ from the real run whenever an EasyBlock branches on files that a dry‑run never unpacks.
 #+ATTR_EB: :id EB-Dry-1 :title What -D prints
 #+begin_exercise
