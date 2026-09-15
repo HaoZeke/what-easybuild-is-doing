@@ -49,7 +49,6 @@ checksums = [
 #+end_src
 Three parameters name the bytes: =source_urls=, =sources=, and
 =checksums=. The third is the checksum.
-People trust it most beyond its literal meaning.
 * The list is positional, and then one entry is a dictionary
 The variable =sources= is a list.
 The variable =checksums= is a list.

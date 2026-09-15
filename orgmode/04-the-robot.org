@@ -93,7 +93,7 @@ EasyBuild then finds none of the thousands of easyconfigs it includes.
 With colon, EasyBuild searches that directory first.
 EasyBuild retains default paths thereafter.
 Mechanism is neither a special case nor a parsing quirk.
-Option is declared with action named =add_flex=.
+The option is declared with action =add_flex=.
 Documentation in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/base/generaloption.py][easybuild/base/generaloption.py]] explains behavior:
 #+begin_quote
 similar to add / add_first, but replaces the first "empty" element with
@@ -106,7 +106,6 @@ The colon is a *position* rather than punctuation.
 The colon indicates where the defaults should be placed.
 Placing the colon at the front, =:/my/site/easyconfigs=, makes EasyBuild search the site directory last.
 The behavior becomes visible.
-The entire option is no longer fiddly.
 The value defines an order.
 The blank marks the default's position within the order.
 Paths supplied to =--robot= are placed ahead of =--robot-paths=.

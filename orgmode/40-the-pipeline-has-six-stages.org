@@ -44,7 +44,7 @@ The stage names come from the pipeline documentation ReFrame 4.10:
 
 A test that fails in =sanity= has already been compiled and run.
 A test that fails in =setup= has not been compiled or run.
-The failing phase appears in the =FAILURE INFO= block as the first field to read mirroring EasyBuild's error block naming of a step.
+The =FAILURE INFO= block names the failing phase first, the same way EasyBuild names a step.
 * Loading is not the pipeline
 Before any stage execution, ReFrame builds each discovered test by importing its file and invoking =__init__=.
 Each test is instantiated regardless of its suitability for the current system.

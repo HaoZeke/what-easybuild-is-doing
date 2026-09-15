@@ -43,7 +43,7 @@ It handled an object count around 10^7 throughout its history.
 The backend supports union publish.
 The backend uses content-addressed objects.
 The backend implements the transaction that reads a stack off the wire.
-CernVM-FS's Stratum 0 is involved.
+The transaction starts on Stratum 0.
 The primary challenge involves metadata rather than bulk data volume.
 Transport uses HTTP.
 Any web cache works with this transport.

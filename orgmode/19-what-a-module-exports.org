@@ -108,7 +108,6 @@ These entries are not shown in the excerpt above.
 =netcdf-c= is transformed into =EBROOTNETCDFMINC= rather than =EBROOTNETCDFC=.
 The =min= convention follows the easyblock filename pattern.
 The =min= convention does more than strip punctuation.
-The name entered by the user is constructed at this point.
 Modifying the toolchain changes the module name.
 Modifying the suffix changes the module name.
 Modifying the toolchain changes the =.eb= filename.
