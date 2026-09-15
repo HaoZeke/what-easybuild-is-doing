@@ -5,7 +5,7 @@
    :alt: an easystack YAML is the ordered list the bot will build
    :class: eb-diagram
 
-   An easystack is the list. It is not a solver. The bot feeds it to eb in that order.
+   An easystack is the ordered list the bot feeds to eb. No solve happens here.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/30-easystack-files.svg

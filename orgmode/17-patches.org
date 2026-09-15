@@ -20,7 +20,7 @@
    :alt: a patch applies to the extracted tree, not the URL
    :class: eb-diagram
 
-   A patch is relative to the unpacked tree and a -pN strip. It is not relative to the source URL.
+   A patch is relative to the unpacked tree and a -pN strip, not to the source URL.
 #+end_export
 
 #+begin_objectives

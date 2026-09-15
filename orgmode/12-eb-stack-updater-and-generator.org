@@ -48,7 +48,7 @@ This page describes those two tasks and includes the files on the page.
 * A port starts as someone else's recipe
 The conda-forge feedstock for eOn 2.16.0 is frozen in eb-stack's fixtures.
 It includes name, version, sources, host dependencies, and tests.
-It is not an easyconfig.
+That file is a feedstock, not an easyconfig.
 #+begin_src yaml
 context:
  version: "2.16.0"

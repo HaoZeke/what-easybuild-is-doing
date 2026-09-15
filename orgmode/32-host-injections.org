@@ -241,8 +241,7 @@ These variables make the EESSI module sticky.
 They enable coexistence with a second, incompatible site stack.
 Licensed software that only some users may run is identified as a poor fit for a site CVMFS repository.
 The setting =CVMFS_CLAIM_OWNERSHIP=no= preserves ownership.
-It is not a security boundary.
-A container can override it.
+A container can override it, so ownership is not a security boundary.
 The webinar proposes keeping those installations on the shared filesystem of Approach 1.
 #+ATTR_EB: :id EB-Site-1 :title Which prefix, which variable
 #+begin_exercise

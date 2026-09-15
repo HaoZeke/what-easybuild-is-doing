@@ -96,8 +96,7 @@ The framework handles the job script, the scheduler, and the output files.
 The corollary surprises users of =make test=.
 *a process that exits zero and prints nothing has failed*.
 =sn.assert_found= looks in =self.stdout=.
-=self.stdout= is the file containing the job's standard output.
-It is not a live stream.
+=self.stdout= is the file of the job's standard output, not a live stream.
 The pattern is a regular expression.
 The STREAM binary prints =Solution Validates= when the array checksum matches.
 That string is the entire correctness claim of this test.
