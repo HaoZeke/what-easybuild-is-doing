@@ -75,7 +75,6 @@ When =foss-2025a= provides HDF5 1.14.6, every package on =foss-2025a= that depen
 The stack then contains one HDF5.
 A resolver that allows ranges would produce one HDF5 per distinct
 range the solver picked.
-Exactness justifies its role.
 Problems arise when the easyconfig outlives the generation for which it was written.
 * The thing that breaks
 An easyconfig that works on =foss-2025a= is moved to =foss-2024a=.
@@ -92,7 +91,7 @@ Requiring 1.14.6 is unlikely.
 Version 1.14.6 reflects what that generation contained when the easyconfig was authored.
 The version number records the build environment.
 The version number provides no information about the package's actual requirements.
-The core insight is that the version number does not indicate actual requirements.
+The version number does not indicate actual requirements.
 #+begin_quote
 A dependency version in an easyconfig is an exact pin for the
 generation the easyconfig was written against. Carried across generations,

@@ -57,8 +57,6 @@ The =versionsuffix= reports.
 It reports into the module's own name.
 =%(cudaver)s= is the templating from [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]].
 It resolves from the CUDA dependency.
-The two are related by derivation.
-They are not related by enforcement.
 EasyBuild derives the suffix from the dependency once, at parse time.
 It writes the result into a filename.
 No check occurs afterwards that the name still describes the tree.
