@@ -112,7 +112,7 @@ Continuous integration presents a conflict between "install a software stack" an
 EESSI provides a solution.
 The runner mounts, resolves required modules, and downloads only the files touched by those modules.
 On GitHub Actions the documented route is not a hand‑rolled mount.
-It is the published action:.
+It is this published action:
 #+begin_example
 - uses: eessi/github-action-eessi@v3
  with:
