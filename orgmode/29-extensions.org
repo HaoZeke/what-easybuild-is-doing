@@ -112,7 +112,7 @@ top level of the options dict is inert. It is only read from inside a
 =sources= dict entry, so a top-level one is silently ignored.
 #+end_detail
 *All other items that qualify as an easyconfig parameter.* Any additional key is copied into the extension's own configuration.
-The loop performing this also processes the remaining items:.
+The loop performing this also processes the remaining items.
 #+begin_example
 for key, value in self.options.items():
  if key in self.cfg:
