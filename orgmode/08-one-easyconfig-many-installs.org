@@ -138,7 +138,7 @@ long before that and has no extension in scope to ask about.
 #+end_solution
 #+end_exercise
 
-* Pages 6 and 7 now apply once per extension
+* The installed-means checks run once per extension
 The =exts_filter= function checks each extension referenced in [[file:06-what-installed-means.org][What "installed" means]].
 It has an unusual shape.
 #+begin_example

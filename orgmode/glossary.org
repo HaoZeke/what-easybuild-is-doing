@@ -207,8 +207,7 @@ non-alphanumerics.
 A second modulefile, generated for every install, at
 =<installdir>/easybuild/<name>-<version>-easybuild-devel= and named by
 =$EBDEVEL<NAME>=. Loading it reproduces the environment the build had,
-Including
-=$PATH= and the modules tool's own bookkeeping variables. It cannot be
+including =$PATH= and the modules tool's own bookkeeping variables. It cannot be
 unloaded through =$EBDEVELNAME=.
 
 [[file:24-development-environments.org][Standing where the build stood]].

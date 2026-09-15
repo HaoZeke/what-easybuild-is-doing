@@ -222,12 +222,12 @@ one node type than on another, with the same module name loaded.
 3. Read the ordered list with =eessi_archdetect.sh -a cpupath= on that node
  and compare the first entry against the directory that exists, then
  check the environment for the override variables. What a login node
- cannot tell you is which target a compute node resolves
- detection reads that node's own =/proc/cpuinfo=. Same lesson as
+ cannot tell you is which target a compute node resolves.
+ Detection reads that node's own =/proc/cpuinfo=. Same lesson as
  Four things that actually happened, one layer up.
 #+end_solution
 #+end_exercise
-Reading a stack off the wire, CernVM-FS uses a symlink whose stored target is a variable reference. The client expands the variable reference. EESSI provides =host_injections=. The live repository stores it as $(EESSI_HOST_INJECTIONS:-/opt/eessi)=.
+Reading a stack off the wire, CernVM-FS uses a symlink whose stored target is a variable reference. The client expands the variable reference. EESSI provides =host_injections=. The live repository stores it as =$(EESSI_HOST_INJECTIONS:-/opt/eessi)=.
 Point it to a writable location.
 A site obtains a tree that behaves as if it were inside the repository.
 * What a site adds without writing to /cvmfs

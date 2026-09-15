@@ -111,7 +111,7 @@ Tracking now uses the directory:
 #+begin_example
 easystacks/software.eessi.io/<eessi_version>/eessi-<eessi_version>-eb-<eb_version>-<toolchain>.yml
 #+end_example
-A new entry for GROMACS on the 2025.06 tree, compiled with EasyBuild 5.3.0 and the 2025b generation, belongs in.
+A new entry for GROMACS on the 2025.06 tree, compiled with EasyBuild 5.3.0 and the 2025b generation, belongs in that file:
 #+begin_example
 easystacks/software.eessi.io/2025.06/eessi-2025.06-eb-5.3.0-2025b.yml
 #+end_example
