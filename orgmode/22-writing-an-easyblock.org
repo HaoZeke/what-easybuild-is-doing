@@ -162,7 +162,7 @@ A direct write to =os.environ= is invisible to the dry run.
 * Loading one without installing it
 Try an easyblock without installing into EasyBuild.
 #+begin_example
-eb example-1.0.eb --include-easyblocks='$HOME/myeb/*.py'
+eb example-1.0.eb --include-easyblocks=~/myeb/*.py,~/myeb/generic/*.py
 #+end_example
 =--include-easyblocks= accepts a comma‑separated list of paths.
 Paths may be absolute, relative, or globbed.
@@ -188,13 +188,13 @@ The documented order is effective.
 *=eb -x=* performs an extended dry run that traverses the entire procedure and reports the actions each step would perform, including commands and environment changes.
 When no errors occur, the run concludes with =(no ignored errors during dry run)=.
 That line is the indicator to look for instead of the absence of a traceback.
-*=eb --module-only --force=* skips fetch, extract, patch, configure,
-build, test and install. It still runs =prepare=, =ready=,
-=sanitycheck= and =module=.
-The easyblock's exports become readable before any compilation.
-Under =--module-only=, =configure_step= does not run, so an easyblock
-whose =configure_step= sets =self.foo= and whose =sanity_check_step=
-reads it encounters =None=.
+~eb --module-only --force~ skips fetch, extract, patch, configure,
+build, test, install *and* sanitycheck. The modulefile is written
+without running =sanity_check_step=.
+~eb --module-only --rebuild~ still runs =prepare=, =ready=,
+=postiter=, =sanitycheck= and =module=. That is the command that
+hits a =None= if =configure_step= set state that =sanity_check_step=
+reads.
 The fix provides a helper method invoked by both steps and stops state from being carried between steps.
 A real build follows, then [[file:23-testing.org][Testing, and the four things it can mean]].
 #+ATTR_EB: :id EB-Easyblock-1 :title Four requests, and only one of them is code

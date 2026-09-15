@@ -104,7 +104,7 @@ Anything that needs a human or a later stage is a typed residual instead.
 =id= R3 =stage= parse =category= split-outputs =severity= judgment =summary= rattler-build outputs splits packages; EasyBuild has one prefix per easyconfig.
 
 * Residual
-=id= R4 =stage= parse =category= range =severity= judgment =summary= Spack states a version range this site does not ship as a pin.
+=id= R4 =stage= parse =category= range =severity= judgment =summary= Spack states a lower bound; the robot has not yet picked a pin this generation ships.
 
 * Residual
 =id= R5 =stage= parse =category= multi-source-extract =severity= judgment =summary= Extract layout is not a single tarball.

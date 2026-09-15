@@ -968,8 +968,8 @@ article.yue figure.eb-diagram img {
 /* D2 ships prefers-color-scheme:dark only. html.dark on a light OS
    would otherwise leave a white slab on --eb-page. */
 @media (prefers-color-scheme: light) {
-  html.dark article.yue figure.eb-diagram img,
-  html[data-color-mode="dark"] article.yue figure.eb-diagram img {
+  html.dark article.yue img.eb-diagram,
+  html[data-color-mode="dark"] article.yue img.eb-diagram {
     filter: invert(0.92) hue-rotate(180deg);
   }
 }

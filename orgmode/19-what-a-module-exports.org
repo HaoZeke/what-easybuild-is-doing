@@ -198,9 +198,9 @@ see about your package.
 while anything else still depends on it. If nothing does and it stays,
 that is worth investigating; if something does, Lmod is doing its job.
 
-3: =module show= prints =EBROOTQMCPACK= and the =PATH= prepend.
-It does not print =LD_LIBRARY_PATH= unless the easyblock also
-prepended that. =EBROOTQMCPACK= is the install prefix.
+3: =module show= prints =EBROOTQMCPACK=, the =PATH= prepend, and
+=LD_LIBRARY_PATH= as in the listing on this page. =EBROOTQMCPACK=
+is the install prefix.
 
 4 is =version=, exported as =EBVERSIONQMCPACK= by the modulefile
 EasyBuild wrote.
