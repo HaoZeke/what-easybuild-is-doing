@@ -252,12 +252,12 @@ Write the plan before you type anything. Specifically:
  you have measured it.
 
 #+begin_solution
-1. Whether upstream has an easyconfig for 6.5.1 at all
- (=eb --search=); which toolchain the GPU build needs and whether your
- site has it at this generation; what the site's current version was
- built with, from the archived easyconfig in its install directory; and
- whether the licence covers this group, which is the question that
- blocks everything else and has nothing to do with EasyBuild.
+1. Four facts, from four places. Does upstream have 6.5.1
+ (=eb --search=). Which toolchain the GPU build needs, and whether
+ this generation has it. What the site's current version was built
+ with, from the archived easyconfig in the install directory. Whether
+ the licence covers this group. The licence question blocks the rest
+ and has nothing to do with EasyBuild.
 
 2. Mostly task two, with task one inside it: a version change *and* a
  toolchain choice. If the toolchain is new to the site it is also a
