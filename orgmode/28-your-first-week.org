@@ -211,7 +211,7 @@ Write the commit message. Specifically decide:
 The ticket said 24 regressions. The pipeline printed zero.
 The pipeline still billed a full hour.
 ** A pipeline's summary can be empty for two different reasons
-One more trap arises from a bump that succeeded on three architecture classes and failed on one, using the same prebuilt archive.
+A bump that succeeded on three architecture classes failed on the fourth. The archive was the same.
 A pipeline that summarises a run typically fills =EasyBuild log:=
 by grepping for the line =eb= prints at the end.
 That line is =Results of the build can be found in the log file(s)=.

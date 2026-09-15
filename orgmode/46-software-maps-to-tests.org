@@ -74,7 +74,7 @@ The mapping connects a module name to those classes.
 * CSCS: config, checks, CI
 The CSCS suite =eth-cscs/cscs-reframe-tests= provides the layout cited in the official ReFrame README, which is the most complete public tree.
 The three directories that run a job are =config/=, =checks/=, and =ci/=.
-The tree also carries =containers/=, =deprecated_checks/=, =hpctestlib/=, =reframe_reporter/=, and =utility/=.
+The tree also carries =containers/=, =deprecated_checks/=, =hpctestlib/=, =reframe_reporter/=, =uenv_checks/=, and =utility/=.
 #+begin_example
 cscs-reframe-tests/
 ├── config/ the machine

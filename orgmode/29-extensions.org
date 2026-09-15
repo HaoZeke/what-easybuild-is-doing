@@ -41,10 +41,7 @@
 #+end_prerequisites
 An extension is software installed *inside* another installation rather than as a separate module.
 The mechanism consists of the easyconfig parameter =exts_list= and the step =extensions=, the tenth of the eighteen steps.
-A dedicated page is required.
-It contains parameters and an easyblock.
-The origins of those parameters are not documented in a single location.
-The origins of those parameters are not inferable.
+Those two objects live in the easyblock. No single page lists every key.
 * Three forms, and the one that gets nothing
 An entry may be a plain string, a =(name, version)= tuple, or a =(name, version, {options})= tuple.
 Within the framework, the definition is in [[https://github.com/easybuilders/easybuild-framework/blob/develop/easybuild/framework/easyblock.py][easybuild/framework/easyblock.py]].

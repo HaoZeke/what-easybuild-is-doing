@@ -31,8 +31,8 @@
 A completed build prints a single line and creates one file.
 The line indicates that the install succeeded.
 The file is a modulefile and is the only component a user ever encounters.
-Neither of these confirms that the software functions correctly.
-The gap between them contains bugs that reach a user bearing the developer's name.
+A green line and a modulefile do not mean the software runs.
+The bugs that remain reach a user under the developer's name.
 * Existence is the default claim
 After the install step copies files into place, EasyBuild checks the count.
 The first consulted parameter is =sanity_check_paths=.
