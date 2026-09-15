@@ -22,7 +22,7 @@ if command -v d2 >/dev/null; then
   for f in "$dir"/*.d2; do
     stem="$(basename "$f" .d2)"
     case "$stem" in
-      rail-*|00-tutorial-read-an-easyconfig-2|recipe-read-four|21-min-fields) continue ;;
+      rail-*|00-tutorial-read-an-easyconfig-2|recipe-read-four|21-min-fields|08-generation-pairs) continue ;;
     esac
     d2 --pad 20 --theme 0 --dark-theme 200 "$f" "${f%.d2}.svg"
   done
@@ -58,6 +58,7 @@ org = root / "orgmode"
 rails = {
     "rail-module-name", "rail-dep-tuple", "rail-pin", "rail-not-range",
     "00-tutorial-read-an-easyconfig-2", "recipe-read-four", "21-min-fields",
+    "08-generation-pairs",
 }
 refs = set()
 for p in org.glob("*.org"):

@@ -142,8 +142,11 @@ Twenty days pass.
 A user loads the module and gets the loader error above.
 =skipsteps= comes out of both recipes.
 A root cause is published and then *retracted*, having been checked from a login node.
-The root cause is re‑established on the hardware and the toolchain's own recipe is fixed: =postinstallcmds= relinking the unversioned =math_libs= and =comm_libs= entries at the CUDA version the module declares.
-A temporary =--rebuild= goes on the build‑list lines for everything built against the broken toolchain and comes off once the results are checked on a node of each architecture class.
+The root cause is re‑established on the hardware.
+The toolchain recipe is then fixed: =postinstallcmds= relink
+=math_libs= and =comm_libs= at the CUDA version the module declares.
+A temporary =--rebuild= goes on every build-list line that used the
+broken toolchain. It comes off after a check on each architecture.
 Three separate mistakes are in that list and only one of them is the symlink.
 *Switching the check off moved the discovery to a user.* The check was reporting a real defect and no change to this package could repair it.
 The checks were true. The conclusion was not.

@@ -58,6 +58,8 @@ No configuration is required.
 | [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] | which dependencies a toolchain permits |
 
 The file is evaluated. The robot walks the tree. An easyblock runs the steps.
+Open a file. Write =name = 'thing'=, =version = '1.0'=, and a
+toolchain the site has. That is the first typed-in recipe.
 * Level B. Understand why a build fails
 Two hours.
 The level where most support tickets reside.

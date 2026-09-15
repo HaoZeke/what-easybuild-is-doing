@@ -59,7 +59,7 @@ permissions
 package
 testcases
 #+end_src
-Eighteen step names exist.
+Eighteen step names exist. The sixteenth is =permissions=, then =package=, then =testcases=.
 The steps form a list, not a script or a dependency graph.
 The list executes in order for every package.
 Each parameter belongs to a single step.
