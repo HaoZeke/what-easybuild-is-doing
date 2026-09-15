@@ -180,8 +180,8 @@ exactly the inference that cost a day the first time.
 #+begin_keypoints
 - Every one of the four was green somewhere, so the question is never "did
  it pass" but what it passed and where.
-- A symlink such as =/sw/arch= resolves against the node underfoot
- on, which makes an =ldd= on a login node evidence about the login node.
+- A symlink such as =/sw/arch= resolves against the node underfoot,
+ which makes an =ldd= on a login node evidence about the login node.
 - A failing check on a package that cannot be fixed is a report about something
  else; deleting the report does not fix the something else.
 - A parameter whose meaning depends on the shape of the source has to be

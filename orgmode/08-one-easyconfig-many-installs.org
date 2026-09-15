@@ -67,7 +67,7 @@ One genuine extension contains two hundred.
 Each entry has its own download, its own build, and its own check.
 The final module is a single module.
 * The [[file:01-an-easyconfig-is-python.org][An easyconfig is Python]] rule inverts here
-=easyblock = 'Bundle'= An easyconfig, written in Python, states that a missing =easyblock= line claims a software-specific easyblock exists.
+=easyblock = 'Bundle'=. An easyconfig, written in Python, states that a missing =easyblock= line claims a software-specific easyblock exists.
 Naming a generic one is the only way to obtain it.
 This easyconfig names one.
 Then look at =exts_defaultclass=.
