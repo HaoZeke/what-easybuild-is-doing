@@ -86,12 +86,8 @@ The build fails.
 No HDF5 1.14.6 exists in that generation.
 No such version will appear later.
 The content of the easyconfig states "1.14.6".
-The software does not necessarily require 1.14.6.
-Requiring 1.14.6 is unlikely.
-Version 1.14.6 reflects what that generation contained when the easyconfig was authored.
-The version number records the build environment.
-The version number provides no information about the package's actual requirements.
-The version number does not indicate actual requirements.
+Version 1.14.6 is what that generation contained when the easyconfig was authored.
+The number records the build environment, not a requirement the software stated.
 #+begin_quote
 A dependency version in an easyconfig is an exact pin for the
 generation the easyconfig was written against. Carried across generations,
@@ -113,9 +109,7 @@ The target generation's available modules are the candidates.
 Look up what that generation provides. Do not carry the old numbers
 across as floors a solver must satisfy.
 * Where the real lower bound lives
-Look up the target generation. That is not a fallback. It is the job.
-The answer lies elsewhere.
-If the minimum is needed, it is written down, just not in the easyconfig.
+The minimum, if it exists, is written down somewhere else, not in the easyconfig.
 
 - The project's own build system says it.  
 - =find_package(HDF5 1.10 REQUIRED)= in CMake is a real lower bound, stated by the people who wrote the software.  

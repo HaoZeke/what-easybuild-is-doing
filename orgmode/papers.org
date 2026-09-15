@@ -23,4 +23,5 @@
 #+end_export
 #+begin_export rst
 .. bibliography::
+   :cited:
 #+end_export

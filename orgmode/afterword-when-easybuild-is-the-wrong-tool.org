@@ -1,20 +1,6 @@
 #+TITLE: Afterword: when EasyBuild is the wrong tool
 #+OPTIONS: toc:nil num:nil
 #+begin_export rst
-.. figure:: _static/diagrams/afterword-when-easybuild-is-the-wrong-tool-2.svg
-   :alt: the same job may belong to EasyBuild, conda, or Spack
-   :class: eb-diagram
-
-   EasyBuild is the wrong tool when the job is a range, a user env, or a single binary with no tree.
-#+end_export
-#+begin_export rst
-.. figure:: _static/diagrams/afterword-when-easybuild-is-the-wrong-tool.svg
-   :alt: EasyBuild or another tool for the same job
-   :class: eb-diagram
-
-   Sometimes EasyBuild is the wrong tool. The afterword names when.
-#+end_export
-#+begin_export rst
 .. figure:: _static/diagrams/afterword-other-tools.svg
    :alt: the same job may belong to EasyBuild, conda-forge, Spack, or modules only
    :class: eb-diagram
@@ -34,25 +20,16 @@ The remainder of this page addresses the drawbacks.
 * When the answer is a different tool for the same job
 Three scenarios provide a genuine alternative rather than a complaint.
 ** A Python environment that changes weekly
-Eleven PyPI packages are required.
-Twelve additional packages are needed the following week.
-A different version of one package is required the week after.
-Using EasyBuild requires an easyconfig for each change.
-EasyBuild requires a build for each easyconfig.
-EasyBuild requires a module for each result.
-The stack generation is pinned to annual changes.
-Requirements change weekly.
-Alignment is prevented.
-The appropriate solution is a Python module provided by EasyBuild combined with a virtual environment owned by the researcher.
-Invoking =pip= within a venv after =module load Python= supplies the weekly cadence.
-Invoking =uv= within a venv after =module load Python= supplies the weekly cadence.
-It retains control of the interpreter within the stack.
-It retains control of the compiler within the stack.
-It retains control of the numerical libraries within the stack.
-Components needing reproducibility receive reproducibility.
-Components needing speed receive performance.
-The failure mode of handling everything within EasyBuild is not lack of functionality.
-A maintainer becomes the bottleneck for another's research week.
+Eleven PyPI packages this week, twelve next week, and a different
+version of one of them the week after, is a weekly cadence.
+EasyBuild's generation is annual. An easyconfig, a build, and a
+module for each of those changes puts the maintainer on the
+researcher's week.
+The fit is =module load Python= and a venv the researcher owns.
+=pip= or =uv= inside that venv keeps the weekly cadence.
+The stack still owns the interpreter, the compiler, and the
+numerical libraries. The weekly packages stay out of the annual
+generation.
 ** Software that arrives as a container
 Some vendors supply only a container image.
 EasyBuild can wrap a container. That is a different object from a recipe that builds the software.
@@ -77,8 +54,7 @@ Installation is a download and a solve rather than a build.
 This yields a working environment in minutes, identical on a laptop and on a cluster.
 In return, those binaries are built for portability rather than for a specific machine's instruction set.
 Exploiting a specific instruction set is the purpose of an HPC stack.
-Thus the question is not which system is best.
-It concerns which cost is acceptable.
+The choice is which cost is acceptable.
 
 - EasyBuild provides exact versions, one stack per generation, tuned builds, hours per package, one generation per year, and a maintainer in the loop.  
 - Spack offers real version ranges, per‑install resolution, tuned builds, hours per package, and a resolved graph that must be captured to reproduce.  

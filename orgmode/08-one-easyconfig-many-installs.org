@@ -184,17 +184,16 @@ When a bundle fails, the failure appears in a single entry.
 Inspect that entry along with the defaults defined above it.
 The next page discusses hooks.
 Hooks are the supported way to modify EasyBuild behavior without editing an easyconfig.
+#+begin_export rst
+.. figure:: _static/diagrams/08-generation-pairs.svg
+   :alt: toolchain plus arch yields an install prefix
+   :class: eb-diagram
+
+   A generation is the set of (toolchain, arch) pairs that move together.
+#+end_export
 
 #+begin_keypoints
 - The file is not the install. The same easyconfig is written into as many prefixes as there are (toolchain, arch) pairs.
 - =exts_list= is more installs inside one file, not one install with extras.
 - A generation is the set of those pairs that move together.
 #+end_keypoints
-
-#+begin_export rst
-.. figure:: _static/diagrams/08-generation-pairs.svg
-   :alt: foss-2025a splits into x86_64 and aarch64 install prefixes
-   :class: eb-diagram
-
-   A generation is the set of (toolchain, arch) pairs that move together.
-#+end_export
