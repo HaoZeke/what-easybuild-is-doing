@@ -151,7 +151,7 @@ A job starts only when the same comment lacks =accel== on a site with a GPU‑on
  =inst:=.
 
 2. The prefix is zen4 plus the NVIDIA cc90 accelerator
- subdirectory, because that is what =for:= names. The allocated
+ subdirectory. That is what =for:= names. The allocated
  node is whatever matches =on:arch=zen4= only. =accel== is not
  on =on:=, so a GPU-declared zen4 type is not allocated. A
  CPU-only zen4 node is used if the instance has one; otherwise

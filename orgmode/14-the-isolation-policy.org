@@ -13,7 +13,7 @@
    :alt: host libraries do not enter the prefix; RPATH points at the tree
    :class: eb-diagram
 
-   The environment is constructed. Host libraries are not a dependency just because they exist.
+   The environment is constructed. Host libraries on the node are not a dependency.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/14-visible-vs-hidden.svg
