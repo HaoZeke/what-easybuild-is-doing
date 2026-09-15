@@ -40,12 +40,14 @@ The file defines recipe creation when none exists.
 Start with the [[file:00-tutorial-read-an-easyconfig.org][tutorial]].
 The tutorial takes about twenty minutes.
 Installation is not required.
+#+begin_export rst
 Four entries, not thirty pages:
 
-- [[file:recipe-read.org][Read a file]]
-- [[file:recipe-fail.org][When it fails]]
-- [[file:recipe-run.org][How it runs]]
-- [[file:recipe-write.org][Write one]]
+- `Read a file <recipe-read.html>`__
+- `When it fails <recipe-fail.html>`__
+- `How it runs <recipe-run.html>`__
+- `Write one <recipe-write.html>`__
+#+end_export
 #+begin_export rst
 .. rst-class:: eb-upstream
 

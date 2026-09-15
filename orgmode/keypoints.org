@@ -6,7 +6,7 @@
    :alt: each page yields a claim and what would falsify it
    :class: eb-diagram
 
-   Keypoints are produced from the pages. They are claims, not slogans.
+   What to remember is produced from the pages. The lines are claims, not slogans.
 #+end_export
 #+begin_export rst
 .. figure:: _static/diagrams/keypoints.svg
@@ -22,7 +22,7 @@
 
    What to remember is a claim with a page behind it.
 #+end_export
-Keypoints for each page are produced in reading order directly from the pages instead of manual maintenance.
+The digest for each page is produced in reading order from the pages.
 [[cite:wilsonSoftwareCarpentryLessons2016][Wilson 2016]] is the Carpentries design this page follows: a claim plus the page that would falsify it.
 It has two purposes.
 Before a page, it indicates whether the page's purpose is already known.
