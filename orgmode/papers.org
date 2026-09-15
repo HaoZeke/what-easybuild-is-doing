@@ -21,6 +21,8 @@
 
    References are the papers the pages opened, not a reading log.
 #+end_export
+The store is =refs.bib=. Unused entries stay in the file.
+This page lists the ones the book opened.
 #+begin_export rst
 .. bibliography::
    :cited:
