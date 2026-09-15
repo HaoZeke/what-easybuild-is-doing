@@ -85,7 +85,6 @@ A file exists. =--help= runs. The binary still cannot start.
 Those are three claims of increasing strength.
 Knowing which of the three a given package satisfies reveals what its green build signifies.
 * Where the check ran is part of what it proved
-The failure that lasts is the one no parameter records.
 A sanity check runs on the machine that performed the build.
 On a cluster with multiple processor architectures, the install tree is split per architecture.
 A binary tuned for one architecture differs from the binary for another.
