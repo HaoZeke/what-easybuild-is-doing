@@ -15,16 +15,18 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --eb-panel: #0d1117;
+  html:not(.light):not([data-color-mode="light"]) {
+    --eb-panel: #1a1917;
   }
 }
 
-:root[data-theme="dark"] {
-  --eb-panel: #0d1117;
+html.dark,
+html[data-color-mode="dark"] {
+  --eb-panel: #1a1917;
 }
 
-:root[data-theme="light"] {
+html.light,
+html[data-color-mode="light"] {
   --eb-panel: #ffffff;
 }
 
@@ -225,9 +227,15 @@ html.eb-ask-open {
 /* A definition and an exercise are what a reader most often wants, so they
  * are the two kinds that get a colour rather than a grey box. */
 .eb-ask__kind--term,
-.eb-ask__kind--reference {
+.eb-ask__kind--reference,
+.eb-ask__kind--docs {
   border-color: var(--eb-accent);
   color: var(--eb-accent);
+}
+
+.eb-ask__kind--code {
+  border-color: var(--eb-code-fg);
+  color: var(--eb-code-fg);
 }
 
 .eb-ask__snippet {

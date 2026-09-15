@@ -847,7 +847,8 @@ article.yue dd {
 .sy-breadcrumbs,
 .sy-foot-copyright,
 .sy-foot-socials,
-.rside-overlay {
+.rside-overlay,
+.sy-head-extra form.searchbox {
   display: none !important;
 }
 

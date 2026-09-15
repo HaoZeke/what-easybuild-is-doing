@@ -363,7 +363,7 @@ def resolve_keypoints_index(app, doctree, fromdocname):
             continue
         container = nodes.container(classes=["eb-keypoints-index"])
         for entry in sorted(store, key=lambda k: k["docname"]):
-            heading = nodes.paragraph(classes=["eb-keypoints-index-chapter"])
+            heading = nodes.paragraph(classes=["eb-keypoints-index-page"])
             ref = nodes.reference("", "")
             ref["refdocname"] = entry["docname"]
             ref["refuri"] = app.builder.get_relative_uri(
@@ -409,7 +409,7 @@ def resolve_exercise_index(app, doctree, fromdocname):
         for entry in ordered:
             if entry["docname"] != current:
                 current = entry["docname"]
-                heading = nodes.paragraph(classes=["eb-exercise-index-chapter"])
+                heading = nodes.paragraph(classes=["eb-exercise-index-page"])
                 title = titles.get(current)
                 ref = nodes.reference("", "")
                 ref["refdocname"] = current

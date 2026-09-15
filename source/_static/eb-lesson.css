@@ -113,7 +113,7 @@ article.yue .eb-solution-body > *:first-child {
 }
 
 /* The index of every exercise in the book. */
-article.yue .eb-exercise-index-chapter {
+article.yue .eb-exercise-index-page {
   font-family: var(--eb-sans);
   font-size: 0.82rem;
   font-weight: 650;
@@ -226,7 +226,7 @@ article.yue .eb-reveal-body > * + * {
 }
 
 /* The digest page: one heading per chapter, its keypoints under it. */
-article.yue .eb-keypoints-index-chapter {
+article.yue .eb-keypoints-index-page {
   margin-top: var(--eb-space-block);
   font-family: var(--eb-sans);
   font-weight: 600;

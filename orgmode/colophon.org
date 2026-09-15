@@ -26,7 +26,9 @@ has those and nothing else.
 
 In a browser, some pages also mount a table from eb-stack at build
 time. Editing that table changes the on-page answer. Escape opens a
-playground. Those controls are not in the EPUB. They do not
+playground. The Ask chip at the bottom searches the book and the
+EasyBuild, EESSI and eb-stack remotes. Hypothesis loads on every
+article. Those controls are not in the EPUB. They do not
 configure, compile, or link.
 
 When a step needs a real toolchain, the page shows a recording of a
