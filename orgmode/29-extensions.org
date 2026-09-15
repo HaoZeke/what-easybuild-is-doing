@@ -255,8 +255,7 @@ Setting =modulename= to =False= disables the import check and allows the build t
 1. =alpha= gets both defaults. =beta= gets the default =source_urls= and
  its own =preinstallopts=. =gamma= gets its own =source_urls=, which
  *replaces* the default rather than adding to it, and the default
- =preinstallopts=. =delta= gets neither default
- never reaches the branch that reads them.
+ =preinstallopts=. =delta= gets neither default. It never reaches the branch that reads them.
 
 2. Nothing, visibly. =instalopts= is not a known parameter, so it is
  dropped with a =debug= line reading "Skipping unknown custom

@@ -40,7 +40,7 @@ The installed module name is a railroad, not a sentence.
    :alt: evaluation namespace, templates after eval, derived easyblock
    :class: eb-diagram
 
-   =SYSTEM= is the empty toolchain, already in the namespace. Templates resolve after the file runs. A missing easyblock line still names a class.
+   SYSTEM is the empty toolchain, already in the namespace. Templates resolve after the file runs. A missing easyblock line still names a class.
 #+end_export
 #+begin_src easyconfig :widget parse :hydrate load
 name = 'code-server'
