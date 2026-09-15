@@ -126,12 +126,9 @@ not emit R2 or R4.
 }
 #+end_example
 Severity has three values for triage.
-- =mechanical=: deterministic formatting or metadata.  
-- =recipe format=: can close some of these.  
-- =judgment=: package-authoring or target evidence is required.  
-- A Spack =def patch(self):= method that is not a file is this.  
-- =blocking=: the next pipeline stage cannot make a valid claim.  
-- A missing SHA-256 on a version bump without =--source-checksum= is this.  
+- =mechanical=: deterministic formatting or metadata. =recipe format= can close some of these.
+- =judgment=: package-authoring or target evidence is required. A Spack =def patch(self):= method that is not a file is this.
+- =blocking=: the next pipeline stage cannot make a valid claim. A missing SHA-256 on a version bump without =--source-checksum= is this.  
 Stage is =parse=, =normalization=, =resolution=, =emission=, =build=, or =verification=.
 An inspect residual is almost always =parse=.
 A bump that changes the package version and does not pass =--source-checksum= adds a residual.
