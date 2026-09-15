@@ -68,9 +68,9 @@ The evaluated model includes three items missing from the file above.
 =toolchain= reads =({name: system, version: system})= rather than the word =SYSTEM=.
 EasyBuild places that name in scope before evaluating the file, using the constant ={'name': 'system', 'version': 'system'}=.
 =%(mapped_arch)s= is the architecture EasyBuild maps the host to
-(=x86_64= or =aarch64=) after the file has run. It is not in the
-file's namespace while the file evaluates.
-=moduleclass= is a string. It is not formatted.
+(=x86_64= or =aarch64=) after the file has run, and is absent from
+the file's namespace while the file evaluates.
+=moduleclass= is a string, not a template.
 =source_urls= is a list of URL prefixes. After the file runs, EasyBuild
 formats =%(version)s= in =sources= to =4.130.0=.
 The file itself stored the literal value.

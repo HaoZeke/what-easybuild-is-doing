@@ -91,8 +91,7 @@ failed with exit code 127 in postproc step for wobble-1.0.eb
 Six fields are presented.
 They are not equally useful.
 The order to read them is not the order they are printed.
-*The exit code, first.* 127 is the shell's code for "command not found".
-It is not a licence problem nor a permissions problem.
+*The exit code, first.* 127 is the shell's code for "command not found", not a licence or permissions problem.
 The command being run is absent.
 A single number has ruled out most of the search space.
 =126= indicates "found but not executable".

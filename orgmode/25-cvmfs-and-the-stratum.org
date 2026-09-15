@@ -488,7 +488,6 @@ The root catalog hash fixes every nested catalog and every file hash below it.
 A local write breaks the chain that makes the repository verifiable at all.
 *There is no client write path.* Publishing is defined as a server-side atomic operation through a union filesystem on the release manager machine.
 The site-specific escape hatch cannot be a write.
-It is not a write.
 It is a symlink whose *stored target is a variable reference*, expanded by the client from its own configuration.
 Three of them appear in the live catalog above:
 * Why it is read-only

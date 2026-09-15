@@ -169,8 +169,7 @@ A failure is collected with the command, its input and its output rather than ab
 Two results follow from it being a single mechanism.
 
 An extension whose =modulename= is =False= produces *no* commands.
-It is skipped in both roles.
-It is not checked before and not checked after.
+No check runs before and no check runs after.
 
 This provides an escape hatch for an extension whose importable name does not exist.
 
@@ -283,8 +282,7 @@ Setting =modulename= to =False= disables the import check and allows the build t
  default list instead of extending it.
 - An unknown per-extension option is dropped at =debug= level, with no
  warning: a typo in a bundle of two hundred extensions is silent.
-- Eight parameters plus =start_dir= are reset before an extension runs,
-.
+- Eight parameters plus =start_dir= are reset before an extension runs.
 - =exts_filter= is one mechanism doing two jobs, skipping what is already
  installed and checking what was just installed, and =modulename: False=
  switches off both.

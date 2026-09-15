@@ -57,8 +57,7 @@ An easyblock represents code maintained by a site across EasyBuild versions.
 A single package with one unusual step can be addressed with a =postinstallcmds= line and a comment.
 Multiple versions of the same package each requiring an unusual step justify creating an easyblock.
 * What to derive from
-=EasyBlock= resides in =easybuild.framework.easyblock= and is abstract.
-It is not abstract by convention.
+=EasyBlock= resides in =easybuild.framework.easyblock= and is abstract in the framework, not by convention.
 #+begin_src ebtranscript :source "EasyBuild 5.3.1 from PyPI, local workstation, 2026-09-10" :caption "Three methods every easyblock must supply"
 $ python3 -c 'import inspect
 > from easybuild.framework.easyblock import EasyBlock

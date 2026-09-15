@@ -69,8 +69,7 @@ It solves no SAT instance. eb-stack ports a recipe and bumps one's =locks/defaul
 Mixing the words in a status report escalates a "lock wait" as a solver bug.
 =--wait-on-lock-*= controls whether a second process waits or errors.
 The filetools API is =create_lock=, =check_lock=, =remove_lock=.
-A stale lock after a killed =eb= is an operator problem on the shared filesystem.
-It is not a recipe problem.
+A stale lock after a killed =eb= is an operator problem on the shared filesystem, not a recipe problem.
 * --bwrap installs to a temporary namespace
 =--bwrap= (EasyBuild 5.3, improved in 5.4.0 for read‑only filesystems and =--subdir-{modules,software}=) builds and installs within a bubblewrap namespace.
 =--bwrap= then transfers the result to the final prefix.
