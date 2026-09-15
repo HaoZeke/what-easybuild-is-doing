@@ -60,7 +60,7 @@ The quoted text states "as much as possible automatic but human involvement requ
 A comment initiates a build.
 A label initiates a deploy.
 A merge in a private staging repository initiates an ingest.
-No element in that chain activates.
+None of those three events starts the next one.
 MultiXscale, the EuroHPC Centre of Excellence that funds most of the EESSI workforce, explains the existence of the Happy Hours and the webinars.
 CASTIEL2 is the tutorial portal, not the build farm.
 * Three processes, one GitHub App

@@ -132,7 +132,7 @@ The same build scripts from =software-layer-scripts= are used.
 The "what we need" slide adds a site Stratum-0 and, in production, Stratum-1s and proxies.
 One bot instance per cluster builds natively.
 An S3‑compatible bucket is required.
-A GitHub repository whose easystack path is.
+A GitHub repository whose easystack path is this file:
 #+begin_example
 easystacks/<site_cvmfs_repo>/<EESSI_VERSION>/eessi-<EESSI_VERSION>-eb-<eb_version>-<anything>.yml
 #+end_example

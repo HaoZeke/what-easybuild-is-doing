@@ -65,7 +65,7 @@ They are not validated.
 Fill them in for any item that will be shared.
 An unrecorded licence will require later research under time pressure.
 A user may ask if they can run the software.
-Thus, the smallest thing runs.
+The smallest recorded recipe is the one that runs.
 #+begin_src easyconfig :widget parse
 easyblock = 'ConfigureMake'
 

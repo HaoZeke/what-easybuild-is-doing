@@ -185,7 +185,7 @@ unpack, configure, build, test and install. It still runs
 =prepare=, =ready=, =postiter=, =sanitycheck= and =module= against
 an existing installation.
 The option is useful when a modulefile requires regeneration while the software does not.
-The option is hazardous.
+A bad modulefile then covers a good install.
 #+ATTR_EB: :id EB-Steps-1 :title Which step, and which parameter
 #+begin_exercise
 Four failures. For each, name the step and the parameter you would read

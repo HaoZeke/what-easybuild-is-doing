@@ -50,11 +50,10 @@
 - [[file:14-the-isolation-policy.org][The isolation policy]]: the
  build's environment. =--bwrap= is a later isolation.
 #+end_prerequisites
-Four EasyBuild 5 surfaces appear beside the machinery in pages 13-19.
-They lack a page.
+Four EasyBuild 5 surfaces sit beside the machinery in 13–19.
 They are not part of eb-stack.
-They explain a campaign finding of class =install= or =runtime=.
-It can represent the framework rather than the recipe.
+They explain a campaign finding of class =install= or =runtime=,
+and can name the framework rather than the recipe.
 * Install locks are not solver locks
 Two =eb= processes installing the same easyconfig into the same prefix corrupt the tree.
 EasyBuild writes a lock file for the duration of an installation.

@@ -58,7 +58,7 @@ The next EasyBuild file is a bump of 1.1.4, not a blank plan of that Spack file.
 [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] already split those two jobs.
 This page is the overlay that came out, the site install, and the PR.
 The first site build found two defects.
-Nothing in that sentence compiled the package.
+The overlay, the site install, and the PR are not a compile.
 * The parent is the old easyconfig
 =package inspect --format spack= on Spack's =seissol= recipe writes a plan and an SBOM.
 It does not write a =.eb=.

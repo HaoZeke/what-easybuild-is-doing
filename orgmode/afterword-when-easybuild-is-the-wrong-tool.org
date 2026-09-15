@@ -87,5 +87,4 @@ No default EasyBlock exists.
 There are no version ranges.
 The framework does not guess.
 A tool that does not guess shows where the uncertainty actually is.
-Take that.
 The rest is documentation.

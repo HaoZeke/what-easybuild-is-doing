@@ -94,7 +94,7 @@ eb-stack package plan \
  --stack-policy site/foss-2024a.toml \
  --out-dir /tmp/eon-from-conda
 #+end_example
-What comes out is a tree, not a speech:
+The command writes this tree:
 #+begin_example
 package.plan.json
 package.sbom.cdx.json
@@ -207,7 +207,7 @@ wrote /tmp/gromacs-2024a/GROMACS-2024.4-foss-2024a.eb
 | =mpi4py= | 3.1.5 | 4.0.1 |
 
 Unchanged lines include =name=, =version=, =sources=, =patches=, =checksums=, =configopts=, =exts_list=.
-Application version equals 2024.4.
+The application version is 2024.4.
 Tarball bytes are identical.
 Each pin on the toolchain moved together with the toolchain.
 Candidate set equals the 2024a robot tree.
