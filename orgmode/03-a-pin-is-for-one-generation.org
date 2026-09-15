@@ -203,7 +203,7 @@ An easyconfig cannot tell the difference.
 When an =easyconfig= moves to a new generation, record each changed version's source in the commit message.
 Possible sources include the project's own build system, another packaging format that can express a condition, or the shelf.
 The first two entries represent bounds.
-The third field is the versionsuffix.
+The third field names the versionsuffix.
 The next person moving this file will appreciate the indication of which entry is which.
 The following page describes the machinery that converts a filename into an install plan.
 It also explains what occurs when the lookup is performed in the wrong location.

@@ -210,7 +210,7 @@ Unchanged lines include =name=, =version=, =sources=, =patches=, =checksums=, =c
 The application version is 2024.4.
 Tarball bytes are identical.
 Each pin on the toolchain moved together with the toolchain.
-Candidate set equals the 2024a robot tree.
+The candidate set is the 2024a robot tree.
 Resolvo chose a single consistent closure.
 #+begin_src easyconfig :widget parse
 name = 'GROMACS'

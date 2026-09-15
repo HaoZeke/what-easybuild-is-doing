@@ -64,10 +64,9 @@ None of those three events starts the next one.
 MultiXscale, the EuroHPC Centre of Excellence that funds most of the EESSI workforce, explains the existence of the Happy Hours and the webinars.
 CASTIEL2 is the tutorial portal, not the build farm.
 * Three processes, one GitHub App
-Bot instance equals GitHub App.
-Bot instance written in Python and Bash.
-Bot instance configured from =.ini= file.
-Bot instance installed on =software-layer=, =software-layer-scripts=, and =compatibility-layer=.
+The bot is a GitHub App, written in Python and Bash, configured from
+an =.ini= file, and installed on =software-layer=,
+=software-layer-scripts=, and =compatibility-layer=.
 Caspar van Leeuwen's 1 June 2026 webinar opens with a site.
 Three processes match those run by EESSI.
 *Smee* provides webhook relay.
