@@ -142,9 +142,9 @@ The step that decides whether an installation exists.
 =sanity_check_paths= takes =files= and =dirs=, both keys required and at
 least one non-empty, and asserts they are there.
 =sanity_check_commands= runs commands, which means the check executes the
-software. An RPATH check runs alongside, exempting =libcuda.so=,
-=libcuda.so.1=, =libnvidia-ml.so= and =libnvidia-ml.so.1=
-belong to the driver.
+software. An RPATH check runs alongside and exempts =libcuda.so=,
+=libcuda.so.1=, =libnvidia-ml.so= and =libnvidia-ml.so.1=.
+Those four belong to the driver.
 
 [[file:06-what-installed-means.org][What "installed" means]].
 #+end_detail
