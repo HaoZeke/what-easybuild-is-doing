@@ -37,5 +37,5 @@ Then the residual queue appears.
 
 1. [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]]
 2. [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]]
-3. [[file:21-writing-one-from-nothing.org][Writing one from nothing]]
+3. [[file:48-seissol-from-spack-to-a-pr.org][SeisSol from Spack to a PR]]
 4. [[file:48-seissol-from-spack-to-a-pr.org][SeisSol, from a Spack recipe to a PR]]
