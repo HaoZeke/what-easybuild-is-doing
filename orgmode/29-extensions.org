@@ -177,7 +177,7 @@ This provides an escape hatch for an extension whose importable name does not ex
 An extension providing three importable modules gets three commands.
 Each command must pass.
 
-For Python, the conventional filter is an import:.
+For Python, the conventional filter is an import.
 #+begin_example
 exts_filter = ("python -c 'import %(ext_name)s'", '')
 #+end_example
