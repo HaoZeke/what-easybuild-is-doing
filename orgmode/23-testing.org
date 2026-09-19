@@ -65,6 +65,19 @@ The framework wraps the test step precisely so this is possible: a failure is ro
 =skipsteps = ['test']= in the easyconfig does the same thing permanently, for everyone, and that is the one to think twice about.
 [[file:27-four-things-that-actually-happened.org][Four things that actually happened]]'s third case is a =skipsteps= that was defensible and still wrong: the check was reporting a real defect somewhere else, and switching it off moved the discovery to a user.
 *a skipped test needs a comment saying why.* *an ignored test needs somebody to have read the failure.* Both are legitimate.
+Where the flag lives matters as much as which flag it is.
+=--ignore-test-failure= belongs in the build list, because it states one site's tolerance for one package and says nothing about the software.
+That placement has a consequence worth naming.
+A production list and a test pipeline can carry different flags for the same easyconfig, and nothing reports the difference.
+The pipeline running without the flag tests something stricter than what the site installs, and its failure reads as a defect in the recipe.
+It is not one.
+A GROMACS build with PLUMED showed the shape.
+The CPU architectures passed every test.
+One GPU node failed the two-rank MPI tests that the production list had tolerated for that package for years.
+Four rebuilds went into making those tests pass, on the belief that the flag could not be carried where it was needed.
+It could.
+Check that a constraint exists before building around it.
+A rebuild is an expensive way to test a belief about a configuration file.
 * The sanity check is a test
 Restating this is important.
 The =sanity_check_paths= assert that files and directories exist.
