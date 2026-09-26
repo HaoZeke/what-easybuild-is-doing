@@ -220,7 +220,7 @@ export CC=mpicc
 export CXX=mpicxx
 export FC=mpifort
 #+end_example
-A second run with the same path refuses to overwrite.
+A second run with the same path stops rather than overwrite.
 The tool calls it an environment.
 #+ATTR_EB: :id EB-DevEnv-2 :title Archaeology on one install
 #+begin_exercise

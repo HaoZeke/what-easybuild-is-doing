@@ -32,7 +32,7 @@
 
    A how-to path may enter RecipeReader, StackWalker, or ReframeReader.
 #+end_export
-A journey is a how-to path. The same page may sit on more than one.
+A journey is a how-to path. The same page may belong to more than one.
 #+begin_export rst
 .. rst-class:: eb-journeys
 

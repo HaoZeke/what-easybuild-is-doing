@@ -263,7 +263,7 @@ A requirement that often surprises users is that a successful test report must b
 The author of the pull request may not merge their own changes.
 Upstream CI parses and style‑checks every easyconfig but does not build them.
 Human verification provides the build evidence.
-The contributing docs want a test report on the PR:
+The contributing docs ask for a test report on the PR:
 =eb --from-pr <PR#> --upload-test-report --force --robot=.
 That is a build plus a comment, not one of the four meanings of
 [[file:23-testing.org][Testing]].

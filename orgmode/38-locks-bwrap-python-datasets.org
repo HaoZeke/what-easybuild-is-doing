@@ -50,7 +50,7 @@
 - [[file:14-the-isolation-policy.org][The isolation policy]]: the
  build's environment. =--bwrap= is a later isolation.
 #+end_prerequisites
-Four EasyBuild 5 surfaces sit beside the machinery in 13–19.
+Four EasyBuild 5 surfaces extend the machinery of chapters 13 to 19.
 They are not part of eb-stack.
 They explain a campaign finding of class =install= or =runtime=,
 and can name the framework rather than the recipe.
