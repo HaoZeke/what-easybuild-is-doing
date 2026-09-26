@@ -74,12 +74,12 @@ ReFrame copies =src/= into the stage directory.
 ReFrame performs the build there.
 =sourcepath=, =build_system= and the Make, CMake, Autotools, Spack
 and EasyBuild backends constitute the How To. The EasyBuild backend
-is the official =ZlibEBCheck= path: the test *builds* with =eb=, it
-does not only =module load=.
+is the official =ZlibEBCheck= path: the test *builds* with =eb= as well as
+running =module load=.
 ExCALIBUR-tests exercises each of them.
 The default configuration performs a single-file compilation using the compiler from the current environment.
-A run-only test may also ship files adjacent to itself via =readonly_files= or by using the same =src/=.
-EESSI's mpi4py test ships =mpi4py_reduce.py= in this manner.
+A run-only test may also carry files adjacent to itself via =readonly_files= or by using the same =src/=.
+EESSI's mpi4py test carries =mpi4py_reduce.py= in this manner.
 The script is included in the test while the interpreter and =mpi4py= are provided by the module.
 * Loading a module is the EasyBuild join
 

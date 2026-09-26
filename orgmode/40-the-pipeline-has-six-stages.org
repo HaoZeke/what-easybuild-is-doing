@@ -74,7 +74,7 @@ It may be local or remote.
 
 Sanity reads files that the run stage wrote on the host after the job finished.
 Performance reads files that the run stage wrote on the host after the job finished.
-A sanity function that tries to open a path that exists only on the compute node will not find it.
+A sanity function that opens a path existing only on the compute node will not find it.
 The path must be in the stage directory.
 The stage directory must be shared.
 The EESSI configuration comments state that the stagedir must be a shared directory.
@@ -90,7 +90,7 @@ It does not fail in =run=.
 * Two execution policies
 Serial mode: each test enters the pipeline only after the preceding test has exited.
 Compile and run still execute for every test.
-The wait is between tests, not an idle compile or run stage.
+The wait falls between tests rather than inside a compile or run stage.
 
 Asynchronous mode: multiple tests run concurrently.
 When a test reaches compile or run, ReFrame does not block.
@@ -99,7 +99,7 @@ A concurrency limit (=max_jobs= on the partition, =max_local_jobs= on the host) 
 This configuration is the default for cluster use.
 A suite of thirty GROMACS cases does not submit thirty jobs simultaneously unless the partition permits it.
 
-The time printed for the run stage reflects ReFrame's time, not the scheduler's.
+The time printed for the run stage is ReFrame's time, measured from submission.
 It includes queue time.
 It does not represent the binary's runtime.
 * Hooks

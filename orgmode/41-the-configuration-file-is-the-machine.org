@@ -121,7 +121,7 @@ A test that writes =num_tasks = 128= hardcodes this cluster.
 A test that asks the partition for its CPU count does not hardcode the cluster.
 A portable test leaves the machine in the config as that hook.
 =max_jobs= is the partition's concurrency cap for the asynchronous policy.
-Eight is a starting number, not a recommendation.
+Eight is a starting number to measure from.
 A site that shares a QoS with users sets this from the QoS instead of a tutorial.
 * Features, extras and the filter syntax
 Partitions or environments declare =features=, a list of tags.

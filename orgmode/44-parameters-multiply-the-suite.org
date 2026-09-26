@@ -101,7 +101,7 @@ Two modules multiplied by three scales yield six cases on one partition.
 The invocation may specify =-S n_iterations=200=.
 Hooks execute after =init=.
 The product exists before =init=.
-=self.module_name= is a single string, not a list.
+=self.module_name= is a single string.
 =self.scale= is a single integer.
 Module load belongs in hooks.
 Task count belongs in hooks.

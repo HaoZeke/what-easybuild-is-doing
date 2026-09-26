@@ -87,7 +87,7 @@ A pattern missing from the first ten lines of the =FAILURE INFO= excerpt often a
 Upon success, the three files are moved to =output/<system>/<partition>/<environ>/<test>/= and the stage directory is removed.
 Upon failure, the files remain in place.
 A site that greps only =output/= for failures finds no results.
-* Restore the session, not the suite
+* Restore the session, and leave the suite alone
 
 #+begin_example
 reframe --restore-session --failed -r
@@ -112,7 +112,7 @@ The listing shows =skipped=.
 Treating skips as passes causes a GPU test to appear green on a CPU partition.
 The debug log resides at =$RFM_PREFIX/logs/reframe_<date>_<time>.log=, or at =/tmp/rfm-*.log= when no prefix is set.
 The file records why a test was filtered out before any stage executed.
-If =reframe -l= fails to list a test that the on‑disk file defines, that log is consulted next, not the stage directory.
+If =reframe -l= fails to list a test that the on‑disk file defines, that log comes next, before the stage directory.
 #+ATTR_EB: :id EB-ReFrame-47-1 :title Where to look
 #+begin_exercise
 Four reports. For each, name the first file or directory

@@ -55,7 +55,8 @@ The first binds the test to a single system name.
 The second provides the system's core count as a constant.
 The third supplies two module strings present in that site's tree.
 A 64-core node running EESSI's =mpi4py/3.1.5-gompi-2023b= still fails the first filter and oversubscribes when the name is patched manually.
-EESSI's writing-tests page presents a three-step tutorial: write the Slurm scripts for one machine, write the ReFrame test that encodes those scripts, then remove the machine.
+EESSI's writing-tests page presents a three-step tutorial.
+Write the Slurm scripts for one machine, write the ReFrame test that encodes them, then remove the machine.
 The third step is a mixin.
 The test class retains the workload.
 The configuration retains the node.
@@ -119,7 +120,7 @@ A site that omits them produces tests that cannot compute a task count.
 Those tests skip or fall back to a conservative option.
 A site that misrepresents the configuration causes tests to follow the same misrepresentation.
 The portable suite reflects the accuracy of that file.
-CSCS's webinar demonstrates the same expansion: STREAM as a local binary, followed by the same class on any partition described by the configuration.
+CSCS's webinar shows the same expansion: STREAM as a local binary, followed by the same class on any partition described by the configuration.
 ExCALIBUR-tests applies this in item 3 of its outline, "Configuring ReFrame to run tests on HPC systems", before creating a second test.
 The order conveys the lesson.
 The machine is entered into the configuration first.

@@ -65,7 +65,7 @@ The nightly drops the tag and keeps the HECBioSim ladder.
 The end user passes =--name GROMACS= or does not.
 The mapping lives in EESSI/software-layer-scripts, not next to the test classes.
 Testing and the four things it can mean already named it: [[https://github.com/EESSI/software-layer-scripts/blob/main/tests/eessi_test_mapping/software_to_tests.yml][software_to_tests.yml]].
-Adding GROMACS to the stack without a line in that file causes a green build to ship a module that the suite will not touch.
+Adding GROMACS to the stack without a line in that file gives a green build a module the suite will not touch.
 The generalisable rule is that a test has a location, and a result without its location is not a result.
 The mapping is that location, written down.
 Available tests in the public suite include GROMACS (six HECBioSim systems, implemented on top of ReFrame's =hpctestlib=), TensorFlow (the multi‑worker Keras tutorial), CP2K, OpenFOAM and the OSU microbenchmarks.
@@ -93,7 +93,7 @@ reframe -C cscs-reframe-tests/config/cscs.py \
 The listing command is the inventory. The nightly job in [[https://github.com/eth-cscs/cscs-reframe-tests/tree/master/ci][ci/]] runs =--mode daily_production=.
 A site copying this layout does not need EESSI.
 The site must have a configuration file describing its partitions, a directory of tests that do not name those partitions, and a nightly job that runs that pair.
-=portable_tests.md= in that tree defines the written rule for what a check may assume.
+=portable_tests.md= in that tree defines the written rule for what a check may take for granted.
 EESSI's mixin implements the same rule, enforced in code.
 * LUMI, CSC and why this is a part
 The CSC Finland computing‑environment course contains ten topics on using Puhti and Mahti, including modules, batch jobs, Allas and containers.

@@ -54,7 +54,7 @@
 SeisSol 1.3.2 is the tagged release this case used.
 The EasyBuild robot on =develop= had [[https://github.com/easybuilders/easybuild-easyconfigs/blob/develop/easybuild/easyconfigs/s/SeisSol/SeisSol-1.1.4-foss-2023a.eb][SeisSol-1.1.4-foss-2023a.eb]].
 Spack's =seissol= recipe stopped at tag 1.3.1.
-The next EasyBuild file is a bump of 1.1.4, not a blank plan of that Spack file.
+The next EasyBuild file is a bump of 1.1.4 rather than a blank plan of that Spack file.
 [[file:12-eb-stack-updater-and-generator.org][eb-stack ports a recipe and bumps one]] already split those two jobs.
 This page is the overlay that came out, the site install, and the PR.
 The first site build found two defects.
@@ -72,8 +72,8 @@ A SeisSol-only bump that exits 0 while ASAGI, easi, or PSpaMM have no
 =foss-2025a= candidate is a hole. The parent exits 1 and prints the
 holes. The text after each =companion== is a full =eb-stack package=
 command. =re_run== is the parent command again.
-The transcript below is a recorded parent bump, not a description of
-a PR. Each =companion== line is a command that was printed.
+The transcript that follows is a recorded parent bump rather than a
+description of a PR. Each =companion== line is a command that was printed.
 
 #+begin_src ebtranscript :source "eb-stack package bump, 2026-09-11" :caption "Parent bump exits 1; three companion= lines, then re_run="
 $ eb-stack package bump \
@@ -232,7 +232,7 @@ A paste through a narrow terminal had wrapped the patch into a different byte st
 The named checksum was still the official =ASAGI-1.0_fix-level.h.patch= from =develop=.
 The file under that name was not that archive.
 [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] is this failure, at site scale.
-The repair is a fetch of the upstream patch, not a new hash of the broken file.
+The repair fetches the upstream patch; hashing the broken file again repairs nothing.
 ** The import that was the EasyBuild name
 ASAGI then installed.
 PSpaMM failed sanity:

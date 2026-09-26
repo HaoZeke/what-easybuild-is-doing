@@ -93,15 +93,15 @@ P: triad_bw: 14883.4 MB/s (r:0, l:None, u:None)
 =$RFM_PERF_INFO_LEVEL= raises the log level of the =P:= lines if a suite's stdout is too noisy.
 The durable record is the perflog, by default at =perflogs/<system>/<partition>/<testname>.log=, or under =$RFM_PREFIX/perflogs/= when the prefix is set.
 It is a CSV whose columns are configurable.
-A site that graphs STREAM triad over six months reads this file, not the session JSON.
+A site that graphs STREAM triad over six months reads this file rather than the session JSON.
 The session JSON lives under =$HOME/.reframe/reports/=, with =latest.json= pointing at the last run. --restore-session= in Reading a failed ReFrame run reads it.
 Past performance can be queried from the same database and compared to the current run.
-That is a How To in the official docs, not a mechanism this page needs.
+That is a How To in the official docs, outside what this page needs.
 * What a number does not say
 The run-stage timer includes queue time.
 The pipeline has six stages.
 A performance function that extracts a runtime from the *application's* output does not.
-STREAM's =Copy:= line is a bandwidth measured by the binary.
+STREAM's =Copy:= line is a memory transfer rate measured by the binary.
 GROMACS's =ns/day= is a throughput measured by the binary.
 Both are independent of job wait time.
 A performance function that returns ReFrame's own elapsed time measures the queue.
