@@ -55,8 +55,8 @@ The easyblock resolved the active CUDA version correctly and patched the install
 The installer linked the unversioned entries at the newest CUDA in the tarball regardless.
 Reaching for a version-detection parameter would have set a value that was already correct.
 
-It was one batch, not a partial rebuild.
-The four installs are stamped =16:14=, =16:18=, =16:25= and =17:59= on 2026-01-27.
+It was one batch, with every install rebuilt.
+The four installs carry the times =16:14=, =16:18=, =16:25= and =17:59= on 2026-01-27.
 Same day, same easyconfig, same run.
 Two of them came out one way and two the other.
 
@@ -69,7 +69,7 @@ Any theory of the form "the GPU builds got the newer CUDA" is contradicted by th
 
 The fix set the symlinks in =postinstallcmds=.
 It runs before the sanity check.
-The check that had been failing could pass honestly.
+The check that had been failing could pass on its merits.
 * The login node that lied, twice
 The task took one day.
 =/sw/arch= is a symlink for each node architecture.
@@ -105,7 +105,7 @@ The conclusion was still wrong.
 The next two facts are easy to state.
 They were not obvious at the time.
 Switching the check off did not make the binary start.
-It moved the discovery from a build host to a user.
+It moved the discovery from a build machine to a user.
 That is [[file:06-what-installed-means.org][What "installed" means]]'s whole argument.
 The check was carrying information: *the toolchain module is broken*.
 That requires escalation.

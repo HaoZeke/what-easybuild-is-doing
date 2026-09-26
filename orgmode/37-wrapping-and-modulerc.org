@@ -51,7 +51,7 @@ It stays applicable to an easyconfig.
 =dependencies= list does not contain =>=1.14.6=.
 The site already provides HDF5 1.14.6.
 Many recipes require 1.14.5.
-Rebuilding those recipes is the honest pin.
+Rebuilding those recipes is the pin that matches what was built.
 An alternative approach uses wrapping.
 Wrapping resides *outside* the requesting recipe.
 * ModuleRC writes a.modulerc and nothing else
@@ -69,7 +69,7 @@ This does not create a range in the asking recipe.
 The asking recipe still names 1.14.5.
 The site's module tree responds with a different module.
 The robot resolving a *build* still looks for an easyconfig of the pinned version unless wrapping-dependencies is also configured for the build.
-* wrapping-dependencies is a configuration, not a syntax
+* wrapping-dependencies is a configuration setting
 The =wrapping-dependencies= setting in EasyBuild lists installations that may satisfy a request for an older version at *runtime*.
 It also applies at resolve time when configured.
 A site uses this to declare that a particular HDF5 version is close enough without editing many files.

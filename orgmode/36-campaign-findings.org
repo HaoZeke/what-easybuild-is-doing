@@ -129,7 +129,7 @@ The finding reflects the compiler line rather than the wrapper.
 
 A SAT-compatible dependency that fails to compile remains =compile= until evidence supports a stack exclusion.
 A compiler killed with "virtual memory exhausted" is =resource=: keep the selected dependency and raise =EASYBUILD_PARALLEL= or the allocation.
-The class is the first surface, not the diagnosis.
+The class is where diagnosis starts, and it is not yet a diagnosis.
 * Claim, then resolve, then retry
 
 #+begin_example

@@ -151,7 +151,7 @@ Three separate mistakes are in that list and only one of them is the symlink.
 *Switching the check off moved the discovery to a user.* The check was reporting a real defect and no change to this package could repair it.
 The checks were true. The conclusion was not.
 The check was carrying information about the *toolchain*.
-Deleting the report left the toolchain broken and the package shipping.
+Deleting the report left the toolchain broken and the package in front of users.
 [[file:23-testing.org][Testing, and the four things it can mean]].
 *The workaround spread while the defect was hidden.* A skipped check costs more than one package: the next recipe copied the workaround along with everything else.
 *The retraction is the part to learn from.*

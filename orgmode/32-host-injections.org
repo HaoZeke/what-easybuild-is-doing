@@ -51,7 +51,8 @@
  bot, pointed at a different repository.
 #+end_prerequisites
 EESSI provides a shared software stack.
-A site may have software not shipped by EESSI, including a closed‑source licence, software not yet on the tree, and software tuned for a specific fabric.
+A site may have software EESSI does not provide.
+Examples are a closed‑source licence, software not yet on the tree, and software tuned for a specific fabric.
 A webinar on 1 June 2026 by Caspar van Leeuwen and Bob Dröge addresses that situation.
 The official =host_injections= page lists four bullets and a symlink.
 The webinar describes two approaches, two live clusters, and the variables that enable a login session to see both trees.
@@ -129,7 +130,7 @@ The quoted goal is to build using dependencies from EESSI.
 The build occurs in a CVMFS repository of our own.
 The build uses the EESSI build bot.
 The same build scripts from =software-layer-scripts= are used.
-The "what we need" slide adds a site Stratum-0 and, in production, Stratum-1s and proxies.
+The "what we need" slide adds a site Stratum-0 and, in production, Stratum-1 servers and proxies.
 One bot instance per cluster builds natively.
 An S3‑compatible bucket is required.
 A GitHub repository whose easystack path is this file:
@@ -160,12 +161,12 @@ The Stratum-0 cannot employ the automounter.
 Rebuilds on a site repository use the same =rebuilds/= directory.
 An easystack is the list the bot will build.
 The scripts include the =--rebuild= option.
-Removal is a Stratum-0 transaction and an Lmod cache rebuild, not a bot comment.
+Removal is a Stratum-0 transaction and an Lmod cache rebuild; a bot comment cannot do it.
 * Drivers, CUDA and an ABI-compatible MPI
 Three items are added *into* the injection tree by a site, even if the remaining site stack resides in the prefix recommended by Approach 1.
 The runtime includes *NVIDIA drivers*.
 The driver is bound to the host kernel.
-It cannot be shipped in the repository.
+It cannot be distributed in the repository.
 For EESSI 2025.06 and later the compatibility‑layer linker searches.
 #+begin_example
 /cvmfs/software.eessi.io/versions/<ver>/compat/<os>/<arch>/lib/nvidia

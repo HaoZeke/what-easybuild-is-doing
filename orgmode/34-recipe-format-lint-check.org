@@ -61,7 +61,7 @@ eb-stack ports a recipe. eb-stack bumps the =lint= component. eb-stack bumps the
 The three components are not aliases.
 * Format rewrites physical lines
 The =recipe format= performs deterministic physical‑line wrapping.
-It is the entire contract.
+Nothing else changes.
 Product configuration, source selection, checksums, patches and sanity paths remain as authored.
 #+begin_example
 eb-stack recipe format RECIPE.eb
@@ -71,10 +71,10 @@ eb-stack recipe format RECIPE.eb --out FORMATTED.eb
 Omit =--out= to rewrite the file in place.
 Use =--dry-run= to print the wrapping while leaving the file unchanged.
 E501 in EasyBuild style indicates the line‑length warning that this command resolves.
-The =mechanical= residual of Inspect writes a work queue, not a recipe; the residual is "the emitter wrapped a list past the column".
+The =mechanical= residual from Inspect is "the emitter wrapped a list past the column".
 The output does not correspond to =eb --check-style=.
 The output does not reflect an opinion about =configopts=.
-A format run that changes a checksum or a patch order is a bug in the formatter, not a feature.
+A format run that changes a checksum or a patch order is a bug in the formatter.
 * Lint reports; it does not repair
 * Check is the robot question
 The =recipe check= opens other files.
@@ -96,7 +96,7 @@ A check failure reporting an absent dependency is not a format problem.
 It indicates either a missing overlay (the eOn core-guard recipes reside in [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/eon_core_rgpot/easyconfigs][fixtures/eon_core_rgpot/easyconfigs/]] for this reason) or a stack-policy pin that selected a candidate the robot does not possess.
 The subsequent command is not =recipe format=.
 The maintainer fixtures under [[https://github.com/HaoZeke/eb-stack/tree/main/fixtures/maintainer_*][fixtures/maintainer_*/]] constitute the other half of the check: fat vs thin, a cross-generation pin, a shell-monster, a patchelf RPATH.
-Those represent =recipe check= plus the maintainer-acceptability gate, not lint.
+Those are =recipe check= plus the maintainer-acceptability check, which lint does not cover.
 #+ATTR_EB: :id EB-Recipe-1 :title Which command
 #+begin_exercise
 Four observations. Name the command that addresses each one, and

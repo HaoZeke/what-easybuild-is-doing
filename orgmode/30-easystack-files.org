@@ -121,7 +121,8 @@ eb_version=$(echo ${easystack_file} | sed 's/.*eb-\([0-9.]*\).*.yml/\1/g')
 source ${TOPDIR}/load_easybuild_module.sh ${eb_version}
 #+end_example
 A line added to the 5.3.0 file is built with EasyBuild 5.3.0, even when 5.4.0 is already present on the tree.
-A new package is placed in the file for the *current* EasyBuild release on that EESSI version, rather than in an older file that lists similar software.
+A new package goes in the file for the *current* EasyBuild release on that EESSI version.
+An older file that lists similar software is the wrong place.
 The =001-system= files run first.
 The 2023.06 README in =software-layer= states: "Software installed with system toolchain should be installed first, this includes EasyBuild itself."
 CUDA easystacks are processed before any components that depend on CUDA.
@@ -155,7 +156,7 @@ GROMACS 2026.2 on the same file also pulls an easyblock from a commit.
 The webinar explicitly states the merge order.
 The software-layer pull request may be opened while the easyconfig pull request remains open.
 Deployment to the CernVM-FS repository occurs only after merging the EasyBuild pull request.
-A =from-commit= pin is a temporary bridge, not a permanent source of truth.
+A =from-commit= pin is temporary; the merged easyconfig becomes the source of truth.
 The 2026.06 tree maintains the same shape and reflects a newer generation.
 The live =eessi-2026.06-eb-5.4.0-2026.1.yml= opens with OpenMPI and =foss-2026.1.eb=, which declares the first toolchain generation of a new EESSI version.
 #+ATTR_EB: :id EB-Easystack-1 :title Which file, and which options
@@ -222,8 +223,10 @@ fi
 #+end_example
 The directory is the flag.
 Placing a rebuild in the ordinary easystack file does not cause =--rebuild= to be passed, and EasyBuild will not overwrite an existing installation.
-Placing a new package in =rebuilds/= causes =--rebuild= to be passed and bypasses the robot, which is the incorrect command for a package that has not yet been added.
-The comments at the top of a rebuild file constitute the bill of materials: what was rebuilt, why and which issue or pull request required it.
+Placing a new package in =rebuilds/= passes =--rebuild= and bypasses the robot.
+That is the incorrect command for a package that has not yet been added.
+The comments at the top of a rebuild file are the bill of materials.
+They say what was rebuilt, why, and which issue or pull request required it.
 The CUDA 12.1.1 rebuild from May 2024 is the documented template, including =accept-eula-for: CUDA= under =options:=.
 * How the bot finds the file at all
 The bot ignores tickets and commit messages when deciding what to build.

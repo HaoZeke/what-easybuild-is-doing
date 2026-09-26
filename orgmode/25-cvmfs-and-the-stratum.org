@@ -81,7 +81,8 @@ Yfe0b764e723f0fdba0522e72b59f86f66f5234d7
 5647f8f42af43e4fb10ec4c3586fa5fbd823982d
 <256 bytes of RSA signature>
 #+end_src
-The format consists of thirteen fields, each represented by a single letter, followed by a separator, a 40‑character certificate fingerprint, and a 256‑byte signature, totaling 603 bytes for a repository containing three generations of a software stack.
+The format is thirteen single-letter fields, a separator, a 40‑character certificate fingerprint, and a 256‑byte signature.
+For a repository holding three generations of a software stack, the whole file is 603 bytes.
 The next ten letters are the ones this page uses.
 =C= is the content hash of the root file catalog.
 =B= is the catalog size, 26624 bytes.
@@ -94,7 +95,7 @@ The value is the MD5 of the empty string.
 =T= is a Unix timestamp, 2026-09-09 08:41:32 UTC.
 =X= is the hash of the certificate that signed this.
 =H=, =M= and =Y= are hashes of the tag history, the repository metadata, and the reflog checksum.
-The same request against a different Stratum 1 returns byte‑for‑byte identical data.
+The same request against a different Stratum 1 returns the same bytes.
 #+begin_src ebtranscript :source "curl against two EESSI Stratum 1 endpoints, 2026-09-10" :caption "Two replicas, one answer"
 $ curl -sS http://aws-eu-central-s1.eessi.science/cvmfs/software.eessi.io/.cvmfspublished \
 > | head -2
@@ -103,7 +104,7 @@ B26624
 #+end_src
 Replication means that a Stratum 1 mirrors immutable objects and includes a copy of the signed manifest.
 Replication does not make a Stratum 1 an independent service with its own state.
-* Content addressing, checked rather than believed
+* Content addressing, and how to check it
 
 #+ATTR_EB: :title Two numbers, before you look
 #+begin_predict
@@ -288,7 +289,7 @@ The suffix C is the catalog object. A regular file has no suffix. Other catalog 
 The fourth software-layer line =.../software/*/*= cuts a catalog per installed package version.
 Opening one module's files pulls in metadata for that package only.
 The line above it, =.../reprod=, is the reproducibility directory of [[file:24-development-environments.org][Standing where the build stood]].
-EESSI ships the easyconfig, the environment script, and the easyblock source for everything in the stack.
+EESSI publishes the easyconfig, the environment script, and the easyblock source for everything in the stack.
 The items are catalogued separately.
 The items cost nothing until requested.
 #+begin_src ebtranscript :source "curl and zlib against the EESSI Stratum 1, 2026-09-10; the file is 1283 bytes, abridged here" :caption "EESSI's own .cvmfsdirtab, fetched by content hash"
@@ -320,7 +321,7 @@ $ python3 -c "import zlib;print(zlib.decompress(open('dirtab.z','rb').read()).de
 The fourth software-layer line =.../software/*/*= cuts a catalog *per installed package version*.
 Opening one module's files pulls in metadata for that package only.
 The line above it =.../reprod= is [[file:24-development-environments.org][Standing where the build stood]]'s reproducibility directory.
-EESSI ships the easyconfig, the environment script and the easyblock source for everything in the stack.
+EESSI publishes the easyconfig, the environment script and the easyblock source for everything in the stack.
 These items are catalogued separately.
 They cost nothing until asked for.
 #+ATTR_EB: :id EB-CVMFS-2 :title Verify a repository yourself
@@ -435,9 +436,11 @@ Everything a client observes is a published revision, indicated by the =S= field
 A client does not apply an older revision.
 When a particular revision of a file system resides in a client's local cache, the client will no longer apply an older revision.
 * One writer
-Stratum 1 is a standard web server that uses the CernVM-FS server toolkit to create and maintain a mirror of a CernVM-FS repository served by Stratum 0.
+Stratum 1 is a standard web server.
+It uses the CernVM-FS server toolkit to keep a mirror of a repository served by Stratum 0.
 It is registered with =cvmfs_server add-replica= and kept current by =cvmfs_server snapshot -a= from cron.
-Squid is present twice in a deployment with different jobs: a reverse proxy in front of a Stratum 1 and a forward proxy in front of clients.
+Squid appears twice in a deployment, with different jobs.
+One is a reverse proxy in front of a Stratum 1; the other is a forward proxy in front of clients.
 The recommended forward-proxy configuration includes one line that decides how a cluster behaves at the start of a job array.
 * Getting it to a thousand machines
 Multiple simultaneous requests for the same object combine into a single request to a Stratum 1 server.
