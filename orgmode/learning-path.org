@@ -46,7 +46,7 @@ Numbering does not represent the curriculum.
 | EasyBuild is the wrong tool. | [[file:afterword-when-easybuild-is-the-wrong-tool.org][the afterword]] |
 * RecipeReader
 
-* Level A. Read a recipe
+* Level A: read a recipe
 One hour.
 No installations are present.
 No configuration is required.
@@ -60,7 +60,7 @@ No configuration is required.
 The file is evaluated. The robot walks the tree. An easyblock runs the steps.
 Open a file. Write =name = 'thing'=, =version = '1.0'=, and a
 toolchain the site has. That is the first typed-in recipe.
-* Level B. Understand why a build fails
+* Level B: understand why a build fails
 Two hours.
 The level where most support tickets reside.
 Requires level A.
@@ -72,7 +72,7 @@ Requires level A.
 | [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] | why a suffix is identity |
 | [[file:06-what-installed-means.org][What "installed" means]] | what a sanity check asserts |
 | [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] | what a checksum does and does not promise |
-* Level C. Work on a machine
+* Level C: work on a machine
 Estimated time: two hours.
 Requires level A. Level B speeds it up.
 [[file:20-reading-a-failed-build.org][Reading a failed build]] covers reading the error block and the log.
@@ -81,7 +81,7 @@ Requires level A. Level B speeds it up.
 [[file:28-your-first-week.org][Your first week on somebody's stack]] covers three tasks of the kind handed to a newcomer.
 Use level C when something is failing.
 Reading a failed build is intended for that situation.
-* Level D. Read the machinery
+* Level D: read the machinery
 Three hours.
 B and C are required.
 Read [[file:13-how-a-build-executes.org][How a build executes]] for the eighteen steps and which parameter belongs to which owner.
@@ -92,7 +92,7 @@ Read [[file:16-what-a-toolchain-injects.org][What a toolchain injects]] for =opt
 Read [[file:17-patches.org][Patches, and what a patch is relative to]] for strip levels.
 Read [[file:17-patches.org][Patches, and what a patch is relative to]] for applying cleanly versus applying correctly.
 Read [[file:19-what-a-module-exports.org][What a module exports]] for the user‑facing interface.
-* Level E. Write a recipe
+* Level E: write a recipe
 Three hours.
 Needs D.
 
@@ -108,21 +108,21 @@ Needs D.
 Testing, and the four things it can mean names the fourth kind and stops.
 [[file:part-a-test.org][ReframeReader]] is that kind.
 * StackWalker
-* Level F. Distribute a stack
+* Level F: distribute a stack
 [[file:25-cvmfs-and-the-stratum.org][CernVM-FS]] and [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]].
-Two hours. The artifact is a mounted tree, not a tarball.
+Two hours. The artifact is a mounted tree rather than a tarball.
 * ReframeReader
 The official tutorial, the CSCS webinar, ExCALIBUR-tests and the EESSI suite each follow the same sequence.
 The sequence consists of a test class, the pipeline, the configuration file, a performance number, and the portable suite.
 There are two levels.
 The grain matches the recipe.
-* Level G. Write a ReFrame test
+* Level G: write a ReFrame test
 [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]],
 [[file:40-the-pipeline-has-six-stages.org][The pipeline has six stages]],
 [[file:41-the-configuration-file-is-the-machine.org][The configuration file is the machine]],
 and [[file:42-a-performance-function-is-a-number-with-a-unit.org][A performance function is a number with a unit]].
 Two hours.
-* Level H. Run a portable suite
+* Level H: run a portable suite
 Two hours.
 Needs G. [[file:44-parameters-multiply-the-suite.org][Parameters multiply the suite]] compares =parameter= against =variable= and explores the cartesian product.
 [[file:45-a-portable-test-leaves-the-machine-in-the-config.org][A portable test leaves the machine in the config]] explains why =valid_systems = ['snellius']= is the trap.

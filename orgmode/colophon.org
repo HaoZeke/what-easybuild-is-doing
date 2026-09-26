@@ -10,12 +10,13 @@
 
 * Where this runs
 EasyBuild is a Python package.
-It installs with =pip= into a virtual environment, needs a modules tool and a compiler, and builds software on a laptop exactly as it does on a compute node.
+It installs with =pip= into a virtual environment and needs a modules tool and a compiler.
+Software compiles on a laptop exactly as it does on a compute node.
 The failing build in [[file:20-reading-a-failed-build.org][Reading a failed build]] and the checks in [[file:21-writing-one-from-nothing.org][Writing one from nothing]] ran on a workstation.
 EESSI's installation instructions cover a laptop.
-CernVM-FS ships a client profile for that case.
+CernVM-FS provides a client profile for that case.
 [[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] does it on four kinds of machine.
-On a large shared machine the *consequences* change, not the mechanism: more users than maintainers, one tree, a scheduler, several microarchitectures, and a rebuild that costs somebody a night.
+On a large shared machine the mechanism stays the same and the *consequences* change: more users than maintainers, one tree, a scheduler, several microarchitectures, and a rebuild that costs somebody a night.
 * The path and the papers
 The learning path is [[file:learning-path.org][A path through this book]].
 The bibliography is [[file:papers.org][Papers]].

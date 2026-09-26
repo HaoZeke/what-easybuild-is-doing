@@ -45,7 +45,7 @@ This part also teaches ReFrame.
    ReframeReader is a class becoming a run. The machine stays in the configuration.
 #+end_export
 Start at [[file:39-a-reframe-test-is-a-class.org][A ReFrame test is a class]].
-This step assumes that Testing, and the four things it can mean has already been read.
+This step expects Testing, and the four things it can mean to have been read first.
 #+begin_export rst
 .. rst-class:: eb-upstream
 

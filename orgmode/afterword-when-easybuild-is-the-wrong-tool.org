@@ -10,7 +10,8 @@
 * What EasyBuild is built to be good at
 EasyBuild builds software from source reproducibly into a curated generation of exact versions.
 EasyBuild produces modulefiles for a shared system whose users outnumber its maintainers by a factor of a thousand or more.
-Exact pins, generation timing, and from‑source build costs are covered respectively in [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]], [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]], and [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
+Exact pins are in [[file:03-a-pin-is-for-one-generation.org][A pin is for one generation]].
+Generation timing is in [[file:08-one-easyconfig-many-installs.org][One easyconfig, many installs]], and from‑source build costs are in [[file:10-build-your-own-without-asking.org][Build your own, without asking anyone]].
 A generation means the whole stack moves at once typically once a year.
 From-source builds take hours. A site that needs a few hundred extensions and user-defined problems pays that cost on every rebuild.
 Modulefiles make the artifact an environment rather than a copyable directory.
@@ -58,7 +59,7 @@ The choice is which cost is acceptable.
 
 - EasyBuild provides exact versions, one stack per generation, tuned builds, hours per package, one generation per year, and a maintainer in the loop.  
 - Spack offers real version ranges, per‑install resolution, tuned builds, hours per package, and a resolved graph that must be captured to reproduce.  
-- conda-forge delivers minutes per environment, identical results on a laptop and a cluster, and binaries built for portability rather than for the instruction set already paid for.  
+- conda-forge gives minutes per environment and identical results on a laptop and a cluster, with binaries built for portability rather than for one instruction set.  
 
 A site operating a large machine typically employs more than one of these systems for different user populations.
 A site that uses more than one of those systems is not failing.
