@@ -232,7 +232,7 @@ The line refers to the second log.
 It globs the log path.
 It retains only files owned by the current uid.
 It returns the newest file by modification time.
-On a shared build host it finds *your* last log rather than the machine's.
+On a shared build machine it finds *your* last log rather than the machine's.
 It implies =--terse=.
 It enables =vim $(eb --last-log)= to work.
 The reading order is often misunderstood.
@@ -240,7 +240,7 @@ The reading order is often misunderstood.
 *Search for the step markers*, not for the word error.
 =Starting configure step= and =Running method configure_step part of step configure= split the log into the eighteen sections described in [[file:13-how-a-build-executes.org][How a build executes]].
 Knowing the current environment section narrows the search.
-*Search for a command, not a complaint.* =running shell command= (or =INFO running cmd= in older logs) lists every command with its working directory and exit code.
+*Search for a command rather than a complaint.* =running shell command= (or =INFO running cmd= in older logs) lists every command with its working directory and exit code.
 Those are the facts.
 Searching for =error= yields a compiler's opinion of a header file.
 * The log, and how to search it
@@ -258,7 +258,7 @@ The line at the end of a failed run is =Results of the build can be found in the
 The line points at the second.
 =eb --last-log= prints the path to the most recent one.
 It globs the log path, keeps only files owned by your uid, and returns the newest by modification time.
-On a shared build host it finds *your* last log rather than the machine's.
+On a shared build machine it finds *your* last log rather than the machine's.
 It implies =--terse=.
 =vim $(eb --last-log)= works.
 Then the reading order is the part people get wrong.
@@ -266,7 +266,7 @@ Then the reading order is the part people get wrong.
 *Search for the step markers*, not for the word error.
 =Starting configure step= and =Running method configure_step part of step configure= divide the log into the eighteen sections from [[file:13-how-a-build-executes.org][How a build executes]].
 Knowing which one the environment is in narrows everything.
-*Search for a command, not a complaint.* =running shell command= (or =INFO running cmd= in older logs) finds every command with its working directory and exit code beside it.
+*Search for a command rather than a complaint.* =running shell command= (or =INFO running cmd= in older logs) finds every command with its working directory and exit code beside it.
 It is a list of facts.
 Searching for =error= finds a compiler's opinion of a header file.
 #+ATTR_EB: :id log-search-patterns :title Patterns worth searching a build log for :kind reference
@@ -334,7 +334,7 @@ For an autotools build, =config.log= remains in the build directory and contains
 For CMake, =CMakeFiles/CMakeOutput.log= and =CMakeFiles/CMakeError.log= remain.
 Both logs contain information that the EasyBuild log does not.
 No process cleans the tree afterwards.
-A build path filling with failed attempts is a normal way for a shared build host to run out of disk.
+A build path filling with failed attempts is a normal way for a shared build machine to run out of disk.
 Three options change where a failure happens.
 =--stop=<step>= ends the run cleanly after a named step.
 The run can stop at =configure= and allow inspection of its output.
@@ -361,7 +361,7 @@ What remains, for an autotools build, is =config.log= in the build directory.
 For CMake it is =CMakeFiles/CMakeOutput.log= and =CMakeFiles/CMakeError.log=.
 Both say things the EasyBuild log does not.
 Nobody cleans the tree afterwards.
-A build path filling with failed attempts is a normal way for a shared build host to run out of disk.
+A build path filling with failed attempts is a normal way for a shared build machine to run out of disk.
 Three options change where a failure happens.
 =--stop=<step>= ends the run cleanly after a named step.
 The run can stop at =configure= and go look at what it produced.

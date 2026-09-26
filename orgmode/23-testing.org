@@ -37,7 +37,7 @@
  =testcases= steps run.
 #+end_prerequisites
 The test comprises four distinct questions.
-Answering the incorrect question results in a broken module being shipped.
+Answering the incorrect question puts a broken module in front of users.
 They occur in the following order:
 1. The package's own test suite runs during the build.  
 That is the =test= step.
@@ -54,10 +54,12 @@ A portable test indicates that the software still works on the node used by user
 Two parameters exist and they are not the same.
 =runtest= drives the =test= step, which runs *before* install.
 On the base =EasyBlock= it is a whole command.
-Under =ConfigureMake=, which is what most easyconfigs use, it is appended to =make=, so =runtest = 'test'= means =make test=, and the composed command is =pretestopts + test_cmd + runtest + testopts= with =test_cmd= defaulting to =make=.
+Most easyconfigs use =ConfigureMake=, where it is appended to =make=, so =runtest = 'test'= means =make test=.
+The composed command is =pretestopts + test_cmd + runtest + testopts=, with =test_cmd= defaulting to =make=.
 That difference catches people: the same value means a command in one easyblock and an argument in another.
 =tests= is a different parameter and a different step.
-It is a list of scripts run in the =testcases= step, at the very end, after the module exists, and a script fails by returning non-zero.
+It is a list of scripts run in the =testcases= step, last of all, after the module exists.
+A script fails by returning non-zero.
 Three ways exist for a failing test step to proceed.
 =--ignore-test-failure= lets the build continue and records the failure.
 The framework wraps the test step precisely so this is possible: a failure is routed to =report_test_failure= rather than aborting.
@@ -151,7 +153,8 @@ A test report is evidence.
 A reviewer can tell whether the success applies.
 * Testing on hardware the site does not have
 The fourth kind.
-A build that works on the machine that built it tells nothing about the machine the users are on, which is [[file:27-four-things-that-actually-happened.org][Four things that actually happened]]'s login-node lesson in general form.
+A build that works on the machine that built it tells nothing about the machine the users are on.
+That is [[file:27-four-things-that-actually-happened.org][Four things that actually happened]]'s login-node lesson in general form.
 EESSI's answer is a portable test suite, =EESSI/test-suite=, written with ReFrame.
 Tests are mapped to software in [[https://github.com/EESSI/software-layer-scripts/blob/main/tests/eessi_test_mapping/software_to_tests.yml][tests/eessi_test_mapping/software_to_tests.yml]].
 Adding software declares which tests should now run rather than leaving somebody to remember.

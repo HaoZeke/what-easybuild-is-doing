@@ -31,7 +31,8 @@ produced the modulefile is on the other pages; this page is the load.
 3. Say what a module naming scheme changes, and what a hierarchical one
  does to =MODULEPATH=.
 #+end_objectives
-The citable unit consists of name, version, toolchain and versionsuffix, not the easyconfig filename nor EasyBuild.
+The citable unit consists of name, version, toolchain and versionsuffix.
+Neither the easyconfig filename nor EasyBuild is part of it.
 FORCE11 software citation requires the specific version that was executed.
 [[file:06-what-installed-means.org][What "installed" means]] stated that the modulefile is the only artifact a user encounters, and then did not open one.
 An example is provided.

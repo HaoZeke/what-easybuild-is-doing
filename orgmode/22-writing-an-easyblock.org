@@ -46,7 +46,7 @@ EasyBuild 5.3.1 provides 82 generic easyblock classes across 47 modules and 282 
 The generic classes exist.
 Three questions are posed in sequence.
 The first two normally resolve the issue.
-*Can =configopts= say it?* A build that requires an unusual flag, an environment variable, or a command before configure or after install does not need additional code.
+*Can =configopts= say it?* An unusual flag, an environment variable, or a command before configure or after install needs no additional code.
 =preconfigopts=, =configopts=, =prebuildopts=, =buildopts=, =preinstallopts=, =installopts= and =postinstallcmds= are strings inserted into the commands described in [[file:13-how-a-build-executes.org][How a build executes]].
 They handle more cases than expected.
 *Is there a generic easyblock for this build system?* =CMakeMake=, =MesonNinja=, =PythonPackage=, =Cargo=, =Bundle=, =Tarball=, =Binary=, =MakeCp=, =PerlModule= are available.
@@ -172,7 +172,7 @@ It symlinks the modules into that directory.
 It places the directory first on the Python search path.
 This establishes precedence.
 
-An included easyblock overrides the shipped one.
+An included easyblock overrides the one EasyBuild provides.
 That is useful for testing.
 It must not remain in a site configuration.
 

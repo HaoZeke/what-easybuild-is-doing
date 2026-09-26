@@ -102,7 +102,7 @@ A specific reason must exist to change it.
 It alters floating-point semantics.
 It changes results.
 A physics code that specifies =strict= asserts a claim about its own numerics.
-Altering it silently modifies the scientific outcome.
+Altering it without saying so modifies the scientific outcome.
 * optarch decides where the binary runs
 =optarch= is enabled by default and has the greatest impact.
 When enabled, the compiler receives =-march=native= or the toolchain's equivalent to optimise for the current microarchitecture.
@@ -115,7 +115,8 @@ The site can then build for a named baseline instead of the specific node where 
 Setting =toolchainopts = {'optarch': False}= disables it for a single package.
 Use this option when a package is known to miscompile under aggressive optimisation.
 An easyconfig requiring =optarch: False= must include an explanatory comment.
-The comment is a claim about the software, not the site, preventing future readers from assuming a cargo‑culted setting.
+The comment is a claim about the software rather than the site.
+It stops a later reader from taking the setting for a cargo‑culted one.
 #+ATTR_EB: :id EB-Toolchainopts-1 :title Four errors, four options
 #+begin_exercise
 Four build failures, each fixed by one =toolchainopts= key.
