@@ -38,16 +38,17 @@
  neither and read it as reference.
 #+end_prerequisites
 [[file:25-cvmfs-and-the-stratum.org][Reading a stack off the wire: CernVM-FS]] dissected a repository.
-The page uses that repository on machines lacking their own software stack, such as a laptop, a continuous‑integration runner, a cloud instance, and a cluster with externally managed stack.
+The page uses that repository on machines without a software stack of their own.
+The examples are a laptop, a continuous-integration runner, a cloud instance, and a cluster whose stack someone else manages.
 The tested claim originates from EESSI: "The host OS still provides a couple of things, like drivers for network and GPU, support for shared filesystems like GPFS and Lustre, a resource manager like Slurm, and so on."
-Those host pieces stay on the host. CernVM-FS delivers the three layers.
+Those host pieces stay on the host. CernVM-FS carries the three layers.
 * Three layers, and what each one does not do
 EESSI has three layers.
 The division is the interesting part.
 
 *The filesystem layer* is CernVM-FS.
 Reading a stack off the wire: CernVM-FS.
-It delivers bytes.
+It moves bytes.
 It verifies them.
 It knows nothing about software.
 
@@ -61,6 +62,16 @@ The host distribution stops mattering.
 
 The prefix path is =$EESSI_PREFIX/compat/$EESSI_OS_TYPE/$EESSI_CPU_FAMILY=.
 For example =/cvmfs/software.eessi.io/versions/2023.06/compat/linux/x86_64=.
+
+The software layer leans on this layer through one EasyBuild setting.
+EESSI-extend passes =--filter-deps= with the packages the compatibility layer already provides.
+For 2026.06 the list starts =binutils,bzip2,DBus,flex,gettext= and includes =ncurses=, =XZ= and =zlib=.
+A filtered dependency is never built and never loaded.
+The build takes the compatibility layer's copy instead.
+That makes a build inside EESSI a weak test of an easyconfig's dependency list.
+A missing =binutils= or =zlib= goes unnoticed, because EESSI would have filtered it anyway.
+The same easyconfig then fails on a site whose own =as= or =libz= is older.
+[[file:15-build-dependencies-are-not-dependencies.org][Build dependencies are not dependencies]] walks through one such failure.
 
 *The software layer* is EasyBuild output.
 It includes everything from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]] onwards.
@@ -85,7 +96,7 @@ $ sudo cvmfs_config setup
 $ ls /cvmfs/software.eessi.io
 #+end_src
 Two configuration lines affect a single machine.
-The setting =CVMFS_CLIENT_PROFILE=single= is shipped for "laptops or fewer than 5 machines".
+The setting =CVMFS_CLIENT_PROFILE=single= is meant for "laptops or fewer than 5 machines".
 The setting =CVMFS_CLIENT_PROFILE=single= prevents the client from expecting a site proxy.
 Setting =CVMFS_QUOTA_LIMIT=10000= raises the cache from the default 4000 megabytes.
 The stack is then one =module use= away.
@@ -233,7 +244,7 @@ A site obtains a tree that behaves as if it were inside the repository.
 * What a site adds without writing to /cvmfs
 Three uses are defined.
 A stack built elsewhere cannot know the uses.
-*GPU drivers.* The driver belongs to the host kernel and cannot be shipped in a repository.
+*GPU drivers.* The driver belongs to the host kernel and cannot travel in a repository.
 On 2025.06 the script writes NVIDIA driver links into
 =compat/.../lib/nvidia= via =EESSI_NVIDIA_OVERRIDE_DEFAULT=.
 It does not populate =host_injections= for those drivers.

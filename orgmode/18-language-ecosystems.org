@@ -92,8 +92,13 @@ By default, =offline = True=.
 The =crates= variable is a list populated with each crate and its version required by the build, analogous to the =exts_list= job for Python.
 A Rust easyconfig lists its full dependency tree, vendors the dependencies, and performs the build with the network disabled.
 Pinning crates in the easyconfig requires more effort than =cargo build= and is the only method to obtain a reproducible build for future years.
+A Rust build often compiles C as well.
+Crates named =*-sys= wrap C libraries, and many compile the C sources themselves through the =cc= crate.
+That step runs the C compiler and the assembler from the build environment.
+So a Cargo easyconfig on =GCCcore= lists =binutils= beside =Rust= in =builddependencies=.
+[[file:15-build-dependencies-are-not-dependencies.org][Build dependencies are not dependencies]] shows =zstd-sys= failing without it.
 * The ecosystem with no easyblock
-EasyBuild 5.3.1 ships 82 generic easyblock classes, in 47 modules, and 282 software-specific ones.
+EasyBuild 5.3.1 has 82 generic easyblock classes, in 47 modules, and 282 software-specific ones.
 None of them is for npm.
 That absence is informative rather than an oversight. npm's model is a resolver that runs at install time against a live registry, producing a tree that depends on when the install ran.
 Nothing in that is compatible with enumerate-and-vendor.

@@ -118,7 +118,7 @@ Anything that conflicts with that CMake now conflicts with the package without r
 Neither issue is caught by a build.
 Both are detected by asking the runtime question for each entry once.
 * The awkward cases
-Three cases where the answer is not obvious.
+Four cases where the answer is not obvious.
 *Python* is in =dependencies= rather than =builddependencies= in the sample above.
 A package that merely uses Python to generate a header at build time puts it in =builddependencies=.
 The same package name appears in a different list depending on what survives into the install.
@@ -135,6 +135,22 @@ The generated code resides in the binary.
 The generator does not reside in the binary.
 When the list cannot be decided the tie‑break uses =ldd= on the installed binaries and =grep= through the installed scripts.
 If nothing in the install mentions it, it is a build dependency.
+*The assembler* is the case that hides best.
+=binutils= provides =as= and =ld=.
+The compiler writes assembly, and =as= turns it into object code.
+A newer GCC emits directives that an older =as= does not know.
+So a =GCCcore= easyconfig that compiles anything lists =binutils= in =builddependencies=, at the version its GCCcore was built with.
+Leaving it out still builds on any host whose own =as= is new enough.
+[[https://github.com/easybuilders/easybuild-easyconfigs/pull/26973][easyconfigs PR 26973]] shows the failure.
+It added the Rust tool =rsx= for =GCCcore/15.2.0= without =binutils=.
+The build passed in EESSI and failed on a Rocky Linux 9 test node.
+A crate, =zstd-sys=, compiled C through the =cc= crate.
+GCC 15 wrote a =.base64= directive, and the older system =as= stopped at it:
+#+begin_example
+Error: unknown pseudo-op: `.base64'
+#+end_example
+The fix was one line, =('binutils', '2.45')=, and the next test passed.
+[[file:26-the-same-stack-somewhere-else.org][The same stack somewhere else]] explains why EESSI never saw the error.
 * And the hierarchy still applies
 Another constraint comes from [[file:02-a-toolchain-is-a-hierarchy.org][A toolchain is a hierarchy]].
 The modulefile lists the versions =Boost/1.88.0-GCC-14.2.0=, =HDF5/1.14.6-gompi-2025a=, and =Python/3.13.1-GCCcore-14.2.0=.
@@ -157,14 +173,16 @@ You are writing an easyconfig for a C++ application. It needs:
 4. Python, which its build uses to generate a lookup table, and which it
  also installs three analysis scripts for.
 5. =pkgconf=, so CMake can find things.
+6. =binutils=, since the toolchain is =GCCcore=.
 
 Put each in a list. Then say what single command on the finished install
 would confirm you got HDF5 right, and what would confirm Python.
 
 #+begin_solution
-=builddependencies=: CMake, Catch2, pkgconf. Catch2 is used
+=builddependencies=: CMake, Catch2, pkgconf, binutils. Catch2 is used
 during the build and is not installed; if the easyconfig installed the
-test binary for users to run, the answer would change.
+test binary for users to run, the answer would change. binutils assembles
+what GCCcore emits and ends in no installed file.
 
 =dependencies=: HDF5, Python. Python is in both roles and the runtime one
 wins. The build-time Python is long gone.
@@ -185,6 +203,7 @@ thing can be asked.
 
 #+begin_keypoints
 - =builddependencies= are not in the module. =dependencies= are.
-- Python can sit in both lists. The runtime one wins after the build is gone.
+- Python can appear in both lists. The runtime one wins after the build is gone.
 - Confirm the claim by reading the install rather than the easyconfig.
+- A =GCCcore= easyconfig that compiles code lists =binutils= in =builddependencies=; a host with a new enough =as= hides the omission.
 #+end_keypoints
