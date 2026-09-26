@@ -31,7 +31,7 @@
 #+end_objectives
 Every easyconfig up to now installs one component.
 The following template installs hundreds of components.
-It is most of a real software stack: the applications, not the toolchain.
+It is most of a real software stack: the applications, with the toolchain left out.
 #+begin_src easyconfig :widget parse
 easyblock = 'Bundle'
 
@@ -147,8 +147,9 @@ It has an unusual shape.
 A pair is composed of a command and the standard input supplied to it.
 The check for =directlabels= invokes R and requests it to load the library.
 The Python equivalent is =("python -c 'import %(ext_name)s'", '')=, with an empty second element.
-It is the strong kind of check described in What "installed" means, executed rather than existence‑tested, and a bundle obtains it for every extension at once.
-Two hundred extensions cause two hundred loads, each delivering a real verification.
+It is the strong kind of check described in What "installed" means, executed rather than existence‑tested.
+A bundle obtains it for every extension at once.
+Two hundred extensions cause two hundred loads, each a real verification.
 Every entry includes its own =checksums=, which is [[file:07-a-checksum-is-a-claim-about-bytes.org][A checksum is a claim about bytes]] two hundred times over.
 Each extension possesses its own bytes, its own source URL, and its own chance for a checksum that is right about the wrong artifact.
 * What that costs, and why it matters when reading a failure

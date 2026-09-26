@@ -27,7 +27,7 @@ An easyconfig is a Python file EasyBuild evaluates.
 This one is a VS Code installation that runs in a browser on a supercomputer.
 The file contains twenty lines.
 Recipes of this form are merged weekly.
-The installed module name is a railroad, not a sentence.
+The installed module name follows a fixed grammar, drawn as a railroad diagram.
 #+begin_export rst
 .. figure:: _static/diagrams/rail-module-name.svg
    :alt: name, hyphen, version, hyphen, toolchain, hyphen, toolchain version, optional versionsuffix

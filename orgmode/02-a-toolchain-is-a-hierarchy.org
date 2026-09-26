@@ -75,7 +75,7 @@ The ordering is significant and does not follow a simple linear sequence.
 The two middle entries occupy the same hierarchical level: =gompi= equals =GCC= plus MPI, =gfbf= equals =GCC= plus numerical libraries, and neither is built atop the other.
 A displayed list must place one of them first.
 The choice carries no semantic weight.
-The sample demonstrates this behavior.
+The sample shows this behavior.
 A =foss= package may depend on a =GCCcore= build.
 A =GCCcore= package may not depend on a =foss= build.
 Courtesy does not influence this relationship.
@@ -173,7 +173,7 @@ EasyBuild 5.2 performed exactly this scenario.
 In toolchains built on the NVIDIA HPC SDK (=NVHPC=), the compiler element became the module =nvidia-compilers=.
 Toolchain modules written before the split still expect the old name.
 The indicator is that the two lists in the error differ by one element.
-Read the lists, not the package.
+The two lists carry the diagnosis; the package name does not.
 The difference names the element; the fix is a toolchain module that provides it.
 In practice this means moving to a generation whose toolchain modules already include it.
 * The same name can mean two toolchains

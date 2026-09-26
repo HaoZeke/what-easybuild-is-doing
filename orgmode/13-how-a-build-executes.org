@@ -60,13 +60,13 @@ package
 testcases
 #+end_src
 Eighteen step names exist. The sixteenth is =permissions=, then =package=, then =testcases=.
-The steps form a list, not a script or a dependency graph.
+The steps form a flat list, with no script logic and no dependency graph.
 The list executes in order for every package.
 Each parameter belongs to a single step.
 Most error messages refer to a specific step.
 Figure 4 in [[cite:hosteEasybuildBuildingSoftware2012][Hoste, Timmerman, Georges and De Weirdt 2012]] presented the same concept as fifteen Roman numerals derived from user test cases.
 =postiter=, =permissions= and =package= were added in five major version updates.
-If no easyblock matches a name, =get_easyblock_class= raises =MISSING_EASYBLOCK=. There is no ConfigureMake fallback.
+If no easyblock matches a name, =get_easyblock_class= raises =MISSING_EASYBLOCK=. No ConfigureMake fallback exists.
 Short-term memory can retain roughly seven items ([[cite:millerMagicalNumberSeven1956][Miller 1956]]; [[cite:wilsonBestPracticesScientific2014][Wilson et al. 2014]]).
 The eighteen step names are organized into three groups of six rather than a single list.
 #+ATTR_EB: :id EB-Steps-parsons-1 :title Put the first six in order
@@ -179,7 +179,7 @@ The option names indicate the omitted step.
 The =skipsteps= setting in the easyconfig permanently removes a step.
 The setting applies to all users each time.
 The article [[file:05-a-versionsuffix-is-part-of-the-name.org][A versionsuffix is part of the name]] describes a case where =sanitycheck= was affected.
-A genuine defect moved from the build host to the user.
+A genuine defect moved from the build machine to the user.
 The =--module-only= option skips fetch, extract, patch, prepare's
 unpack, configure, build, test and install. It still runs
 =prepare=, =ready=, =postiter=, =sanitycheck= and =module= against

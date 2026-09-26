@@ -49,7 +49,8 @@ EasyBuild lacks operators, ranges, carets and tildes in its syntax.
 #+end_export
 A dependency consists solely of a name and a specific version.
 Resolution requires that exact module; otherwise the build fails.
-A site wrap or a =ModuleRC= =.modulerc= can map an old name to a newer module; see [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]], and this does not constitute a range here.
+A site wrap or a =ModuleRC= =.modulerc= can map an old name to a newer module.
+That mapping is still not a range here; see [[file:37-wrapping-and-modulerc.org][A wrapper is the range EasyBuild will not write]].
 The official common-toolchain table now includes =foss/2026.1= and omits =2024b=.
 The 2026 maintainer summit decided on a single common generation annually.
 The pin law remains unchanged: a version adjacent to a dependency denotes that specific module and generation.
@@ -87,7 +88,8 @@ No HDF5 1.14.6 exists in that generation.
 No such version will appear later.
 The content of the easyconfig states "1.14.6".
 Version 1.14.6 is what that generation contained when the easyconfig was authored.
-The number records the build environment, not a requirement the software stated.
+The number records the build environment.
+The software itself stated no such requirement.
 #+begin_quote
 A dependency version in an easyconfig is an exact pin for the
 generation the easyconfig was written against. Carried across generations,

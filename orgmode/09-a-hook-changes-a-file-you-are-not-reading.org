@@ -166,7 +166,7 @@ Choosing the incorrect method yields a characteristic outcome in each case.
 An overlay employed for policy creates a fork to maintain, with one copy per package, each diverging from upstream at its own pace.
 A hook used to apply a package-specific change provides a global mechanism whose behaviour depends on a guard.
 The subsequent reader examines the easyconfig and observes no change.
-* The condition this puts on An easyconfig is Python
+* The condition this puts on an easyconfig as Python
 Python states that any expected path originates from a value assigned in the easyconfig.
 On a site employing hooks, the statement is true only after confirming that no hook has modified it.
 Determining this requires reading a short Python file and its guards.
@@ -184,7 +184,7 @@ Apply it atop EESSI.
 Examine how the engine behind these examples determines its established state.
 
 #+begin_keypoints
-- A hook runs in the site's EasyBuild process, not in the easyconfig you opened.
+- A hook runs in the site's EasyBuild process, outside the easyconfig being read.
 - The robot path and hooks are the two ways a site changes behaviour without editing upstream files.
 - A hook that is not in the log is still what ran.
 #+end_keypoints

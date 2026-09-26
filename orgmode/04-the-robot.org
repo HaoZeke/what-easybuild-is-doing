@@ -50,7 +50,7 @@ It is short for =--robot=.
 This page explains its function.
 It also explains its search locations.
 The sample is a toy robot.
-It walks a canned universe shipped with the page.
+It walks a canned universe bundled with the page.
 It does not walk the site.
 Change Python from =3.13.1= to =3.11.3= to observe a dependency being removed.
 #+begin_src easyconfig :widget solve :hydrate load :universe canned-foss-2025a

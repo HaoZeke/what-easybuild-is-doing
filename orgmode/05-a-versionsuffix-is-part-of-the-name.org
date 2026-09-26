@@ -165,7 +165,7 @@ The check inspects installed binaries against their recorded runtime library sea
 The check reports each library it cannot resolve.
 =libnvJitLink.so.13= was reported by the check.
 The build specified =skipsteps = ['sanitycheck']= in its easyconfig.
-The specification assumed the check produced a failure the package could not fix.
+The specification took for granted that the check produced a failure the package could not fix.
 Both components of that reasoning were true.
 The conclusion remained incorrect.
 The check identified a defect in the toolchain module.

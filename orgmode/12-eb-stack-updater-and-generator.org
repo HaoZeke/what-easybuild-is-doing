@@ -48,7 +48,7 @@ This page describes those two tasks and includes the files on the page.
 * A port starts as someone else's recipe
 The conda-forge feedstock for eOn 2.16.0 is frozen in eb-stack's fixtures.
 It includes name, version, sources, host dependencies, and tests.
-That file is a feedstock, not an easyconfig.
+That file is a conda-forge feedstock, which EasyBuild cannot read.
 #+begin_src yaml
 context:
  version: "2.16.0"
@@ -101,11 +101,11 @@ package.sbom.cdx.json
 locks/default.lock.json
 easyconfigs/e/eOn/eOn-2.16.0-foss-2024a.eb
 #+end_example
-The =.eb= is an emitted recipe, not an artifact EasyBuild compiled.
+The =.eb= is an emitted recipe; EasyBuild has compiled nothing yet.
 Lock denotes solver assignment.
 Plan includes parsed foreign recipe and residuals; parser‑invented items appear as typed leftovers, not guessed dependencies.
 [[file:33-inspect-residuals-and-the-plan.org][Inspect writes a work queue, not a recipe]].
-The feedstock and the Spack recipe sit next to each other.
+The feedstock and the Spack recipe are side by side.
 Name and version remain retained.
 =eon= transformed into =eOn=.
 =eigen >=3.4,<3.5= converted into pin for this generation.
@@ -232,7 +232,7 @@ dependencies = [
 Use the same command with =--version= and =--source-checksum= to increase the *application* version.
 If the checksum is omitted, the tarball name changes.
 The hash becomes stale.
-That missing hash is a blocking residual, not a guessed checksum.
+That missing hash is a blocking residual, and nothing guesses a checksum for it.
 * Two commands, then =eb=
 | Job | Command | Input | Output |
 |---+---|---|---|
